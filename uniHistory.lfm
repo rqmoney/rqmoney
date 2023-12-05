@@ -1,0 +1,531 @@
+object frmHistory: TfrmHistory
+  Left = 461
+  Height = 500
+  Top = 339
+  Width = 1200
+  ClientHeight = 500
+  ClientWidth = 1200
+  Constraints.MinHeight = 400
+  Constraints.MinWidth = 800
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnResize = FormResize
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '3.0.0.1'
+  object pnlList: TPanel
+    Left = 3
+    Height = 341
+    Top = 128
+    Width = 1194
+    Align = alClient
+    BorderSpacing.Top = 2
+    BorderSpacing.Around = 3
+    BevelOuter = bvLowered
+    ClientHeight = 341
+    ClientWidth = 1194
+    Constraints.MinHeight = 200
+    TabOrder = 0
+    object pnlButtons: TPanel
+      Left = 3
+      Height = 25
+      Top = 311
+      Width = 1188
+      Align = alBottom
+      AutoSize = True
+      BorderSpacing.Top = 2
+      BorderSpacing.Bottom = 2
+      BorderSpacing.Around = 2
+      BevelOuter = bvNone
+      ClientHeight = 25
+      ClientWidth = 1188
+      Constraints.MinHeight = 25
+      TabOrder = 0
+      OnResize = pnlButtonsResize
+      object btnCancel: TBCMDButtonFocus
+        Cursor = crHandPoint
+        Left = 1
+        Height = 23
+        Top = 1
+        Width = 150
+        Animation = True
+        StyleNormal.Color = clWhite
+        StyleNormal.TextColor = clBlack
+        StyleHover.Color = 14474460
+        StyleHover.TextColor = clBlack
+        StyleActive.Color = 13027014
+        StyleActive.TextColor = clBlack
+        StyleDisabled.Color = clWhite
+        StyleDisabled.TextColor = 10724259
+        TextAutoSize = True
+        TextProportional = False
+        TextProportionalRatio = 0.5
+        Align = alLeft
+        BorderSpacing.Around = 1
+        Color = clNone
+        Font.Style = [fsBold]
+        OnClick = actExitExecute
+        ParentFont = False
+      end
+    end
+    object pnlHistoryCaption: TBCPanel
+      Left = 1
+      Height = 20
+      Top = 1
+      Width = 1192
+      Align = alTop
+      Background.Color = clBtnFace
+      Background.Gradient1.StartColor = 16744448
+      Background.Gradient1.EndColor = clBlack
+      Background.Gradient1.GradientType = gtRadial
+      Background.Gradient1.Point1XPercent = 50
+      Background.Gradient1.Point1YPercent = 100
+      Background.Gradient1.Point2XPercent = 0
+      Background.Gradient1.Point2YPercent = 100
+      Background.Gradient2.StartColor = clWhite
+      Background.Gradient2.EndColor = clBlack
+      Background.Gradient2.GradientType = gtLinear
+      Background.Gradient2.Point1XPercent = 0
+      Background.Gradient2.Point1YPercent = 0
+      Background.Gradient2.Point2XPercent = 0
+      Background.Gradient2.Point2YPercent = 100
+      Background.Gradient1EndPercent = 100
+      Background.Style = bbsGradient
+      BevelInner = bvNone
+      BevelOuter = bvRaised
+      BevelWidth = 1
+      Border.Style = bboNone
+      Constraints.MinHeight = 20
+      FontEx.Color = clDefault
+      FontEx.FontQuality = fqFineAntialiasing
+      FontEx.Shadow = True
+      FontEx.ShadowRadius = 2
+      FontEx.ShadowOffsetX = 2
+      FontEx.ShadowOffsetY = 2
+      FontEx.Style = []
+      ParentBackground = False
+      Rounding.RoundX = 1
+      Rounding.RoundY = 1
+      TabOrder = 1
+    end
+    object VST2: TLazVirtualStringTree
+      Cursor = 63
+      Left = 3
+      Height = 284
+      Top = 23
+      Width = 1188
+      Align = alClient
+      BorderSpacing.Around = 2
+      ClipboardFormats.Strings = (
+        'CSV'
+        'HTML Format'
+        'Plain text'
+        'Rich Text Format'
+        'Rich Text Format Without Objects'
+        'Unicode text'
+        'Virtual Tree Data'
+      )
+      Colors.BorderColor = clWindowText
+      Colors.HotColor = clBlack
+      DefaultNodeHeight = 20
+      DragMode = dmAutomatic
+      DragOperations = []
+      EditDelay = 0
+      Header.AutoSizeIndex = -1
+      Header.Background = clBtnShadow
+      Header.Columns = <      
+        item
+          Alignment = taCenter
+          Margin = 0
+          MaxWidth = 25
+          MinWidth = 25
+          Options = [coParentBidiMode, coParentColor, coVisible, coUseCaptionAlignment]
+          Position = 0
+          Width = 25
+        end      
+        item
+          Alignment = taRightJustify
+          CaptionAlignment = taRightJustify
+          Margin = 0
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 1
+          Width = 100
+        end      
+        item
+          Margin = 0
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 2
+          Width = 80
+        end      
+        item
+          Alignment = taRightJustify
+          CaptionAlignment = taRightJustify
+          Margin = 0
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 3
+          Width = 80
+        end      
+        item
+          Alignment = taCenter
+          CaptionAlignment = taRightJustify
+          Margin = 0
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 4
+          Width = 100
+        end      
+        item
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 5
+          Width = 100
+        end      
+        item
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 6
+          Width = 70
+        end      
+        item
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 7
+          Width = 150
+        end      
+        item
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 8
+          Width = 200
+        end      
+        item
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 9
+          Width = 150
+        end      
+        item
+          Alignment = taRightJustify
+          CaptionAlignment = taRightJustify
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 10
+        end      
+        item
+          Options = [coParentBidiMode, coParentColor]
+          Position = 11
+        end>
+      Header.DefaultHeight = 17
+      Header.Font.Style = [fsBold]
+      Header.Height = 20
+      Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoHeaderClickAutoSort]
+      Header.SortColumn = 1
+      Header.SortDirection = sdDescending
+      Header.Style = hsFlatButtons
+      HintMode = hmTooltip
+      ParentFont = False
+      ParentShowHint = False
+      TabOrder = 2
+      TextMargin = 2
+      TreeOptions.AutoOptions = [toAutoScroll, toAutoSort]
+      TreeOptions.MiscOptions = [toReportMode, toWheelPanning]
+      TreeOptions.PaintOptions = [toHideFocusRect, toShowVertGridLines, toUseExplorerTheme]
+      TreeOptions.SelectionOptions = [toDisableDrawSelection, toFullRowSelect, toMultiSelect]
+      TreeOptions.StringOptions = []
+      WantTabs = True
+      OnBeforeCellPaint = VST2BeforeCellPaint
+      OnGetText = VST2GetText
+      OnGetImageIndex = VST2GetImageIndex
+      OnResize = VST1Resize
+    end
+  end
+  object pnlTop: TPanel
+    Left = 3
+    Height = 110
+    Top = 3
+    Width = 1194
+    Align = alTop
+    BorderSpacing.Bottom = 2
+    BorderSpacing.Around = 3
+    BevelOuter = bvLowered
+    ClientHeight = 110
+    ClientWidth = 1194
+    Constraints.MinHeight = 110
+    TabOrder = 1
+    object pnlOriginalCaption: TBCPanel
+      Left = 1
+      Height = 20
+      Top = 1
+      Width = 1192
+      Align = alTop
+      Background.Color = clBtnFace
+      Background.Gradient1.StartColor = 16744448
+      Background.Gradient1.EndColor = clBlack
+      Background.Gradient1.GradientType = gtRadial
+      Background.Gradient1.Point1XPercent = 50
+      Background.Gradient1.Point1YPercent = 100
+      Background.Gradient1.Point2XPercent = 0
+      Background.Gradient1.Point2YPercent = 100
+      Background.Gradient2.StartColor = clWhite
+      Background.Gradient2.EndColor = clBlack
+      Background.Gradient2.GradientType = gtLinear
+      Background.Gradient2.Point1XPercent = 0
+      Background.Gradient2.Point1YPercent = 0
+      Background.Gradient2.Point2XPercent = 0
+      Background.Gradient2.Point2YPercent = 100
+      Background.Gradient1EndPercent = 100
+      Background.Style = bbsGradient
+      BevelInner = bvNone
+      BevelOuter = bvRaised
+      BevelWidth = 1
+      Border.Style = bboNone
+      Constraints.MinHeight = 20
+      FontEx.Color = clDefault
+      FontEx.FontQuality = fqFineAntialiasing
+      FontEx.Shadow = True
+      FontEx.ShadowRadius = 2
+      FontEx.ShadowOffsetX = 2
+      FontEx.ShadowOffsetY = 2
+      FontEx.Style = []
+      ParentBackground = False
+      Rounding.RoundX = 1
+      Rounding.RoundY = 1
+      TabOrder = 0
+    end
+    object VST1: TLazVirtualStringTree
+      Cursor = 63
+      Left = 3
+      Height = 84
+      Top = 23
+      Width = 1188
+      Align = alClient
+      BorderSpacing.Around = 2
+      ClipboardFormats.Strings = (
+        'CSV'
+        'HTML Format'
+        'Plain text'
+        'Rich Text Format'
+        'Rich Text Format Without Objects'
+        'Unicode text'
+        'Virtual Tree Data'
+      )
+      Colors.BorderColor = clWindowText
+      Colors.HotColor = clBlack
+      DefaultNodeHeight = 20
+      DragMode = dmAutomatic
+      DragOperations = []
+      EditDelay = 0
+      Header.AutoSizeIndex = -1
+      Header.Background = clBtnShadow
+      Header.Columns = <      
+        item
+          Alignment = taCenter
+          Margin = 0
+          MaxWidth = 25
+          MinWidth = 25
+          Options = [coParentBidiMode, coParentColor, coVisible, coUseCaptionAlignment]
+          Position = 0
+          Width = 25
+        end      
+        item
+          Alignment = taRightJustify
+          CaptionAlignment = taRightJustify
+          Margin = 0
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 1
+          Width = 100
+        end      
+        item
+          Margin = 0
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 2
+          Width = 80
+        end      
+        item
+          Alignment = taRightJustify
+          CaptionAlignment = taRightJustify
+          Margin = 0
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 3
+          Width = 80
+        end      
+        item
+          Alignment = taCenter
+          CaptionAlignment = taRightJustify
+          Margin = 0
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 4
+          Width = 100
+        end      
+        item
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 5
+          Width = 100
+        end      
+        item
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 6
+          Width = 70
+        end      
+        item
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 7
+          Width = 150
+        end      
+        item
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 8
+          Width = 200
+        end      
+        item
+          MinWidth = 0
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 9
+          Width = 150
+        end      
+        item
+          Alignment = taRightJustify
+          CaptionAlignment = taRightJustify
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus, coUseCaptionAlignment]
+          Position = 10
+        end      
+        item
+          Options = [coParentBidiMode, coParentColor]
+          Position = 11
+        end>
+      Header.DefaultHeight = 17
+      Header.Font.Style = [fsBold]
+      Header.Height = 20
+      Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoHeaderClickAutoSort]
+      Header.SortColumn = 1
+      Header.SortDirection = sdDescending
+      Header.Style = hsFlatButtons
+      HintMode = hmTooltip
+      ParentFont = False
+      ParentShowHint = False
+      TabOrder = 1
+      TextMargin = 2
+      TreeOptions.AutoOptions = [toAutoScroll, toAutoSort]
+      TreeOptions.MiscOptions = [toReportMode, toWheelPanning]
+      TreeOptions.PaintOptions = [toHideFocusRect, toShowVertGridLines, toUseExplorerTheme]
+      TreeOptions.SelectionOptions = [toDisableDrawSelection, toFullRowSelect, toMultiSelect]
+      TreeOptions.StringOptions = []
+      WantTabs = True
+      OnBeforeCellPaint = VST1BeforeCellPaint
+      OnGetText = VST1GetText
+      OnGetImageIndex = VST1GetImageIndex
+      OnResize = VST1Resize
+    end
+  end
+  object pnlBottom: TPanel
+    Left = 3
+    Height = 25
+    Top = 472
+    Width = 1194
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Around = 3
+    BevelOuter = bvLowered
+    ClientHeight = 25
+    ClientWidth = 1194
+    Constraints.MinHeight = 20
+    TabOrder = 2
+    object pnlHeight: TPanel
+      Left = 1092
+      Height = 20
+      Top = 3
+      Width = 100
+      Align = alRight
+      BorderSpacing.Top = 1
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 100
+      ParentFont = False
+      TabOrder = 0
+      object imgHeight: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        Constraints.MaxHeight = 16
+      end
+      object lblHeight: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 76
+        Align = alClient
+        Alignment = taCenter
+        BorderSpacing.Around = 1
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+    object pnlWidth: TPanel
+      Left = 991
+      Height = 20
+      Top = 3
+      Width = 100
+      Align = alRight
+      BorderSpacing.Top = 1
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 100
+      ParentFont = False
+      TabOrder = 1
+      object imgWidth: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        Constraints.MaxHeight = 16
+      end
+      object lblWidth: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 76
+        Align = alClient
+        Alignment = taCenter
+        BorderSpacing.Around = 1
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+  end
+  object Splitter1: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 5
+    Top = 118
+    Width = 1200
+    Align = alTop
+    ResizeAnchor = akTop
+  end
+  object ActionList1: TActionList
+    Left = 584
+    Top = 264
+    object actExit: TAction
+      OnExecute = actExitExecute
+      ShortCut = 27
+    end
+  end
+end

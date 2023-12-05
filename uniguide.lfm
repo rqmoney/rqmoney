@@ -1,0 +1,654 @@
+object frmGuide: TfrmGuide
+  Left = 280
+  Height = 401
+  Top = 96
+  Width = 700
+  BorderIcons = [biSystemMenu]
+  ClientHeight = 401
+  ClientWidth = 700
+  Constraints.MinHeight = 400
+  Constraints.MinWidth = 600
+  Icon.Data = {
+    BE1000000000010001002020000001002000A810000016000000280000002000
+    0000400000000100200000000000001000006400000064000000000000000000
+    000000000000000000000000000000000000302B2C57282120DE2F2828F2322D
+    30F746372FF85C412FF859402FF85B402FF85B412FF85B412FF85C412FF85C41
+    2FF85C412FF85D412FF85D422FF85D422FF85E4230F85E4230F85F4230F85F42
+    30F8614330F8634430F8684632F678482AFF884A247800000000000000000000
+    000000000000000000000000000000000000221D1DCE3A3D45FF859CB2FE8CA2
+    B9FF8BA3BAFF8BA3BBFF8CA4BCFF8DA4BCFF8DA5BDFF8EA5BDFF8EA6BEFF8FA6
+    BEFF8FA7BEFF90A7BFFF90A7BFFF90A7BFFF91A8BFFF91A8BFFF90A8BFFF90A7
+    BFFF91A7BFFF91A7BEFF8EA7C0FD9CA7B6FFC1855CC800000000000000000000
+    00000000000000000000000000000000000054352AC84B3733FF60585CFB615C
+    62FE796962FE8B7362FE897262FE8A7363FE8B7463FE8C7463FE8C7463FE8D75
+    63FE8D7564FE8D7564FE8D7564FE8D7564FE8D7564FE8D7564FE8D7564FE8C74
+    64FE8C7464FE8B7463FE897261FB8B786CFFAE7E5EBC00000000000000000000
+    0000000000000000000000000000000000008A5640C9A4664BFFA9684BFCA261
+    49FEC98645FFE8A342FEE29E42FFE39F42FFE39F42FFE39F42FFE39F42FFE39E
+    42FFE39E42FFE39E41FFE39D42FFE29D41FFE29D41FFE29C41FFE19C41FFE19B
+    41FFE19B41FFE09A41FEE09A41FCDD963EFFC07A36CC00000000000000000000
+    00000000000000000000000000000000000088543FC7A96D52FFBB7C5EFCB876
+    5DFED79A58FFF0B755FFECB255FFEDB255FFECB255FFECB255FFECB255FFECB2
+    55FFECB155FFECB155FFECB054FFEBB054FFEBAF54FFEBAF54FFEAAF54FFEAAE
+    54FFEAAD54FFE9AD54FEE9AB53FDEAAD54FFE39E48D800000002000000000000
+    0000000000000000000000000000000000008D5741C6AD6F53FFBB7A5BFCB773
+    5AFED69855FFF0B551FFEBB051FFECB151FFECB151FFECB151FFECB151FFECB0
+    51FFECB051FFEBAF51FFEBAF50FFEBAF50FFEBAE50FFEAAE50FFEAAD50FFEAAC
+    50FFE9AC50FFE9AB50FEE8AA4FFCE9AA4FFFE09B46D500000001000000000000
+    000000000000000000000000000000000000915A42C5B17255FFBF7C5CFCBA75
+    5BFED99A55FFF2B851FFEDB352FFEEB451FFEEB451FFEEB452FFEEB352FFEEB3
+    52FFEEB351FFEDB251FFEDB251FFEDB150FFECB151FFECB050FFECAF50FFEBAF
+    50FFEBAE50FFEBAD50FEEAAC4FFCEBAD50FFE29D46D400000001000000000000
+    000000000000000000000000000000000000955D44C4B57556FFC27E5DFCBD77
+    5BFEDB9C55FFF3BB51FFEFB552FFF0B651FFF0B652FFEFB651FFEFB551FFEFB5
+    51FFEFB551FFEFB451FFEEB450FFEEB351FFEEB351FFEDB250FFEDB250FFEDB1
+    51FFECB050FFECAF4FFEEBAE4FFCECAF4FFFE39F46D300000000000000000000
+    000000000000000000000000000000000000995F45C3B87858FFC4805DFCC078
+    5CFEDD9E56FFF5BD51FFF0B852FFF1B852FFF1B851FFF1B851FFF1B851FFF0B7
+    51FFF0B751FFF0B751FFF0B650FFF0B551FFEFB551FFEFB450FFEEB451FFEEB3
+    50FFEDB24FFFEDB14FFEECB04FFCEDB14FFFE4A046D200000000000000000000
+    0000000000000000000000000000000000009D6247C2BC7B5AFFC7825EFCC27A
+    5CFEDEA056FFF6BF51FFF2BA51FFF3BB51FFF2BA51FFF2BA51FFF2BA51FFF2BA
+    51FFF2B951FFF1B951FFF1B850FFF1B851FFF1B750FFF0B651FFF0B650FFEFB5
+    50FFEFB44FFFEEB34FFEEEB24FFCEEB34FFFE6A246D000000000000000000000
+    000000000000000000000000000000000000A16549C0C07D5CFFCA855FFCC57C
+    5DFEE0A256FFF8C251FFF3BC51FFF4BD51FFF4BD51FFF4BD50FFF3BC50FFF3BC
+    50FFF3BB51FFF3BB51FFF3BA51FFF2BA50FFF2B951FFF1B851FFF1B850FFF0B7
+    4FFFF0B64FFFF0B54FFEEFB44EFCEFB54FFFE7A445CF00000000000000000000
+    000000000000000000000000000000000000A6684BBEC3805DFFCD875FFCC87E
+    5DFEE2A456FFF9C450FFF5BE51FFF5BF51FFF5BF50FFF5BF51FFF5BE50FFF5BE
+    50FFF4BE50FFF4BD51FFF4BC50FFF4BC50FFF3BB51FFF3BA50FFF2B94FFFF2B9
+    50FFF1B84FFFF1B74FFEF0B64EFCF1B64FFFE8A545CE00000000000000000000
+    000000000000000000000000000000000000AA6B4DBDC6835FFFD08960FCCB80
+    5EFEE4A656FFFAC750FFF6C151FFF7C251FFF7C151FFF7C150FFF6C151FFF6C0
+    51FFF6C051FFF6BF51FFF5BE50FFF5BE50FFF4BD50FFF4BC4FFFF3BB4FFFF3BB
+    4FFFF2BA4FFFF2B94EFEF1B84EFCF2B84FFFE9A745CC00000000000000000000
+    000000000000000000000000000000000000AE6E4FBBCA8761FFD28C61FCCD82
+    5EFEE6A756FFFCC950FFF8C351FFF8C451FFF8C450FFF8C351FFF8C350FFF7C2
+    50FFF7C250FFF7C150FFF6C150FFF6C050FFF6BF50FFF5BE50FFF5BD4FFFF4BD
+    4FFFF4BC4EFFF3BB4FFEF3B94EFCF3BA4FFFEAA945CB00000000000000000000
+    000000000000000000000000000000000000B27151BACD8A63FFD58E62FCD085
+    5FFEE7AA57FFFDCB50FFF9C651FFFAC651FFFAC651FFF9C550FFF9C550FFF9C4
+    50FFF8C450FFF8C350FFF8C350FFF7C24FFFF7C150FFF6C04FFFF6BF4FFFF5BE
+    4EFFF5BE4FFFF4BC4EFEF4BB4EFCF4BC4EFFEBAA45CA00000000000000000000
+    000000000000000000000000000000000000B67452B8D08D65FFD89163FCD387
+    5FFEE9AC57FFFECE50FFFBC851FFFBC950FFFBC850FFFBC850FFFAC750FFFAC7
+    50FFFAC64FFFF9C550FFF9C54FFFF8C44FFFF8C350FFF8C24FFFF7C14EFFF7C0
+    4EFFF6BF4EFFF5BE4EFEF5BD4EFCF5BD4EFFECAC45C900000000000000000000
+    000000000000000000000000000000000000B97855B7D39267FFDB9464FCD68A
+    60FEEBAE58FFFFD150FFFCCB51FFFDCB51FFFCCB51FFFCCB51FFFCCA51FFFBC9
+    51FFFBC950FFFBC850FFFAC750FFFAC650FFF9C550FFF9C54FFFF8C34FFFF8C2
+    4FFFF7C24FFFF7C04FFEF6BF4EFCF6C04EFFEDAE45C800000000000000000000
+    000000000000000000000000000000000000BD7C57B6D6966AFFDD9865FBD98E
+    61FEEDB159FFFFD452FFFDCE53FFFECF52FFFDCE52FFFDCD52FFFDCD52FFFDCC
+    52FFFDCC52FFFCCB51FFFBCA51FFFBC951FFFBC851FFFAC750FFF9C650FFF9C5
+    50FFF9C450FFF8C34FFEF7C24FFCF7C24FFFEEB046C700000000000000000000
+    000000000000000000000000000000000000C1815AB4D99A6CFFE09C67FBDB91
+    62FEEEB45BFFFFD753FFFDD154FFFED254FFFED153FFFED053FFFED053FFFECF
+    53FFFDCE53FFFDCD52FFFDCC52FFFCCC52FFFCCB52FFFBCA51FFFBC951FFFAC8
+    51FFFAC651FFF9C650FEF8C450FCF8C450FFEFB247C600000000000000000000
+    000000000000000000000000000000000000C5855CB3DC9F6FFFE3A068FBDE95
+    63FEEFB75CFFFFD955FFFED455FFFED455FFFED455FFFED354FFFED354FFFED2
+    54FFFED154FFFED053FFFDCF53FFFDCE53FFFDCD53FFFCCC52FFFCCB52FFFBCA
+    52FFFBC952FFFAC851FEF9C651FCF9C751FFF0B447C500000000000000000000
+    000000000000000000000000000000000000C8885FB1DFA371FFE5A46AFBE199
+    65FEF0BA5DFFFFDC56FFFED657FFFFD756FFFED656FFFED656FFFED556FFFED4
+    55FFFED355FFFED255FFFDD154FFFDD054FFFDCF54FFFDCE54FFFDCD53FFFCCC
+    53FFFCCB53FFFBCA52FEFAC952FCFAC952FFF1B648C400000000000000000000
+    000000000000000000000000000000000000CC8D61B0E2A774FFE8A86BFBE49D
+    66FEF2BD5FFFFFDF58FFFED958FFFEDA58FFFFDB57FFFFDB57FFFFDA56FFFFD9
+    56FFFFD855FFFFD755FFFFD655FFFFD555FFFFD454FFFFD354FFFFD254FFFFD1
+    53FFFDCE53FFFCCC53FEFBCB53FCFBCB53FFF2B849C300000000000000000000
+    000000000000000000000000000000000000CF9164AEE5AC76FFEAAC6DFBE6A0
+    67FEF3C060FFFFE159FFFEDB5AFFFFDF59FFF1BB60FFEAA963FFEBAC62FFEAAA
+    61FFE9A961FFE8A860FFE8A760FFE7A55FFFE6A45EFFE5A35EFFE5A25DFFE29C
+    5DFFF2BB58FFFFD254FEFCCC54FCFCCD53FFF3BA4AC200000000000000000000
+    000000000000000000000000000000000000D19567ADE7B079FFEDB06FFBE9A4
+    68FEF4C362FFFFE45BFFFEDE5BFFFFE15AFFF2BE61FFEBAD64FFECAF63FFEBAE
+    63FFEBAC62FFEAAB61FFE9AA61FFE8A960FFE8A75FFFE7A65FFFE6A55EFFE3A0
+    5EFFF3BE59FFFFD455FEFDCE55FCFDCF54FFF4BC4BC100000000000000000000
+    000000000000000000000000000000000000D4996AABE9B47CFFEFB470FBEBA8
+    69FEF5C663FFFFE65DFFFEE15DFFFEE15CFFFFE25BFFFFE25BFFFFE15AFFFFE0
+    5AFFFFDF59FFFFDE59FFFFDD58FFFFDC58FFFFDB58FFFFDA57FFFFD957FFFFD7
+    56FFFFD556FFFED256FEFDD156FCFED155FFF5BE4CC000000000000000000000
+    000000000000000000000000000000000000D79D6CAAECB87EFFF1B872FBEEAC
+    6BFEF6C965FFFFE85EFFFEE35FFFFFE35EFFFEE25DFFFEE15DFFFEE05CFFFEDF
+    5BFFFEDE5BFFFEDD5BFFFEDC5AFFFEDB5AFFFEDA59FFFED959FFFED758FFFED6
+    58FFFED558FFFED457FEFED257FCFED256FFF5C04DBF00000000000000000000
+    000000000000000000000000000000000000DAA16FA8EEBB81FFF3BB74FBF0B0
+    6CFEF7CB66FFFFEA60FFFEE560FFFEE55FFFFEE45FFFFEE35EFFFEE35DFFFEE2
+    5DFFFEE15CFFFEE05CFFFEDF5BFFFEDD5BFFFEDC5AFFFEDB5AFFFED959FFFED8
+    59FFFED758FFFFD658FEFED457FCFED457FFF6C14DBD00000000000000000000
+    000000000000000000000000000000000000DCA572A7F0BE84FFF5BF76FBF2B3
+    6EFEF8CE68FEFFEC61FEFEE761FEFEE761FEFEE660FEFEE55FFEFEE45FFEFFE3
+    5EFEFEE25DFEFEE15DFEFEE05CFEFEDF5CFEFEDE5BFEFEDC5BFEFFDB5AFEFEDA
+    5AFEFED959FEFED759FEFED659FCFFD558FFF6C34EBC00000000000000000000
+    000000000000000000000000000000000000DEA774A7F1C186FFF6C278F9F4B7
+    6FFDF9D069FDFFED63FDFEE863FDFEE962FDFFE861FDFFE761FDFFE660FDFFE5
+    5FFDFFE45EFDFFE35EFDFFE25DFDFFE05DFDFFDF5CFDFEDE5CFDFEDD5BFDFFDB
+    5BFDFFDA5AFDFED95AFDFED759FAFFD759FFF6C44FBA00000000000000000000
+    000000000000000000000000000000000000E2AF7BA3F3C489FFF8C478FFF5BA
+    71FFFAD26BFFFFEF64FFFEEA64FFFEEA63FFFEE962FFFEE861FFFEE761FFFEE6
+    60FFFEE55FFFFEE45FFFFEE35EFFFEE25EFFFEE05DFFFFDF5DFFFFDE5CFFFEDC
+    5CFFFEDB5BFFFEDA5BFFFED85AFFFED85AFFF8C751C000000000000000000000
+    000000000000000000000000000000000000F0C89E27F8D19FAEFACA81D8F8BE
+    73E1FBD56CE2FFF165E2FEEC65E2FEEC64E2FEEC63E2FEEB63E2FEEA62E2FEE9
+    61E2FEE860E2FEE760E2FEE55FE2FEE45FE2FEE35EE2FEE25EE2FEE05DE2FEDF
+    5CE2FEDE5CE2FEDC5BE1FEDB5BE1FED958E4FCCE525800000000000000000000
+    0000000000000000000000000000000000000000000000000000FFFFFF04FFD8
+    8909FFE88209FEFE7909FFFB7A09FEFB7A09FEFA7B09FFFA7A09FFFA7909FFF9
+    7809FFF87709FEF87609FEF67409FEF67309FEF57209FEF47109FEF26F09FEF1
+    6E09FFF06E09FEF06D09FEEE6B0AFDF15C040000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000
+  }
+  KeyPreview = True
+  OnCreate = FormCreate
+  OnKeyPress = FormKeyPress
+  OnResize = FormResize
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '3.0.0.1'
+  object pnlBottom: TPanel
+    Left = 5
+    Height = 22
+    Top = 374
+    Width = 690
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Around = 5
+    BevelOuter = bvNone
+    ClientHeight = 22
+    ClientWidth = 690
+    Constraints.MinHeight = 20
+    TabOrder = 0
+    object pnlHeight: TPanel
+      Left = 569
+      Height = 20
+      Top = 1
+      Width = 120
+      Align = alRight
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 120
+      Constraints.MinWidth = 120
+      TabOrder = 0
+      object imgHeight: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        Center = True
+        ImageIndex = 1
+        Images = frmMain.imgSize
+      end
+      object lblHeight: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 96
+        Align = alClient
+        Alignment = taCenter
+        AutoSize = False
+        BorderSpacing.Around = 1
+        ParentColor = False
+      end
+    end
+    object pnlWidth: TPanel
+      Left = 448
+      Height = 20
+      Top = 1
+      Width = 120
+      Align = alRight
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 120
+      Constraints.MinWidth = 120
+      TabOrder = 1
+      object imgWidth: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        Center = True
+        Images = frmMain.imgSize
+      end
+      object lblWidth: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 96
+        Align = alClient
+        Alignment = taCenter
+        AutoSize = False
+        BorderSpacing.Around = 1
+        ParentColor = False
+      end
+    end
+    object pnlTip: TPanel
+      Left = 1
+      Height = 20
+      Top = 1
+      Width = 446
+      Align = alClient
+      AutoSize = True
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 446
+      Font.Color = clMaroon
+      ParentFont = False
+      TabOrder = 2
+      object lblTip: TLabel
+        Left = 12
+        Height = 16
+        Top = 2
+        Width = 432
+        Align = alClient
+        BorderSpacing.Left = 10
+        BorderSpacing.Around = 1
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+  end
+  object pnlButtons: TPanel
+    Left = 5
+    Height = 25
+    Top = 344
+    Width = 690
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Around = 5
+    BevelOuter = bvNone
+    ClientHeight = 25
+    ClientWidth = 690
+    Constraints.MinHeight = 25
+    TabOrder = 1
+    object btnBack: TBCMDButtonFocus
+      Cursor = crHandPoint
+      Left = 3
+      Height = 23
+      Top = 1
+      Width = 200
+      Animation = True
+      StyleNormal.Color = clWhite
+      StyleNormal.TextColor = clBlack
+      StyleHover.Color = 14474460
+      StyleHover.TextColor = clBlack
+      StyleActive.Color = 13027014
+      StyleActive.TextColor = clBlack
+      StyleDisabled.Color = clWhite
+      StyleDisabled.TextColor = 10724259
+      TextAutoSize = True
+      TextProportional = False
+      TextProportionalRatio = 0.5
+      Align = alLeft
+      BorderSpacing.Left = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Around = 1
+      Color = clNone
+      Constraints.MinWidth = 200
+      Font.Style = [fsBold]
+      OnClick = btnBackClick
+      ParentFont = False
+    end
+    object btnNext: TBCMDButtonFocus
+      Cursor = crHandPoint
+      Left = 487
+      Height = 23
+      Top = 1
+      Width = 200
+      Animation = True
+      StyleNormal.Color = clWhite
+      StyleNormal.TextColor = clBlack
+      StyleHover.Color = 14474460
+      StyleHover.TextColor = clBlack
+      StyleActive.Color = 13027014
+      StyleActive.TextColor = clBlack
+      StyleDisabled.Color = clWhite
+      StyleDisabled.TextColor = 10724259
+      TextAutoSize = True
+      TextProportional = False
+      TextProportionalRatio = 0.5
+      Align = alRight
+      BorderSpacing.Left = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Around = 1
+      Color = clNone
+      Constraints.MinWidth = 200
+      Font.Style = [fsBold]
+      OnClick = btnNextClick
+      ParentFont = False
+    end
+  end
+  object pnlList: TScrollBox
+    Left = 5
+    Height = 334
+    Top = 5
+    Width = 690
+    HorzScrollBar.Page = 11
+    VertScrollBar.Page = 34
+    Align = alClient
+    AutoSize = True
+    BorderSpacing.Around = 5
+    ClientHeight = 332
+    ClientWidth = 688
+    TabOrder = 2
+    object notGuide: TNotebook
+      Left = 0
+      Height = 309
+      Top = 23
+      Width = 688
+      PageIndex = 0
+      Align = alClient
+      TabOrder = 0
+      TabStop = True
+      object pagWelcome: TPage
+        object txtWelcome: TLabel
+          Left = 5
+          Height = 299
+          Top = 5
+          Width = 678
+          Align = alClient
+          AutoSize = False
+          BorderSpacing.Around = 5
+          ParentColor = False
+          WordWrap = True
+        end
+      end
+      object pagPerson: TPage
+        object pnlPerson: TPanel
+          Left = 617
+          Height = 302
+          Top = 5
+          Width = 64
+          Align = alRight
+          AutoSize = True
+          BorderSpacing.Left = 10
+          BorderSpacing.Top = 5
+          BorderSpacing.Right = 5
+          BevelOuter = bvNone
+          ClientHeight = 302
+          ClientWidth = 64
+          TabOrder = 0
+          object btnPerson: TBitBtn
+            Left = 0
+            Height = 64
+            Top = 0
+            Width = 64
+            Align = alTop
+            Constraints.MaxHeight = 64
+            Constraints.MaxWidth = 64
+            Constraints.MinHeight = 64
+            Constraints.MinWidth = 64
+            Images = frmMain.img32
+            ImageIndex = 6
+            OnClick = btnPersonClick
+            ParentShowHint = False
+            ShowHint = True
+            Spacing = 0
+            TabOrder = 0
+          end
+        end
+        object txtPerson: TLabel
+          Left = 5
+          Height = 297
+          Top = 5
+          Width = 602
+          Align = alClient
+          BorderSpacing.Around = 5
+          ParentColor = False
+          WordWrap = True
+        end
+      end
+      object pagAccount: TPage
+        object pnlAccount: TPanel
+          Left = 636
+          Height = 307
+          Top = 0
+          Width = 50
+          Align = alRight
+          AutoSize = True
+          BorderSpacing.Left = 10
+          BorderSpacing.Top = 5
+          BorderSpacing.Right = 5
+          BevelOuter = bvNone
+          ClientHeight = 307
+          ClientWidth = 50
+          TabOrder = 0
+          object btnAccount: TBitBtn
+            Left = 0
+            Height = 50
+            Top = 0
+            Width = 50
+            Align = alTop
+            Constraints.MaxHeight = 64
+            Constraints.MaxWidth = 64
+            Constraints.MinHeight = 64
+            Constraints.MinWidth = 64
+            Images = frmMain.img32
+            ImageIndex = 4
+            OnClick = btnAccountClick
+            ParentShowHint = False
+            ShowHint = True
+            Spacing = 0
+            TabOrder = 0
+          end
+        end
+        object txtAccount: TLabel
+          Left = 5
+          Height = 297
+          Top = 5
+          Width = 621
+          Align = alClient
+          BorderSpacing.Around = 5
+          ParentColor = False
+          WordWrap = True
+        end
+      end
+      object pagCategory: TPage
+        object pnlCategory: TPanel
+          Left = 636
+          Height = 307
+          Top = 0
+          Width = 50
+          Align = alRight
+          AutoSize = True
+          BorderSpacing.Left = 10
+          BorderSpacing.Top = 5
+          BorderSpacing.Right = 5
+          BevelOuter = bvNone
+          ClientHeight = 307
+          ClientWidth = 50
+          TabOrder = 0
+          object btnCategory: TBitBtn
+            Left = 0
+            Height = 50
+            Top = 0
+            Width = 50
+            Align = alTop
+            Constraints.MaxHeight = 64
+            Constraints.MaxWidth = 64
+            Constraints.MinHeight = 64
+            Constraints.MinWidth = 64
+            Images = frmMain.img32
+            ImageIndex = 5
+            OnClick = btnCategoryClick
+            ParentShowHint = False
+            ShowHint = True
+            Spacing = 0
+            TabOrder = 0
+          end
+        end
+        object txtCategory: TLabel
+          Left = 5
+          Height = 297
+          Top = 5
+          Width = 621
+          Align = alClient
+          BorderSpacing.Around = 5
+          ParentColor = False
+          WordWrap = True
+        end
+      end
+      object pagPayee: TPage
+        object pnlPayee: TPanel
+          Left = 636
+          Height = 307
+          Top = 0
+          Width = 50
+          Align = alRight
+          AutoSize = True
+          BorderSpacing.Left = 10
+          BorderSpacing.Top = 5
+          BorderSpacing.Right = 5
+          BevelOuter = bvNone
+          ClientHeight = 307
+          ClientWidth = 50
+          TabOrder = 0
+          object btnPayee: TBitBtn
+            Left = 0
+            Height = 50
+            Top = 0
+            Width = 50
+            Align = alTop
+            Constraints.MaxHeight = 64
+            Constraints.MaxWidth = 64
+            Constraints.MinHeight = 64
+            Constraints.MinWidth = 64
+            Images = frmMain.img32
+            ImageIndex = 7
+            OnClick = btnPayeeClick
+            ParentShowHint = False
+            ShowHint = True
+            Spacing = 0
+            TabOrder = 0
+          end
+        end
+        object txtPayee: TLabel
+          Left = 5
+          Height = 297
+          Top = 5
+          Width = 621
+          Align = alClient
+          BorderSpacing.Around = 5
+          ParentColor = False
+          WordWrap = True
+        end
+      end
+      object pagTransaction: TPage
+        object pnlTransaction: TPanel
+          Left = 617
+          Height = 302
+          Top = 5
+          Width = 64
+          Align = alRight
+          AutoSize = True
+          BorderSpacing.Left = 10
+          BorderSpacing.Top = 5
+          BorderSpacing.Right = 5
+          BevelOuter = bvNone
+          ClientHeight = 302
+          ClientWidth = 64
+          TabOrder = 0
+          object btnTransaction: TBitBtn
+            Left = 0
+            Height = 64
+            Top = 0
+            Width = 64
+            Align = alTop
+            Constraints.MaxHeight = 64
+            Constraints.MaxWidth = 64
+            Constraints.MinHeight = 64
+            Constraints.MinWidth = 64
+            Images = frmMain.img32
+            ImageIndex = 3
+            OnClick = btnTransactionClick
+            ParentShowHint = False
+            ShowHint = True
+            Spacing = 0
+            TabOrder = 0
+          end
+        end
+        object txtTransaction: TLabel
+          Left = 5
+          Height = 297
+          Top = 5
+          Width = 602
+          Align = alClient
+          BorderSpacing.Around = 5
+          ParentColor = False
+          WordWrap = True
+        end
+      end
+      object pagFinish: TPage
+        object txtFinish: TLabel
+          Left = 5
+          Height = 296
+          Top = 5
+          Width = 578
+          Align = alClient
+          BorderSpacing.Around = 5
+          ParentColor = False
+          WordWrap = True
+        end
+      end
+    end
+    object pnlGuideCaption: TBCPanel
+      Left = 0
+      Height = 20
+      Top = 0
+      Width = 688
+      Align = alTop
+      BorderSpacing.Bottom = 3
+      Background.Color = clBtnFace
+      Background.Gradient1.StartColor = 16744448
+      Background.Gradient1.EndColor = clBlack
+      Background.Gradient1.GradientType = gtRadial
+      Background.Gradient1.Point1XPercent = 50
+      Background.Gradient1.Point1YPercent = 100
+      Background.Gradient1.Point2XPercent = 0
+      Background.Gradient1.Point2YPercent = 100
+      Background.Gradient2.StartColor = clWhite
+      Background.Gradient2.EndColor = clBlack
+      Background.Gradient2.GradientType = gtLinear
+      Background.Gradient2.Point1XPercent = 0
+      Background.Gradient2.Point1YPercent = 0
+      Background.Gradient2.Point2XPercent = 0
+      Background.Gradient2.Point2YPercent = 100
+      Background.Gradient1EndPercent = 100
+      Background.Style = bbsGradient
+      BevelInner = bvNone
+      BevelOuter = bvRaised
+      BevelWidth = 1
+      Border.Style = bboNone
+      Constraints.MinHeight = 20
+      FontEx.Color = clWhite
+      FontEx.FontQuality = fqFineAntialiasing
+      FontEx.Shadow = True
+      FontEx.ShadowRadius = 2
+      FontEx.ShadowOffsetX = 2
+      FontEx.ShadowOffsetY = 2
+      FontEx.Style = []
+      ParentBackground = False
+      Rounding.RoundX = 1
+      Rounding.RoundY = 1
+      TabOrder = 1
+    end
+  end
+end

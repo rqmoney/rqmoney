@@ -1,0 +1,559 @@
+object frmSQL: TfrmSQL
+  Left = 253
+  Height = 400
+  Top = 98
+  Width = 700
+  BorderIcons = [biSystemMenu]
+  ClientHeight = 400
+  ClientWidth = 700
+  Constraints.MinHeight = 400
+  Constraints.MinWidth = 600
+  Icon.Data = {
+    BE1000000000010001002020000001002000A810000016000000280000002000
+    0000400000000100200000000000001000006400000064000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000004A00FF0F4A00FF594A00FF9B4A00FFCC4A00FFEC4A00
+    FFFC4A00FFFC4A00FFEC4A00FFCC4A00FF9B4A00FF594A00FF0F000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00004A00FF254A00FF9D4A00FFF64A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFF64A00FF9D4A00
+    FF25000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000000000000000000000000000000000004A00FF094A00
+    FF8D4A00FFFA4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFA4A00FF8D4A00FF0900000000000000000000000000000000000000000000
+    000000000000000000000000000000000000000000004A00FF254A00FFD44A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFD44A00FF25000000000000000000000000000000000000
+    0000000000000000000000000000000000004A00FF324A00FFEB4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFEB4A00FF320000000000000000000000000000
+    00000000000000000000000000004A00FF254A00FFEB4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFEB4A00FF2500000000000000000000
+    000000000000000000004A00FF094A00FFD44A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFD44A00FF09000000000000
+    000000000000000000004A00FF8C4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FF8C000000000000
+    0000000000004A00FF264A00FFFB4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFB4A00FF260000
+    0000000000004A00FF9D4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FF9D0000
+    00004A00FF0E4A00FFF74E16FFFFB9B2FFFFF0EEFFFFFDFDFFFFF2F1FFFFC9C4
+    FFFF6040FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF705AFFFFCBC7FFFFF0EF
+    FFFFFCFCFFFFF2F1FFFFD5D1FFFF8879FFFFEFEEFFFFFCFCFFFFA9A0FFFF4A00
+    FFFFA9A0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF2F1FFFE4A00
+    FF0E4A00FF5B4A00FFFFA9A0FFFFF4F3FFFF9F94FFFF6447FFFF8E80FFFFEAE8
+    FFFFEBE9FFFF5A35FFFF4A00FFFF4A00FFFF9588FFFFF8F7FFFFE3E0FFFF9386
+    FFFF6447FFFF8271FFFFCCC7FFFFFFFFFFFFFDFDFFFF9386FFFF4A00FFFF4A00
+    FFFF9A8FFFFFFFFFFFFFB6AFFFFF4A00FFFF4E16FFFF6E56FFFF8271FFFF4A00
+    FF5B4A00FF9B4A00FFFFA79EFFFF8271FFFF4A00FFFF4A00FFFF4A00FFFF7865
+    FFFFFFFFFFFFB1AAFFFF4A00FFFF7C69FFFFF9F9FFFFDDDBFFFF5122FFFF4A00
+    FFFF4A00FFFF5832FFFFDBD8FFFFF8F7FFFFFFFFFFFFADA5FFFF4A00FFFF4A00
+    FFFF8C7EFFFFFFFFFFFFADA5FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FF9B4A00FFCD4A00FFFF5326FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFFF6F5FFFFCBC6FFFF4A00FFFFD7D4FFFFFCFCFFFF6E56FFFF4A00FFFF4A00
+    FFFF7662FFFFE8E6FFFFFAFAFFFF8677FFFFE6E4FFFFF7F6FFFF5D3BFFFF4A00
+    FFFF8B7DFFFFFFFFFFFFADA5FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFCD4A00FFEC4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF8271
+    FFFFFFFFFFFFBBB4FFFF5832FFFFFCFBFFFFDEDBFFFF4A00FFFF4A00FFFF4C0D
+    FFFFAAA2FFFFB8B1FFFF9386FFFF4A00FFFFB5AEFFFFFFFFFFFFA399FFFF4A00
+    FFFF8B7DFFFFFFFFFFFFADA5FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFEC4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFFA399FFFFF4F3
+    FFFFF8F7FFFF6F58FFFF7D6AFFFFFFFFFFFFC8C3FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF998EFFFFFFFFFFFFBEB8FFFF4A00
+    FFFF8B7DFFFFFFFFFFFFADA5FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF8372FFFFE5E3FFFFFFFFFFFFEEED
+    FFFF8A7CFFFF4A00FFFF7D6AFFFFFFFFFFFFC8C3FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF9487FFFFFFFFFFFFBFB9FFFF4A00
+    FFFF8B7DFFFFFFFFFFFFADA5FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFEC4A00FFFF4A00FFFF8575FFFFFAFAFFFFF6F5FFFFB5AEFFFF5326
+    FFFF4A00FFFF4A00FFFF562EFFFFFBFBFFFFDEDBFFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFFB3ABFFFFFFFFFFFFA49AFFFF4A00
+    FFFF8B7DFFFFFFFFFFFFADA5FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFEC4A00FFCD4A00FFFF4A00FFFFD6D2FFFFF3F2FFFF6A51FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFFD7D3FFFFFCFCFFFF6E56FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4C0DFFFFE7E5FFFFF7F6FFFF5E3DFFFF4A00
+    FFFF8B7DFFFFFFFFFFFFADA5FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFCD4A00FF9B4A00FFFF4A00FFFFE5E2FFFFD7D4FFFF4A00FFFF4A00FFFF4C0D
+    FFFF6549FFFF4A00FFFF4A00FFFF7966FFFFF9F8FFFFDDDBFFFF501CFFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFFB9B2FFFFFFFFFFFFAFA7FFFF4A00FFFF4A00
+    FFFF8C7EFFFFFFFFFFFFADA5FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FF9B4A00FF5B4A00FFFF4A00FFFFC0BBFFFFF9F9FFFF9083FFFF6447FFFFC7C2
+    FFFF8F81FFFF4A00FFFF4A00FFFF4A00FFFF9588FFFFF8F8FFFFE1DFFFFF8E80
+    FFFF5832FFFF7763FFFFC8C3FFFFFEFEFFFFC0BBFFFF4A00FFFF4A00FFFF4A00
+    FFFF9A8FFFFFFFFFFFFFB4ADFFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FF5B4A00FF0E4A00FFF74A00FFFF5122FFFFC6C1FFFFF4F4FFFFFAFAFFFFDAD7
+    FFFF6549FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF725CFFFFCCC7FFFFF0EF
+    FFFFFDFCFFFFF7F6FFFFDBD8FFFF9184FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFFA9A0FFFFFFFFFFFFC8C3FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFF74A00
+    FF0E000000004A00FF9D4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FF9D0000
+    0000000000004A00FF264A00FFFB4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFB4A00FF260000
+    000000000000000000004A00FF8C4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FF8C000000000000
+    000000000000000000004A00FF094A00FFD44A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFD44A00FF09000000000000
+    00000000000000000000000000004A00FF254A00FFEB4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFEB4A00FF2500000000000000000000
+    0000000000000000000000000000000000004A00FF324A00FFEB4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFEB4A00FF320000000000000000000000000000
+    000000000000000000000000000000000000000000004A00FF254A00FFD44A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFD44A00FF25000000000000000000000000000000000000
+    00000000000000000000000000000000000000000000000000004A00FF094A00
+    FF8D4A00FFFA4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFA4A00FF8D4A00FF0900000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00004A00FF254A00FF9D4A00FFF64A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00
+    FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFFF4A00FFF64A00FF9D4A00
+    FF25000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000004A00FF0F4A00FF594A00FF9B4A00FFCC4A00FFEC4A00
+    FFFC4A00FFFC4A00FFEC4A00FFCC4A00FF9B4A00FF594A00FF0F000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000
+  }
+  OnCreate = FormCreate
+  OnResize = FormResize
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '3.0.0.1'
+  object pnlList: TPanel
+    Left = 5
+    Height = 362
+    Top = 5
+    Width = 690
+    Align = alClient
+    BorderSpacing.Around = 5
+    BevelOuter = bvLowered
+    ClientHeight = 362
+    ClientWidth = 690
+    ParentFont = False
+    TabOrder = 0
+    object pnlSQL: TPanel
+      Left = 4
+      Height = 259
+      Top = 71
+      Width = 682
+      Align = alClient
+      BorderSpacing.Around = 3
+      BevelOuter = bvLowered
+      ClientHeight = 259
+      ClientWidth = 682
+      TabOrder = 0
+      object memSQL: TMemo
+        Left = 31
+        Height = 174
+        Top = 79
+        Width = 645
+        Align = alClient
+        BorderSpacing.Left = 25
+        BorderSpacing.Around = 5
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Lines.Strings = (
+          ''
+        )
+        OnChange = memSQLChange
+        ParentFont = False
+        ScrollBars = ssAutoBoth
+        TabOrder = 0
+      end
+      object lblCommand: TStaticText
+        Left = 4
+        Height = 1
+        Top = 4
+        Width = 674
+        Align = alTop
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Top = 3
+        BorderSpacing.Right = 3
+        BorderSpacing.Bottom = 1
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 1
+      end
+      object rbtMaster: TRadioButton
+        Left = 11
+        Height = 17
+        Top = 6
+        Width = 667
+        Align = alTop
+        BorderSpacing.Left = 10
+        BorderSpacing.Right = 3
+        Checked = True
+        OnChange = rbtMasterChange
+        TabOrder = 3
+        TabStop = True
+      end
+      object rbtVacuum: TRadioButton
+        Left = 11
+        Height = 17
+        Top = 40
+        Width = 667
+        Align = alTop
+        BorderSpacing.Left = 10
+        BorderSpacing.Right = 3
+        OnChange = rbtVacuumChange
+        TabOrder = 4
+      end
+      object rbtOwn: TRadioButton
+        Left = 11
+        Height = 17
+        Top = 57
+        Width = 667
+        Align = alTop
+        BorderSpacing.Left = 10
+        BorderSpacing.Right = 3
+        OnChange = rbtOwnChange
+        TabOrder = 2
+      end
+      object rbtData: TRadioButton
+        Left = 11
+        Height = 17
+        Top = 23
+        Width = 667
+        Align = alTop
+        BorderSpacing.Left = 10
+        BorderSpacing.Right = 3
+        OnChange = rbtDataChange
+        TabOrder = 5
+      end
+    end
+    object pnlButtons: TPanel
+      Left = 4
+      Height = 25
+      Top = 333
+      Width = 682
+      Align = alBottom
+      AutoSize = True
+      BorderSpacing.Around = 3
+      BevelOuter = bvNone
+      ClientHeight = 25
+      ClientWidth = 682
+      Constraints.MinHeight = 25
+      ParentColor = False
+      TabOrder = 1
+      object btnExit: TBCMDButtonFocus
+        Cursor = crHandPoint
+        Left = 3
+        Height = 23
+        Top = 1
+        Width = 150
+        Animation = True
+        StyleNormal.Color = clWhite
+        StyleNormal.TextColor = clBlack
+        StyleHover.Color = 14474460
+        StyleHover.TextColor = clBlack
+        StyleActive.Color = 13027014
+        StyleActive.TextColor = clBlack
+        StyleDisabled.Color = clWhite
+        StyleDisabled.TextColor = 10724259
+        TextAutoSize = True
+        TextProportional = False
+        TextProportionalRatio = 0.5
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 2
+        BorderSpacing.Right = 2
+        BorderSpacing.Around = 1
+        Color = clNone
+        Constraints.MinWidth = 150
+        Font.Style = [fsBold]
+        OnClick = btnExitClick
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object btnExecute: TBCMDButtonFocus
+        Cursor = crHandPoint
+        Left = 529
+        Height = 23
+        Top = 1
+        Width = 150
+        Animation = True
+        StyleNormal.Color = clWhite
+        StyleNormal.TextColor = clBlack
+        StyleHover.Color = 14474460
+        StyleHover.TextColor = clBlack
+        StyleActive.Color = 13027014
+        StyleActive.TextColor = clBlack
+        StyleDisabled.Color = clWhite
+        StyleDisabled.TextColor = 10724259
+        TextAutoSize = True
+        TextProportional = False
+        TextProportionalRatio = 0.5
+        Align = alRight
+        AutoSize = True
+        BorderSpacing.Left = 2
+        BorderSpacing.Right = 2
+        BorderSpacing.Around = 1
+        Color = clNone
+        Constraints.MinWidth = 150
+        Font.Style = [fsBold]
+        OnClick = btnExecuteClick
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+    end
+    object pnlCaption: TBCPanel
+      Left = 1
+      Height = 20
+      Top = 1
+      Width = 687
+      Align = alTop
+      BorderSpacing.Right = 1
+      BorderSpacing.Bottom = 5
+      Background.Color = clBtnFace
+      Background.Gradient1.StartColor = 16744448
+      Background.Gradient1.EndColor = clBlack
+      Background.Gradient1.GradientType = gtRadial
+      Background.Gradient1.Point1XPercent = 50
+      Background.Gradient1.Point1YPercent = 100
+      Background.Gradient1.Point2XPercent = 0
+      Background.Gradient1.Point2YPercent = 100
+      Background.Gradient2.StartColor = clWhite
+      Background.Gradient2.EndColor = clBlack
+      Background.Gradient2.GradientType = gtLinear
+      Background.Gradient2.Point1XPercent = 0
+      Background.Gradient2.Point1YPercent = 0
+      Background.Gradient2.Point2XPercent = 0
+      Background.Gradient2.Point2YPercent = 100
+      Background.Gradient1EndPercent = 100
+      Background.Style = bbsGradient
+      BevelInner = bvNone
+      BevelOuter = bvRaised
+      BevelWidth = 1
+      Border.Style = bboNone
+      Constraints.MinHeight = 20
+      FontEx.Color = clWhite
+      FontEx.FontQuality = fqFineAntialiasing
+      FontEx.Shadow = True
+      FontEx.ShadowRadius = 2
+      FontEx.ShadowOffsetX = 2
+      FontEx.ShadowOffsetY = 2
+      FontEx.Style = [fsBold]
+      ParentBackground = False
+      Rounding.RoundX = 1
+      Rounding.RoundY = 1
+      TabOrder = 2
+    end
+    object pnlCaption1: TBCPanel
+      Left = 2
+      Height = 20
+      Top = 26
+      Width = 686
+      Align = alTop
+      BorderSpacing.Left = 1
+      BorderSpacing.Right = 1
+      Background.Color = clBtnFace
+      Background.Gradient1.StartColor = 3937500
+      Background.Gradient1.EndColor = clBlack
+      Background.Gradient1.GradientType = gtRadial
+      Background.Gradient1.Point1XPercent = 50
+      Background.Gradient1.Point1YPercent = 100
+      Background.Gradient1.Point2XPercent = 0
+      Background.Gradient1.Point2YPercent = 100
+      Background.Gradient2.StartColor = clWhite
+      Background.Gradient2.EndColor = clBlack
+      Background.Gradient2.GradientType = gtLinear
+      Background.Gradient2.Point1XPercent = 0
+      Background.Gradient2.Point1YPercent = 0
+      Background.Gradient2.Point2XPercent = 0
+      Background.Gradient2.Point2YPercent = 100
+      Background.Gradient1EndPercent = 100
+      Background.Style = bbsGradient
+      BevelInner = bvNone
+      BevelOuter = bvRaised
+      BevelWidth = 0
+      Border.Style = bboNone
+      Constraints.MinHeight = 20
+      FontEx.Color = clWhite
+      FontEx.FontQuality = fqFineAntialiasing
+      FontEx.Shadow = True
+      FontEx.ShadowRadius = 2
+      FontEx.ShadowOffsetX = 2
+      FontEx.ShadowOffsetY = 2
+      FontEx.Style = [fsBold]
+      ParentBackground = False
+      Rounding.RoundX = 1
+      Rounding.RoundY = 1
+      TabOrder = 3
+    end
+    object pnlCaption2: TBCPanel
+      Left = 2
+      Height = 20
+      Top = 46
+      Width = 686
+      Align = alTop
+      BorderSpacing.Left = 1
+      BorderSpacing.Right = 1
+      BorderSpacing.Bottom = 5
+      Background.Color = clBtnFace
+      Background.Gradient1.StartColor = 3937500
+      Background.Gradient1.EndColor = clBlack
+      Background.Gradient1.GradientType = gtRadial
+      Background.Gradient1.Point1XPercent = 50
+      Background.Gradient1.Point1YPercent = 100
+      Background.Gradient1.Point2XPercent = 0
+      Background.Gradient1.Point2YPercent = 100
+      Background.Gradient2.StartColor = clWhite
+      Background.Gradient2.EndColor = clBlack
+      Background.Gradient2.GradientType = gtLinear
+      Background.Gradient2.Point1XPercent = 0
+      Background.Gradient2.Point1YPercent = 0
+      Background.Gradient2.Point2XPercent = 0
+      Background.Gradient2.Point2YPercent = 100
+      Background.Gradient1EndPercent = 100
+      Background.Style = bbsGradient
+      BevelInner = bvNone
+      BevelOuter = bvRaised
+      BevelWidth = 0
+      Border.Style = bboNone
+      Constraints.MinHeight = 20
+      FontEx.Color = clWhite
+      FontEx.FontQuality = fqFineAntialiasing
+      FontEx.Shadow = True
+      FontEx.ShadowRadius = 2
+      FontEx.ShadowOffsetX = 2
+      FontEx.ShadowOffsetY = 2
+      FontEx.Style = [fsBold]
+      ParentBackground = False
+      Rounding.RoundX = 1
+      Rounding.RoundY = 1
+      TabOrder = 4
+    end
+  end
+  object pnlBottom: TPanel
+    Left = 3
+    Height = 25
+    Top = 372
+    Width = 694
+    Align = alBottom
+    BorderSpacing.Around = 3
+    BevelOuter = bvLowered
+    ClientHeight = 25
+    ClientWidth = 694
+    Constraints.MinHeight = 20
+    TabOrder = 1
+    object pnlHeight: TPanel
+      Left = 572
+      Height = 20
+      Top = 3
+      Width = 120
+      Align = alRight
+      BorderSpacing.Top = 1
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 120
+      Constraints.MinWidth = 120
+      ParentFont = False
+      TabOrder = 0
+      object imgHeight: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        ImageIndex = 1
+        Images = frmMain.imgSize
+      end
+      object lblHeight: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 96
+        Align = alClient
+        Alignment = taCenter
+        AutoSize = False
+        BorderSpacing.Around = 1
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+    object pnlWidth: TPanel
+      Left = 451
+      Height = 20
+      Top = 3
+      Width = 120
+      Align = alRight
+      BorderSpacing.Top = 1
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 120
+      Constraints.MinWidth = 120
+      ParentFont = False
+      TabOrder = 1
+      object imgWidth: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        Images = frmMain.imgSize
+      end
+      object lblWidth: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 96
+        Align = alClient
+        Alignment = taCenter
+        AutoSize = False
+        BorderSpacing.Around = 1
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Left = 303
+    Top = 214
+    object actExit: TAction
+      OnExecute = btnExitClick
+      ShortCut = 27
+    end
+  end
+end

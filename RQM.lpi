@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="12"/>
+    <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
+      <SessionStorage Value="InProjectDir"/>
+      <Title Value="RQM"/>
+      <Scaled Value="True"/>
+      <UseAppBundle Value="False"/>
+      <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="True"/>
+        <TextName Value="Slavomir Svetlik"/>
+        <TextDesc Value="Simple and powerful financial software for households."/>
+      </XPManifest>
+      <Icon Value="0"/>
+    </General>
+    <i18n>
+      <EnableI18N Value="True"/>
+      <OutDir Value="Languages"/>
+    </i18n>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <MajorVersionNr Value="3"/>
+      <MinorVersionNr Value="8"/>
+      <Attributes pvaPreRelease="True"/>
+      <StringTable Comments="Financial software for households" CompanyName="Slavomir Svetlik" ProductName="RQ MONEY"/>
+    </VersionInfo>
+    <BuildModes Count="4">
+      <Item1 Name="Default" Default="True"/>
+      <Item2 Name="Linux 64x">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="RQM"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <DebugInfoType Value="dsDwarf2Set"/>
+            </Debugging>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item2>
+      <Item3 Name="Debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="RQM"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+            <SrcPath Value="/usr/share/lazarus/3.0.0/components/virtualtreeview/"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <IncludeAssertionCode Value="True"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <Checks>
+              <IOChecks Value="True"/>
+              <RangeChecks Value="True"/>
+              <OverflowChecks Value="True"/>
+              <StackChecks Value="True"/>
+            </Checks>
+            <VerifyObjMethodCallValidity Value="True"/>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <DebugInfoType Value="dsDwarf3"/>
+              <UseHeaptrc Value="True"/>
+              <TrashVariables Value="True"/>
+              <UseExternalDbgSyms Value="True"/>
+            </Debugging>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item3>
+      <Item4 Name="Win64">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="RQM"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <RunWithoutDebug Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item4>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default"/>
+      </Modes>
+    </RunParams>
+    <RequiredPackages Count="13">
+      <Item1>
+        <PackageName Value="eccontrols"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="callight_pkg"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="DateTimeCtrls"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="TAChartLazarusPkg"/>
+      </Item4>
+      <Item5>
+        <PackageName Value="ExCtrlsPkg_dsgn"/>
+      </Item5>
+      <Item6>
+        <PackageName Value="SynEdit"/>
+      </Item6>
+      <Item7>
+        <PackageName Value="ExCtrlsPkg"/>
+      </Item7>
+      <Item8>
+        <PackageName Value="laz.virtualtreeview_package"/>
+      </Item8>
+      <Item9>
+        <PackageName Value="bgracontrols"/>
+      </Item9>
+      <Item10>
+        <PackageName Value="lazreport"/>
+      </Item10>
+      <Item11>
+        <PackageName Value="FCL"/>
+      </Item11>
+      <Item12>
+        <PackageName Value="LazControls"/>
+      </Item12>
+      <Item13>
+        <PackageName Value="LCL"/>
+      </Item13>
+    </RequiredPackages>
+    <Units Count="38">
+      <Unit0>
+        <Filename Value="RQM.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="rqm"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unimain.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmMain"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniMain"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="uniabout.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmAbout"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniAbout"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="uniaccounts.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmAccounts"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniAccounts"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="unicategories.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCategories"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniCategories"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="unicomments.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmComments"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniComments"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="unicurrencies.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCurrencies"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniCurrencies"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="unifilter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmFilter"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniFilter"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="unigate.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmGate"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniGate"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="uniguide.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmGuide"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniGuide"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="uniholidays.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmHolidays"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniHolidays"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="unipassword.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmPassword"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniPassword"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="unipayees.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmPayees"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniPayees"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="unipersons.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmPersons"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniPersons"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="unisettings.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSettings"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniSettings"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="unischeduler.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmScheduler"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniScheduler"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="unisuccess.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSuccess"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniSuccess"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="univalues.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmValues"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniValues"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="unisql.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSQL"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniSQL"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="unisqlresults.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSQLResult"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniSQLResults"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="unicounter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCounter"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniCounter"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="uniedits.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmEdits"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniEdits"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="uniproperties.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmProperties"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniProperties"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="unirecyclebin.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmRecycleBin"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniRecycleBin"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="unischedulers.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSchedulers"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniSchedulers"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="uniwrite.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmWrite"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniWrite"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="unimanycurrencies.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmManyCurrencies"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniManyCurrencies"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="unishortcut.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmShortCut"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniShortCut"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="unicalendar.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCalendar"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniCalendar"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="uniresources.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uniResources"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="uniwriting.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmWriting"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="uniperiod.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmPeriod"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniPeriod"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="uniplan.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmPlan"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniPlan"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="unibudgets.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmBudgets"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniBudgets"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="unibudget.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmBudget"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniBudget"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="uniimport.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmImport"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniImport"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="unitemplates.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmTemplates"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniTemplates"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="unilinks.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmLinks"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniLinks"/>
+      </Unit37>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <Target>
+      <Filename Value="RQM"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir)"/>
+      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <IncludeAssertionCode Value="True"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <Checks>
+        <IOChecks Value="True"/>
+        <RangeChecks Value="True"/>
+        <OverflowChecks Value="True"/>
+        <StackChecks Value="True"/>
+      </Checks>
+      <VerifyObjMethodCallValidity Value="True"/>
+      <SmallerCode Value="True"/>
+    </CodeGeneration>
+    <Linking>
+      <Debugging>
+        <DebugInfoType Value="dsDwarf2Set"/>
+      </Debugging>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="5">
+      <Item1>
+        <Name Value="EAbort"/>
+      </Item1>
+      <Item2>
+        <Name Value="ECodetoolError"/>
+      </Item2>
+      <Item3>
+        <Name Value="EFOpenError"/>
+      </Item3>
+      <Item4>
+        <Name Value="RunError(101)"/>
+      </Item4>
+      <Item5>
+        <Name Value="EInOutError"/>
+      </Item5>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

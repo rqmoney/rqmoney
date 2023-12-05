@@ -1,0 +1,1035 @@
+object frmPayees: TfrmPayees
+  Left = 113
+  Height = 501
+  Top = 23
+  Width = 800
+  ClientHeight = 501
+  ClientWidth = 800
+  Constraints.MinHeight = 400
+  Constraints.MinWidth = 600
+  Icon.Data = {
+    BE1000000000010001002020000001002000A810000016000000280000002000
+    0000400000000100200000000000001000006400000064000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000002325290123252902000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000002325280100000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00002A2D300200000000000000002A2C30010000000000000000000000000000
+    000000000000000000000000000000000000000000000000000000000000272A
+    2E01000000000000000000000000282A2F010000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000001D21261E20242928000000000000000000000000000000000000
+    000000000000000000000000000000000000000000000000000025282D010000
+    0000000000001D212623000000000000000026282D0100000000000000000000
+    000000000000000000000000000000000000000000000000000027282C020000
+    00002B2D325E28292CFA27272AFF292B3084000000005E60660581848C038688
+    9103878A9203878A9203878A9203878A9203878A92036D6F7704000000003235
+    3B14282A2EC227282AFF26282BBC3C3F4610000000002B2C3001000000000000
+    0000000000000000000000000000000000000000000000000000D8D0D2010000
+    00002C2E31D7343436FF353334FF2B2D30FB0002030F00000000000000000000
+    000000000000000000000000000000000000000000000000000000000000282A
+    2E712C2D30FF353435F72C2C2FFF24262A610000000023272C03000000000000
+    00000000000000000000000000000000000000000000BFB7B501000000002D3A
+    4C1C3F3E40DB393739FF3A3839FF3C393AF668686E5A777D8842767A8549787D
+    8748797E89497A7F894A7A7F894A7A7F894B7A7F894B777A844F848894404A49
+    4BA5333133FF3D393BFD363335FF5451549E888D9A3278615602000000000000
+    000000000000000000000000000000000000ADABAF02000000008F919858B8B5
+    B7FFC5BDBBF2817977F06E6563F0B2A8A5EECCC6C5F5C8C2C2F8CAC3C4F7CAC4
+    C4F7CAC4C4F7CAC4C4F7CAC4C4F7CAC4C4F7CAC4C4F7CAC3C3F6C9C2C2F8C8BF
+    BDEF897F7CEA5B5352EB938783E6CDC4C2F5C6BEBDCB9E817904000000000000
+    0000000000000000000000000000B5B4B701000000006F79840ACBC6C6F6E6DC
+    D894FFFFFF10FFFFFF1EFFFDF21AFFFFFF19FFFAEE17FFFFF015FFFDEF15FFFE
+    F014FFFFF213FFFFF413FFFFF612FFFFF812FFFFF911FFFFFB11FFFFFE10FFFF
+    FF12FFFFFF12FFDFD211FFFFFF10FFFFFF0FFFFFFF0500000000000000000000
+    0000000000000000000000000000D5D1D10200000000DBD9D932D2CCCBFFA991
+    8819000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000E7E3E20100000000FFFFFF14D6D1D0FF8C92
+    9C757300000BAE524F1FA94D4C1BAD4D4D1AAF4D4D1AB24F4F19B44E4F19B64D
+    4F18B84D4F17BB4E5117BC4E5217BE4D5116BF4B5016C04B5215C24C5215C34D
+    5415C24B5314C0464F14C6485115BD556E0B0000000000000000000000000000
+    000000000000000000000000000000000000DCD8D70200000000EDF5FA7AB98E
+    7BFFC74510EDCD4D1DF1CC491DF1CE491DF0CF491EF0D1491FEFD2491FEFD448
+    1FEFD64720EFD74720EED94621EEDA4621EEDB4522EDDC4422EDDD4322EDDD42
+    23EDDE4023EDDF3F23ECE03E24EBE04026ECE04B344C00000000E0462C020000
+    000000000000000000000000000000000000000000000000000000000000E47A
+    21DBE67916FFE67919FFE67619FFE6741AFFE7731BFFE8711BFFE8701CFFE96F
+    1DFFEA6E1EFFEB6D1EFFEB6B1FFFEC6A20FFED6820FFED6621FFED6422FFEE62
+    22FFEE6023FFEE5D24FFEE5C24FFED5523FFE8532DCC00000000000000000000
+    000000000000000000000000000000000000DD82230200000000DA823133E68C
+    19FFEC941AFDED921CFDED901DFDED8F1DFDED8D1EFDEE8C1FFDEF8A1FFDEF88
+    20FDF08721FDF08522FDF18323FDF18123FDF17F24FDF17D25FDF27B25FDF278
+    26FDF27527FDF27227FDF27028FDF26B26FFEC5E29F4E05F481D00000000E662
+    3E0100000000000000000000000000000000E28F1F0300000000DF8C2464EA98
+    16FFEE9E18FBED9C1AFEED9A1BFEED981BFEEE971CFEEE951DFEEF941EFEF092
+    1EFEF0901FFEF08E20FEF18C20FEF28A21FEF18722FEF28523FEF28323FEF380
+    24FEF37E24FEF37B25FEF27826FEF37525FDEE6726FFE560384300000000E863
+    340200000000000000000000000000000000E795120300000000E08F2097EA9D
+    16FFEDA219FBEDA119FEEDA119FEEDA019FFEE9F19FFEE9D1AFFEF9B1BFFF099
+    1CFFF0971CFFF1961DFFF1931EFFF1911FFFF18F1FFFF28C20FFF28A21FFF287
+    21FFF28522FFF28222FFF27F23FEF37D23FBEF6F23FFE765306E00000000E965
+    2903000000000000000000000000000000000000000000000000E1911FC7EA9F
+    19FFEBA21CFCEBA11BFEECA21AFFECA219FFEDA219FFEEA218FFEFA118FFEFA0
+    18FFF09E19FFF09D1AFFF19A1BFFF1981BFFF1951CFFF1931DFFF1911EFFF18E
+    1EFFF18C1FFFF2891FFEF28620FEF28320FBF0781FFFE86A299A00000000ED68
+    1903000000000000000000000000D588310100000000C7784014E1931EEDE9A0
+    1CFFE9A21EFDEAA11EFEEAA21DFFEBA21CFFECA21BFFEDA31BFFEEA31AFFEEA3
+    19FFEFA318FFEFA218FFF0A018FFF09F18FFF19D19FFF09A1AFFF1971AFFF195
+    1BFFF1921CFFF18F1CFFF18C1DFEF28A1DFCF0811CFFE97024C500000000FF76
+    0001000000000000000000000000D5882A0200000000D1822E3BE0951FFFE8A1
+    20FDE8A121FEE8A120FEE9A21FFFEAA21FFFEBA21EFFECA31DFFECA31CFFEDA3
+    1BFFEEA31AFFEEA21AFFEFA219FFEFA118FFF0A117FFF09F17FFF09D17FFF09B
+    17FFF09818FFF09519FFF1921AFEF1901AFDF08A19FFE9781EE8D77048110000
+    0000000000000000000000000000D78A250300000000D285296DE09720FFE6A1
+    23FBE6A123FEE7A122FFE8A122FFE9A221FFEAA320FFEBA31FFFECA41EFFEDA4
+    1DFFEDA41DFFEEA51CFFEFA51BFFEFA41AFFF0A41AFFF0A419FFF0A318FFF0A2
+    17FFF1A117FFF09F17FFF09C17FEF09917FEF09416FEE87E1AFFDF6F312F0000
+    0000000000000000000000000000D98F1A0300000000D48E29A1E09E24FFE4A5
+    27FBE4A427FEE4A326FFE4A325FFE4A224FFE5A124FFE59F22FFE59E21FFE59B
+    20FFE5991FFFE5971EFFE5941DFFE5911CFFE48E1BFFE48C1AFFE48919FFE386
+    18FFE38417FEE38216FEE37F15FEE37C14FEE27812FBDE6C14FFD76E22790000
+    00000000000000000000000000000000000000000000B96A23D2CC8022FFCF84
+    25FCD08223FED18121FFD38020FFD5801EFED8821DFFDA831CFEDC851BFEDD87
+    1BFEDF891BFEE18C1AFEE38F19FEE59218FEE79518FEE89818FEEA9B18FEEA9D
+    19FEEAA019FEECA419FEEDA619FDEEA919FDEEAC19FBEFAD19FFE9961DE4C84A
+    60090000000000000000E7A5240300000000E6A42858E6A31EFFEBAA1FFCEEB0
+    20FEF1B420FEF4B91FFEF6BE1FFEF8C11FFEFAC41FFEFBC71FFEFCC91FFEFCCA
+    20FDFCCA20FCFCCB20FCFDCB1FFBFDCB1FFBFDCB1FFBFDCA1FFBFCC91FFBFBC7
+    20FCFBC61FFDFBC51FFFFBC51FFFFBC41EFFFBC41EFFFCC51CFFF9B719FFF3A8
+    21380000000000000000FCC5180300000000F3B6249CFFCD1FFFFFD423F7FFD4
+    24FBFFD324FBFFD324FBFFD223FBFFD222FCFFD122FDFED022FFFED022FFFED0
+    22FFFDD022FFFDD021FFFDD121FFFDD120FFFDD31FFFFDD41FFFFDD51FFFFDD6
+    1EFFFDD71EFFFED81EFAFEDA1EF1FEDB1EE5FEDD1DD4FEDF1DC2FEDE19B5FDD6
+    1F300000000098703801746A2F030000BE02F6BD15CCFED11BFFFDD724FFFED9
+    25FFFEDB24FFFEDD24FFFEDF23FFFEE123FFFEE223FFFEE323FAFEE523F1FEE6
+    23E4FEE724D3FEE824C4FEE924B1FEEA249CFEEB2689FEEC2773FEEE275EFEF0
+    2B4CFDF22D38FDF72F27FDFC3C1AFCFF560BEDFFFF0100000000000000000000
+    0000A17834020000000000000000FFFF9401F2D34CEAFCE33CDFFEEA2AADFEEC
+    2FA0FEEE2F8BFEF02E74FEF2305FFEF3334CFEF63538FEF93928FEFD4719FDFF
+    5D0BFDFFFB020000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000FEC80003FBC8
+    0801000000000000A9035B414167603E314EDEDCE1EDEAE0EE60000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000FEDB0302FEE11403FEE51603FEE81E04FEE82403FEE9
+    2703FDEA2A02FDEA2D02FDEA3401000000000000000000000000000000000000
+    0000B27E292EA67E34D3804E25FF8D7067FFEBE9E9FBF8E8D62400000000F8E6
+    6104FEEA1F03FEEC2604FEEE2B03FEEF2E03FEEF3202FEEF3602FEEF3B010000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000CB9E35D0D4A133FFCD9E39FFE1DAD4FFFFFFFF6400000000F8F3EC020000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000E2BF5287DFB23DFFE1BC55BFFFFFFF2500000000F6EACC01000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000ECD76A28F5FF610100000000F2E7C80300000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000F1E3BD020000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000E8C95B0200000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000
+  }
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnResize = FormResize
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '3.0.0.1'
+  object splList: TSplitter
+    Left = 567
+    Height = 446
+    Top = 0
+    Width = 3
+    Align = alRight
+    OnCanResize = splListCanResize
+    ResizeAnchor = akRight
+  end
+  object pnlBottom: TPanel
+    Left = 0
+    Height = 22
+    Top = 479
+    Width = 800
+    Align = alBottom
+    BorderSpacing.Top = 5
+    BevelOuter = bvNone
+    ClientHeight = 22
+    ClientWidth = 800
+    Constraints.MaxHeight = 36
+    Constraints.MinHeight = 18
+    TabOrder = 4
+    object pnlHeight: TPanel
+      Left = 699
+      Height = 20
+      Top = 1
+      Width = 100
+      Align = alRight
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 100
+      TabOrder = 0
+      object imgHeight: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        ImageIndex = -1
+        Images = frmMain.imgSize
+      end
+      object lblHeight: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 76
+        Align = alClient
+        Alignment = taCenter
+        BorderSpacing.Around = 1
+        ParentColor = False
+      end
+    end
+    object pnlWidth: TPanel
+      Left = 598
+      Height = 20
+      Top = 1
+      Width = 100
+      Align = alRight
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 100
+      TabOrder = 1
+      object imgWidth: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        ImageIndex = -1
+        Images = frmMain.imgSize
+      end
+      object lblWidth: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 76
+        Align = alClient
+        Alignment = taCenter
+        BorderSpacing.Around = 1
+        ParentColor = False
+      end
+    end
+    object pnlTip: TPanel
+      Left = 203
+      Height = 20
+      Top = 1
+      Width = 394
+      Align = alClient
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ParentFont = False
+      TabOrder = 2
+    end
+    object pnlItem: TPanel
+      Left = 1
+      Height = 20
+      Top = 1
+      Width = 100
+      Align = alLeft
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 100
+      TabOrder = 3
+      object imgItem: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        ImageIndex = -1
+        Images = frmMain.imgSize
+      end
+      object lblItem: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 76
+        Align = alClient
+        Alignment = taCenter
+        BorderSpacing.Around = 1
+        ParentColor = False
+      end
+    end
+    object pnlItems: TPanel
+      Left = 102
+      Height = 20
+      Top = 1
+      Width = 100
+      Align = alLeft
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 100
+      TabOrder = 4
+      object imgItems: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        ImageIndex = 7
+        Images = frmMain.imgSize
+      end
+      object lblItems: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 76
+        Align = alClient
+        Alignment = taCenter
+        BorderSpacing.Around = 1
+        ParentColor = False
+      end
+    end
+  end
+  object pnlList: TPanel
+    Left = 5
+    Height = 439
+    Top = 5
+    Width = 557
+    Align = alClient
+    BorderSpacing.Around = 5
+    BevelOuter = bvLowered
+    ClientHeight = 439
+    ClientWidth = 557
+    TabOrder = 0
+    object pnlListCaption: TBCPanel
+      Left = 1
+      Height = 20
+      Top = 1
+      Width = 555
+      Align = alTop
+      Background.Color = clBtnFace
+      Background.Gradient1.StartColor = 16744448
+      Background.Gradient1.EndColor = clBlack
+      Background.Gradient1.GradientType = gtRadial
+      Background.Gradient1.Point1XPercent = 50
+      Background.Gradient1.Point1YPercent = 100
+      Background.Gradient1.Point2XPercent = 0
+      Background.Gradient1.Point2YPercent = 100
+      Background.Gradient2.StartColor = clWhite
+      Background.Gradient2.EndColor = clBlack
+      Background.Gradient2.GradientType = gtLinear
+      Background.Gradient2.Point1XPercent = 0
+      Background.Gradient2.Point1YPercent = 0
+      Background.Gradient2.Point2XPercent = 0
+      Background.Gradient2.Point2YPercent = 100
+      Background.Gradient1EndPercent = 100
+      Background.Style = bbsGradient
+      BevelInner = bvNone
+      BevelOuter = bvRaised
+      BevelWidth = 1
+      Border.Style = bboNone
+      Constraints.MinHeight = 20
+      FontEx.Color = clDefault
+      FontEx.FontQuality = fqFineAntialiasing
+      FontEx.Shadow = True
+      FontEx.ShadowRadius = 2
+      FontEx.ShadowOffsetX = 2
+      FontEx.ShadowOffsetY = 2
+      FontEx.Style = []
+      ParentBackground = False
+      Rounding.RoundX = 1
+      Rounding.RoundY = 1
+      TabOrder = 0
+    end
+    object VST: TLazVirtualStringTree
+      Cursor = 63
+      Left = 4
+      Height = 411
+      Top = 24
+      Width = 549
+      Align = alClient
+      BorderSpacing.Around = 3
+      DefaultNodeHeight = 20
+      Header.AutoSizeIndex = 0
+      Header.Columns = <      
+        item
+          Position = 0
+          Width = 25
+        end      
+        item
+          MinWidth = 0
+          Position = 1
+        end      
+        item
+          MinWidth = 0
+          Position = 2
+        end      
+        item
+          MinWidth = 0
+          Position = 3
+        end      
+        item
+          Alignment = taCenter
+          MinWidth = 0
+          Position = 4
+        end>
+      Header.Font.Style = [fsBold]
+      Header.Height = 20
+      Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoHeaderClickAutoSort]
+      Header.SortColumn = 1
+      Header.Style = hsFlatButtons
+      Images = frmMain.img16
+      IncrementalSearch = isAll
+      IncrementalSearchStart = ssAlwaysStartOver
+      PopupMenu = popList
+      TabOrder = 1
+      TreeOptions.AutoOptions = [toAutoScroll]
+      TreeOptions.MiscOptions = [toReportMode, toWheelPanning]
+      TreeOptions.PaintOptions = [toHideFocusRect, toShowVertGridLines, toUseBlendedImages]
+      TreeOptions.SelectionOptions = [toDisableDrawSelection, toFullRowSelect, toMultiSelect]
+      TreeOptions.StringOptions = []
+      OnBeforeCellPaint = VSTBeforeCellPaint
+      OnChange = VSTChange
+      OnCompareNodes = VSTCompareNodes
+      OnDblClick = VSTDblClick
+      OnGetText = VSTGetText
+      OnPaintText = VSTPaintText
+      OnGetImageIndex = VSTGetImageIndex
+      OnGetNodeDataSize = VSTGetNodeDataSize
+      OnResize = VSTResize
+    end
+  end
+  object pnlButtons: TPanel
+    Left = 5
+    Height = 25
+    Top = 449
+    Width = 790
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Left = 2
+    BorderSpacing.Right = 2
+    BorderSpacing.Around = 3
+    BevelOuter = bvNone
+    ClientHeight = 25
+    ClientWidth = 790
+    Constraints.MinHeight = 25
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 3
+    OnResize = pnlButtonsResize
+    object btnAdd: TBCMDButtonFocus
+      Cursor = crHandPoint
+      Left = 3
+      Height = 23
+      Top = 1
+      Width = 166
+      StyleNormal.Color = clWhite
+      StyleNormal.TextColor = clBlack
+      StyleHover.Color = 14474460
+      StyleHover.TextColor = clBlack
+      StyleActive.Color = 13027014
+      StyleActive.TextColor = clBlack
+      StyleDisabled.Color = clWhite
+      StyleDisabled.TextColor = 10724259
+      TextAutoSize = True
+      TextProportional = False
+      TextProportionalRatio = 0.5
+      Align = alClient
+      BorderSpacing.Left = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Around = 1
+      Color = clNone
+      Font.Style = [fsBold]
+      OnClick = btnAddClick
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object btnEdit: TBCMDButtonFocus
+      Cursor = crHandPoint
+      Left = 172
+      Height = 23
+      Top = 1
+      Width = 100
+      StyleNormal.Color = clWhite
+      StyleNormal.TextColor = clBlack
+      StyleHover.Color = 14474460
+      StyleHover.TextColor = clBlack
+      StyleActive.Color = 13027014
+      StyleActive.TextColor = clBlack
+      StyleDisabled.Color = clWhite
+      StyleDisabled.TextColor = 10724259
+      TextAutoSize = True
+      TextProportional = False
+      TextProportionalRatio = 0.5
+      Align = alRight
+      BorderSpacing.Left = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Around = 1
+      Color = clNone
+      Font.Style = [fsBold]
+      OnClick = btnEditClick
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object btnDelete: TBCMDButtonFocus
+      Cursor = crHandPoint
+      Left = 275
+      Height = 23
+      Top = 1
+      Width = 100
+      StyleNormal.Color = clWhite
+      StyleNormal.TextColor = clBlack
+      StyleHover.Color = 14474460
+      StyleHover.TextColor = clBlack
+      StyleActive.Color = 13027014
+      StyleActive.TextColor = clBlack
+      StyleDisabled.Color = clWhite
+      StyleDisabled.TextColor = 10724259
+      TextAutoSize = True
+      TextProportional = False
+      TextProportionalRatio = 0.5
+      Align = alRight
+      BorderSpacing.Left = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Around = 1
+      Color = clNone
+      Font.Style = [fsBold]
+      OnClick = btnDeleteClick
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object btnCopy: TBCMDButtonFocus
+      Cursor = crHandPoint
+      Left = 378
+      Height = 23
+      Top = 1
+      Width = 100
+      StyleNormal.Color = clWhite
+      StyleNormal.TextColor = clBlack
+      StyleHover.Color = 14474460
+      StyleHover.TextColor = clBlack
+      StyleActive.Color = 13027014
+      StyleActive.TextColor = clBlack
+      StyleDisabled.Color = clWhite
+      StyleDisabled.TextColor = 10724259
+      TextAutoSize = True
+      TextProportional = False
+      TextProportionalRatio = 0.5
+      Align = alRight
+      BorderSpacing.Left = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Around = 1
+      Color = clNone
+      Font.Style = [fsBold]
+      OnClick = btnCopyClick
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object btnPrint: TBCMDButtonFocus
+      Cursor = crHandPoint
+      Left = 584
+      Height = 23
+      Top = 1
+      Width = 100
+      StyleNormal.Color = clWhite
+      StyleNormal.TextColor = clBlack
+      StyleHover.Color = 14474460
+      StyleHover.TextColor = clBlack
+      StyleActive.Color = 13027014
+      StyleActive.TextColor = clBlack
+      StyleDisabled.Color = clWhite
+      StyleDisabled.TextColor = 10724259
+      TextAutoSize = True
+      TextProportional = False
+      TextProportionalRatio = 0.5
+      Align = alRight
+      BorderSpacing.Left = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Around = 1
+      Color = clNone
+      Font.Style = [fsBold]
+      OnClick = btnPrintClick
+      OnMouseDown = btnPrintMouseDown
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object btnExit: TBCMDButtonFocus
+      Cursor = crHandPoint
+      Left = 687
+      Height = 23
+      Top = 1
+      Width = 100
+      StyleNormal.Color = clWhite
+      StyleNormal.TextColor = clBlack
+      StyleHover.Color = 14474460
+      StyleHover.TextColor = clBlack
+      StyleActive.Color = 13027014
+      StyleActive.TextColor = clBlack
+      StyleDisabled.Color = clWhite
+      StyleDisabled.TextColor = 10724259
+      TextAutoSize = True
+      TextProportional = False
+      TextProportionalRatio = 0.5
+      Align = alRight
+      BorderSpacing.Left = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Around = 1
+      Color = clNone
+      Font.Style = [fsBold]
+      OnClick = btnExitClick
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object btnSelect: TBCMDButtonFocus
+      Cursor = crHandPoint
+      Left = 481
+      Height = 23
+      Top = 1
+      Width = 100
+      Animation = True
+      StyleNormal.Color = clWhite
+      StyleNormal.TextColor = clBlack
+      StyleHover.Color = 14474460
+      StyleHover.TextColor = clBlack
+      StyleActive.Color = 13027014
+      StyleActive.TextColor = clBlack
+      StyleDisabled.Color = clWhite
+      StyleDisabled.TextColor = 10724259
+      TextAutoSize = True
+      TextProportional = False
+      TextProportionalRatio = 0.5
+      Align = alRight
+      BorderSpacing.Left = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Around = 1
+      Color = clNone
+      Font.Style = [fsBold]
+      OnClick = btnSelectClick
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+    end
+  end
+  object pnlDetail: TPanel
+    Left = 575
+    Height = 439
+    Top = 5
+    Width = 220
+    Align = alRight
+    BorderSpacing.Around = 5
+    BevelOuter = bvLowered
+    ClientHeight = 439
+    ClientWidth = 220
+    Constraints.MaxWidth = 250
+    Constraints.MinWidth = 150
+    Enabled = False
+    ParentBackground = False
+    TabOrder = 2
+    object pnlButton: TPanel
+      Left = 2
+      Height = 25
+      Top = 410
+      Width = 216
+      Align = alBottom
+      AutoSize = True
+      BorderSpacing.Bottom = 2
+      BorderSpacing.Around = 1
+      BevelOuter = bvNone
+      ClientHeight = 25
+      ClientWidth = 216
+      Constraints.MinHeight = 25
+      TabOrder = 2
+      Visible = False
+      OnResize = pnlButtonResize
+      object btnSave: TBCMDButtonFocus
+        Cursor = crHandPoint
+        Left = 115
+        Height = 23
+        Top = 1
+        Width = 98
+        StyleNormal.Color = clWhite
+        StyleNormal.TextColor = clBlack
+        StyleHover.Color = 14474460
+        StyleHover.TextColor = clBlack
+        StyleActive.Color = 13027014
+        StyleActive.TextColor = clBlack
+        StyleDisabled.Color = clWhite
+        StyleDisabled.TextColor = 10724259
+        TextAutoSize = True
+        TextProportional = False
+        TextProportionalRatio = 0.5
+        Align = alClient
+        BorderSpacing.Left = 2
+        BorderSpacing.Right = 2
+        BorderSpacing.Around = 1
+        Color = clNone
+        Font.Style = [fsBold]
+        OnClick = btnSaveClick
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object btnCancel: TBCMDButtonFocus
+        Cursor = crHandPoint
+        Left = 3
+        Height = 23
+        Top = 1
+        Width = 109
+        StyleNormal.Color = clWhite
+        StyleNormal.TextColor = clBlack
+        StyleHover.Color = 14474460
+        StyleHover.TextColor = clBlack
+        StyleActive.Color = 13027014
+        StyleActive.TextColor = clBlack
+        StyleDisabled.Color = clWhite
+        StyleDisabled.TextColor = 10724259
+        TextAutoSize = True
+        TextProportional = False
+        TextProportionalRatio = 0.5
+        Align = alLeft
+        BorderSpacing.Left = 2
+        BorderSpacing.Right = 2
+        BorderSpacing.Around = 1
+        Color = clNone
+        Font.Style = [fsBold]
+        OnClick = btnCancelClick
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+    end
+    object pnlDetailCaption: TBCPanel
+      Left = 1
+      Height = 20
+      Top = 1
+      Width = 218
+      Align = alTop
+      Background.Color = clBtnFace
+      Background.Gradient1.StartColor = 16744448
+      Background.Gradient1.EndColor = clBlack
+      Background.Gradient1.GradientType = gtRadial
+      Background.Gradient1.Point1XPercent = 50
+      Background.Gradient1.Point1YPercent = 100
+      Background.Gradient1.Point2XPercent = 0
+      Background.Gradient1.Point2YPercent = 100
+      Background.Gradient2.StartColor = clWhite
+      Background.Gradient2.EndColor = clBlack
+      Background.Gradient2.GradientType = gtLinear
+      Background.Gradient2.Point1XPercent = 0
+      Background.Gradient2.Point1YPercent = 0
+      Background.Gradient2.Point2XPercent = 0
+      Background.Gradient2.Point2YPercent = 100
+      Background.Gradient1EndPercent = 100
+      Background.Style = bbsGradient
+      BevelInner = bvNone
+      BevelOuter = bvRaised
+      BevelWidth = 1
+      Border.Style = bboNone
+      Constraints.MinHeight = 20
+      FontEx.Color = clDefault
+      FontEx.FontQuality = fqFineAntialiasing
+      FontEx.Shadow = True
+      FontEx.ShadowRadius = 2
+      FontEx.ShadowOffsetX = 2
+      FontEx.ShadowOffsetY = 2
+      FontEx.Style = []
+      ParentBackground = False
+      Rounding.RoundX = 1
+      Rounding.RoundY = 1
+      TabOrder = 0
+    end
+    object pnlClient: TPanel
+      Left = 1
+      Height = 388
+      Top = 21
+      Width = 218
+      Align = alClient
+      BevelOuter = bvNone
+      ClientHeight = 388
+      ClientWidth = 218
+      TabOrder = 1
+      object pnlComment: TPanel
+        Left = 3
+        Height = 296
+        Top = 39
+        Width = 212
+        Align = alClient
+        AutoSize = True
+        BorderSpacing.Around = 3
+        ClientHeight = 296
+        ClientWidth = 212
+        TabOrder = 1
+        object lblComment: TLabel
+          Left = 3
+          Height = 1
+          Top = 3
+          Width = 206
+          Align = alTop
+          BorderSpacing.Left = 2
+          BorderSpacing.Top = 2
+          BorderSpacing.Right = 2
+          ParentColor = False
+        end
+        object memComment: TMemo
+          Tag = 1
+          Left = 3
+          Height = 289
+          Top = 4
+          Width = 206
+          Align = alClient
+          BorderSpacing.Left = 2
+          BorderSpacing.Right = 2
+          BorderSpacing.Bottom = 2
+          OnEnter = memCommentEnter
+          OnExit = memCommentExit
+          OnKeyUp = memCommentKeyUp
+          ScrollBars = ssAutoVertical
+          TabOrder = 0
+          WantReturns = False
+        end
+      end
+      object pnlName: TPanel
+        Left = 3
+        Height = 30
+        Top = 3
+        Width = 212
+        Align = alTop
+        AutoSize = True
+        BorderSpacing.Bottom = 3
+        BorderSpacing.Around = 3
+        ClientHeight = 30
+        ClientWidth = 212
+        TabOrder = 0
+        object lblName: TLabel
+          Left = 3
+          Height = 1
+          Top = 3
+          Width = 206
+          Align = alTop
+          BorderSpacing.Left = 2
+          BorderSpacing.Top = 2
+          BorderSpacing.Right = 2
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object ediName: TEdit
+          Left = 3
+          Height = 23
+          Top = 4
+          Width = 206
+          Align = alTop
+          AutoSelect = False
+          BorderSpacing.Left = 2
+          BorderSpacing.Right = 2
+          BorderSpacing.Bottom = 2
+          OnChange = ediNameChange
+          OnEnter = ediNameEnter
+          OnExit = ediNameExit
+          OnKeyUp = ediNameKeyUp
+          TabOrder = 0
+        end
+      end
+      object pnlStatus: TPanel
+        Left = 3
+        Height = 44
+        Top = 338
+        Width = 212
+        Align = alBottom
+        AutoSize = True
+        BorderSpacing.Bottom = 3
+        BorderSpacing.Around = 3
+        ClientHeight = 44
+        ClientWidth = 212
+        TabOrder = 2
+        object cbxStatus: TComboBox
+          Left = 3
+          Height = 23
+          Top = 18
+          Width = 206
+          Align = alTop
+          BorderSpacing.Left = 2
+          BorderSpacing.Right = 2
+          BorderSpacing.Bottom = 2
+          ItemHeight = 15
+          OnEnter = cbxStatusEnter
+          OnExit = cbxStatusExit
+          OnKeyUp = cbxStatusKeyUp
+          Style = csDropDownList
+          TabOrder = 0
+        end
+        object pnlStatusTop: TPanel
+          Left = 1
+          Height = 16
+          Top = 1
+          Width = 210
+          Align = alTop
+          AutoSize = True
+          BorderSpacing.Bottom = 1
+          BevelOuter = bvNone
+          ClientHeight = 16
+          ClientWidth = 210
+          TabOrder = 1
+          object lblStatus: TLabel
+            Left = 2
+            Height = 14
+            Top = 2
+            Width = 190
+            Align = alClient
+            BorderSpacing.Left = 2
+            BorderSpacing.Top = 2
+            BorderSpacing.Right = 2
+            Font.Style = [fsBold]
+            ParentColor = False
+            ParentFont = False
+          end
+          object btnStatusInfo: TImage
+            Left = 194
+            Height = 16
+            Top = 0
+            Width = 16
+            Align = alRight
+            Enabled = False
+            ParentShowHint = False
+            Picture.Data = {
+              1754506F727461626C654E6574776F726B477261706869630C02000089504E47
+              0D0A1A0A0000000D49484452000000100000001008060000001FF3FF61000001
+              D349444154388D9D93BD6A5B411046CFCCAE91E520A953E13C80D2250E98A431
+              18830D2E5D04E21070C863A531695CA5F01BC4AF2089A45017C90EAAAE1448F4
+              73EFEE4E0A5991C475E30C0C2CCC7076BE6F76A5DFEF5BADD6C02CF198505546
+              A32CF97ABD46BD5EC7CC1E0510114228D4879088319500CE394416E7948C9452
+              091063C29B4108B174C3603060341A01D06C36D9DD7D4A51141B0033F066468C
+              2B7AA552E1EAEA33BD5E0F5587730E33A3D56A7176F68618E31AC0D0948C1012
+              45B1C81012A108BCDA7FCDDBF3F7EC3D7F8188D0ED76180E87C468FF7ACD0C0F
+              9BFAA6D329E7EF2E08C1A856B7F835CA984FA7CCF239E0305BFA25A464F8188D
+              3C5F6903C8F382EDED2A37375FB9BEFE82A8F2726F9F46A3C16C962F5D584C10
+              42C16CB60970CE7177F783CBCB4FECEC3CE1E0E088E3E353C6E3F1DAB604D580
+              1701112D6DC139C7C9C92929250E0F8F98CFE78020CBDDDE1BA922A06A38B74A
+              EF95F138A3DD6ED3E9B48931967A9C0311F0228288DBB85DD5936519DFBF7509
+              21E09C22E24A8F4D44F0668273B251308BB45ACFB8F8F011CC16A3EA42F77AC4
+              08727BFBD3547DC90311C1FB2D008A222FD50142C8F1AA8AAA3CD81063712FE9
+              A1BAA02AF8C9E44FAA56ABFA3FBF7132F99DFE02D96CF8514892D57E00000000
+              49454E44AE426082
+            }
+            ShowHint = True
+          end
+        end
+      end
+    end
+  end
+  object popList: TPopupMenu
+    Images = frmMain.imgButtons
+    Left = 140
+    Top = 272
+    object popAdd: TMenuItem
+      ImageIndex = 0
+      ShortCut = 45
+      OnClick = btnAddClick
+    end
+    object popEdit: TMenuItem
+      ImageIndex = 2
+      ShortCut = 32
+      OnClick = btnEditClick
+    end
+    object popDelete: TMenuItem
+      ImageIndex = 4
+      ShortCut = 46
+      OnClick = btnDeleteClick
+    end
+    object popCopy: TMenuItem
+      ImageIndex = 5
+      ShortCut = 16451
+      OnClick = btnCopyClick
+    end
+    object popSelect: TMenuItem
+      ImageIndex = 6
+      ShortCut = 16449
+      OnClick = btnSelectClick
+    end
+    object popPrint: TMenuItem
+      ImageIndex = 7
+      ShortCut = 16464
+      OnClick = btnPrintClick
+    end
+    object MenuItem1: TMenuItem
+      Caption = '-'
+    end
+    object popExit: TMenuItem
+      ImageIndex = 9
+      ShortCut = 27
+      OnClick = btnExitClick
+    end
+  end
+  object ActionList1: TActionList
+    Left = 316
+    Top = 268
+    object actAdd: TAction
+      OnExecute = btnAddClick
+      ShortCut = 45
+    end
+    object actEdit: TAction
+      OnExecute = btnEditClick
+      ShortCut = 32
+    end
+    object actDelete: TAction
+      OnExecute = btnDeleteClick
+      ShortCut = 46
+    end
+    object actCopy: TAction
+      OnExecute = btnCopyClick
+      ShortCut = 16451
+    end
+    object actSelect: TAction
+      OnExecute = btnSelectClick
+      ShortCut = 16449
+    end
+    object actPrint: TAction
+      OnExecute = btnPrintClick
+      ShortCut = 16464
+    end
+    object actExit: TAction
+      OnExecute = btnExitClick
+      ShortCut = 27
+    end
+    object actSave: TAction
+      OnExecute = btnSaveClick
+      ShortCut = 8205
+    end
+  end
+end
