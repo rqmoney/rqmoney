@@ -7,7 +7,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, Math, Buttons, LazUTF8,
+  StdCtrls, Math, Buttons, LazUTF8, IniFiles,
   ActnList, Menus, laz.VirtualTrees, BCPanel, BCMDButtonFocus, DateUtils, StrUtils;
 
 type // bottom grid (Budget)
@@ -15,6 +15,7 @@ type // bottom grid (Budget)
     Name: string;
     Comment: string;
     ID: integer;
+    Checked: boolean;
   end;
   PBudget = ^TBudget;
 
@@ -115,14 +116,72 @@ var
   Budget: PBudget;
   BudCat: PBudcat;
   Budgets: PBudgets;
-
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
-  If ((frmBudget.Tag = 0) and (frmBudgets.popBudgetAdd.Tag = 1)) then   // duplicate mode
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmBudget.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmBudget.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmBudget.Width := Screen.Width - 500 - (200 - ScreenRatio)
+      else
+        frmBudget.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmBudget.Height := Screen.Height - 400 - (200 - ScreenRatio)
+      else
+        frmBudget.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmBudget.left := (Screen.Width - frmBudget.Width) div 2
+      else
+        frmBudget.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmBudget.Top := ((Screen.Height - frmBudget.Height) div 2) - 75
+      else
+        frmBudget.Top := I;
+
+      // left panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 150) or (I > 300) then
+        frmBudget.pnlLeft.Width := 200
+      else
+        frmBudget.pnlLeft.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
+  if ((frmBudget.Tag = 0) and (frmBudgets.popBudgetAdd.Tag = 1)) then   // duplicate mode
   begin
-    Budgets := frmBudgets.VSTBudgets.GetNodeData(frmBudgets.VSTBudgets.GetFirstSelected());
-    If Budgets.Kind = 0 then
+    Budgets := frmBudgets.VSTBudgets.GetNodeData(
+      frmBudgets.VSTBudgets.GetFirstSelected());
+    if Budgets.Kind = 0 then
       rbtCategories.Checked := True
-    Else rbtSubcategories.Checked := True;
+    else
+      rbtSubcategories.Checked := True;
   end;
 
   UpdateBudget;
@@ -135,12 +194,17 @@ begin
     while Assigned(B) do
     begin
       Budget := VST.GetNodeData(B);
+      Budget.Checked := False;
       C := frmBudgets.VSTBudCat.GetFirst();
       while Assigned(C) do
       begin
         BudCat := frmBudgets.VSTBudCat.GetNodeData(C);
+        //ShowMessage (IntToStr(BudCat.CategoryID) + sLineBreak +  IntToStr(Budget.ID));
         if BudCat.CategoryID = Budget.ID then
+        begin
           B.CheckState := csCheckedNormal;
+          Budget.Checked := True;
+        end;
         C := frmBudgets.VSTBudCat.GetNext(C);
       end;
       B := frmBudget.VST.GetNext(B);
@@ -236,8 +300,8 @@ begin
   Budget := Sender.GetNodeData(Node);
   case Column of
     0: CellText := AnsiUpperCase(Budget.Name);
-    1: CellText := IfThen(frmSettings.chkDisplaySubCatCapital.Checked = True,
-      AnsiUpperCase(Budget.Comment), Budget.Comment);
+    1: CellText := IfThen(frmSettings.chkDisplaySubCatCapital.Checked =
+        True, AnsiUpperCase(Budget.Comment), Budget.Comment);
     2: CellText := IntToStr(Budget.ID);
   end;
 end;
@@ -281,6 +345,10 @@ begin
 end;
 
 procedure TfrmBudget.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
 begin
   if (btnSave.Tag = 0) and (VST.CheckedCount > 0) then
     if MessageDlg(Application.Title, Question_19, mtConfirmation, [mbYes, mbNo], 0) <>
@@ -290,21 +358,32 @@ begin
       Exit;
     end;
   btnSave.Tag := 0;
+  // write position and window size
+  try
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmBudget.Name, '') <>
+        IntToStr(frmBudget.Left) + separ + // form left
+      IntToStr(frmBudget.Top) + separ + // form top
+      IntToStr(frmBudget.Width) + separ + // form width
+      IntToStr(frmBudget.Height) + separ + // form height
+      IntToStr(frmBudget.pnlLeft.Width) then
+        INI.WriteString('POSITION', frmBudget.Name,
+          IntToStr(frmBudget.Left) + separ + // form left
+          IntToStr(frmBudget.Top) + separ + // form top
+          IntToStr(frmBudget.Width) + separ + // form width
+          IntToStr(frmBudget.Height) + separ + // form height
+          IntToStr(frmBudget.pnlLeft.Width));
+    end;
+  finally
+    INI.Free;
+  end;
 end;
 
 procedure TfrmBudget.FormCreate(Sender: TObject);
 begin
-  {$IFDEF WINDOWS}
-  // form size
-  (Sender as TForm).Width := Round(700 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinWidth := Round(700 * (ScreenRatio / 100));
-  (Sender as TForm).Height := Round(400 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinHeight := Round(400 * (ScreenRatio / 100));
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
   // set components height
   VST.Header.Height := PanelHeight;
   pnlTypeCaption.Height := PanelHeight;
@@ -313,7 +392,9 @@ begin
 
   pnlButtons.Height := ButtonHeight;
   pnlBottom.Height := ButtonHeight;
-  {$ENDIF}
+
+  // get form icon
+  frmMain.img16.GetIcon(21, (Sender as TForm).Icon);
 end;
 
 procedure TfrmBudget.FormResize(Sender: TObject);
@@ -337,9 +418,7 @@ begin
       frmBudget.ModalResult := mrOk;
     end;
     1: begin
-      if MessageDlg(Application.Title, Question_21, mtConfirmation, [mbYes, mbNo], 0) <>
-        mrYes then Exit;
-      I := MessageDlg(Application.Title, AnsiReplaceStr(Message_08, '%', sLineBreak),
+      I := MessageDlg(Application.Title, AnsiReplaceStr(Question_21, '%', sLineBreak),
         mtWarning, [mbYes, mbNo, mbCancel], 0);
       case I of
         mrYes: frmBudget.ModalResult := mrOk;

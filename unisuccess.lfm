@@ -1,72 +1,78 @@
 object frmSuccess: TfrmSuccess
-  Left = 736
-  Height = 400
-  Top = 214
-  Width = 600
-  AutoSize = True
+  Left = 752
+  Height = 330
+  Top = 255
+  Width = 500
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsSingle
-  ClientHeight = 400
-  ClientWidth = 600
+  ClientHeight = 330
+  ClientWidth = 500
   Color = 14606046
-  Constraints.MinHeight = 250
-  Constraints.MinWidth = 600
+  Constraints.MinHeight = 330
+  Constraints.MinWidth = 500
+  OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
+  OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '3.0.0.1'
+  Scaled = False
   object pnlSuccess: TPanel
     Left = 10
-    Height = 228
+    Height = 250
     Top = 41
-    Width = 580
-    Align = alTop
+    Width = 480
+    Align = alClient
     AutoSize = True
     BorderSpacing.Around = 10
     BevelOuter = bvLowered
-    ClientHeight = 228
-    ClientWidth = 580
+    ClientHeight = 250
+    ClientWidth = 480
     Constraints.MinHeight = 100
     ParentBackground = False
     TabOrder = 0
-    object Panel1: TPanel
+    OnResize = pnlSuccessResize
+    object pnlPassword: TPanel
       Left = 3
-      Height = 54
+      Height = 61
       Top = 3
-      Width = 574
+      Width = 474
       Align = alTop
       BorderSpacing.Around = 2
-      ClientHeight = 54
-      ClientWidth = 574
+      ClientHeight = 61
+      ClientWidth = 474
       ParentBackground = False
       TabOrder = 0
       object Image1: TImage
         Left = 3
-        Height = 48
+        Height = 55
         Top = 3
-        Width = 53
+        Width = 55
         Align = alLeft
         BorderSpacing.Around = 2
         Center = True
+        Constraints.MaxHeight = 55
         Constraints.MinHeight = 48
+        ImageIndex = 5
         Images = frmMain.img32
+        Proportional = True
       end
       object Panel5: TPanel
-        Left = 58
-        Height = 52
+        Left = 60
+        Height = 59
         Top = 1
-        Width = 515
+        Width = 413
         Align = alClient
         AutoSize = True
         BevelOuter = bvNone
-        ClientHeight = 52
-        ClientWidth = 515
+        ClientHeight = 59
+        ClientWidth = 413
         ParentBackground = False
         TabOrder = 0
         object lblPassword: TLabel
           Left = 5
           Height = 1
           Top = 5
-          Width = 505
+          Width = 403
           Align = alTop
           BorderSpacing.Left = 5
           BorderSpacing.Top = 5
@@ -78,9 +84,9 @@ object frmSuccess: TfrmSuccess
         object btnPassword: TBCMDButtonFocus
           Cursor = crHandPoint
           Left = 5
-          Height = 20
+          Height = 46
           Top = 8
-          Width = 505
+          Width = 403
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -93,11 +99,11 @@ object frmSuccess: TfrmSuccess
           TextAutoSize = True
           TextProportional = False
           TextProportionalRatio = 0.5
-          Align = alTop
+          Align = alClient
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Right = 3
-          BorderSpacing.Bottom = 10
+          BorderSpacing.Bottom = 3
           BorderSpacing.Around = 2
           Color = clNone
           Constraints.MinHeight = 20
@@ -107,34 +113,34 @@ object frmSuccess: TfrmSuccess
         end
       end
     end
-    object Panel2: TPanel
+    object pnlGuide: TPanel
       Left = 3
       Height = 54
-      Top = 59
-      Width = 574
+      Top = 66
+      Width = 474
       Align = alTop
       BorderSpacing.Around = 2
       ClientHeight = 54
-      ClientWidth = 574
+      ClientWidth = 474
       ParentBackground = False
       TabOrder = 1
       object Panel6: TPanel
-        Left = 58
+        Left = 60
         Height = 52
         Top = 1
-        Width = 515
+        Width = 413
         Align = alClient
         AutoSize = True
         BevelOuter = bvNone
         ClientHeight = 52
-        ClientWidth = 515
+        ClientWidth = 413
         ParentBackground = False
         TabOrder = 0
         object lblGuide: TLabel
           Left = 5
           Height = 1
           Top = 5
-          Width = 505
+          Width = 403
           Align = alTop
           BorderSpacing.Left = 5
           BorderSpacing.Top = 5
@@ -146,9 +152,9 @@ object frmSuccess: TfrmSuccess
         object btnGuide: TBCMDButtonFocus
           Cursor = crHandPoint
           Left = 5
-          Height = 20
+          Height = 39
           Top = 8
-          Width = 505
+          Width = 403
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -161,11 +167,11 @@ object frmSuccess: TfrmSuccess
           TextAutoSize = True
           TextProportional = False
           TextProportionalRatio = 0.5
-          Align = alTop
+          Align = alClient
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Right = 3
-          BorderSpacing.Bottom = 10
+          BorderSpacing.Bottom = 3
           BorderSpacing.Around = 2
           Color = clNone
           Constraints.MinHeight = 20
@@ -178,54 +184,58 @@ object frmSuccess: TfrmSuccess
         Left = 3
         Height = 48
         Top = 3
-        Width = 53
+        Width = 55
         Align = alLeft
         BorderSpacing.Around = 2
         Center = True
+        Constraints.MaxHeight = 55
         Constraints.MinHeight = 48
-        ImageIndex = 1
+        ImageIndex = 6
         Images = frmMain.img32
+        Proportional = True
       end
     end
-    object Panel3: TPanel
+    object pnlImport: TPanel
       Left = 3
       Height = 54
-      Top = 115
-      Width = 574
+      Top = 122
+      Width = 474
       Align = alTop
       BorderSpacing.Around = 2
       ClientHeight = 54
-      ClientWidth = 574
+      ClientWidth = 474
       ParentBackground = False
       TabOrder = 2
       object Image3: TImage
         Left = 3
         Height = 48
         Top = 3
-        Width = 53
+        Width = 55
         Align = alLeft
         BorderSpacing.Around = 2
         Center = True
+        Constraints.MaxHeight = 55
         Constraints.MinHeight = 48
-        ImageIndex = 2
+        ImageIndex = 3
         Images = frmMain.img32
+        Proportional = True
       end
       object Panel7: TPanel
-        Left = 58
+        Left = 60
         Height = 52
         Top = 1
-        Width = 515
+        Width = 413
         Align = alClient
         BevelOuter = bvNone
         ClientHeight = 52
-        ClientWidth = 515
+        ClientWidth = 413
         ParentBackground = False
         TabOrder = 0
         object lblImport: TLabel
           Left = 5
           Height = 1
           Top = 5
-          Width = 505
+          Width = 403
           Align = alTop
           BorderSpacing.Left = 5
           BorderSpacing.Top = 5
@@ -237,9 +247,9 @@ object frmSuccess: TfrmSuccess
         object btnImport: TBCMDButtonFocus
           Cursor = crHandPoint
           Left = 5
-          Height = 20
+          Height = 39
           Top = 8
-          Width = 505
+          Width = 403
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -252,11 +262,11 @@ object frmSuccess: TfrmSuccess
           TextAutoSize = True
           TextProportional = False
           TextProportionalRatio = 0.5
-          Align = alTop
+          Align = alClient
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Right = 3
-          BorderSpacing.Bottom = 10
+          BorderSpacing.Bottom = 3
           BorderSpacing.Around = 2
           Color = clNone
           Constraints.MinHeight = 20
@@ -266,45 +276,47 @@ object frmSuccess: TfrmSuccess
         end
       end
     end
-    object Panel4: TPanel
+    object pnlCancel: TPanel
       Left = 3
       Height = 54
-      Top = 171
-      Width = 574
+      Top = 178
+      Width = 474
       Align = alTop
       BorderSpacing.Around = 2
       ClientHeight = 54
-      ClientWidth = 574
+      ClientWidth = 474
       ParentBackground = False
       TabOrder = 3
       object Image4: TImage
         Left = 3
         Height = 48
         Top = 3
-        Width = 53
+        Width = 55
         Align = alLeft
         BorderSpacing.Around = 2
         Center = True
+        Constraints.MaxHeight = 55
         Constraints.MinHeight = 48
-        ImageIndex = 3
+        ImageIndex = 28
         Images = frmMain.img32
+        Proportional = True
       end
       object Panel8: TPanel
-        Left = 58
+        Left = 60
         Height = 52
         Top = 1
-        Width = 515
+        Width = 413
         Align = alClient
         BevelOuter = bvNone
         ClientHeight = 52
-        ClientWidth = 515
+        ClientWidth = 413
         ParentBackground = False
         TabOrder = 0
         object lblCancel: TLabel
           Left = 5
           Height = 1
           Top = 5
-          Width = 505
+          Width = 403
           Align = alTop
           BorderSpacing.Left = 5
           BorderSpacing.Top = 5
@@ -316,9 +328,9 @@ object frmSuccess: TfrmSuccess
         object btnCancel: TBCMDButtonFocus
           Cursor = crHandPoint
           Left = 5
-          Height = 20
+          Height = 39
           Top = 8
-          Width = 505
+          Width = 403
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -331,11 +343,11 @@ object frmSuccess: TfrmSuccess
           TextAutoSize = True
           TextProportional = False
           TextProportionalRatio = 0.5
-          Align = alTop
+          Align = alClient
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Right = 3
-          BorderSpacing.Bottom = 10
+          BorderSpacing.Bottom = 3
           BorderSpacing.Around = 2
           Color = clNone
           Constraints.MinHeight = 20
@@ -350,7 +362,7 @@ object frmSuccess: TfrmSuccess
     Left = 10
     Height = 1
     Top = 30
-    Width = 580
+    Width = 480
     Align = alTop
     Alignment = taCenter
     BorderSpacing.Left = 5
@@ -364,7 +376,7 @@ object frmSuccess: TfrmSuccess
     Left = 10
     Height = 20
     Top = 5
-    Width = 580
+    Width = 480
     Align = alTop
     BorderSpacing.Left = 5
     BorderSpacing.Right = 5
@@ -402,6 +414,100 @@ object frmSuccess: TfrmSuccess
     Rounding.RoundX = 1
     Rounding.RoundY = 1
     TabOrder = 1
+  end
+  object pnlBottom: TPanel
+    Left = 5
+    Height = 24
+    Top = 301
+    Width = 490
+    Align = alBottom
+    BorderSpacing.Around = 5
+    BevelOuter = bvLowered
+    ClientHeight = 24
+    ClientWidth = 490
+    ParentBackground = False
+    TabOrder = 2
+    object pnlHeight: TPanel
+      Left = 338
+      Height = 20
+      Top = 2
+      Width = 150
+      Align = alRight
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 150
+      Constraints.MinWidth = 150
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 0
+      object imgHeight: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        Center = True
+        ImageIndex = 1
+        Images = frmMain.imgSize
+      end
+      object lblHeight: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 126
+        Align = alClient
+        Alignment = taCenter
+        AutoSize = False
+        BorderSpacing.Around = 1
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+    object pnlWidth: TPanel
+      Left = 187
+      Height = 20
+      Top = 2
+      Width = 150
+      Align = alRight
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 150
+      Constraints.MinWidth = 150
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 1
+      object imgWidth: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        Center = True
+        Images = frmMain.imgSize
+      end
+      object lblWidth: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 126
+        Align = alClient
+        Alignment = taCenter
+        AutoSize = False
+        BorderSpacing.Around = 1
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+      end
+    end
   end
   object ActionList1: TActionList
     Left = 224

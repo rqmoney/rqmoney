@@ -1,18 +1,20 @@
 object frmEdits: TfrmEdits
-  Left = 517
-  Height = 560
-  Top = 85
+  Left = 459
+  Height = 542
+  Top = 198
   Width = 600
   BorderIcons = [biSystemMenu]
-  ClientHeight = 560
+  ClientHeight = 542
   ClientWidth = 600
   Constraints.MinHeight = 400
   Constraints.MinWidth = 500
+  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.1'
+  LCLVersion = '3.2.0.0'
+  Scaled = False
   object pnlCount: TPanel
     Left = 5
     Height = 11
@@ -105,7 +107,7 @@ object frmEdits: TfrmEdits
   end
   object splEdit: TSplitter
     Left = 385
-    Height = 474
+    Height = 456
     Top = 47
     Width = 5
     Align = alRight
@@ -114,19 +116,20 @@ object frmEdits: TfrmEdits
   end
   object pnlTag: TPanel
     Left = 395
-    Height = 474
+    Height = 456
     Top = 47
     Width = 200
     Align = alRight
     BorderSpacing.Around = 5
-    ClientHeight = 474
+    ClientHeight = 456
     ClientWidth = 200
+    Constraints.MaxWidth = 400
     Constraints.MinWidth = 150
     ParentBackground = False
     TabOrder = 0
     object lbxTag: TCheckListBox
       Left = 4
-      Height = 442
+      Height = 424
       Top = 28
       Width = 192
       Align = alClient
@@ -134,11 +137,11 @@ object frmEdits: TfrmEdits
       BorderStyle = bsNone
       Enabled = False
       ItemHeight = 0
+      ParentFont = False
+      TabOrder = 0
       OnClickCheck = lbxTagClickCheck
       OnEnter = lbxTagEnter
       OnExit = lbxTagExit
-      ParentFont = False
-      TabOrder = 0
     end
     object pnlTagTop: TPanel
       Left = 1
@@ -160,11 +163,11 @@ object frmEdits: TfrmEdits
         Width = 171
         Align = alClient
         BorderSpacing.Left = 3
+        ParentFont = False
+        TabOrder = 0
         OnChange = chkTagChange
         OnEnter = chkTypeEnter
         OnExit = chkTypeExit
-        ParentFont = False
-        TabOrder = 0
       end
       object btnTag: TSpeedButton
         Cursor = crHandPoint
@@ -189,7 +192,7 @@ object frmEdits: TfrmEdits
   object pnlBottom: TPanel
     Left = 5
     Height = 26
-    Top = 526
+    Top = 508
     Width = 590
     Align = alBottom
     BorderSpacing.Bottom = 3
@@ -385,15 +388,15 @@ object frmEdits: TfrmEdits
   end
   object pnlEdit: TScrollBox
     Left = 5
-    Height = 474
+    Height = 456
     Top = 47
     Width = 375
     HorzScrollBar.Page = 158
-    VertScrollBar.Page = 371
+    VertScrollBar.Page = 402
     Align = alClient
     AutoSize = True
     BorderSpacing.Around = 5
-    ClientHeight = 470
+    ClientHeight = 452
     ClientWidth = 371
     ParentBackground = False
     TabOrder = 5
@@ -418,11 +421,11 @@ object frmEdits: TfrmEdits
         Width = 362
         Align = alTop
         BorderSpacing.Left = 3
+        ParentFont = False
+        TabOrder = 0
         OnChange = chkAccountChange
         OnEnter = chkTypeEnter
         OnExit = chkTypeExit
-        ParentFont = False
-        TabOrder = 0
       end
       object cbxAccount: TComboBox
         Tag = 7
@@ -439,10 +442,11 @@ object frmEdits: TfrmEdits
         DropDownCount = 20
         Enabled = False
         ItemHeight = 15
-        OnEnter = cbxTypeEnter
-        OnExit = cbxTypeExit
         ParentFont = False
         TabOrder = 1
+        OnDropDown = cbxAccountDropDown
+        OnEnter = cbxTypeEnter
+        OnExit = cbxTypeExit
       end
       object btnAccount: TSpeedButton
         Cursor = crHandPoint
@@ -467,55 +471,21 @@ object frmEdits: TfrmEdits
     end
     object pnlCategory: TPanel
       Left = 2
-      Height = 43
+      Height = 74
       Top = 233
       Width = 367
       Align = alTop
       AutoSize = True
       BorderSpacing.Bottom = 1
       BorderSpacing.Around = 2
-      ClientHeight = 43
+      ClientHeight = 74
       ClientWidth = 367
       ParentBackground = False
       TabOrder = 5
-      object chkCategory: TCheckBox
-        Tag = 16
-        Left = 4
-        Height = 17
-        Top = 1
-        Width = 362
-        Align = alTop
-        BorderSpacing.Left = 3
-        OnChange = chkCategoryChange
-        OnEnter = chkTypeEnter
-        OnExit = chkTypeExit
-        ParentFont = False
-        TabOrder = 0
-      end
-      object cbxCategory: TComboBox
-        Tag = 7
-        Left = 21
-        Height = 23
-        Top = 18
-        Width = 317
-        Align = alClient
-        AutoComplete = True
-        AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
-        BorderSpacing.Left = 20
-        BorderSpacing.Right = 5
-        BorderSpacing.Bottom = 1
-        DropDownCount = 20
-        Enabled = False
-        ItemHeight = 15
-        OnEnter = cbxTypeEnter
-        OnExit = cbxTypeExit
-        ParentFont = False
-        TabOrder = 1
-      end
       object btnCategory: TSpeedButton
         Cursor = crHandPoint
         Left = 343
-        Height = 20
+        Height = 51
         Top = 19
         Width = 20
         Align = alRight
@@ -531,6 +501,79 @@ object frmEdits: TfrmEdits
         ShowHint = True
         ParentFont = False
         ParentShowHint = False
+      end
+      object chkCategory: TCheckBox
+        Tag = 16
+        Left = 4
+        Height = 17
+        Top = 1
+        Width = 362
+        Align = alTop
+        BorderSpacing.Left = 3
+        ParentFont = False
+        TabOrder = 0
+        OnChange = chkCategoryChange
+        OnEnter = chkTypeEnter
+        OnExit = chkTypeExit
+      end
+      object pnlSubcategory: TPanel
+        Left = 3
+        Height = 50
+        Top = 20
+        Width = 338
+        Align = alClient
+        AutoSize = True
+        BorderSpacing.Bottom = 1
+        BorderSpacing.Around = 2
+        BevelOuter = bvNone
+        ClientHeight = 50
+        ClientWidth = 338
+        ParentBackground = False
+        TabOrder = 1
+        object cbxSubcategory: TComboBox
+          Tag = 7
+          Left = 20
+          Height = 23
+          Top = 26
+          Width = 313
+          Align = alTop
+          AutoComplete = True
+          AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+          BorderSpacing.Left = 20
+          BorderSpacing.Right = 5
+          BorderSpacing.Bottom = 1
+          DropDownCount = 20
+          Enabled = False
+          ItemHeight = 15
+          ParentFont = False
+          TabOrder = 1
+          OnDropDown = cbxAccountDropDown
+          OnEnter = cbxTypeEnter
+          OnExit = cbxTypeExit
+        end
+        object cbxCategory: TComboBox
+          Tag = -1
+          Left = 20
+          Height = 23
+          Top = 0
+          Width = 313
+          Align = alTop
+          AutoComplete = True
+          AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+          BorderSpacing.Left = 20
+          BorderSpacing.Right = 5
+          BorderSpacing.Bottom = 3
+          DropDownCount = 20
+          Enabled = False
+          ItemHeight = 15
+          ParentFont = False
+          TabOrder = 0
+          OnChange = cbxCategoryChange
+          OnDropDown = cbxAccountDropDown
+          OnEditingDone = cbxCategoryChange
+          OnEnter = cbxTypeEnter
+          OnExit = cbxTypeExit
+        end
       end
     end
     object pnlAmount: TPanel
@@ -554,11 +597,11 @@ object frmEdits: TfrmEdits
         Width = 362
         Align = alTop
         BorderSpacing.Left = 3
+        ParentFont = False
+        TabOrder = 0
         OnChange = chkAmountChange
         OnEnter = chkTypeEnter
         OnExit = chkTypeExit
-        ParentFont = False
-        TabOrder = 0
       end
       object btnAmount: TSpeedButton
         Cursor = crHandPoint
@@ -581,7 +624,7 @@ object frmEdits: TfrmEdits
         ParentFont = False
         ParentShowHint = False
       end
-      object spiAmount: TFloatSpinEdit
+      object spiAmount: TEdit
         Tag = 7
         Left = 21
         Height = 23
@@ -593,18 +636,18 @@ object frmEdits: TfrmEdits
         BorderSpacing.Right = 5
         BorderSpacing.Bottom = 1
         Enabled = False
-        Increment = 0.01
+        ParentFont = False
+        TabOrder = 1
+        OnClick = spiAmountClick
         OnEnter = spiAmountEnter
         OnExit = spiAmountExit
         OnKeyUp = spiAmountKeyUp
-        ParentFont = False
-        TabOrder = 1
       end
     end
     object pnlPerson: TPanel
       Left = 2
       Height = 43
-      Top = 279
+      Top = 310
       Width = 367
       Align = alTop
       AutoSize = True
@@ -622,11 +665,11 @@ object frmEdits: TfrmEdits
         Width = 362
         Align = alTop
         BorderSpacing.Left = 3
+        ParentFont = False
+        TabOrder = 0
         OnChange = chkPersonChange
         OnEnter = chkTypeEnter
         OnExit = chkTypeExit
-        ParentFont = False
-        TabOrder = 0
       end
       object cbxPerson: TComboBox
         Tag = 7
@@ -643,10 +686,11 @@ object frmEdits: TfrmEdits
         DropDownCount = 20
         Enabled = False
         ItemHeight = 15
-        OnEnter = cbxTypeEnter
-        OnExit = cbxTypeExit
         ParentFont = False
         TabOrder = 1
+        OnDropDown = cbxAccountDropDown
+        OnEnter = cbxTypeEnter
+        OnExit = cbxTypeExit
       end
       object btnPerson: TSpeedButton
         Cursor = crHandPoint
@@ -690,11 +734,11 @@ object frmEdits: TfrmEdits
         Width = 362
         Align = alTop
         BorderSpacing.Left = 3
+        ParentFont = False
+        TabOrder = 0
         OnChange = chkCommentChange
         OnEnter = chkTypeEnter
         OnExit = chkTypeExit
-        ParentFont = False
-        TabOrder = 0
       end
       object cbxComment: TComboBox
         Tag = 3
@@ -712,10 +756,11 @@ object frmEdits: TfrmEdits
         DropDownCount = 20
         Enabled = False
         ItemHeight = 15
-        OnEnter = cbxCommentEnter
-        OnExit = cbxCommentExit
         ParentFont = False
         TabOrder = 1
+        OnDropDown = cbxAccountDropDown
+        OnEnter = cbxCommentEnter
+        OnExit = cbxCommentExit
       end
       object btnComment: TSpeedButton
         Cursor = crHandPoint
@@ -742,7 +787,7 @@ object frmEdits: TfrmEdits
     object pnlPayee: TPanel
       Left = 2
       Height = 43
-      Top = 325
+      Top = 356
       Width = 367
       Align = alTop
       AutoSize = True
@@ -760,11 +805,11 @@ object frmEdits: TfrmEdits
         Width = 362
         Align = alTop
         BorderSpacing.Left = 3
+        ParentFont = False
+        TabOrder = 0
         OnChange = chkPayeeChange
         OnEnter = chkTypeEnter
         OnExit = chkTypeExit
-        ParentFont = False
-        TabOrder = 0
       end
       object cbxPayee: TComboBox
         Tag = 7
@@ -781,10 +826,11 @@ object frmEdits: TfrmEdits
         DropDownCount = 20
         Enabled = False
         ItemHeight = 15
-        OnEnter = cbxTypeEnter
-        OnExit = cbxTypeExit
         ParentFont = False
         TabOrder = 1
+        OnDropDown = cbxAccountDropDown
+        OnEnter = cbxTypeEnter
+        OnExit = cbxTypeExit
       end
       object btnPayee: TSpeedButton
         Cursor = crHandPoint
@@ -828,11 +874,11 @@ object frmEdits: TfrmEdits
         Width = 362
         Align = alTop
         BorderSpacing.Left = 3
+        ParentFont = False
+        TabOrder = 0
         OnChange = chkTypeChange
         OnEnter = chkTypeEnter
         OnExit = chkTypeExit
-        ParentFont = False
-        TabOrder = 0
       end
       object cbxType: TComboBox
         Left = 21
@@ -847,11 +893,12 @@ object frmEdits: TfrmEdits
         BorderSpacing.Bottom = 1
         Enabled = False
         ItemHeight = 15
-        OnEnter = cbxTypeEnter
-        OnExit = cbxTypeExit
         ParentFont = False
         Style = csDropDownList
         TabOrder = 1
+        OnChange = cbxTypeChange
+        OnEnter = cbxTypeEnter
+        OnExit = cbxTypeExit
       end
     end
     object pnlDate: TPanel
@@ -875,11 +922,11 @@ object frmEdits: TfrmEdits
         Width = 362
         Align = alTop
         BorderSpacing.Left = 3
+        ParentFont = False
+        TabOrder = 0
         OnChange = chkDateChange
         OnEnter = chkTypeEnter
         OnExit = chkTypeExit
-        ParentFont = False
-        TabOrder = 0
       end
       object pnlDate1: TPanel
         Left = 21
@@ -960,8 +1007,8 @@ object frmEdits: TfrmEdits
     end
   end
   object ActionList1: TActionList
-    Left = 352
-    Top = 208
+    Left = 440
+    Top = 232
     object actExit: TAction
       OnExecute = btnCancelClick
       ShortCut = 27
@@ -969,6 +1016,34 @@ object frmEdits: TfrmEdits
     object actSave: TAction
       OnExecute = btnSaveClick
       ShortCut = 8205
+    end
+    object actAccounts: TAction
+      OnExecute = btnAccountClick
+      ShortCut = 121
+    end
+    object actCalc: TAction
+      OnExecute = btnAmountClick
+      ShortCut = 16459
+    end
+    object actComments: TAction
+      OnExecute = btnCommentClick
+      ShortCut = 120
+    end
+    object actCategories: TAction
+      OnExecute = btnCategoryClick
+      ShortCut = 122
+    end
+    object actPersons: TAction
+      OnExecute = btnPersonClick
+      ShortCut = 123
+    end
+    object actPayees: TAction
+      OnExecute = btnPayeeClick
+      ShortCut = 119
+    end
+    object actTags: TAction
+      OnExecute = btnTagClick
+      ShortCut = 117
     end
   end
 end

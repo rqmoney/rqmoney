@@ -26,13 +26,13 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="3"/>
-      <MinorVersionNr Value="8"/>
+      <MinorVersionNr Value="9"/>
       <Attributes pvaPreRelease="True"/>
-      <StringTable Comments="Financial software for households" CompanyName="Slavomir Svetlik" ProductName="RQ MONEY"/>
+      <StringTable CompanyName="Slavomir Svetlik" ProductName="RQ MONEY"/>
     </VersionInfo>
-    <BuildModes Count="4">
+    <BuildModes Count="5">
       <Item1 Name="Default" Default="True"/>
-      <Item2 Name="Linux 64x">
+      <Item2 Name="Debug">
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
@@ -41,33 +41,6 @@
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
-          </SearchPaths>
-          <CodeGeneration>
-            <SmallerCode Value="True"/>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="False"/>
-              <DebugInfoType Value="dsDwarf2Set"/>
-            </Debugging>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="True"/>
-              </Win32>
-            </Options>
-          </Linking>
-        </CompilerOptions>
-      </Item2>
-      <Item3 Name="Debug">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <Target>
-            <Filename Value="RQM"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir)"/>
-            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
-            <SrcPath Value="/usr/share/lazarus/3.0.0/components/virtualtreeview/"/>
           </SearchPaths>
           <Parsing>
             <SyntaxOptions>
@@ -98,12 +71,12 @@
             </Options>
           </Linking>
         </CompilerOptions>
-      </Item3>
-      <Item4 Name="Win64">
+      </Item2>
+      <Item3 Name="Windows 64bit Release">
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
-            <Filename Value="RQM"/>
+            <Filename Value="bin/$(TargetOS)/RQM"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -111,8 +84,43 @@
           </SearchPaths>
           <CodeGeneration>
             <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
             <Optimizations>
-              <OptimizationLevel Value="3"/>
+              <OptimizationLevel Value="2"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <RunWithoutDebug Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item3>
+      <Item4 Name="Windows 32bit Release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="bin/$(TargetOS)/RQM"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="win32"/>
+            <Optimizations>
+              <OptimizationLevel Value="2"/>
             </Optimizations>
             <SmallerCode Value="True"/>
           </CodeGeneration>
@@ -130,6 +138,40 @@
           </Linking>
         </CompilerOptions>
       </Item4>
+      <Item5 Name="Linux 64bit Release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="bin/$(TargetOS)/RQM"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetProcessor Value="ATHLON64"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="linux"/>
+            <Optimizations>
+              <OptimizationLevel Value="2"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <RunWithoutDebug Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item5>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
@@ -140,48 +182,45 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="13">
+    <RequiredPackages Count="12">
       <Item1>
-        <PackageName Value="eccontrols"/>
+        <PackageName Value="SynEditDsgn"/>
       </Item1>
       <Item2>
-        <PackageName Value="callight_pkg"/>
+        <PackageName Value="eccontrols"/>
       </Item2>
       <Item3>
-        <PackageName Value="DateTimeCtrls"/>
+        <PackageName Value="callight_pkg"/>
       </Item3>
       <Item4>
-        <PackageName Value="TAChartLazarusPkg"/>
+        <PackageName Value="DateTimeCtrls"/>
       </Item4>
       <Item5>
-        <PackageName Value="ExCtrlsPkg_dsgn"/>
+        <PackageName Value="TAChartLazarusPkg"/>
       </Item5>
       <Item6>
         <PackageName Value="SynEdit"/>
       </Item6>
       <Item7>
-        <PackageName Value="ExCtrlsPkg"/>
+        <PackageName Value="laz.virtualtreeview_package"/>
       </Item7>
       <Item8>
-        <PackageName Value="laz.virtualtreeview_package"/>
+        <PackageName Value="bgracontrols"/>
       </Item8>
       <Item9>
-        <PackageName Value="bgracontrols"/>
+        <PackageName Value="lazreport"/>
       </Item9>
       <Item10>
-        <PackageName Value="lazreport"/>
+        <PackageName Value="FCL"/>
       </Item10>
       <Item11>
-        <PackageName Value="FCL"/>
+        <PackageName Value="LazControls"/>
       </Item11>
       <Item12>
-        <PackageName Value="LazControls"/>
-      </Item12>
-      <Item13>
         <PackageName Value="LCL"/>
-      </Item13>
+      </Item12>
     </RequiredPackages>
-    <Units Count="38">
+    <Units Count="44">
       <Unit0>
         <Filename Value="RQM.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -472,13 +511,59 @@
         <UnitName Value="uniTemplates"/>
       </Unit36>
       <Unit37>
+        <Filename Value="uniedit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmEdit"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniEdit"/>
+      </Unit37>
+      <Unit38>
         <Filename Value="unilinks.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmLinks"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uniLinks"/>
-      </Unit37>
+      </Unit38>
+      <Unit39>
+        <Filename Value="unidetail.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDetail"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniDetail"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="uniDelete.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDelete"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="uniHistory.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmHistory"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="unitags.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmTags"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniTags"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="uniimage.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmImage"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniImage"/>
+      </Unit43>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

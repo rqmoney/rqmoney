@@ -6,7 +6,8 @@ unit uniResources;
 interface
 
 uses
-  Classes, SysUtils, Dialogs, StrUtils, LazUTF8, LCLProc, uniMain, DefaultTranslator, ComCtrls,
+  Classes, SysUtils, Dialogs, StrUtils, LazUTF8, LCLProc, uniMain,
+  DefaultTranslator, ComCtrls,
   laz.VirtualTrees, Forms;
 
 procedure UpdateLanguage;
@@ -89,21 +90,25 @@ resourcestring
   Menu_A08 = 'Developed in';
   Menu_A09 = 'Thanks';
   Menu_A10 = 'Thanks to all the users who helped me a lot in developing this ' +
-    'program with their advices, ideas, bug fixes or financial support for this project.%' +
-    'Without their help, this program would not have been so successful in all those years.%' + 'Author';
+    'program with their advices, ideas, bug fixes or financial support for this project.%'
+    + 'Without their help, this program would not have been so successful in all those years.%'
+    + 'Author';
   Menu_A11 = 'Donation';
   Menu_A12 = 'RQ Money is free software, which means you can use it without any fees.%' +
     'The author has already paid for this program with his free time ' +
-    '(several thousand hours of development since 2005!), his energy and also paid several ' +
-    'fees (buying software, renting a domain, buying an SSL certificate, etc.).%' +
+    '(several thousand hours of development since 2005!), his energy and also paid several '
+    + 'fees (buying software, renting a domain, buying an SSL certificate, etc.).%' +
     'So, if you like RQ Money and find it useful, the author will be grateful ' +
-    'if you consider a small reward (e.g. 10 Euros) via PayPal (button below) ' +
-    'or SEPA payment (more info on the program page).';
-  Menu_A13 = 'Click to open web page for donation%(via PayPal or other way - debit or credit card)';
-
+    'if you consider a small reward. Using the Paypal button below, you can send ' +
+    'support to the author from your own debit / credit card or from your PayPal account.';
+  Menu_A13 =
+    'Click to open web page for donation%(via PayPal or other way - debit or credit card)';
+  Menu_A14 = 'Use the left mouse button to display popup menu';
   Menu_T1 = 'Expand all panels';
   Menu_T2 = 'Collapse all panels';
   Menu_XX = 'Menu';
+  Menu_B01 = 'Legend';
+
 
   // ===============================================================================================
   // Captions
@@ -269,7 +274,8 @@ resourcestring
   Caption_156 = 'The quick brown fox jumps over the lazy dog.';
   Caption_157 = 'On run';
   Caption_158 = 'open last used forms size';
-  Caption_159 = 'when new transaction is added, open the window "New transaction" again to add another transaction';
+  Caption_159 =
+    'when new transaction is added, open the window "New transaction" again to add another transaction';
   Caption_160 = 'open last used database';
   Caption_161 = 'open last used filter';
   Caption_162 = 'automatic columns width for all tables';
@@ -294,8 +300,9 @@ resourcestring
   Caption_181 = 'Transfer';
   Caption_182 = 'IMPORT FILE';
   Caption_183 = 'SELECT FILE TO IMPORT';
-  Caption_184 = 'To be strong, your password should contain:%' + '- at least one lower case letter%' +
-    '- at least one upper case letter%' + '- at least one digit';
+  Caption_184 = 'To be strong, your password should contain:%' +
+    '- at least one lower case letter%' + '- at least one upper case letter%' +
+    '- at least one digit';
   Caption_185 = 'USE STRONG PASSWORD !';
   Caption_186 = 'Old password';
   Caption_187 = 'New password';
@@ -304,7 +311,7 @@ resourcestring
   Caption_190 = 'YOUR NEW DATABASE WAS SUCCESSFULY CREATED !';
   Caption_191 = 'Choose your next step now:';
   Caption_192 = 'Strongly reccomanded';
-  Caption_193 = 'ENCRYPT THE DATABASE';
+  Caption_193 = 'PROTECT THE DATABASE WITH THE PASSWORD';
   Caption_194 = 'For new users';
   Caption_195 = 'RUN THE BEGINNER''S GUIDE';
   Caption_196 = 'For old users';
@@ -332,10 +339,12 @@ resourcestring
   Caption_218 = 'before';
   Caption_219 = 'after';
   Caption_220 = 'Note';
-  Caption_221 = 'These options work only for monthly, quarterly, biannually and yearly repeating transactions!';
+  Caption_221 =
+    'These options work only for monthly, quarterly, biannually and yearly repeating transactions!';
   Caption_222 = 'public holiday';
   Caption_223 = 'to make backup of database';
-  Caption_224 = 'Your backup folder doesn''t exists. Do you want to correct it now?';
+  Caption_224 =
+    'Your backup folder doesn''t exists.%Please, set the folder first or turn off the back up.';
   Caption_225 = 'Maximal count of backup files';
   Caption_226 = 'Show message about successful backup of the database';
   Caption_227 = 'Your database has been backed up successful to the folder';
@@ -417,6 +426,21 @@ resourcestring
   Caption_313 = 'Icons by';
   Caption_314 = 'Show series';
   Caption_315 = 'Show points';
+  Caption_316 = 'if a day is set in the filter, use the current date';
+  Caption_317 = 'use the date shift according to the settings in the program';
+  Caption_318 = 'Cross tables';
+  Caption_319 = 'Simple transaction';
+  Caption_320 = 'Multiple transaction';
+  Caption_321 = 'Kind';
+  Caption_322 = 'DB structure';
+  Caption_323 = 'Created in Apricot software';
+  Caption_324 = 'to show a confirmation dialog about backup of the database';
+  Caption_325 = 'to encrypt the database (required database password protection!)';
+  Caption_326 = 'Your database was not encrypt now.';
+  Caption_327 = 'Red color for buttons DELETE';
+  Caption_328 = 'Buttons bar';
+  Caption_329 = 'Buttons size';
+  Caption_330 = 'Buttons visibility';
 
   // ===============================================================================================
   // A BEGINNER'S GUIDE FORM
@@ -425,41 +449,54 @@ resourcestring
   Guide_02 = 'WELCOME TO THE GUIDE !';
   Guide_03 = 'WELCOME TO THIS SIMPLE GUIDE!%' +
     'You can find here a simple and short instructioms of how to add one daily record ' +
-    '(transaction) to the database.%' + 'It is important to know, that each transaction is bounded with some:%' +
-    'a) person,%b) account,%c) category (or subcategory) and%' + 'd) payee.%' +
-    'Therefore you have to add at least one person, one account (include the currency), ' +
-    'one category (or subcategory) and one payee to the database first.%' + 'Let''s go work!';
+    '(transaction) to the database.%' +
+    'It is important to know, that each transaction is bounded with some:%' +
+    'a) person,%b) account,%c) category (or subcategory) and%' +
+    'd) payee.%' +
+    'Therefore you have to add at least one person, one account (include the currency), '
+    +
+    'one category (or subcategory) and one payee to the database first.%' +
+    'Let''s go work!';
   Guide_04 = 'ADD SOME PERSON TO THE LIST!%' +
     'Click on following button (with persons image), to show the form for the LIST OF ' +
     'PERSONS. You can add, edit or delete people, who will used in the program.%' +
     'You can NOW add the person''s name (like JOHN, JOAN, SUGAR, ...) or you can ' +
     'simply use other descriptions (like MOTHER, SON, ALL, etc.).%' +
-    'Remember 4 basic commands (shortcuts), you can use for faster work with the lists:%' +
+    'Remember 4 basic commands (shortcuts), you can use for faster work with the lists:%'
+    +
     '1) press key INSERT to input new record to the list%' +
     '2) press key SPACE to edit selected record in the list%' +
     '3) press key DELETE to delete selected record(s) from the list%' +
     '4) press key ESC to close any form (without any changes).';
-  Guide_05 = 'NOW YOU CAN ADD YOUR ACCOUNT.%' + 'It can be cash, wallet, bank account, etc.%' +
+  Guide_05 = 'NOW YOU CAN ADD YOUR ACCOUNT.%' +
+    'It can be cash, wallet, bank account, etc.%' +
     'Call them whatever you want (like My Cash, BANK1, BANK2, etc.)%' +
-    'You also have to fill at least 3 fields:%' + 'a) define starting amount of this account%' +
-    'b) starting day (of evidence) and%' + 'c) currency of this account.';
+    'You also have to fill at least 3 fields:%' +
+    'a) define starting amount of this account%' + 'b) starting day (of evidence) and%' +
+    'c) currency of this account.';
   Guide_06 = 'ADD CATEGORY TO THE LIST!%' +
     'For viewing easy it is better to split your credit and debit records into ' +
     'categories and subcategories.%' +
-    'If you have a CAR (category), perhaps you would like to see all car expenses '
-    + 'arranged by various  subcategories (eg. FUEL, SERVICE, TUNING, ...)%' +
+    'If you have a CAR (category), perhaps you would like to see all car expenses ' +
+    'arranged by various  subcategories (eg. FUEL, SERVICE, TUNING, ...)%' +
     'To do so, Open List of categories (push button) and add category CAR.%' +
-    'Then create subcategory FUEL.%' + 'After saving this CATEGORY and SUBCATEGORY repeat all this activities ' +
-    'with subcategory SERVICE and TUNING.%' + 'Just select the category CAR from dropdown list.';
+    'Then create subcategory FUEL.%' +
+    'After saving this CATEGORY and SUBCATEGORY repeat all this activities ' +
+    'with subcategory SERVICE and TUNING.%' +
+    'Just select the category CAR from dropdown list.';
   Guide_07 = '... AND AT THE END ADD SOME PAYEE TO THE LIST!%' +
     'Click on following button (with basket image), to show the form for the ' +
-    'LIST OF PAYEES.%' + 'You can add, edit or delete your business partner (where you get used to ' +
+    'LIST OF PAYEES.%' +
+    'You can add, edit or delete your business partner (where you get used to ' +
     'spending your money or from whom you receive the money).%' +
     'You can NOW add the partner''s name (like WALLMART, TESCO, ' +
-    'AMAZON, LIDL, ...) or you can simply use other descriptions ' + '(like PARTNER 1, PARTNER 2, EMPLOYER, etc.).';
-  Guide_08 = 'ADD YOUR FIRST TRANSACTION!%' + 'If you have added some persons, some accounts, some categories ' +
+    'AMAZON, LIDL, ...) or you can simply use other descriptions ' +
+    '(like PARTNER 1, PARTNER 2, EMPLOYER, etc.).';
+  Guide_08 = 'ADD YOUR FIRST TRANSACTION!%' +
+    'If you have added some persons, some accounts, some categories ' +
     '(with subcategories) and some payee, you can easily add new daily ' +
-    'records (transactions) to the database.%' + 'To add a new debit record into the daily records, use button ' +
+    'records (transactions) to the database.%' +
+    'To add a new debit record into the daily records, use button ' +
     'to open transaction form and fill all necessary fields.%' +
     'Field AMOUNT and COMMENT are optional. If you did not previously add ' +
     'a required person, account, category (subcategory) or payee, ' +
@@ -469,8 +506,9 @@ resourcestring
     'There are a few other lists, but these four are the most important.';
   Guide_09 = 'FINISH! %We have reached the end of the guide!%' +
     'If you have added some transactions to the main window, congratulations!%' +
-    'If not, go back and try again step by step.%' + 'I wish you success with this program! Good luck!%' +
-    'Author of the program%%' + 'If you won''t be satisfied with my program, e-mail me.%' +
+    'If not, go back and try again step by step.%' +
+    'I wish you success with this program! Good luck!%' + 'Author of the program%%' +
+    'If you won''t be satisfied with my program, e-mail me.%' +
     'But - if you are satisfied with it, tell your friends about it.';
 
   // ===============================================================================================
@@ -484,18 +522,18 @@ resourcestring
   Hint_06 = 'Exit this window';
   Hint_09 = 'Copy all item(s) to the clipboard';
   Hint_10 = 'Show all nominal values of selected currency';
-  Hint_12 = 'Take a photo of current form';
+  //  Hint_12 = 'Take a photo of current form';
   Hint_13 = 'Print the list';
   Hint_14 = 'Active = visible in all modules';
   Hint_15 = 'Passive = visible in module Statistics only';
   Hint_16 = 'Archive = hidden in all modules';
   Hint_17 = 'Show all scheduled payments in the selected schedule';
   Hint_18 = 'Duplicate selected item';
-  Hint_19 = 'Add new multiple items';
+  //  Hint_19 = 'Add new multiple items';
   Hint_21 = 'Execute SQL command.%0:sThe results wil be shown in the second panel.';
   Hint_22 = 'Select all items in the list';
   Hint_23 = 'Save all items to the list at once';
-  Hint_24 = 'Print the selected item detail';
+  //  Hint_24 = 'Print the selected item detail';
   Hint_25 = 'Show history of changes of the transaction';
   Hint_26 = 'Filter for multiple selection of items';
 
@@ -521,7 +559,7 @@ resourcestring
   Hint_45 = 'Show list of accounts';
   Hint_46 = 'Show list of categories';
   Hint_47 = 'Show list of persons';
-  Hint_48 = 'Show list of values';
+  //  Hint_48 = 'Show list of values';
   Hint_49 = 'Show list of types';
 
   // btnFinancial_Tools
@@ -537,8 +575,8 @@ resourcestring
   Hint_59 = 'Exit program';
 
   Hint_60 = 'Hint';
-  Hint_61 = 'Name your budget and check some categories / subcategories, you want to watch ' +
-    '(compare plan and real amounts). Then SAVE this new budget.';
+  Hint_61 = 'Name your budget and check some categories / subcategories, you want to watch '
+    + '(compare plan and real amounts). Then SAVE this new budget.';
   Hint_62 = 'Now you can add the first period with the budgeted (planned) amounts.';
 
   // frmRecycle
@@ -546,6 +584,7 @@ resourcestring
 
   // frmEdits
   Hint_80 = 'Reset all fields (to be unchecked)';
+  Hint_81 = 'Check / uncheck all items';
 
   // other
   Hint_100 = 'Swap the order of both transactions within one day.';
@@ -583,14 +622,20 @@ resourcestring
     'All selected payments will be deleted from the scheduler !';
   Question_18 = 'Do you want to delete the date of payment from selected items?';
   Question_19 = 'Do you want to close this window without saving data?';
-  Question_20 = 'Do you want to create new budget and write all checked categories / subcategories to this budget?';
+  Question_20 =
+    'Do you want to create new budget and write all checked categories / subcategories to this budget?';
   Question_21 = 'Do you want to save changes to the selected budget?';
-  Question_22 = 'Do you want to write checked categories / subcategories with planned amounts to the budget?';
+  Question_22 =
+    'Do you want to write checked categories / subcategories with planned amounts to the budget?';
   Question_23 = 'Are you sure you want to delete entire budget with all periods?';
   Question_24 = 'Do you want to set default shortcuts for all actions?';
-  Question_25 = 'There exists brand new stable version %1 of this program.%2Release date: %3 %2' +
-    'Do you want do visit official website to download it?';
-  Question_26 = 'Do you want to delete corrupted records now? You can view them later in the recycle bin.';
+  Question_25 = 'There exists brand new stable version %1 of this program.%2Release date: %3 %2'
+    + 'Do you want do visit official website to download it?';
+  Question_26 =
+    'Do you want to delete corrupted records now? You can view them later in the recycle bin.';
+  Question_27 = 'Do you want to back up your database to the selected folder now?';
+  Question_28 =
+    'The encryption of your database requires password protection.% Do you want to set this password now?';
 
   // ===============================================================================================
   // Messages
@@ -603,8 +648,7 @@ resourcestring
   Message_05 = 'SQL command was executed successful.';
   Message_06 = 'Import finished successful.';
   Message_07 = 'Selected picture was copied to the clipboard.%0:sSize: %1:s px x %2:s px.';
-  Message_08 = 'After editing this budget all previous periods with categories and planned amounts will be deleted!' +
-    'Do you want to save this changes?';
+  //  Message_08 = '';
   Message_09 = 'You are using the current version of the program.';
   Message_10 = 'This feature is not available in this operating system';
 
@@ -627,13 +671,16 @@ resourcestring
   Error_11 = 'The database seems to be malformed.%Program can not open it.';
   Error_12 =
     'You can not use the same account %1 for transfer (credit and debit) at the same time. %2 Use two different accounts.';
-  Error_13 = 'You can not use in the transaction older date than the date, when the account % was created!';
+  Error_13 =
+    'You can not use in the transaction older date than the date, when the account % was created!';
   Error_14 = 'Program can not find a printing template assigned to this list:';
   Error_15 = 'Wrong date !';
-  Error_16 = 'Choose one account in the filter only and then try print "The account book" again.';
+  Error_16 =
+    'Choose one account in the filter only and then try print "The account book" again.';
   Error_17 =
     'This function is not working yet.%Maybe in the next version it will be implemented.%Please be patient.';
-  Error_18 = 'Program can not open this type of database (perhaps created in different program).';
+  Error_18 =
+    'Program can not open this type of database (perhaps created in different program).';
   Error_19 = 'Sorry, there are no data to show you ...';
   Error_20 =
     'The import failed due the problem with the file.%Please, be sure that the imported file is not encrypted!';
@@ -649,7 +696,8 @@ resourcestring
   Error_29 = 'You can not add transactions older then';
   Error_30 = 'You can not edit transactions older then';
   Error_31 = 'You can not delete transactions older then';
-  Error_32 = 'The program cannot open your database % because another program is already using it.';
+  Error_32 =
+    'The program cannot open your database % because another program is already using it.';
 
   // ===============================================================================================
   // Version
@@ -660,13 +708,14 @@ resourcestring
   // ===============================================================================================
   // License
   // ===============================================================================================
-  License_01 = 'RQ MONEY is free software: you can redistribute it and/or modify it under the terms of ' +
-    'the GNU General Public License as published by the Free Software Foundation; either version 3 ' +
-    'of the License, or (at your option) any later version.% %RQ MONEY is distributed in the hope that ' +
-    'it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY ' +
-    'or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.% %' +
-    'You should have received a copy of the GNU General Public License along with RQ MONEY. ' +
-    'If not, see:';
+  License_01 =
+    'RQ MONEY is free software: you can redistribute it and/or modify it under the terms of '
+    + 'the GNU General Public License as published by the Free Software Foundation; either version 3 '
+    + 'of the License, or (at your option) any later version.% %RQ MONEY is distributed in the hope that '
+    + 'it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY '
+    + 'or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.% %'
+    + 'You should have received a copy of the GNU General Public License along with RQ MONEY. '
+    + 'If not, see:';
 
   // ===============================================================================================
   // CHARTS
@@ -682,13 +731,14 @@ resourcestring
   Chart_09 = 'The Chart has been copied to the clipboard';
   Chart_10 = 'Wrap the text string';
   Chart_11 = 'Graph';
+  Chart_12 = 'Data';
 
 implementation
 
 uses
   uniProperties, uniDetail, uniCurrencies, uniCategories, uniAccounts, uniPayees,
   uniHolidays, uniScheduler, uniSchedulers, uniCounter, uniManyCurrencies, uniCalendar,
-  uniTags, uniAbout, uniComments, uniDelete, uniEdit, uniGate, uniHistory, uniMultiple,
+  uniTags, uniAbout, uniComments, uniDelete, uniEdit, uniGate, uniHistory, uniImage,
   uniPassword, uniPersons, uniRecycleBin, uniSettings, uniShortCut, uniSQL, uniLinks,
   uniSQLResults, uniValues, uniWrite, uniwriting, uniEdits, uniFilter, uniGuide,
   uniImport, uniSuccess, uniPeriod, uniPlan, uniBudget, uniBudgets, uniTemplates;
@@ -697,9 +747,8 @@ procedure UpdateLanguage;
 var
   Key: PKey;
   P: PVirtualNode;
-  I: Integer;
+  I: integer;
   Lang: PLang;
-
 begin
   try
     // =============================================================================================
@@ -774,10 +823,12 @@ begin
     frmMain.btnTag.Hint := Hint_26;
 
     frmMain.pnlFilterCaption.Caption := Caption_18;
-    frmMain.pnlListCaption.Caption := AnsiUpperCase(Caption_25) + frmMain.pnlType.Hint + frmMain.pnlDate.Hint +
+    frmMain.pnlListCaption.Caption :=
+      AnsiUpperCase(Caption_25) + frmMain.pnlType.Hint + frmMain.pnlDate.Hint +
       frmMain.pnlCurrency.Hint + frmMain.pnlAccount.Hint + frmMain.pnlAmount.Hint +
-      frmMain.pnlComment.Hint + frmMain.pnlCategory.Hint + AnsiUpperCase(frmMain.pnlPerson.Hint) +
-      AnsiUpperCase(frmMain.pnlPayee.Hint) + frmMain.pnlTag.Hint;
+      frmMain.pnlComment.Hint + frmMain.pnlCategory.Hint +
+      AnsiUpperCase(frmMain.pnlPerson.Hint) + AnsiUpperCase(frmMain.pnlPayee.Hint) +
+      frmMain.pnlTag.Hint;
 
     frmMain.pnlTypeCaption.Caption := '  ' + Caption_63; // Type
     frmMain.pnlDateCaption.Caption := '  ' + Caption_26; // Date
@@ -795,7 +846,8 @@ begin
     frmMain.pnlPayeeCaption.Caption := '  ' + Caption_60; // Payee
 
     frmMain.pnlCurrencyCaption.Caption := '  ' + Caption_52; // Currency
-    frmMain.pnlMonthYearCaption.Caption := Caption_19 + ' + ' + Caption_20 + '  '; // Month + Year
+    frmMain.pnlMonthYearCaption.Caption := Caption_19 + ' + ' + Caption_20 + '  ';
+    // Month + Year
     frmMain.gbxMonth.Caption := Caption_19; // Month
     frmMain.gbxYear.Caption := Caption_20; // Year
 
@@ -808,46 +860,68 @@ begin
     //  TOOL MENU HINT -----------------------------------------------------------------------------
 
     // mnuDatabase
-    frmMain.btnNew.Hint := Hint_30 + sLineBreak + '[' + ShortCutToText(frmMain.mnuNew.ShortCut) + ']';
-    frmMain.btnOpen.Hint := Hint_31 + sLineBreak + '[' + ShortCutToText(frmMain.mnuOpen.ShortCut) + ']';
-    frmMain.btnClose.Hint := Hint_32 + sLineBreak + '[' + ShortCutToText(frmMain.mnuClose.ShortCut) + ']';
-    frmMain.btnImport.Hint := Hint_33 + sLineBreak + '[' + ShortCutToText(frmMain.mnuImport.ShortCut) + ']';
-    frmMain.btnExport.Hint := Hint_34 + sLineBreak + '[' + ShortCutToText(frmMain.mnuExport.ShortCut) + ']';
-    frmMain.btnPassword.Hint := Hint_35 + sLineBreak + '[' + ShortCutToText(frmMain.mnuPassword.ShortCut) + ']';
-    frmMain.btnSQL.Hint := Hint_36 + sLineBreak + '[' + ShortCutToText(frmMain.mnuSQL.ShortCut) + ']';
-    frmMain.btnGuide.Hint := Hint_37 + sLineBreak + '[' + ShortCutToText(frmMain.mnuGuide.ShortCut) + ']';
-    frmMain.btnProperties.Hint := Hint_38 + sLineBreak + '[' +
-      ShortCutToText(frmMain.mnuProperties.ShortCut) + ']';
-    frmMain.btnRecycle.Hint := Hint_39 + sLineBreak + '[' + ShortCutToText(frmMain.mnuRecycle.ShortCut) + ']';
+    frmMain.btnNew.Hint := Hint_30 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuNew.ShortCut) + ']';
+    frmMain.btnOpen.Hint := Hint_31 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuOpen.ShortCut) + ']';
+    frmMain.btnClose.Hint := Hint_32 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuClose.ShortCut) + ']';
+    frmMain.btnImport.Hint := Hint_33 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuImport.ShortCut) + ']';
+    frmMain.btnExport.Hint := Hint_34 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuExport.ShortCut) + ']';
+    frmMain.btnPassword.Hint :=
+      Hint_35 + sLineBreak + '[' + ShortCutToText(frmMain.mnuPassword.ShortCut) + ']';
+    frmMain.btnSQL.Hint := Hint_36 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuSQL.ShortCut) + ']';
+    frmMain.btnGuide.Hint := Hint_37 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuGuide.ShortCut) + ']';
+    frmMain.btnProperties.Hint :=
+      Hint_38 + sLineBreak + '[' + ShortCutToText(frmMain.mnuProperties.ShortCut) + ']';
+    frmMain.btnRecycle.Hint :=
+      Hint_39 + sLineBreak + '[' + ShortCutToText(frmMain.mnuRecycle.ShortCut) + ']';
 
-    frmMain.btnHolidays.Hint := Hint_40 + sLineBreak + '[' + ShortCutToText(frmMain.mnuHolidays.ShortCut) + ']';
-    frmMain.btnTags.Hint := Hint_41 + sLineBreak + '[' + ShortCutToText(frmMain.mnuTags.ShortCut) + ']';
-    frmMain.btnCurrencies.Hint := Hint_42 + sLineBreak + '[' +
-      ShortCutToText(frmMain.mnuCurrencies.ShortCut) + ']';
-    frmMain.btnPayees.Hint := Hint_43 + sLineBreak + '[' + ShortCutToText(frmMain.mnuPayees.ShortCut) + ']';
-    frmMain.btnComments.Hint := Hint_44 + sLineBreak + '[' + ShortCutToText(frmMain.mnuComments.ShortCut) + ']';
-    frmMain.btnAccounts.Hint := Hint_45 + sLineBreak + '[' + ShortCutToText(frmMain.mnuAccounts.ShortCut) + ']';
-    frmMain.btnCategories.Hint := Hint_46 + sLineBreak + '[' +
-      ShortCutToText(frmMain.mnuCategories.ShortCut) + ']';
-    frmMain.btnPersons.Hint := Hint_47 + sLineBreak + '[' + ShortCutToText(frmMain.mnuPersons.ShortCut) + ']';
+    frmMain.btnHolidays.Hint :=
+      Hint_40 + sLineBreak + '[' + ShortCutToText(frmMain.mnuHolidays.ShortCut) + ']';
+    frmMain.btnTags.Hint := Hint_41 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuTags.ShortCut) + ']';
+    frmMain.btnCurrencies.Hint :=
+      Hint_42 + sLineBreak + '[' + ShortCutToText(frmMain.mnuCurrencies.ShortCut) + ']';
+    frmMain.btnPayees.Hint := Hint_43 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuPayees.ShortCut) + ']';
+    frmMain.btnComments.Hint :=
+      Hint_44 + sLineBreak + '[' + ShortCutToText(frmMain.mnuComments.ShortCut) + ']';
+    frmMain.btnAccounts.Hint :=
+      Hint_45 + sLineBreak + '[' + ShortCutToText(frmMain.mnuAccounts.ShortCut) + ']';
+    frmMain.btnCategories.Hint :=
+      Hint_46 + sLineBreak + '[' + ShortCutToText(frmMain.mnuCategories.ShortCut) + ']';
+    frmMain.btnPersons.Hint :=
+      Hint_47 + sLineBreak + '[' + ShortCutToText(frmMain.mnuPersons.ShortCut) + ']';
 
-    frmMain.btnSchedulers.Hint := Hint_50 + sLineBreak + '[' +
-      ShortCutToText(frmMain.mnuSchedulers.ShortCut) + ']';
-    frmMain.btnWrite.Hint := Hint_51 + sLineBreak + '[' + ShortCutToText(frmMain.mnuWrite.ShortCut) + ']';
-    frmMain.btnCalendar.Hint := Hint_52 + sLineBreak + '[' + ShortCutToText(frmMain.mnuCalendar.ShortCut) + ']';
-    frmMain.btnBudgets.Hint := Hint_53 + sLineBreak + '[' + ShortCutToText(frmMain.mnuBudget.ShortCut) + ']';
-    frmMain.btnReports.Hint := Hint_54 + sLineBreak + '[' + ShortCutToText(frmMain.mnuReports.ShortCut) + ']';
+    frmMain.btnSchedulers.Hint :=
+      Hint_50 + sLineBreak + '[' + ShortCutToText(frmMain.mnuSchedulers.ShortCut) + ']';
+    frmMain.btnWrite.Hint := Hint_51 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuWrite.ShortCut) + ']';
+    frmMain.btnCalendar.Hint :=
+      Hint_52 + sLineBreak + '[' + ShortCutToText(frmMain.mnuCalendar.ShortCut) + ']';
+    frmMain.btnBudgets.Hint :=
+      Hint_53 + sLineBreak + '[' + ShortCutToText(frmMain.mnuBudget.ShortCut) + ']';
+    frmMain.btnReports.Hint :=
+      Hint_54 + sLineBreak + '[' + ShortCutToText(frmMain.mnuReports.ShortCut) + ']';
     frmMain.btnCashCounter.Hint :=
       Hint_55 + sLineBreak + '[' + ShortCutToText(frmMain.mnuCashCounter.ShortCut) + ']';
-    frmMain.btnCalc.Hint := Hint_56 + sLineBreak + '[' + ShortCutToText(frmMain.mnuCalc.ShortCut) + ']';
+    frmMain.btnCalc.Hint := Hint_56 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuCalc.ShortCut) + ']';
 
-    frmMain.btnSettings.Hint := Hint_57 + sLineBreak + '[' + ShortCutToText(frmMain.mnuSettings.ShortCut) + ']';
-    frmMain.btnAbout.Hint := Hint_58 + sLineBreak + '[' + ShortCutToText(frmMain.mnuAbout.ShortCut) + ']';
-    frmMain.btnExit.Hint := Hint_59 + sLineBreak + '[' + ShortCutToText(frmMain.mnuExit.ShortCut) + ']';
+    frmMain.btnSettings.Hint :=
+      Hint_57 + sLineBreak + '[' + ShortCutToText(frmMain.mnuSettings.ShortCut) + ']';
+    frmMain.btnAbout.Hint := Hint_58 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuAbout.ShortCut) + ']';
+    frmMain.btnExit.Hint := Hint_59 + sLineBreak + '[' +
+      ShortCutToText(frmMain.mnuExit.ShortCut) + ']';
 
     // BUTTON CAPTION
     frmMain.btnAdd.Caption := Caption_00;
-    frmMain.btnAddMulti.Caption := Caption_01;
     frmMain.btnDuplicate.Caption := Caption_10;
     frmMain.btnEdit.Caption := Caption_02;
     frmMain.btnDelete.Caption := Caption_03;
@@ -857,8 +931,8 @@ begin
     frmMain.btnHistory.Caption := Caption_67;
 
     // POPUPMENU CAPTION
-    frmMain.popAdd.Caption := Caption_00;
-    frmMain.popAddMulti.Caption := Caption_01;
+    frmMain.popAddSimple.Caption := Caption_00;
+    frmMain.popAddMulitple.Caption := Caption_01;
     frmMain.popEdit.Caption := Caption_02;
     frmMain.popDuplicate.Caption := Caption_10;
     frmMain.popDelete.Caption := Caption_03;
@@ -872,15 +946,21 @@ begin
     frmMain.popSummaryPrint.Caption := Caption_68;
 
     // BUTTONS HINT
-    frmMain.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmMain.popAdd.ShortCut) + ']';
-    frmMain.btnAddMulti.Hint :=
-      Hint_19 + sLineBreak + '[' + ShortCutToText(frmMain.popAddMulti.ShortCut) + ']';
-    frmMain.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmMain.popEdit.ShortCut) + ']';
-    frmMain.btnDuplicate.Hint := Hint_18 + sLineBreak + '[' + ShortCutToText(frmMain.popDuplicate.ShortCut) + ']';
-    frmMain.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(frmMain.popDelete.ShortCut) + ']';
-    frmMain.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(frmMain.popSelect.ShortCut) + ']';
-    frmMain.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmMain.popCopy.ShortCut) + ']';
-    frmMain.btnHistory.Hint := Hint_25 + sLineBreak + '[' + ShortCutToText(frmMain.popHistory.ShortCut) + ']';
+    frmMain.btnAdd.Hint := Hint_01 + ':' + sLineBreak + Caption_319 +
+      ' [' + ShortCutToText(frmMain.popAddSimple.ShortCut) + ']' +
+      sLineBreak + Caption_320 + ' [' + frmMain.pnlButtons.Hint + ']';
+    frmMain.btnEdit.Hint := Hint_02 + sLineBreak + '[' +
+      ShortCutToText(frmMain.popEdit.ShortCut) + ']';
+    frmMain.btnDuplicate.Hint :=
+      Hint_18 + sLineBreak + '[' + ShortCutToText(frmMain.popDuplicate.ShortCut) + ']';
+    frmMain.btnDelete.Hint := Hint_03 + sLineBreak + '[' +
+      ShortCutToText(frmMain.popDelete.ShortCut) + ']';
+    frmMain.btnSelect.Hint := Hint_22 + sLineBreak + '[' +
+      ShortCutToText(frmMain.popSelect.ShortCut) + ']';
+    frmMain.btnCopy.Hint := Hint_09 + sLineBreak + '[' +
+      ShortCutToText(frmMain.popCopy.ShortCut) + ']';
+    frmMain.btnHistory.Hint :=
+      Hint_25 + sLineBreak + '[' + ShortCutToText(frmMain.popHistory.ShortCut) + ']';
 
     // LIST HEADER CAPTION
     frmMain.VST.Header.Columns[1].Text := Caption_26; // date
@@ -905,33 +985,41 @@ begin
     frmMain.VSTSummary.Header.Columns[7].Text := Caption_35; // current balance
     frmMain.VSTSummary.Header.Columns[8].Text := Caption_36; // final balance
 
-    For I := 2 to 8 do
+    for I := 2 to 8 do
       frmMain.VSTSummaries.Header.Columns[I - 1].Text :=
         frmMain.VSTSummary.Header.Columns[I].Text;
 
     frmMain.chkShowPieChart.Caption := Caption_312;
 
     // REPORTS
+    frmMain.pnlReportCaption.Caption := AnsiUpperCase(AnsiReplaceStr(Menu_45, '&', ''));
     frmMain.btnReportExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
-    frmMain.btnReportExit.Hint := Hint_06 + sLineBreak + '[' +
-      ShortCutToText(frmCurrencies.actExit.ShortCut) + ']';
+    frmMain.btnReportExit.Hint :=
+      Hint_06 + sLineBreak + '[' + ShortCutToText(frmCurrencies.actExit.ShortCut) + ']';
     frmMain.btnReportCopy.Caption := Caption_272;
-    frmMain.btnReportCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmMain.popCopy.ShortCut) + ']';
+    frmMain.btnReportCopy.Hint := frmMain.btnCopy.Hint;
     frmMain.btnReportPrint.Caption := Caption_68;
-    frmMain.btnReportPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(frmCurrencies.popPrint.ShortCut) + ']';
+    frmMain.btnReportPrint.Hint :=
+      Hint_13 + sLineBreak + '[' + ShortCutToText(frmCurrencies.popPrint.ShortCut) + ']';
     frmMain.btnReportSettings.Caption := AnsiReplaceStr(Menu_61, '&', '');
-    frmMain.btnReportSettings.Hint := Hint_57 + sLineBreak + '[' + ShortCutToText(frmMain.mnuSettings.ShortCut) + ']';
+    frmMain.btnReportSettings.Hint := frmMain.btnSettings.Hint;
 
     frmMain.tabBalance.Caption := Caption_287;
-    frmMain.tabBalanceHeader.Tabs.Clear;
-    frmMain.tabBalanceHeader.Tabs.Add(AnsiReplaceStr(Menu_23, '&', ''));
-    frmMain.tabBalanceHeader.Tabs.Add(AnsiReplaceStr(Menu_26, '&', ''));
-    frmMain.tabBalanceHeader.Tabs.Add(AnsiReplaceStr(Menu_27, '&', ''));
-    //frmMain.tabBalanceHeader.Tabs.Add(AnsiReplaceStr(Menu_29, '&', ''));
-    frmMain.tabBalanceHeader.Tabs.Add(AnsiReplaceStr(Menu_28, '&', ''));
-    frmMain.tabBalanceHeader.Tabs.Add(AnsiReplaceStr(Menu_24, '&', ''));
-    // frmMain.tabBalanceHeader.Tabs.Add(AnsiReplaceStr(Menu_22, '&', ''));
+
+    frmMain.tabBalanceHeader.Tabs[0].Text :=
+      '  ' + AnsiReplaceStr(Menu_23, '&', '') + '  ';
+    frmMain.tabBalanceHeader.Tabs[1].Text :=
+      '  ' + AnsiReplaceStr(Menu_26, '&', '') + '  ';
+    frmMain.tabBalanceHeader.Tabs[2].Text :=
+      '  ' + AnsiReplaceStr(Menu_27, '&', '') + '  ';
+    frmMain.tabBalanceHeader.Tabs[3].Text :=
+      '  ' + AnsiReplaceStr(Menu_28, '&', '') + '  ';
+    frmMain.tabBalanceHeader.Tabs[4].Text :=
+      '  ' + AnsiReplaceStr(Menu_24, '&', '') + '  ';
     frmMain.tabBalanceHeader.TabIndex := 0;
+
+    frmMain.tabBalanceShow.Tabs[0].Text := Chart_12;
+    frmMain.tabBalanceShow.Tabs[1].Text := Chart_11;
 
     // REPORTS - BALANCE CHART SERIES
     frmMain.styBalanceCredit.Styles[0].Text := Caption_38; // credits
@@ -952,14 +1040,42 @@ begin
     frmMain.popCopyChartChrono.Caption := Caption_272;
 
     frmMain.tabChrono.Caption := Caption_310;
-    frmMain.tabChronoHeader.Tabs.Clear;
-    frmMain.tabChronoHeader.Tabs.Add(Caption_308 + ' (1-7)');
-    frmMain.tabChronoHeader.Tabs.Add(Caption_308 + ' (1-31)');
-    frmMain.tabChronoHeader.Tabs.Add(Caption_308 + ' (1-365)');
-    frmMain.tabChronoHeader.Tabs.Add(Caption_302 + ' (1-52)');
-    frmMain.tabChronoHeader.Tabs.Add(Caption_303 + ' (1-12)');
-    frmMain.tabChronoHeader.Tabs.Add(Caption_304 + ' (1-4)');
-    frmMain.tabChronoHeader.Tabs.Add(Caption_309);
+
+    frmMain.tabChronoHeader.Tabs[0].Text := Caption_308 + ' (1-7)';
+    frmMain.tabChronoHeader.Tabs[1].Text := Caption_308 + ' (1-31)';
+    frmMain.tabChronoHeader.Tabs[2].Text := Caption_308 + ' (1-365)';
+    frmMain.tabChronoHeader.Tabs[3].Text := Caption_302 + ' (1-52)';
+    frmMain.tabChronoHeader.Tabs[4].Text := Caption_303 + ' (1-12)';
+    frmMain.tabChronoHeader.Tabs[5].Text := Caption_304 + ' (1-4)';
+    frmMain.tabChronoHeader.Tabs[6].Text := Caption_309;
+
+    frmMain.tabCross.Caption := Caption_318;
+
+    // Cross tables - top header
+    frmMain.tabCrossTop.Tabs[0].Text := '  ' + Caption_52 + '  '; // currency
+    frmMain.tabCrossTop.Tabs[1].Text := '  ' + Caption_50 + '  '; // account
+    frmMain.tabCrossTop.Tabs[2].Text := '  ' + AnsiReplaceStr(Caption_54, '&', '') + '  '; // category
+    frmMain.tabCrossTop.Tabs[3].Text := '  ' + Caption_58 + '  '; // person
+    frmMain.tabCrossTop.Tabs[4].Text := '  ' + Caption_60 + '  '; // payee
+
+    // Cross tables - left header
+    frmMain.tabCrossLeft.Tabs[1].Text := '  ' + Caption_52 + '  '; // currency
+    frmMain.tabCrossLeft.Tabs[2].Text := '  ' + Caption_50 + '  '; // account
+    frmMain.tabCrossLeft.Tabs[3].Text := '  ' + AnsiReplaceStr(Caption_54, '&', '') + '  '; // category
+    frmMain.tabCrossLeft.Tabs[4].Text := '  ' + Caption_80 + '  '; // subcategory
+    frmMain.tabCrossLeft.Tabs[5].Text := '  ' + Caption_58 + '  '; // person
+    frmMain.tabCrossLeft.Tabs[6].Text := '  ' + Caption_60 + '  '; // payee
+
+    // REPORTS - CROSS HEADER CAPTION
+    frmMain.VSTCross.Header.Columns[2].Text := Caption_38; // credits
+    frmMain.VSTCross.Header.Columns[3].Text := Caption_39; // debits
+    frmMain.VSTCross.Header.Columns[4].Text := Caption_40 + ' +'; // transfers (+)
+    frmMain.VSTCross.Header.Columns[5].Text := Caption_40 + ' -'; // transfers (-)
+    frmMain.VSTCross.Header.Columns[6].Text := Caption_35; // current balance
+
+    frmMain.VSTCross.Header.Columns[1].Text :=
+      frmMain.tabCrossTop.Tabs[frmMain.tabCrossTop.TabIndex].Text +
+      ' / ' + frmMain.tabCrossLeft.Tabs[frmMain.tabCrossLeft.TabIndex].Text;
 
     // SUMMARY HEADER CAPTION
     frmMain.VSTChrono.Header.Columns[1].Text := Caption_311; // intervals
@@ -972,6 +1088,7 @@ begin
     frmMain.VSTChrono.Header.Columns[8].Text := Caption_36; // final balance
 
     // charts
+    frmMain.chaChrono.Hint := Menu_A14;
     frmMain.serChronoStart.Title := Caption_37; // starting balance;
     frmMain.serChronoCredits.Title := Caption_38; // credits
     frmMain.serChronoDebits.Title := Caption_39; // debits
@@ -993,77 +1110,81 @@ begin
     frmMain.popChartChrono6.Caption := Caption_35; // current balance
     frmMain.popChartChrono7.Caption := Caption_36; // final balance
 
-    // =============================================================================================
-    // FRMMULTIPLE FORM
-    // =============================================================================================
-
-    frmMultiple.Caption := AnsiUpperCase(Caption_74);
-    frmMultiple.pnlBasicCaption.Caption := AnsiUpperCase(Caption_73);
-    frmMultiple.pnlDetailCaption.Caption := AnsiUpperCase(Caption_43);
-    frmMultiple.pnlListCaption.Caption := AnsiUpperCase(Caption_25);
-
-    // update menu items
-    frmMultiple.btnAdd.Caption := Caption_00;
-    frmMultiple.btnEdit.Caption := Caption_02;
-    frmMultiple.btnDelete.Caption := Caption_03;
-    frmMultiple.btnDuplicate.Caption := Caption_10;
-    frmMultiple.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
-    frmMultiple.btnWrite.Caption := Caption_72;
-    frmMultiple.btnSave.Caption := Caption_04;
-    frmMultiple.btnCancel.Caption := Caption_05;
-
-    // popup menu
-    frmMultiple.popAdd.Caption := Caption_00;
-    frmMultiple.popEdit.Caption := Caption_02;
-    frmMultiple.popDelete.Caption := Caption_03;
-    frmMultiple.popDuplicate.Caption := Caption_10;
-    frmMultiple.popSelect.Caption := Caption_12;
-    frmMultiple.popExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
-
-    // update hint of all menu
-    frmMultiple.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmMultiple.actAdd.ShortCut) + ']';
-    frmMultiple.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmMultiple.actEdit.ShortCut) + ']';
-    frmMultiple.btnDuplicate.Hint :=
-      Hint_18 + sLineBreak + '[' + ShortCutToText(frmMultiple.actDuplicate.ShortCut) + ']';
-    frmMultiple.btnDelete.Hint := Hint_03 + sLineBreak + '[' +
-      ShortCutToText(frmMultiple.actDelete.ShortCut) + ']';
-    frmMultiple.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmMultiple.actSave.ShortCut) + ']';
-    frmMultiple.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmMultiple.actExit.ShortCut) + ']';
-    frmMultiple.btnWrite.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmMultiple.actSave.ShortCut) + ']';
-    frmMultiple.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmMultiple.actExit.ShortCut) + ']';
-
-    frmMultiple.lblAccount.Caption := Caption_50;
-    frmMultiple.lblDate.Caption := Caption_26;
-    frmMultiple.lblPayee.Caption := Caption_60;
-    frmMultiple.lblPerson.Caption := Caption_58;
-    frmMultiple.lblComment.Caption := Caption_56;
-    frmMultiple.lblCategory.Caption := AnsiReplaceStr(Caption_54, '&', '');
-    frmMultiple.lblTag.Caption := Caption_62;
-    frmMultiple.lblAmount.Caption := Caption_42;
-    frmMultiple.lblType.Caption := Caption_63;
-    frmMultiple.chkAmountMinus.Caption := Caption_93;
-    frmMultiple.lblSummaryInList.Caption := Caption_94;
-    frmMultiple.lblBalance_.Caption := Caption_79;
-
-    frmMultiple.VST.Header.Columns[1].Text := Caption_42; // amount
-    frmMultiple.VST.Header.Columns[2].Text := Caption_56; // comment
-    frmMultiple.VST.Header.Columns[3].Text := AnsiReplaceStr(Caption_54, '&', ''); // category
-    frmMultiple.VST.Header.Columns[4].Text := Caption_58; // person
-    frmMultiple.VST.Header.Columns[5].Text := Caption_63; // type
-    frmMultiple.VST.Header.Columns[6].Text := Caption_62; // tag 1
-    frmMultiple.VST.Header.Columns[7].Text := Caption_62; // tag 2
+    frmMain.popEditToolBar.Caption := Caption_02;
 
     // =============================================================================================
     // FRMDETAIL FORM
     // =============================================================================================
 
-    frmDetail.Caption := AnsiUpperCase(Caption_45);
+    frmDetail.pnlBasicCaption.Caption := AnsiUpperCase(Caption_73);
+    frmDetail.pnlDetailCaption.Caption := AnsiUpperCase(Caption_43);
+    frmDetail.pnlListCaption.Caption := AnsiUpperCase(Caption_25);
 
+    // update menu items
+    frmDetail.btnAdd.Caption := Caption_00;
+    frmDetail.btnEdit.Caption := Caption_02;
+    frmDetail.btnDelete.Caption := Caption_03;
+    frmDetail.btnDuplicate.Caption := Caption_10;
+    frmDetail.btnSelect.Caption := Caption_12;
     frmDetail.btnSave.Caption := Caption_04;
     frmDetail.btnCancel.Caption := Caption_05;
+
+    // POPUPMENU CAPTION
+    frmDetail.popAdd.Caption := Caption_00;
+    frmDetail.popEdit.Caption := Caption_02;
+    frmDetail.popDuplicate.Caption := Caption_10;
+    frmDetail.popDelete.Caption := Caption_03;
+    frmDetail.popSelect.Caption := Caption_12;
+    frmDetail.popExit.Caption := Menu_63;
+
+    // update hint of all menu
+    frmDetail.btnAdd.Hint := Hint_01 + sLineBreak + '[' +
+      ShortCutToText(frmMain.actAddSimple.ShortCut) + ']';
+    frmDetail.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmDetail.btnDuplicate.Hint := frmMain.btnDuplicate.Hint;
+    frmDetail.btnSelect.Hint := frmMain.btnSelect.Hint;
+    frmDetail.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmDetail.btnSave.Hint := Hint_04 + sLineBreak + '[' +
+      ShortCutToText(frmDetail.actSave.ShortCut) + ']';
+    frmDetail.btnCancel.Hint :=
+      Hint_05 + sLineBreak + '[' + ShortCutToText(frmDetail.actExit.ShortCut) + ']';
+
+    frmDetail.lblAccountX.Caption := Caption_50;
+    frmDetail.lblDateX.Caption := Caption_26;
+    frmDetail.lblPayeeX.Caption := Caption_60;
+    frmDetail.lblPersonX.Caption := Caption_58;
+    frmDetail.lblCommentX.Caption := Caption_56;
+    frmDetail.lblCategoryX.Caption := AnsiReplaceStr(Caption_54, '&', '') + ' / ' + Caption_80;
+    frmDetail.lblTagsX.Caption := Caption_62;
+    frmDetail.lblAmountX.Caption := Caption_42;
+    frmDetail.lblTypeX.Caption := Caption_63;
+    frmDetail.chkAmountMinus.Caption := Caption_93;
+    frmDetail.lblSummaryInList.Caption := Caption_94;
+    frmDetail.lblBalance_.Caption := Caption_79;
+
+    frmDetail.VST.Header.Columns[1].Text := Caption_42; // amount
+    frmDetail.VST.Header.Columns[2].Text := Caption_56; // comment
+    frmDetail.VST.Header.Columns[3].Text := AnsiReplaceStr(Caption_54, '&', '');
+    // category
+    frmDetail.VST.Header.Columns[4].Text := Caption_58; // person
+    frmDetail.VST.Header.Columns[5].Text := Caption_63; // type
+    frmDetail.VST.Header.Columns[6].Text := Caption_62; // tag 1
+    frmDetail.VST.Header.Columns[7].Text := Caption_62; // tag 2
+
+    frmDetail.Caption := AnsiUpperCase(Caption_45);
+    frmDetail.tabKind.Tabs[0].Text :=
+      ' ' + Caption_319 + ' [' + ShortCutToText(frmDetail.actSimple.ShortCut) +
+      ']' + ' ';
+    frmDetail.tabKind.Tabs[1].Text :=
+      ' ' + Caption_320 + ' [' + ShortCutToText(frmDetail.actMultiple.ShortCut) +
+      ']' + ' ';
+
     frmDetail.btnSettings.Caption := AnsiReplaceStr(Menu_61, '&', '');
-    frmDetail.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmDetail.actSave.ShortCut) + ']';
-    frmDetail.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmDetail.actExit.ShortCut) + ']';
+    frmDetail.btnSettings.Hint := frmMain.btnSettings.Hint;
+    frmDetail.btnSaveX.Caption := Caption_04;
+    frmDetail.btnSaveX.Hint := frmDetail.btnSave.Hint;
+    frmDetail.btnCancelX.Caption := Caption_05;
+    frmDetail.btnCancelX.Hint := frmDetail.btnCancel.Hint;
 
     // labels FROM
     frmDetail.gbxType.Caption := Caption_63; // Type;
@@ -1074,30 +1195,35 @@ begin
     frmDetail.gbxDateTo.Caption := Caption_26; // Date
     frmDetail.gbxAmountTo.Caption := Caption_42; // Amount;
     frmDetail.gbxComment.Caption := Caption_56; // Comment;
-    frmDetail.gbxCategory.Caption := AnsiReplaceStr(Caption_54, '&', ''); // Category
+    frmDetail.gbxCategory.Caption := AnsiReplaceStr(Caption_54, '&', '') + ' / ' + Caption_80;
+    // Category / Subcategory
     frmDetail.gbxPerson.Caption := Caption_58; // Person
     frmDetail.gbxPayee.Caption := Caption_60; // Payee
     frmDetail.gbxTag.Caption := Caption_62; // Tag
 
     // hints
-    frmDetail.btnComment.Hint := Hint_44;
-    frmDetail.btnCategory.Hint := Hint_46;
-    frmDetail.btnPerson.Hint := Hint_47;
-    frmDetail.btnPayee.Hint := Hint_43;
-    frmDetail.btnAccountFrom.Hint := Hint_45;
-    frmDetail.btnAccountTo.Hint := Hint_45;
-    frmDetail.btnTag.Hint := Hint_41;
-    frmDetail.btnAmountFrom.Hint := Hint_56;
-    frmDetail.btnAmountTo.Hint := Hint_56;
-
+    frmDetail.btnComment.Hint := frmMain.btnComments.Hint;
+    frmDetail.btnCommentX.Hint := frmMain.btnComments.Hint;
+    frmDetail.btnCategory.Hint := frmMain.btnCategories.Hint;
+    frmDetail.btnCategoryX.Hint := frmMain.btnCategories.Hint;
+    frmDetail.btnPerson.Hint := frmMain.btnPersons.Hint;
+    frmDetail.btnPersonX.Hint := frmMain.btnPersons.Hint;
+    frmDetail.btnPayee.Hint := frmMain.btnPayees.Hint;
+    frmDetail.btnPayeeX.Hint := frmMain.btnPayees.Hint;
+    frmDetail.btnAccountFrom.Hint := frmMain.btnAccounts.Hint;
+    frmDetail.btnAccountTo.Hint := frmMain.btnAccounts.Hint;
+    frmDetail.btnAccountX.Hint := frmMain.btnAccounts.Hint;
+    frmDetail.btnTag.Hint := frmMain.btnTags.Hint;
+    frmDetail.btnTagsX.Hint := frmMain.btnTags.Hint;
+    frmDetail.btnAmountFrom.Hint := frmMain.btnCalc.Hint;
+    frmDetail.btnAmountTo.Hint := frmMain.btnCalc.Hint;
+    frmDetail.btnAmountX.Hint := frmMain.btnCalc.Hint;
     frmDetail.cbxType.Clear;
     frmDetail.cbxType.Items.Add(AnsiUpperCase(Caption_76));
     frmDetail.cbxType.Items.Add(AnsiUpperCase(Caption_75));
     frmDetail.cbxType.Items.Add(AnsiUpperCase(Caption_181));
-
-    frmMultiple.cbxType.Items := frmDetail.cbxType.Items;
-    frmMultiple.cbxType.Items.Delete(2);
-
+    frmDetail.cbxTypeX.Items := frmDetail.cbxType.Items;
+    frmDetail.cbxTypeX.Items.Delete(2);
     frmScheduler.cbxType.Items := frmDetail.cbxType.Items;
 
     // =============================================================================================
@@ -1115,22 +1241,23 @@ begin
     frmEdit.gbxDate.Caption := Caption_26; // Date (also Scheduled Date)
     frmEdit.gbxAmount.Caption := Caption_42; // Amount
     frmEdit.gbxComment.Caption := Caption_56; // Comment
-    frmEdit.gbxCategory.Caption := AnsiReplaceStr(Caption_54, '&', ''); // Category
+    frmEdit.gbxCategory.Caption := AnsiReplaceStr(Caption_54, '&', '') + ' / ' + Caption_80;
+    // Category / Subcategory
     frmEdit.gbxPerson.Caption := Caption_58; // Person
     frmEdit.gbxPayee.Caption := Caption_60; // Payee
     frmEdit.gbxAccount.Caption := Caption_50; // Account
     frmEdit.gbxTag.Caption := Caption_62; // Tag
 
     // hints
-    frmEdit.btnComment.Hint := Hint_44;
-    frmEdit.btnCategory.Hint := Hint_46;
-    frmEdit.btnPerson.Hint := Hint_47;
-    frmEdit.btnPayee.Hint := Hint_43;
-    frmEdit.btnAccount.Hint := Hint_45;
-    frmEdit.btnTag.Hint := Hint_41;
-    frmEdit.btnAmount.Hint := Hint_56;
-    frmEdit.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmEdit.actSave.ShortCut) + ']';
-    frmEdit.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmEdit.actExit.ShortCut) + ']';
+    frmEdit.btnComment.Hint := frmMain.btnComments.Hint;
+    frmEdit.btnCategory.Hint := frmMain.btnCategories.Hint;
+    frmEdit.btnPerson.Hint := frmMain.btnPersons.Hint;
+    frmEdit.btnPayee.Hint := frmMain.btnPayees.Hint;
+    frmEdit.btnAccount.Hint := frmMain.btnAccounts.Hint;
+    frmEdit.btnTag.Hint := frmMain.btnTags.Hint;
+    frmEdit.btnAmount.Hint := frmMain.btnCalc.Hint;
+    frmEdit.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmEdit.btnCancel.Hint := frmDetail.btnCancel.Hint;
 
     // =============================================================================================
     // FRMEDITS FORM
@@ -1143,8 +1270,8 @@ begin
     frmEdits.btnSave.Caption := Caption_04;
     frmEdits.btnReset.Caption := Caption_21;
 
-    frmEdits.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmEdits.actSave.ShortCut) + ']';
-    frmEdits.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmEdits.actExit.ShortCut) + ']';
+    frmEdits.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmEdits.btnCancel.Hint := frmDetail.btnCancel.Hint;
     frmEdits.btnReset.Hint := Hint_80;
 
     frmEdits.chkType.Caption := Caption_63; // Type
@@ -1154,20 +1281,21 @@ begin
     frmEdits.chkDate.Caption := Caption_26; // Date (also Scheduled Date)
     frmEdits.chkAmount.Caption := Caption_42; // Amount
     frmEdits.chkComment.Caption := Caption_56; // Comment
-    frmEdits.chkCategory.Caption := AnsiReplaceStr(Caption_54, '&', ''); // Category
+    frmEdits.chkCategory.Caption := AnsiReplaceStr(Caption_54, '&', '') + ' / ' + Caption_80;
+    // Category / Subcategory
     frmEdits.chkPerson.Caption := Caption_58; // Person
     frmEdits.chkPayee.Caption := Caption_60; // Payee
     frmEdits.chkAccount.Caption := Caption_50; // Account
     frmEdits.chkTag.Caption := Caption_62; // Tag
 
     // hints
-    frmEdits.btnComment.Hint := Hint_44;
-    frmEdits.btnCategory.Hint := Hint_46;
-    frmEdits.btnPerson.Hint := Hint_47;
-    frmEdits.btnPayee.Hint := Hint_43;
-    frmEdits.btnAccount.Hint := Hint_45;
-    frmEdits.btnTag.Hint := Hint_41;
-    frmEdits.btnAmount.Hint := Hint_56;
+    frmEdits.btnComment.Hint := frmMain.btnComments.Hint;
+    frmEdits.btnCategory.Hint := frmMain.btnCategories.Hint;
+    frmEdits.btnPerson.Hint := frmMain.btnPersons.Hint;
+    frmEdits.btnPayee.Hint := frmMain.btnPayees.Hint;
+    frmEdits.btnAccount.Hint := frmMain.btnAccounts.Hint;
+    frmEdits.btnTag.Hint := frmMain.btnTags.Hint;
+    frmEdits.btnAmount.Hint := frmMain.btnCalc.Hint;
 
     // =============================================================================================
     // FRMCURRENCIES FORM
@@ -1189,24 +1317,17 @@ begin
     frmCurrencies.btnSelect.Caption := Caption_12;
 
     // update hint of all menu
-    frmCurrencies.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmCurrencies.actAdd.ShortCut) + ']';
-    frmCurrencies.btnEdit.Hint := Hint_02 + sLineBreak + '[' +
-      ShortCutToText(frmCurrencies.actEdit.ShortCut) + ']';
-    frmCurrencies.btnDelete.Hint :=
-      Hint_03 + sLineBreak + '[' + ShortCutToText(frmCurrencies.actDelete.ShortCut) + ']';
-    frmCurrencies.btnSave.Hint := Hint_04 + sLineBreak + '[' +
-      ShortCutToText(frmCurrencies.actSave.ShortCut) + ']';
-    frmCurrencies.btnCancel.Hint :=
-      Hint_05 + sLineBreak + '[' + ShortCutToText(frmCurrencies.actExit.ShortCut) + ']';
-    frmCurrencies.btnExit.Hint := Hint_06 + sLineBreak + '[' +
-      ShortCutToText(frmCurrencies.actExit.ShortCut) + ']';
-    frmCurrencies.btnCopy.Hint := Hint_09 + sLineBreak + '[' +
-      ShortCutToText(frmCurrencies.popCopy.ShortCut) + ']';
-    frmCurrencies.btnSelect.Hint :=
-      Hint_22 + sLineBreak + '[' + ShortCutToText(frmCurrencies.popSelect.ShortCut) + ']';
-    frmCurrencies.btnPrint.Hint :=
-      Hint_13 + sLineBreak + '[' + ShortCutToText(frmCurrencies.popPrint.ShortCut) + ']';
-    frmCurrencies.btnStatusInfo.Hint := Hint_14 + sLineBreak + Hint_15 + sLineBreak + Hint_16;
+    frmCurrencies.btnAdd.Hint := frmDetail.btnAdd.Hint;
+    frmCurrencies.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmCurrencies.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmCurrencies.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmCurrencies.btnCancel.Hint := frmDetail.btnCancel.Hint;
+    frmCurrencies.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmCurrencies.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmCurrencies.btnSelect.Hint := frmMain.btnSelect.Hint;
+    frmCurrencies.btnPrint.Hint := frmMain.btnReportPrint.Hint;
+    frmCurrencies.btnStatusInfo.Hint :=
+      Hint_14 + sLineBreak + Hint_15 + sLineBreak + Hint_16;
 
     // update pop menu items
     frmCurrencies.popAdd.Caption := Caption_00;
@@ -1227,7 +1348,10 @@ begin
     frmCurrencies.VST.Header.Columns[6].Text := Caption_53; // ID
 
     frmCurrencies.btnValues.Caption := AnsiReplaceStr(Caption_06, '&', '');
-    frmCurrencies.btnValues.Hint := Hint_10;
+    frmCurrencies.btnValues.Hint :=
+      Hint_10 + sLineBreak + '[' + ShortCutToText(
+      frmCurrencies.popValues.ShortCut) + ']';
+    ;
 
     // labels
     frmCurrencies.lblCode.Caption := Caption_71;
@@ -1265,14 +1389,14 @@ begin
     frmValues.btnSelect.Caption := Caption_12;
 
     // update hint of all menu
-    frmValues.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmValues.actAdd.ShortCut) + ']';
-    frmValues.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmValues.actEdit.ShortCut) + ']';
-    frmValues.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(frmValues.actDelete.ShortCut) + ']';
-    frmValues.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmValues.actSave.ShortCut) + ']';
-    frmValues.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmValues.actExit.ShortCut) + ']';
-    frmValues.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmValues.actExit.ShortCut) + ']';
-    frmValues.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmValues.popCopy.ShortCut) + ']';
-    frmValues.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(frmValues.popSelect.ShortCut) + ']';
+    frmValues.btnAdd.Hint := frmDetail.btnAdd.Hint;
+    frmValues.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmValues.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmValues.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmValues.btnCancel.Hint := frmDetail.btnCancel.Hint;
+    frmValues.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmValues.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmValues.btnSelect.Hint := frmMain.btnSelect.Hint;
 
     // update pop menu items
     frmValues.popAdd.Caption := Caption_00;
@@ -1316,24 +1440,16 @@ begin
     frmCategories.btnPrint.Caption := Caption_68;
 
     // update hint of all menu
-    frmCategories.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmCategories.actAdd.ShortCut) + ']';
-    frmCategories.btnEdit.Hint := Hint_02 + sLineBreak + '[' +
-      ShortCutToText(frmCategories.actEdit.ShortCut) + ']';
-    frmCategories.btnDelete.Hint :=
-      Hint_03 + sLineBreak + '[' + ShortCutToText(frmCategories.actDelete.ShortCut) + ']';
-    frmCategories.btnSave.Hint := Hint_04 + sLineBreak + '[' +
-      ShortCutToText(frmCategories.actSave.ShortCut) + ']';
-    frmCategories.btnCancel.Hint :=
-      Hint_05 + sLineBreak + '[' + ShortCutToText(frmCategories.actExit.ShortCut) + ']';
-    frmCategories.btnExit.Hint := Hint_06 + sLineBreak + '[' +
-      ShortCutToText(frmCategories.actExit.ShortCut) + ']';
-    frmCategories.btnCopy.Hint := Hint_09 + sLineBreak + '[' +
-      ShortCutToText(frmCategories.popCopy.ShortCut) + ']';
-    frmCategories.btnSelect.Hint :=
-      Hint_22 + sLineBreak + '[' + ShortCutToText(frmCategories.popSelect.ShortCut) + ']';
-    frmCategories.btnPrint.Hint :=
-      Hint_13 + sLineBreak + '[' + ShortCutToText(frmCategories.popPrint.ShortCut) + ']';
-    frmCategories.btnStatusInfo.Hint := Hint_14 + sLineBreak + Hint_15 + sLineBreak + Hint_16;
+    frmCategories.btnAdd.Hint := frmDetail.btnAdd.Hint;
+    frmCategories.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmCategories.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmCategories.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmCategories.btnCancel.Hint := frmDetail.btnCancel.Hint;
+    frmCategories.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmCategories.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmCategories.btnSelect.Hint := frmMain.btnSelect.Hint;
+    frmCategories.btnPrint.Hint := frmMain.btnReportPrint.Hint;
+    frmCategories.btnStatusInfo.Hint := frmCurrencies.btnStatusInfo.Hint;
 
     // update pop menu items
     frmCategories.popAdd.Caption := Caption_00;
@@ -1351,26 +1467,37 @@ begin
     frmCategories.popCollapseAll.Caption := Menu_C4;
 
     // header columns captions
-    frmCategories.VST.Header.Columns[1].Text := AnsiReplaceStr(Caption_54, '&', ''); // category
+    frmCategories.VST.Header.Columns[1].Text := AnsiReplaceStr(Caption_54, '&', '');
+    // category
     frmCategories.VST.Header.Columns[2].Text := Caption_56; // comment
     frmCategories.VST.Header.Columns[3].Text := Caption_51; // status
     frmCategories.VST.Header.Columns[4].Text := Caption_53; // ID
+    frmCategories.VST.Header.Columns[7].Text := Caption_321; // Type
 
     frmCategories.cbxType.Clear;
     frmCategories.cbxType.Items.Add(AnsiUpperCase(AnsiReplaceStr(Caption_54, '&', '')));
     frmCategories.cbxType.Items.Add(AnsiLowerCase(Caption_80));
 
     // labels
+    frmCategories.lblType.Caption := Caption_63;
+    frmCategories.lblName.Caption := Caption_49;
     frmCategories.lblTo.Caption := Caption_61;
+    frmCategories.lblKind.Caption := Caption_321;
     frmCategories.lblComment.Caption := Caption_56;  // comment
     frmCategories.lblStatus.Caption := Caption_51; // status
+
+    // cbxKind
+    frmCategories.cbxKind.Clear;
+    frmCategories.cbxKind.Items.Add(''); // active
+    frmCategories.cbxKind.Items.Add(Caption_76); // credit
+    frmCategories.cbxKind.Items.Add(Caption_75); // debit
+    frmCategories.cbxKind.Items.Add(Caption_181); // transfer
 
     // cbxStatus
     frmCategories.cbxStatus.Clear;
     frmCategories.cbxStatus.Items.Add(Caption_55); // active
     frmCategories.cbxStatus.Items.Add(Caption_57); // passive
     frmCategories.cbxStatus.Items.Add(Caption_59); // archive
-
 
     // =============================================================================================
     // FRMACCOUNTS FORM
@@ -1390,20 +1517,19 @@ begin
     frmAccounts.btnPrint.Caption := Caption_68;
     frmAccounts.btnSave.Caption := Caption_04;
     frmAccounts.btnCancel.Caption := Caption_05;
+    frmAccounts.btnCurrency.Hint := frmMain.btnCurrencies.Hint;
 
     // update hint of all menu
-    frmAccounts.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmAccounts.actAdd.ShortCut) + ']';
-    frmAccounts.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmAccounts.actEdit.ShortCut) + ']';
-    frmAccounts.btnDelete.Hint := Hint_03 + sLineBreak + '[' +
-      ShortCutToText(frmAccounts.actDelete.ShortCut) + ']';
-    frmAccounts.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmAccounts.actSave.ShortCut) + ']';
-    frmAccounts.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmAccounts.actExit.ShortCut) + ']';
-    frmAccounts.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmAccounts.actExit.ShortCut) + ']';
-    frmAccounts.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmAccounts.popCopy.ShortCut) + ']';
-    frmAccounts.btnSelect.Hint := Hint_22 + sLineBreak + '[' +
-      ShortCutToText(frmAccounts.popSelect.ShortCut) + ']';
-    frmAccounts.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(frmAccounts.popPrint.ShortCut) + ']';
-    frmAccounts.btnStatusInfo.Hint := Hint_14 + sLineBreak + Hint_15 + sLineBreak + Hint_16;
+    frmAccounts.btnAdd.Hint := frmDetail.btnAdd.Hint;
+    frmAccounts.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmAccounts.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmAccounts.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmAccounts.btnCancel.Hint := frmDetail.btnCancel.Hint;
+    frmAccounts.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmAccounts.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmAccounts.btnSelect.Hint := frmMain.btnSelect.Hint;
+    frmAccounts.btnPrint.Hint := frmMain.btnReportPrint.Hint;
+    frmAccounts.btnStatusInfo.Hint := frmCurrencies.btnStatusInfo.Hint;
 
     // update pop menu items
     frmAccounts.popAdd.Caption := Caption_00;
@@ -1458,16 +1584,16 @@ begin
     frmPersons.btnSelect.Caption := Caption_12;
 
     // update hint of all menu
-    frmPersons.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmPersons.actAdd.ShortCut) + ']';
-    frmPersons.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmPersons.actEdit.ShortCut) + ']';
-    frmPersons.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(frmPersons.actDelete.ShortCut) + ']';
-    frmPersons.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmPersons.actSave.ShortCut) + ']';
-    frmPersons.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmPersons.actExit.ShortCut) + ']';
-    frmPersons.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmPersons.actExit.ShortCut) + ']';
-    frmPersons.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmPersons.popCopy.ShortCut) + ']';
-    frmPersons.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(frmPersons.popSelect.ShortCut) + ']';
-    frmPersons.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(frmPersons.popPrint.ShortCut) + ']';
-    frmPersons.btnStatusInfo.Hint := Hint_14 + sLineBreak + Hint_15 + sLineBreak + Hint_16;
+    frmPersons.btnAdd.Hint := frmDetail.btnAdd.Hint;
+    frmPersons.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmPersons.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmPersons.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmPersons.btnCancel.Hint := frmDetail.btnCancel.Hint;
+    frmPersons.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmPersons.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmPersons.btnSelect.Hint := frmMain.btnSelect.Hint;
+    frmPersons.btnPrint.Hint := frmMain.btnReportPrint.Hint;
+    frmPersons.btnStatusInfo.Hint := frmCurrencies.btnStatusInfo.Hint;
 
     // update pop menu items
     frmPersons.popAdd.Caption := Caption_00;
@@ -1514,16 +1640,16 @@ begin
     frmPayees.btnSelect.Caption := Caption_12;
 
     // update hint of all menu
-    frmPayees.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmPayees.actAdd.ShortCut) + ']';
-    frmPayees.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmPayees.actEdit.ShortCut) + ']';
-    frmPayees.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(frmPayees.actDelete.ShortCut) + ']';
-    frmPayees.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmPayees.actSave.ShortCut) + ']';
-    frmPayees.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmPayees.actExit.ShortCut) + ']';
-    frmPayees.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmPayees.actExit.ShortCut) + ']';
-    frmPayees.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmPayees.popCopy.ShortCut) + ']';
-    frmPayees.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(frmPayees.popSelect.ShortCut) + ']';
-    frmPayees.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(frmPayees.popPrint.ShortCut) + ']';
-    frmPayees.btnStatusInfo.Hint := Hint_14 + sLineBreak + Hint_15 + sLineBreak + Hint_16;
+    frmPayees.btnAdd.Hint := frmDetail.btnAdd.Hint;
+    frmPayees.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmPayees.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmPayees.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmPayees.btnCancel.Hint := frmDetail.btnCancel.Hint;
+    frmPayees.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmPayees.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmPayees.btnSelect.Hint := frmMain.btnSelect.Hint;
+    frmPayees.btnPrint.Hint := frmMain.btnReportPrint.Hint;
+    frmPayees.btnStatusInfo.Hint := frmCurrencies.btnStatusInfo.Hint;
 
     // update pop menu items
     //popList.Images := frmMain.imgTransactions;
@@ -1571,17 +1697,15 @@ begin
     frmHolidays.btnPrint.Caption := Caption_68;
 
     // update hint of all menu
-    frmHolidays.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmHolidays.actAdd.ShortCut) + ']';
-    frmHolidays.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmHolidays.actEdit.ShortCut) + ']';
-    frmHolidays.btnDelete.Hint := Hint_03 + sLineBreak + '[' +
-      ShortCutToText(frmHolidays.actDelete.ShortCut) + ']';
-    frmHolidays.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmHolidays.actSave.ShortCut) + ']';
-    frmHolidays.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmHolidays.actExit.ShortCut) + ']';
-    frmHolidays.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmHolidays.actExit.ShortCut) + ']';
-    frmHolidays.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmHolidays.popCopy.ShortCut) + ']';
-    frmHolidays.btnSelect.Hint := Hint_22 + sLineBreak + '[' +
-      ShortCutToText(frmHolidays.popSelect.ShortCut) + ']';
-    frmHolidays.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(frmHolidays.popPrint.ShortCut) + ']';
+    frmHolidays.btnAdd.Hint := frmDetail.btnAdd.Hint;
+    frmHolidays.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmHolidays.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmHolidays.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmHolidays.btnCancel.Hint := frmDetail.btnCancel.Hint;
+    frmHolidays.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmHolidays.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmHolidays.btnSelect.Hint := frmMain.btnSelect.Hint;
+    frmHolidays.btnPrint.Hint := frmMain.btnReportPrint.Hint;
 
     // update pop menu items
     frmHolidays.popAdd.Caption := Caption_00;
@@ -1623,15 +1747,15 @@ begin
     frmTags.btnSelect.Caption := Caption_12;
 
     // update hint of all menu
-    frmTags.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmTags.actAdd.ShortCut) + ']';
-    frmTags.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmTags.actEdit.ShortCut) + ']';
-    frmTags.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(frmTags.actDelete.ShortCut) + ']';
-    frmTags.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmTags.actSave.ShortCut) + ']';
-    frmTags.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmTags.actExit.ShortCut) + ']';
-    frmTags.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmTags.actExit.ShortCut) + ']';
-    frmTags.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmTags.popCopy.ShortCut) + ']';
-    frmTags.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(frmTags.popSelect.ShortCut) + ']';
-    frmTags.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(frmTags.popPrint.ShortCut) + ']';
+    frmTags.btnAdd.Hint := frmDetail.btnAdd.Hint;
+    frmTags.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmTags.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmTags.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmTags.btnCancel.Hint := frmDetail.btnCancel.Hint;
+    frmTags.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmTags.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmTags.btnSelect.Hint := frmMain.btnSelect.Hint;
+    frmTags.btnPrint.Hint := frmMain.btnReportPrint.Hint;
 
     // update pop menu items
     frmTags.popAdd.Caption := Caption_00;
@@ -1670,17 +1794,15 @@ begin
     frmComments.btnSelect.Caption := Caption_12;
 
     // update hint of all menu
-    frmComments.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmComments.actAdd.ShortCut) + ']';
-    frmComments.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmComments.actEdit.ShortCut) + ']';
-    frmComments.btnDelete.Hint := Hint_03 + sLineBreak + '[' +
-      ShortCutToText(frmComments.actDelete.ShortCut) + ']';
-    frmComments.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmComments.actSave.ShortCut) + ']';
-    frmComments.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmComments.actExit.ShortCut) + ']';
-    frmComments.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmComments.actExit.ShortCut) + ']';
-    frmComments.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmComments.popCopy.ShortCut) + ']';
-    frmComments.btnSelect.Hint := Hint_22 + sLineBreak + '[' +
-      ShortCutToText(frmComments.popSelect.ShortCut) + ']';
-    frmComments.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(frmComments.popPrint.ShortCut) + ']';
+    frmComments.btnAdd.Hint := frmDetail.btnAdd.Hint;
+    frmComments.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmComments.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmComments.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmComments.btnCancel.Hint := frmDetail.btnCancel.Hint;
+    frmComments.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmComments.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmComments.btnSelect.Hint := frmMain.btnSelect.Hint;
+    frmComments.btnPrint.Hint := frmMain.btnReportPrint.Hint;
 
     // update btn menu items
     frmComments.popAdd.Caption := Caption_00;
@@ -1698,40 +1820,6 @@ begin
     frmComments.lblComment.Caption := Caption_56;
 
     // =============================================================================================
-    // FRMNOTES FORM
-    // =============================================================================================
-
-{    frmNotes.btnAdd.Caption := AnsiReplaceStr(frmMain.Menus.Items[0];
-    frmNotes.btnEdit.Caption := AnsiReplaceStr(frmMain.Menus.Items[1];
-    frmNotes.btnDelete.Caption := AnsiReplaceStr(frmMain.Menus.Items[2];
-    frmNotes.btnExit.Caption := AnsiReplaceStr(frmMain.Menus.Items[3];
-    frmNotes.btnSave.Caption := AnsiReplaceStr(frmMain.Menus.Items[4];
-    frmNotes.btnCancel.Caption := AnsiReplaceStr(frmMain.Menus.Items[5];
-    frmNotes.btnCopy.Caption := AnsiReplaceStr(frmMain.Menus.Items[7];
-    frmNotes.btnPhoto.Caption := AnsiReplaceStr(frmMain.Menus.Items[8];
-    frmNotes.btnPrint.Caption := AnsiReplaceStr(frmMain.Menus.Items[9];
-
-    // update hint of all menu
-    frmNotes.btnAdd.Hint := ReplaceStr(frmMain.Messages.Items[1], '%', sLineBreak);
-    frmNotes.btnEdit.Hint := ReplaceStr(frmMain.Messages.Items[2], '%', sLineBreak);
-    frmNotes.btnDelete.Hint := ReplaceStr(frmMain.Messages.Items[3], '%', sLineBreak);
-    frmNotes.btnSave.Hint := ReplaceStr(frmMain.Messages.Items[4], '%', sLineBreak);
-    frmNotes.btnCancel.Hint := ReplaceStr(frmMain.Messages.Items[5], '%', sLineBreak);
-    frmNotes.btnExit.Hint := ReplaceStr(frmMain.Messages.Items[6], '%', sLineBreak);
-    frmNotes.btnCopy.Hint := ReplaceStr(frmMain.Messages.Items[9], '%', sLineBreak);
-    frmNotes.btnPhoto.Hint := ReplaceStr(frmMain.Messages.Items[12], '%', sLineBreak);
-    frmNotes.btnPrint.Hint := ReplaceStr(frmMain.Messages.Items[13], '%', sLineBreak);
-
-    // update pop menu items
-    frmNotes.popAdd.Caption := frmMain.Menus.Items[0];
-    frmNotes.popEdit.Caption := frmMain.Menus.Items[1];
-    frmNotes.popDelete.Caption := frmMain.Menus.Items[2];
-    frmNotes.popExit.Caption := frmMain.Menus.Items[3];
-    frmNotes.popCopy.Caption := frmMain.Menus.Items[7];
-    frmNotes.popPhoto.Caption := frmMain.Menus.Items[8];
-    frmNotes.popPrint.Caption := frmMain.Menus.Items[9]; }
-
-    // =============================================================================================
     // FRMSCHEDULERS FORM
     // =============================================================================================
 
@@ -1746,21 +1834,14 @@ begin
     frmSchedulers.btnCalendar.Caption := AnsiReplaceStr(Menu_43, '&', '');
 
     // update hint of all menu
-    frmSchedulers.btnAdd.Hint := Hint_01 + sLineBreak + '[' +
-      ShortCutToText(frmMain.actAdd.ShortCut) + ']';
-    frmSchedulers.btnDelete.Hint := Hint_03 + sLineBreak + '[' +
-      ShortCutToText(frmMain.actDelete.ShortCut) + ']';
-    frmSchedulers.btnCalendar.Hint := Hint_52 + sLineBreak + '[' +
-      ShortCutToText(frmMain.mnuCalendar.ShortCut) + ']';
-    frmSchedulers.btnExit.Hint := Hint_06 + sLineBreak + '[' +
-      ShortCutToText(frmSchedulers.actExit.ShortCut) + ']';
+    frmSchedulers.btnAdd.Hint := frmDetail.btnAdd.Hint;
+    frmSchedulers.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmSchedulers.btnCalendar.Hint := frmMain.btnCalendar.Hint;
+    frmSchedulers.btnExit.Hint := frmMain.btnReportExit.Hint;
 
-    frmSchedulers.btnAdd1.Hint := Hint_01 + sLineBreak + '[' +
-      ShortCutToText(frmSchedulers.actAdd.ShortCut) + ']';
-    frmSchedulers.btnEdit1.Hint := Hint_02 + sLineBreak + '[' +
-      ShortCutToText(frmSchedulers.actEdit.ShortCut) + ']';
-    frmSchedulers.btnDelete1.Hint := Hint_03 + sLineBreak + '[' +
-      ShortCutToText(frmSchedulers.actDelete.ShortCut) + ']';
+    frmSchedulers.btnAdd1.Hint := frmDetail.btnAdd.Hint;
+    frmSchedulers.btnEdit1.Hint := frmMain.btnEdit.Hint;
+    frmSchedulers.btnDelete1.Hint := frmMain.btnDelete.Hint;
 
     // update pop menu items
     frmSchedulers.popAdd.Caption := Caption_00;
@@ -1783,13 +1864,15 @@ begin
     frmSchedulers.VST.Header.Columns[4].Text := Caption_42; // amount
     frmSchedulers.VST.Header.Columns[5].Text := Caption_52; // currency
     frmSchedulers.VST.Header.Columns[6].Text := Caption_56; // comment
-    frmSchedulers.VST.Header.Columns[7].Text := Caption_50;  // account
+    frmSchedulers.VST.Header.Columns[7].Text := Caption_50; // account
     frmSchedulers.VST.Header.Columns[8].Text := AnsiReplaceStr(Caption_54, '&', ''); // category
-    frmSchedulers.VST.Header.Columns[9].Text := Caption_80;  // subcategory
+    frmSchedulers.VST.Header.Columns[9].Text := Caption_80; // subcategory
     frmSchedulers.VST.Header.Columns[10].Text := Caption_58; // person
     frmSchedulers.VST.Header.Columns[11].Text := Caption_60; // payee
     frmSchedulers.VST.Header.Columns[12].Text := Caption_53; // ID
     // frmSchedulers.VST.Header.Columns[13].Text := Caption_63; // Type
+
+    frmSchedulers.VST1.Hint := Menu_A14;
 
     // Grid columns title - payments
     frmSchedulers.VST1.Header.Columns[1].Text := Caption_32; // scheduled date
@@ -1811,25 +1894,23 @@ begin
     frmScheduler.Caption := AnsiUpperCase(AnsiReplaceStr(Menu_41, '&', ''));
 
     // hints
-    frmScheduler.btnComment.Hint := Hint_44;
-    frmScheduler.btnCategory.Hint := Hint_46;
-    frmScheduler.btnPerson.Hint := Hint_47;
-    frmScheduler.btnPayee.Hint := Hint_43;
-    frmScheduler.btnAccountFrom.Hint := Hint_45;
-    frmScheduler.btnAccountTo.Hint := Hint_45;
-    frmScheduler.btnTag.Hint := Hint_41;
-    frmScheduler.btnAmountFrom.Hint := Hint_56;
-    frmScheduler.btnAmountTo.Hint := Hint_56;
+    frmScheduler.btnComment.Hint := frmMain.btnComments.Hint;
+    frmScheduler.btnCategory.Hint := frmMain.btnCategories.Hint;
+    frmScheduler.btnPerson.Hint := frmMain.btnPersons.Hint;
+    frmScheduler.btnPayee.Hint := frmMain.btnPayees.Hint;
+    frmScheduler.btnAccountFrom.Hint := frmMain.btnAccounts.Hint;
+    frmScheduler.btnAccountTo.Hint := frmMain.btnAccounts.Hint;
+    frmScheduler.btnTag.Hint := frmMain.btnTags.Hint;
+    frmScheduler.btnAmountFrom.Hint := frmDetail.btnAmountFrom.Hint;
+    frmScheduler.btnAmountTo.Hint := frmDetail.btnAmountTo.Hint;
 
     // buttons
     frmScheduler.btnSave.Caption := Caption_04;
     frmScheduler.btnCancel.Caption := Caption_05;
-    frmScheduler.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmDetail.actSave.ShortCut) + ']';
-    frmScheduler.btnCancel.Hint :=
-      Hint_05 + sLineBreak + '[' + ShortCutToText(frmScheduler.actExit.ShortCut) + ']';
+    frmScheduler.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmScheduler.btnCancel.Hint := frmDetail.btnCancel.Hint;
     frmScheduler.btnSettings.Caption := AnsiReplaceStr(Menu_61, '&', '');
-    frmScheduler.btnSettings.Hint := Hint_57 + sLineBreak + '[' +
-      ShortCutToText(frmMain.mnuSettings.ShortCut) + ']';
+    frmScheduler.btnSettings.Hint := frmMain.btnSettings.Hint;
 
     // labels FROM
     frmScheduler.lblDateFrom.Caption := Caption_69; // date from
@@ -1843,7 +1924,7 @@ begin
 
     frmScheduler.lblType.Caption := Caption_63; // type
     frmScheduler.lblComment.Caption := Caption_56; // comment
-    frmScheduler.lblCategory.Caption := AnsiReplaceStr(Caption_54, '&', ''); // category
+    frmScheduler.lblCategory.Caption := AnsiReplaceStr(Caption_54, '&', '') + ' / ' + Caption_80; // Category / Subcategory
     frmScheduler.lblPerson.Caption := Caption_58; // person
     frmScheduler.lblPayee.Caption := Caption_60; // payee
     frmScheduler.lblTag.Caption := Caption_62; // tag
@@ -1860,6 +1941,8 @@ begin
     frmScheduler.cbxPeriodicity.Items.Add(Caption_214); // Biannualy
     frmScheduler.cbxPeriodicity.Items.Add(Caption_215); // Yearly
 
+    frmScheduler.chkUseDateShift.Caption := Caption_317;
+
     // =============================================================================================
     // FRMPROPERTIES
     // =============================================================================================
@@ -1870,8 +1953,7 @@ begin
     frmProperties.tabDatabase.Caption := AnsiReplaceStr(Menu_00, '&', '');
 
     frmProperties.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
-    frmProperties.btnExit.Hint := Hint_06 + sLineBreak + '[' +
-      ShortCutToText(frmProperties.actExit.ShortCut) + ']';
+    frmProperties.btnExit.Hint := frmMain.btnReportExit.Hint;
 
     frmProperties.lblProtection.Caption := Caption_109;
     frmProperties.lblData.Caption := Caption_25;
@@ -1903,13 +1985,13 @@ begin
     frmCounter.Caption := UTF8UpperCase(AnsiReplaceStr(Menu_46, '&', ''));
     frmCounter.btnReset.Caption := Caption_21;
     frmCounter.btnPrint.Caption := Caption_68;
-    frmCounter.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(frmMain.actPrint.ShortCut) + ']';;
+    frmCounter.btnPrint.Hint := frmMain.btnReportPrint.Hint;
     frmCounter.btnCopy.Caption := frmMain.btnCopy.Caption;
-    frmCounter.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmMain.popCopy.ShortCut) + ']';
-    frmCounter.btnCurrencies.Hint := Field('%', Hint_42, 1);
-    frmCounter.btnValues.Hint := Hint_10;
+    frmCounter.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmCounter.btnCurrencies.Hint := frmMain.btnCurrencies.Hint;
+    frmCounter.btnValues.Hint := frmCurrencies.btnValues.Hint;
     frmCounter.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
-    frmCounter.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmCounter.actExit.ShortCut) + ']';
+    frmCounter.btnExit.Hint := frmMain.btnReportExit.Hint;
     frmCounter.pnlCurrencyCaption.Caption := Caption_101;
     frmCounter.lblValue.Caption := Caption_102;
     frmCounter.lblTotalCaption.Hint := AnsiUpperCase(Caption_16) + ':';
@@ -1924,10 +2006,8 @@ begin
 
     frmManyCurrencies.btnSave.Caption := Caption_04;
     frmManyCurrencies.btnCancel.Caption := Caption_05;
-    frmManyCurrencies.btnSave.Hint :=
-      Hint_04 + sLineBreak + '[' + ShortCutToText(frmDetail.actSave.ShortCut) + ']';
-    frmManyCurrencies.btnCancel.Hint :=
-      Hint_05 + sLineBreak + '[' + ShortCutToText(frmDetail.actExit.ShortCut) + ']';
+    frmManyCurrencies.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmManyCurrencies.btnCancel.Hint := frmDetail.btnCancel.Hint;
 
     // =============================================================================================
     // FRMWRITE FORM
@@ -1941,7 +2021,8 @@ begin
     frmWrite.VST.Header.Columns[3].Text := Caption_42; // amount
     frmWrite.VST.Header.Columns[4].Text := Caption_52; // currency
     frmWrite.VST.Header.Columns[5].Text := Caption_50; // account
-    frmWrite.VST.Header.Columns[6].Text := AnsiReplaceStr(Caption_54, '&', ''); // category
+    frmWrite.VST.Header.Columns[6].Text := AnsiReplaceStr(Caption_54, '&', '');
+    // category
     frmWrite.VST.Header.Columns[7].Text := Caption_80;  // subcategory
     frmWrite.VST.Header.Columns[8].Text := Caption_58; // person
     frmWrite.VST.Header.Columns[9].Text := Caption_60; // payee
@@ -1957,18 +2038,17 @@ begin
 
     // captions
     frmWrite.btnCalendar.Caption := AnsiReplaceStr(Menu_43, '&', '');
-    frmWrite.btnCalendar.Hint := Hint_52 + sLineBreak + '[' + ShortCutToText(frmMain.mnuCalendar.ShortCut) + ']';
+    frmWrite.btnCalendar.Hint := frmMain.btnCalendar.Hint;
     frmWrite.btnSave.Caption := Caption_72;
-    frmWrite.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmWrite.actSave.ShortCut) + ']';
+    frmWrite.btnSave.Hint := frmDetail.btnSave.Hint;
     frmWrite.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
-    frmWrite.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmWrite.actExit.ShortCut) + ']';
+    frmWrite.btnExit.Hint := frmMain.btnReportExit.Hint;
     frmWrite.btnEdit.Caption := Caption_02;
-    frmWrite.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmSchedulers.actEdit.ShortCut) + ']';
+    frmWrite.btnEdit.Hint := frmMain.btnEdit.Hint;
     frmWrite.btnDelete.Caption := Caption_03;
-    frmWrite.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(
-      frmSchedulers.actDelete.ShortCut) + ']';
+    frmWrite.btnDelete.Hint := frmMain.btnDelete.Hint;
     frmWrite.btnSettings.Caption := AnsiReplaceStr(Menu_61, '&', '');
-    frmWrite.btnSettings.Hint := Hint_57 + sLineBreak + '[' + ShortCutToText(frmMain.mnuSettings.ShortCut) + ']';
+    frmWrite.btnSettings.Hint := frmMain.btnSettings.Hint;
 
     // =============================================================================================
     // FRMWRITEAGREEMENT FORM
@@ -1985,7 +2065,8 @@ begin
 
     frmCalendar.Caption := AnsiUpperCase(AnsiReplaceStr(Menu_43, '&', ''));
     frmCalendar.pnlFilterCaption.Caption := AnsiUpperCase(Caption_18);
-    frmCalendar.pnlMonthYearCaption.Caption := '  ' + Caption_19 + ' + ' + Caption_20 + '  ';
+    frmCalendar.pnlMonthYearCaption.Caption :=
+      '  ' + Caption_19 + ' + ' + Caption_20 + '  ';
     // Month & Year
     frmCalendar.pnlCurrencyCaption.Caption := '  ' + Caption_52;
     frmCalendar.pnlAccountCaption.Caption := '  ' + Caption_50;
@@ -2005,17 +2086,19 @@ begin
 
     frmCalendar.btnEdit.Caption := Caption_02;
     frmCalendar.btnDelete.Caption := Caption_03;
-    frmCalendar.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmSchedulers.actEdit.ShortCut) + ']';
-    frmCalendar.btnDelete.Hint := Hint_03 + sLineBreak + '[' +
-      ShortCutToText(frmSchedulers.actDelete.ShortCut) + ']';
+    frmCalendar.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmCalendar.btnDelete.Hint := frmMain.btnDelete.Hint;
     frmCalendar.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
-    frmCalendar.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmWrite.actExit.ShortCut) + ']';
+    frmCalendar.btnExit.Hint := frmMain.btnReportExit.Hint;
 
     // VST float
     frmCalendar.VSTFloat.Header.Columns[1].Text := Caption_42;
     frmCalendar.VSTFloat.Header.Columns[2].Text := Caption_52;
     frmCalendar.VSTFloat.Header.Columns[3].Text := Caption_56;
 
+    // hints
+    frmCalendar.btnCurrencies.Hint := frmMain.btnCurrencies.Hint;
+    frmCalendar.btnAccounts.Hint := frmMain.btnAccounts.Hint;
 
     // =============================================================================================
     // FRMDELETE FORM
@@ -2037,7 +2120,7 @@ begin
     frmDelete.VST1.Header.Columns[4].Text := Caption_52; // Currency
     frmDelete.VST1.Header.Columns[5].Text := Caption_50; // Account
     frmDelete.VST1.Header.Columns[6].Text := AnsiReplaceStr(Caption_54, '&', ''); // Category
-    frmDelete.VST1.Header.Columns[7].Text := Caption_80;  // subcategory
+    frmDelete.VST1.Header.Columns[7].Text := Caption_80; // subcategory
     frmDelete.VST1.Header.Columns[8].Text := Caption_58; // Person
     frmDelete.VST1.Header.Columns[9].Text := Caption_60; // Payee
     frmDelete.VST1.Header.Columns[10].Text := Caption_53; // ID
@@ -2050,9 +2133,9 @@ begin
     frmDelete.VST2.Header.Columns[4].Text := Caption_42; // amount
     frmDelete.VST2.Header.Columns[5].Text := Caption_52; // currency
     frmDelete.VST2.Header.Columns[6].Text := Caption_56; // comment
-    frmDelete.VST2.Header.Columns[7].Text := Caption_50;  // account
+    frmDelete.VST2.Header.Columns[7].Text := Caption_50; // account
     frmDelete.VST2.Header.Columns[8].Text := AnsiReplaceStr(Caption_54, '&', ''); // category
-    frmDelete.VST2.Header.Columns[9].Text := Caption_80;  // subcategory
+    frmDelete.VST2.Header.Columns[9].Text := Caption_80; // subcategory
     frmDelete.VST2.Header.Columns[10].Text := Caption_58; // person
     frmDelete.VST2.Header.Columns[11].Text := Caption_60; // payee
     frmDelete.VST2.Header.Columns[12].Text := Caption_53; // ID
@@ -2078,7 +2161,8 @@ begin
     frmAbout.pnlEmail.Caption := Menu_A02 + ':'; // E-mail
     frmAbout.pnlVersion.Caption := Menu_A03 + ':'; // Version
     frmAbout.tabLicense.Caption := Menu_A04; // License
-    frmAbout.lblLicense.Caption := AnsiReplaceStr(License_01, '%', sLineBreak); // free software
+    frmAbout.lblLicense.Caption := AnsiReplaceStr(License_01, '%', sLineBreak);
+    // free software
     frmAbout.pnlReleased.Caption := Menu_A06 + ':'; // Released
     frmAbout.pnlWebsite.Caption := Menu_A07 + ':'; // Official website
     frmAbout.pnlDeveloped.Caption := Menu_A08 + ':'; // Developed in
@@ -2115,7 +2199,7 @@ begin
     // =============================================================================================
 
     frmHistory.Caption := AnsiUpperCase(Caption_67);
-    frmHistory.btnCancel.Caption := Caption_05;
+    frmHistory.btnCancel.Caption := AnsiReplaceStr(Menu_03, '&', '');
     frmHistory.pnlOriginalCaption.Caption := Caption_200;
     frmHistory.pnlHistoryCaption.Caption := Caption_201;
 
@@ -2129,7 +2213,7 @@ begin
     frmHistory.VST1.Header.Columns[4].Text := Caption_52; // Currency
     frmHistory.VST1.Header.Columns[5].Text := Caption_50; // Account
     frmHistory.VST1.Header.Columns[6].Text := AnsiReplaceStr(Caption_54, '&', ''); // Category
-    frmHistory.VST1.Header.Columns[7].Text := Caption_80;  // subcategory
+    frmHistory.VST1.Header.Columns[7].Text := Caption_80; // subcategory
     frmHistory.VST1.Header.Columns[8].Text := Caption_58; // Person
     frmHistory.VST1.Header.Columns[9].Text := Caption_60; // Payee
     frmHistory.VST1.Header.Columns[10].Text := Caption_17;  // date and time
@@ -2141,7 +2225,7 @@ begin
     frmHistory.VST2.Header.Columns[4].Text := Caption_52; // Currency
     frmHistory.VST2.Header.Columns[5].Text := Caption_50; // Account
     frmHistory.VST2.Header.Columns[6].Text := AnsiReplaceStr(Caption_54, '&', ''); // Category
-    frmHistory.VST2.Header.Columns[7].Text := Caption_80;  // subcategory
+    frmHistory.VST2.Header.Columns[7].Text := Caption_80; // subcategory
     frmHistory.VST2.Header.Columns[8].Text := Caption_58; // Person
     frmHistory.VST2.Header.Columns[9].Text := Caption_60; // Payee
     frmHistory.VST2.Header.Columns[10].Text := Caption_17;  // date and time
@@ -2156,7 +2240,7 @@ begin
     frmPassword.btnSave.Caption := Caption_04;
     frmPassword.btnSave.Hint := Hint_102;
     frmPassword.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
-    frmPassword.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmDetail.actExit.ShortCut) + ']';
+    frmPassword.btnExit.Hint := frmMain.btnReportExit.Hint;
 
     frmPassword.lblPassword.Caption := AnsiReplaceStr(Caption_184, '%', sLineBreak);
     frmPassword.pnlPasswordCaption.Caption := Caption_185;
@@ -2183,16 +2267,13 @@ begin
     frmRecycleBin.cbxView.ItemIndex := 0;
 
     // buttons
-    frmRecycleBin.btnEdit.Hint := Hint_02 + sLineBreak + '[' +
-      ShortCutToText(frmRecycleBin.actEdit.ShortCut) + ']';
-    frmRecycleBin.btnDelete.Hint :=
-      Hint_03 + sLineBreak + '[' + ShortCutToText(frmRecycleBin.actDelete.ShortCut) + ']';
-    frmRecycleBin.btnSelect.Hint :=
-      Hint_22 + sLineBreak + '[' + ShortCutToText(frmMain.popSelect.ShortCut) + ']';
-    frmRecycleBin.btnExit.Hint := Hint_06 + sLineBreak + '[' +
-      ShortCutToText(frmRecycleBin.actExit.ShortCut) + ']';
+    frmRecycleBin.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmRecycleBin.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmRecycleBin.btnSelect.Hint := frmMain.btnSelect.Hint;
+    frmRecycleBin.btnExit.Hint := frmMain.btnReportExit.Hint;
     frmRecycleBin.btnRestore.Hint :=
-      Hint_70 + sLineBreak + '[' + ShortCutToText(frmRecycleBin.actRestore.ShortCut) + ']';
+      Hint_70 + sLineBreak + '[' +
+      ShortCutToText(frmRecycleBin.actRestore.ShortCut) + ']';
 
     // Transactions grid columns title
     frmRecycleBin.VST.Header.Columns[1].Text := Caption_26; // Date
@@ -2201,7 +2282,7 @@ begin
     frmRecycleBin.VST.Header.Columns[4].Text := Caption_52; // Currency
     frmRecycleBin.VST.Header.Columns[5].Text := Caption_50; // Account
     frmRecycleBin.VST.Header.Columns[6].Text := AnsiReplaceStr(Caption_54, '&', ''); // Category
-    frmRecycleBin.VST.Header.Columns[7].Text := Caption_80;  // subcategory
+    frmRecycleBin.VST.Header.Columns[7].Text := Caption_80; // subcategory
     frmRecycleBin.VST.Header.Columns[8].Text := Caption_58; // Person
     frmRecycleBin.VST.Header.Columns[9].Text := Caption_60; // Payee
     frmRecycleBin.VST.Header.Columns[10].Text := Caption_53; // ID
@@ -2225,10 +2306,12 @@ begin
     frmSettings.treSettings.Items[4].Text := Caption_25; // Transactions
     frmSettings.treSettings.Items[5].Text := AnsiReplaceStr(Menu_45, '&', ''); // reports
     frmSettings.treSettings.Items[6].Text := Chart_01; // Charts
-    frmSettings.treSettings.Items[7].Text := AnsiReplaceStr(Menu_40, '&', ''); // financial tools
+    frmSettings.treSettings.Items[7].Text := AnsiReplaceStr(Menu_40, '&', '');
+    // financial tools
     frmSettings.treSettings.Items[8].Text := Caption_122; // shortcuts
 
-    frmSettings.treSettings.Items[9].Text := AnsiReplaceStr(Menu_00, '&', ''); // database
+    frmSettings.treSettings.Items[9].Text := AnsiReplaceStr(Menu_00, '&', '');
+    // database
     frmSettings.treSettings.Items[10].Text := Caption_121; // on open
     frmSettings.treSettings.Items[11].Text := Caption_243; // on close
 
@@ -2244,10 +2327,10 @@ begin
     frmSettings.VSTLang.Header.Columns[4].Text := Menu_A02;
 
     P := frmSettings.VSTLang.GetFirst();
-    While Assigned(P) do
+    while Assigned(P) do
     begin
       Lang := frmSettings.VSTLang.GetNodeData(P);
-      If (Lang.code = 'cs') or (Lang.code = 'en') or (Lang.code = 'sk') then
+      if (Lang.code = 'cs') or (Lang.code = 'en') or (Lang.code = 'sk') then
         Lang.translator := AnsiLowerCase(Menu_A01);
       P := frmSettings.VSTLang.GetNext(P);
     end;
@@ -2271,6 +2354,7 @@ begin
     frmSettings.chkShadowedFont.Caption := Caption_144;
     frmSettings.chkBoldFont.Caption := Caption_145;
     frmSettings.chkGradientEffect.Caption := Caption_146;
+    frmSettings.chkRedColorButtonDelete.Caption := Caption_327;
     frmSettings.btnCaptionColorBack.Caption := Caption_147;
     frmSettings.btnCaptionColorFont.Caption := Caption_148;
     frmSettings.tabTables.Caption := Caption_149;
@@ -2278,14 +2362,15 @@ begin
     frmSettings.btnOddRowColorBack.Caption := Caption_147;
     frmSettings.lblGridFont.Caption := Caption_246;
 
-    //frmSettings.tabMiscellaneous.Caption := Caption_163;
+    frmSettings.tabButtons.Caption := Caption_328;
+    frmSettings.lblButtonsSize.Caption := Caption_329;
+    frmSettings.lblButtonsVisibility.Caption := Caption_330;
 
     frmSettings.chkLastFormsSize.Caption := Caption_158;
-    //    frmSettings.lblTransactions.Caption := Caption_159;
     frmSettings.chkLastUsedFile.Caption := Caption_160;
     frmSettings.chkLastUsedFilter.Caption := Caption_161;
+    frmSettings.chkLastUsedFilterDate.Caption := Caption_316;
     frmSettings.chkAutoColumnWidth.Caption := Caption_162;
-    //frmSettings..Caption := Caption_163;
     frmSettings.chkNewVersion.Caption := Caption_279;
 
     frmSettings.btnChange.Caption := Caption_02;
@@ -2293,13 +2378,19 @@ begin
     frmSettings.VSTKeys.Header.Columns[1].Text := Caption_204;
     frmSettings.VSTKeys.Header.Columns[2].Text := Caption_206;
 
-    frmSettings.btnchange.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmMain.actEdit.ShortCut) + ']';
+    frmSettings.btnchange.Hint := frmMain.btnEdit.Hint;
 
     // transactions font color
     frmSettings.tabCreditFontColor.Caption := Caption_38;
     frmSettings.tabDebitFontColor.Caption := Caption_39;
     frmSettings.tabTransferPFontColor.Caption := Caption_40 + '(+)';
-    frmSettings.tabTransferMFontColor.Caption := Caption_40 + '(+)';
+    frmSettings.tabTransferMFontColor.Caption := Caption_40 + '(-)';
+
+    for I := 0 to frmMain.tooMenu.ControlCount - 1 do
+      frmSettings.chkButtonsVisibility.Items[I] :=
+        Field(sLineBreak, frmMain.tooMenu.Controls[I].Hint, 1);
+
+    frmSettings.chkSelectAll.Caption := Hint_81;
 
     // panel TRANSACTIONS
     frmSettings.lblTransactionsColor.Caption := Caption_151;
@@ -2354,58 +2445,101 @@ begin
         0: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_00); // record-add
         1: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_01); // record-add+
         2: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_02); // record-edit
-        3: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_10); // record-duplicate
-        4: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_03); // record-delete
-        5: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_07); // record-copy all
-        6: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_29); // record-copy selected
-        7: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_12); // record-select
-        8: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_09); // record-print all
-        9: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_30); // record-print selected
-        10: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_67); // record-history
+        3: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_10);
+        // record-duplicate
+        4: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_03);
+        // record-delete
+        5: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_07);
+        // record-copy all
+        6: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_29);
+        // record-copy selected
+        7: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_12);
+        // record-select
+        8: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_09);
+        // record-print all
+        9: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_30);
+        // record-print selected
+        10: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_67);
+        // record-history
         11: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_04); // record-save
         12: Key.Caption := AnsiLowerCase(Caption_271 + ': ' + Caption_33); // record-swap
 
         // menu
-        13: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_00 + ': ' + Menu_01, '&', '')); // db new
-        14: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_00 + ': ' + Menu_02, '&', '')); // db open
-        15: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_00 + ': ' + Menu_03, '&', '')); // db close
-        16: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_00 + ': ' + Menu_04, '&', '')); // db import
-        17: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_00 + ': ' + Menu_05, '&', '')); // db import
-        18: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_00 + ': ' + Menu_06, '&', '')); // db password
-        19: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_00 + ': ' + Menu_10, '&', '')); // db properties
-        20: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_00 + ': ' + Menu_08, '&', '')); // db sql
-        21: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_00 + ': ' + Menu_09, '&', '')); // db trash
-        22: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_00 + ': ' + Menu_07, '&', '')); // db quide
+        13: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_00 + ': ' + Menu_01, '&', '')); // db new
+        14: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_00 + ': ' + Menu_02, '&', '')); // db open
+        15: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_00 + ': ' + Menu_03, '&', '')); // db close
+        16: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_00 + ': ' + Menu_04, '&', '')); // db import
+        17: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_00 + ': ' + Menu_05, '&', '')); // db import
+        18: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_00 + ': ' + Menu_06, '&', '')); // db password
+        19: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_00 + ': ' + Menu_10, '&', '')); // db properties
+        20: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_00 + ': ' + Menu_08, '&', '')); // db sql
+        21: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_00 + ': ' + Menu_09, '&', '')); // db trash
+        22: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_00 + ': ' + Menu_07, '&', '')); // db quide
 
         // lists
-        23: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_20 + ': ' + Menu_30, '&', '')); // external links
-        24: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_20 + ': ' + Menu_21, '&', '')); // list holidays
-        25: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_20 + ': ' + Menu_22, '&', '')); // list tags
-        26: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_20 + ': ' + Menu_23, '&', '')); // list currencies
-        27: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_20 + ': ' + Menu_24, '&', '')); // list payees
-        28: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_20 + ': ' + Menu_25, '&', '')); // list comments
-        29: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_20 + ': ' + Menu_26, '&', '')); // list accounts
-        30: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_20 + ': ' + Menu_27, '&', '')); // list categories
-        31: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_20 + ': ' + Menu_28, '&', '')); // list persons
+        23: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_20 + ': ' + Menu_30, '&', '')); // external links
+        24: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_20 + ': ' + Menu_21, '&', '')); // list holidays
+        25: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_20 + ': ' + Menu_22, '&', '')); // list tags
+        26: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_20 + ': ' + Menu_23, '&', '')); // list currencies
+        27: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_20 + ': ' + Menu_24, '&', '')); // list payees
+        28: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_20 + ': ' + Menu_25, '&', '')); // list comments
+        29: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_20 + ': ' + Menu_26, '&', '')); // list accounts
+        30: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_20 + ': ' + Menu_27, '&', '')); // list categories
+        31: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_20 + ': ' + Menu_28, '&', '')); // list persons
 
         // tools
-        32: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_40 + ': ' + Menu_41, '&', '')); // tools scheduler
-        33: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_40 + ': ' + Menu_42, '&', '')); // tools write
-        34: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_40 + ': ' + Menu_43, '&', '')); // tools calendar
-        35: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_40 + ': ' + Menu_44, '&', '')); // tools budget
-        36: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_40 + ': ' + Menu_45, '&', '')); // tools report
-        37: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_40 + ': ' + Menu_46, '&', '')); // tools counter
-        38: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_40 + ': ' + Menu_47, '&', '')); // tools calc
+        32: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_40 + ': ' + Menu_41, '&', '')); // tools scheduler
+        33: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_40 + ': ' + Menu_42, '&', '')); // tools write
+        34: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_40 + ': ' + Menu_43, '&', '')); // tools calendar
+        35: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_40 + ': ' + Menu_44, '&', '')); // tools budget
+        36: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_40 + ': ' + Menu_45, '&', '')); // tools report
+        37: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_40 + ': ' + Menu_46, '&', '')); // tools counter
+        38: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_40 + ': ' + Menu_47, '&', '')); // tools calc
 
         // program
-        39: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_60 + ': ' + Menu_61, '&', '')); // program settings
-        40: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_60 + ': ' + Menu_64, '&', '')); // check updates
-        41: Key.Caption := AnsiLowerCase(Menu_XX + '-' + AnsiReplaceStr(Menu_60 + ': ' + Menu_62, '&', '')); // program about
+        39: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_60 + ': ' + Menu_61, '&', '')); // program settings
+        40: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_60 + ': ' + Menu_64, '&', '')); // check updates
+        41: Key.Caption := AnsiLowerCase(Menu_XX + '-' +
+            AnsiReplaceStr(Menu_60 + ': ' + Menu_62, '&', '')); // program about
 
         // filter
         42: Key.Caption := AnsiLowerCase(Menu_F1); // clear filter
         43: Key.Caption := AnsiLowerCase(Menu_F2); // expand filter
         44: Key.Caption := AnsiLowerCase(Menu_F3); // collapse filter
+
+        // new transaction
+        45: Key.Caption := AnsiLowerCase(Caption_45 + ': ' + Caption_319);
+        // clear filter
+        46: Key.Caption := AnsiLowerCase(Caption_45 + ': ' + Caption_320);
+        // clear filter
 
       end;
       P := frmSettings.VSTKeys.GetNext(P);
@@ -2435,8 +2569,10 @@ begin
     frmSettings.tabScheduler.Caption := Menu_41;
     frmSettings.lblScheduler1.Caption := Caption_216;
     frmSettings.chkSaturday.Caption :=
-      AnsiLowerCase(DefaultFormatSettings.LongDayNames[DayOfWeek(EncodeDate(2022, 8, 6))]);
-    frmSettings.chkSunday.Caption := AnsiLowerCase(DefaultFormatSettings.LongDayNames[DayOfWeek(
+      AnsiLowerCase(DefaultFormatSettings.LongDayNames[DayOfWeek(
+      EncodeDate(2022, 8, 6))]);
+    frmSettings.chkSunday.Caption :=
+      AnsiLowerCase(DefaultFormatSettings.LongDayNames[DayOfWeek(
       EncodeDate(2022, 8, 7))]);
     frmSettings.chkHoliday.Caption := Caption_222;
     frmSettings.lblScheduler2.Caption := Caption_217;
@@ -2462,10 +2598,11 @@ begin
     frmSettings.gbxBackupFolder.Caption := Caption_284;
     frmSettings.gbxBackupCount.Caption := Caption_225;
     frmSettings.chkBackupMessage.Caption := Caption_226;
+    frmSettings.chkBackupQuestion.Caption := Caption_324;
 
     // PNL ONCLOSEDATABASE --------------------------------------------------------------------
-    //    frmSettings.pnlCloseDbCaption.Caption := AnsiUpperCase(Caption_243);
     frmSettings.chkCloseDbWarning.Caption := Caption_244;
+    frmSettings.chkEncryptDatabase.Caption := Caption_325;
 
     // =============================================================================================
     // FRMSHORTCUT FORMS
@@ -2477,10 +2614,7 @@ begin
     frmShortCut.lblShortcutNew.Caption := Caption_203;
 
     frmShortCut.btnSave.Caption := Caption_04;
-    //    frmShortCut.btnCancel.Caption := Caption_05;
-    frmShortCut.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmDetail.actSave.ShortCut) + ']';
-    //    frmShortCut.btnCancel.Hint := Hint_05 + sLineBreak + '[' +
-    //      ShortCutToText(frmDetail.actExit.ShortCut) + ']';
+    frmShortCut.btnSave.Hint := frmDetail.btnSave.Hint;
 
     // =============================================================================================
     // FRMSQL FORMS
@@ -2498,7 +2632,19 @@ begin
     frmSQL.btnExecute.Caption := Caption_106;
     frmSQL.btnExecute.Hint := Format(Hint_21, [sLineBreak]);
     frmSQL.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', ''); // Exit
-    frmSQL.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmSQL.actExit.ShortCut) + ']';
+    frmSQL.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmSQL.btnDiagram.Caption := Caption_322;
+    frmSQL.btnDiagram.Hint := Caption_177;
+
+    // =============================================================================================
+    // FRMIMAGE FORMS
+    // =============================================================================================
+    frmImage.Caption := UTF8UpperCase(Caption_322);
+    frmImage.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', ''); // Exit
+    frmImage.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmImage.btnCopy.Caption := Caption_272;
+    frmImage.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmImage.lblApricotDB.Caption := Caption_323;
 
     // =============================================================================================
     // FRMSQLRESULT FORM
@@ -2507,12 +2653,11 @@ begin
 
     frmSQLResult.pnlCaption.Caption := AnsiUpperCase(Caption_44);
     frmSQLResult.btnCopy.Caption := Caption_272;
-    frmSQLResult.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmSQLResult.actCopy.ShortCut) + ']';
+    frmSQLResult.btnCopy.Hint := frmMain.btnCopy.Hint;
     frmSQLResult.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', ''); // Exit
-    frmSQLResult.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmSQLResult.actExit.ShortCut) + ']';
+    frmSQLResult.btnExit.Hint := frmMain.btnReportExit.Hint;
     frmSQLResult.btnSelect.Caption := Caption_273;
-    frmSQLResult.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(
-      frmSQLResult.actSelect.ShortCut) + ']';
+    frmSQLResult.btnSelect.Hint := frmMain.btnSelect.Hint;
 
     // =============================================================================================
     // FRMFILTER FORM
@@ -2537,8 +2682,7 @@ begin
     frmImport.btnFile.Hint := AnsiLowerCase(Caption_183);
     frmImport.btnImport.Caption := AnsiReplaceStr(Menu_04, '&', '');
     frmImport.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
-    frmImport.btnExit.Hint :=
-      Hint_06 + sLineBreak + '[' + ShortCutToText(frmImport.actExit.ShortCut) + ']';
+    frmImport.btnExit.Hint := frmMain.btnReportExit.Hint;
 
     frmImport.lblFileName1.Caption := Caption_96 + ':';
 
@@ -2564,7 +2708,9 @@ begin
     frmBudgets.tabBudgets.Caption := AnsiUpperCase(AnsiReplaceStr(Menu_44, '&', ''));
     frmBudgets.tabPeriods.Caption := AnsiUpperCase(Caption_234);
     frmBudgets.pnlCategoriesCaption.Caption :=
-      AnsiUpperCase(AnsiReplaceStr(Menu_27, '&', '')) + ' & ' + AnsiUpperCase(Caption_234);
+      AnsiUpperCase(AnsiReplaceStr(Menu_27, '&', '')) + ' & ' +
+      AnsiUpperCase(Caption_234);
+    frmBudgets.tabLegend.Caption := AnsiUpperCase(Menu_B01);
 
     // update menu Budget
     frmBudgets.btnBudgetAdd.Caption := Caption_00;
@@ -2575,7 +2721,7 @@ begin
     frmBudgets.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
     frmBudgets.btnSettings.Caption := AnsiReplaceStr(Menu_61, '&', '');
     frmBudgets.btnCopy.Caption := Caption_272;
-    frmBudgets.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmMain.popCopy.ShortCut) + ']';;
+    frmBudgets.btnCopy.Hint := frmMain.btnCopy.Hint;
 
     // update menu Periods
     frmBudgets.btnPeriodAdd.Caption := Caption_00;
@@ -2584,27 +2730,18 @@ begin
     frmBudgets.btnPeriodDuplicate.Caption := Caption_10;
 
     // update hint of budget buttons
-    frmBudgets.btnBudgetAdd.Hint := Hint_01 + sLineBreak + '[' +
-      ShortCutToText(frmBudgets.actBudgetAdd.ShortCut) + ']';
-    frmBudgets.btnBudgetEdit.Hint := Hint_02 + sLineBreak + '[' +
-      ShortCutToText(frmBudgets.actBudgetEdit.ShortCut) + ']';
-    frmBudgets.btnBudgetDelete.Hint := Hint_03 + sLineBreak + '[' +
-      ShortCutToText(frmBudgets.actBudgetDelete.ShortCut) + ']';
-    frmBudgets.btnBudgetDuplicate.Hint :=
-      Hint_18 + sLineBreak + '[' + ShortCutToText(frmBudgets.actBudgetDuplicate.ShortCut) + ']';
-    frmBudgets.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmBudgets.actExit.ShortCut) + ']';
-    frmBudgets.btnSettings.Hint := Hint_57 + sLineBreak + '[' + ShortCutToText(
-      frmMain.mnuSettings.ShortCut) + ']';
+    frmBudgets.btnBudgetAdd.Hint := frmDetail.btnAdd.Hint;
+    frmBudgets.btnBudgetEdit.Hint := frmMain.btnEdit.Hint;
+    frmBudgets.btnBudgetDelete.Hint := frmMain.btnDelete.Hint;
+    frmBudgets.btnBudgetDuplicate.Hint := frmMain.btnDuplicate.Hint;
+    frmBudgets.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmBudgets.btnSettings.Hint := frmMain.btnSettings.Hint;
 
     // update hint of period buttons
-    frmBudgets.btnPeriodAdd.Hint := Hint_01 + sLineBreak + '[' +
-      ShortCutToText(frmBudgets.actBudgetAdd.ShortCut) + ']';
-    frmBudgets.btnPeriodEdit.Hint := Hint_02 + sLineBreak + '[' +
-      ShortCutToText(frmBudgets.actBudgetEdit.ShortCut) + ']';
-    frmBudgets.btnPeriodDelete.Hint := Hint_03 + sLineBreak + '[' +
-      ShortCutToText(frmBudgets.actBudgetDelete.ShortCut) + ']';
-    frmBudgets.btnPeriodDuplicate.Hint :=
-      Hint_09 + sLineBreak + '[' + ShortCutToText(frmBudgets.actBudgetDuplicate.ShortCut) + ']';
+    frmBudgets.btnPeriodAdd.Hint := frmDetail.btnAdd.Hint;
+    frmBudgets.btnPeriodEdit.Hint := frmMain.btnEdit.Hint;
+    frmBudgets.btnPeriodDelete.Hint := frmMain.btnDelete.Hint;
+    frmBudgets.btnPeriodDuplicate.Hint := frmMain.btnCopy.Hint;
 
     // update Budgets pop menu items
     frmBudgets.popBudgetAdd.Caption := Caption_00;
@@ -2631,12 +2768,19 @@ begin
     frmBudgets.VSTPeriods.Header.Columns[1].Text := Caption_69; // date from
     frmBudgets.VSTPeriods.Header.Columns[2].Text := Caption_70; // date to
 
+    // Legend
+    frmBudgets.lblPlan.Caption := Caption_228;
+    frmBudgets.lblReality.Caption := Caption_229;
+    frmBudgets.lblDifference.Caption := Caption_231;
+    frmBudgets.lblIndex.Caption := Caption_230;
+
     // =============================================================================================
     // FRMBUDGET FORM
     // =============================================================================================
     frmBudget.Caption := AnsiUpperCase(AnsiReplaceStr(Menu_44, '&', ''));
     frmBudget.pnlNameCaption.Caption := AnsiUpperCase(Caption_49); // name
-    frmBudget.pnlCategoriesCaption.Caption := AnsiUpperCase(AnsiReplaceStr(Menu_27, '&', ''));
+    frmBudget.pnlCategoriesCaption.Caption :=
+      AnsiUpperCase(AnsiReplaceStr(Menu_27, '&', ''));
 
     // header columns captions
     frmBudget.VST.Header.Columns[0].Text := AnsiReplaceStr(Caption_54, '&', ''); // category
@@ -2646,11 +2790,10 @@ begin
     frmBudget.btnSave.Caption := Caption_04;
     frmBudget.btnCancel.Caption := Caption_05;
     frmBudget.btnCategories.Caption := AnsiReplaceStr(Menu_27, '&', '');
-    frmBudget.btnCategories.Hint := Hint_46 + sLineBreak + '[' +
-      ShortCutToText(frmMain.mnuCategories.ShortCut) + ']';
+    frmBudget.btnCategories.Hint := frmMain.btnCategories.Hint;
 
-    frmBudget.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmBudget.actSave.ShortCut) + ']';
-    frmBudget.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmBudget.actExit.ShortCut) + ']';
+    frmBudget.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmBudget.btnCancel.Hint := frmDetail.btnCancel.Hint;
 
     // hint
     frmBudget.lblHint1.Caption := Hint_60;
@@ -2665,7 +2808,8 @@ begin
     // FRMPERIOD FORM
     // =============================================================================================
     frmPeriod.pnlPeriodCaption.Caption := AnsiUpperCase(Caption_28);
-    frmPeriod.pnlBudgetCaption.Caption := AnsiUpperCase(AnsiReplaceStr(Menu_44, '&', ''));
+    frmPeriod.pnlBudgetCaption.Caption :=
+      AnsiUpperCase(AnsiReplaceStr(Menu_44, '&', ''));
 
     // header columns captions
     frmPeriod.VST.Header.Columns[1].Text := AnsiReplaceStr(Caption_54, '&', ''); // category
@@ -2677,10 +2821,9 @@ begin
     frmPeriod.btnCancel.Caption := Caption_05;
     frmPeriod.btnEdit.Caption := Caption_02;
 
-    frmPeriod.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmPeriod.actSave.ShortCut) + ']';
-    frmPeriod.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmPeriod.actExit.ShortCut) + ']';
-    frmPeriod.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(
-      frmBudgets.actPeriodEdit.ShortCut) + ']';
+    frmPeriod.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmPeriod.btnCancel.Hint := frmDetail.btnCancel.Hint;
+    frmPeriod.btnEdit.Hint := frmMain.btnEdit.Hint;
 
     // labels
     frmPeriod.lblFromDate.Caption := Caption_69; // date from
@@ -2694,8 +2837,8 @@ begin
     // buttons
     frmPlan.btnSave.Caption := Caption_04;
     frmPlan.btnCancel.Caption := Caption_05;
-    frmPlan.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmPlan.actSave.ShortCut) + ']';
-    frmPlan.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmPlan.actCancel.ShortCut) + ']';
+    frmPlan.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmPlan.btnCancel.Hint := frmDetail.btnCancel.Hint;
 
     // labels
     frmPlan.lblDate1.Caption := Caption_28;
@@ -2711,22 +2854,22 @@ begin
 
     frmTemplates.btnImport.Caption := AnsiReplaceStr(Menu_04, '&', '');
     frmTemplates.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
-    frmTemplates.btnExit.Hint :=
-      Hint_06 + sLineBreak + '[' + ShortCutToText(frmTemplates.actExit.ShortCut) + ']';
+    frmTemplates.btnExit.Hint := frmMain.btnReportExit.Hint;
 
     frmTemplates.btnSave.Caption := Caption_04;
-    frmTemplates.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmTemplates.actSave.ShortCut) + ']';
+    frmTemplates.btnSave.Hint := frmDetail.btnSave.Hint;
     frmTemplates.lblTemplates.Caption := Caption_251;
     frmTemplates.btnAdd.Caption := Caption_00;
-    frmTemplates.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmTemplates.actAdd.ShortCut) + ']';
+    frmTemplates.btnAdd.Hint := frmDetail.btnAdd.Hint;
     frmTemplates.btnEdit.Caption := Caption_02;
-    frmTemplates.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmTemplates.actEdit.ShortCut) + ']';
+    frmTemplates.btnEdit.Hint := frmMain.btnEdit.Hint;
     frmTemplates.btnDelete.Caption := Caption_03;
-    frmTemplates.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(frmTemplates.actDelete.ShortCut) + ']';
+    frmTemplates.btnDelete.Hint := frmMain.btnDelete.Hint;
     frmTemplates.btnCancel.Caption := Caption_05;
-    frmTemplates.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmTemplates.actExit .ShortCut) + ']';
+    frmTemplates.btnCancel.Hint := frmDetail.btnCancel.Hint;
 
-    frmTemplates.pnlSettingsCaption.Caption := AnsiUpperCase(AnsiReplaceStr(Menu_61, '&', ''));
+    frmTemplates.pnlSettingsCaption.Caption :=
+      AnsiUpperCase(AnsiReplaceStr(Menu_61, '&', ''));
 
     frmTemplates.pnlOriginCaption.Caption := '  ' + Caption_259;
     frmTemplates.gbxImport.Caption := Caption_254;
@@ -2759,7 +2902,7 @@ begin
     frmTemplates.rbtCommentAuto.Caption := Caption_268;
 
     frmTemplates.pnlCategoryCaption.Caption :=
-      '  ' + AnsiReplaceStr(Caption_54, '&', '') + ' / ' + AnsiReplaceStr(Caption_80, '&', '');
+      '  ' + AnsiReplaceStr(Caption_54, '&', '') + ' / ' + Caption_80;
     frmTemplates.rbtCategoryManually.Caption := Caption_267;
     frmTemplates.rbtCategoryAuto.Caption := Caption_268;
 
@@ -2798,15 +2941,15 @@ begin
     frmLinks.btnSelect.Caption := Caption_12;
 
     // update hint of all menu
-    frmLinks.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(frmLinks.actAdd.ShortCut) + ']';
-    frmLinks.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(frmLinks.actEdit.ShortCut) + ']';
-    frmLinks.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(frmLinks.actDelete.ShortCut) + ']';
-    frmLinks.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(frmLinks.actSave.ShortCut) + ']';
-    frmLinks.btnCancel.Hint := Hint_05 + sLineBreak + '[' + ShortCutToText(frmLinks.actExit.ShortCut) + ']';
-    frmLinks.btnExit.Hint := Hint_06 + sLineBreak + '[' + ShortCutToText(frmLinks.actExit.ShortCut) + ']';
-    frmLinks.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(frmLinks.popCopy.ShortCut) + ']';
-    frmLinks.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(frmLinks.popSelect.ShortCut) + ']';
-    frmLinks.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(frmLinks.popPrint.ShortCut) + ']';
+    frmLinks.btnAdd.Hint := frmDetail.btnAdd.Hint;
+    frmLinks.btnEdit.Hint := frmMain.btnEdit.Hint;
+    frmLinks.btnDelete.Hint := frmMain.btnDelete.Hint;
+    frmLinks.btnSave.Hint := frmDetail.btnSave.Hint;
+    frmLinks.btnCancel.Hint := frmDetail.btnCancel.Hint;
+    frmLinks.btnExit.Hint := frmMain.btnReportExit.Hint;
+    frmLinks.btnCopy.Hint := frmMain.btnCopy.Hint;
+    frmLinks.btnSelect.Hint := frmMain.btnSelect.Hint;
+    frmLinks.btnPrint.Hint := frmMain.btnReportPrint.Hint;
 
     // update pop menu items
     frmLinks.popAdd.Caption := Caption_00;

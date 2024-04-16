@@ -9,17 +9,18 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   ComCtrls, ExtCtrls, Buttons, Menus, StrUtils, Math, DB, sqldb, LCLProc,
   LCLType, DBGrids, DBCtrls, LazUTF8, laz.VirtualTrees, Clipbrd, ActnList,
-  BCPanel, BCMDButtonFocus, Variants;
+  BCPanel, BCMDButtonFocus, Variants, IniFiles;
 
 type
   TCategory = record
-    Name: String;
-    Comment: String;
-    Status: Integer;
-    Parent_ID: Integer;
-    Parent_name: String;
-    Time: String;
-    ID: Integer;
+    Name: string;
+    Comment: string;
+    Status: integer;
+    Parent_ID: integer;
+    Parent_name: string;
+    Time: string;
+    Kind: integer;
+    ID: integer;
   end;
   PCategory = ^TCategory;
 
@@ -55,6 +56,7 @@ type
     cbxStatus: TComboBox;
     cbxType: TComboBox;
     cbxTo: TComboBox;
+    cbxKind: TComboBox;
     imgList: TImageList;
     lblComment: TLabel;
     ediName: TEdit;
@@ -65,11 +67,15 @@ type
     lblHeight: TLabel;
     lblItem: TLabel;
     lblItems: TLabel;
+    lblName: TLabel;
     lblStatus: TLabel;
     lblTo: TLabel;
+    lblKind: TLabel;
+    lblType: TLabel;
     lblWidth: TLabel;
     memComment: TMemo;
     pnlTip: TPanel;
+    pnlKind: TPanel;
     popExpandOne: TMenuItem;
     popCollapseOne: TMenuItem;
     popExpandAll: TMenuItem;
@@ -107,8 +113,9 @@ type
     procedure btnMenuClick(Sender: TObject);
     procedure btnPrintClick(Sender: TObject);
     procedure btnPrintMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+      Shift: TShiftState; X, Y: integer);
     procedure btnSelectClick(Sender: TObject);
+    procedure cbxKindKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxStatusKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxToKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxTypeKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -141,14 +148,13 @@ type
       Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode;
       CellRect: TRect; var ContentRect: TRect);
     procedure VSTChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
-    procedure VSTCompareNodes(Sender: TBaseVirtualTree; Node1,
-      Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
+    procedure VSTCompareNodes(Sender: TBaseVirtualTree; Node1, Node2: PVirtualNode;
+      Column: TColumnIndex; var Result: integer);
     procedure VSTDblClick(Sender: TObject);
     procedure VSTGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean;
       var ImageIndex: integer);
-    procedure VSTGetNodeDataSize(Sender: TBaseVirtualTree;
-      var NodeDataSize: Integer);
+    procedure VSTGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: integer);
     procedure VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure VSTPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas;
@@ -162,7 +168,8 @@ type
 
 var
   frmCategories: TfrmCategories;
-//  slPrintCategories: TStringList;
+
+  //  slPrintCategories: TStringList;
 
 procedure UpdateCategories;
 
@@ -171,10 +178,9 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniScheduler, uniSettings, uniEdit, uniProperties, uniTemplates,
-  uniMultiple, uniDetail, uniDelete, uniResources, uniEdits, uniBudget;
+  uniMain, uniSettings, uniProperties, uniDetail, uniDelete, uniResources, uniBudget;
 
-{ TfrmCategories }
+  { TfrmCategories }
 
 procedure TfrmCategories.FormCreate(Sender: TObject);
 begin
@@ -185,24 +191,16 @@ begin
     frmCategories.cbxStatus.Items.Add(Caption_57); // passive
     frmCategories.cbxStatus.Items.Add(Caption_59); // archive
 
-    // form size
-    (Sender as TForm).Width := Round((Screen.Width /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - (Round(820 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height := Round(Screen.Height /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - 3 * (250 - ScreenRatio);
-
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := (Screen.Height - 100 - (Sender as TForm).Height) div 2;
-
-    {$IFDEF WINDOWS}
+    // set components height
     VST.Header.Height := PanelHeight;
     pnlDetailCaption.Height := PanelHeight;
     pnlListCaption.Height := PanelHeight;
     pnlButtons.Height := ButtonHeight;
     pnlButton.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
-    {$ENDIF}
+
+    // get form icon
+    frmMain.img16.GetIcon(16, (Sender as TForm).Icon);
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -232,7 +230,6 @@ begin
     actExpandOne.Enabled := False;
     btnMenu.Enabled := False;
 
-
     // enabled buttons
     btnSave.Enabled := False;
     btnSave.Tag := 0;
@@ -241,6 +238,7 @@ begin
     memComment.Clear;
     if cbxStatus.ItemIndex = -1 then
       cbxStatus.ItemIndex := 0;
+    cbxKind.ItemIndex := 0;
 
     //pnlStamp.Visible := False;
 
@@ -275,7 +273,7 @@ begin
     actEdit.Enabled := False;
     actDelete.Enabled := False;
 
-    If cbxType.ItemIndex = -1 then
+    if cbxType.ItemIndex = -1 then
       cbxType.ItemIndex := 0;
   except
     on E: Exception do
@@ -428,11 +426,11 @@ procedure TfrmCategories.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  {if Sender.GetNodeLevel(Node) = 0 then
-    TargetCanvas.Brush.Color := FullColor
-  else}
+  if Sender.GetNodeLevel(Node) = 0 then
+    TargetCanvas.Brush.Color := clSilver
+  else
     TargetCanvas.Brush.Color :=
-      IfThen(Sender.GetNodeLevel(Node) = 1, clWhite, frmSettings.pnlOddRowColor.Color);
+      IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -479,6 +477,7 @@ begin
       ediName.Clear;
       cbxStatus.ItemIndex := -1;
       memComment.Clear;
+      cbxKind.ItemIndex := 0;
       Exit;
     end;
 
@@ -493,6 +492,10 @@ begin
       memComment.Text := VST.Text[VST.GetFirstSelected(False), 2];
       cbxStatus.ItemIndex := cbxStatus.Items.IndexOf(
         VST.Text[VST.GetFirstSelected(False), 3]);
+      if VST.GetNodeLevel(VST.GetFirstSelected()) = 0 then
+        cbxKind.ItemIndex := StrToInt(VST.Text[VST.GetFirstSelected(), 7])
+      else
+        cbxKind.ItemIndex := StrToInt(VST.Text[VST.GetFirstSelected().Parent, 7]);
     end;
   except
     on E: Exception do
@@ -500,8 +503,8 @@ begin
   end;
 end;
 
-procedure TfrmCategories.VSTCompareNodes(Sender: TBaseVirtualTree; Node1,
-  Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
+procedure TfrmCategories.VSTCompareNodes(Sender: TBaseVirtualTree;
+  Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: integer);
 var
   Data1, Data2: PCategory;
 begin
@@ -513,7 +516,7 @@ begin
         Result := UTF8CompareText( // compare
           AnsiLowerCase(Data1.Parent_name + Data1.Name), // 1
           AnsiLowerCase(Data2.Parent_name + Data2.Name)); // 2
-      end;
+    end;
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -539,7 +542,7 @@ begin
 end;
 
 procedure TfrmCategories.VSTGetNodeDataSize(Sender: TBaseVirtualTree;
-  var NodeDataSize: Integer);
+  var NodeDataSize: integer);
 begin
   NodeDataSize := SizeOf(TCategory);
 end;
@@ -549,17 +552,17 @@ procedure TfrmCategories.VSTGetText(Sender: TBaseVirtualTree;
   var CellText: string);
 var
   Category: PCategory;
-
 begin
   Category := Sender.GetNodeData(Node);
   try
-    Case Column of
-      1: CellText := IfThen(VST.GetNodeLevel(Node) = 0, Category.Name, Category.Name);
+    case Column of
+      1: CellText := Category.Name;
       2: CellText := Category.Comment;
       3: CellText := cbxStatus.Items[Category.Status];
       4: CellText := IntToStr(Category.ID);
       5: CellText := IntToStr(Category.Parent_ID);
       6: CellText := Category.Parent_name;
+      7: CellText := IntToStr(Category.Kind);
     end;
   except
     on E: Exception do
@@ -572,13 +575,11 @@ procedure TfrmCategories.VSTPaintText(Sender: TBaseVirtualTree;
   TextType: TVSTTextType);
 var
   Category: PCategory;
-
 begin
   Category := Sender.GetNodeData(Node);
 
   case Category.Status of
     0: TargetCanvas.Font.Color := clDefault;
-        // IfThen(Sender.GetNodeLevel(Node) = 0, clWhite, clDefault);
     1: TargetCanvas.Font.Color := clBlue;
     2: TargetCanvas.Font.Color := clRed;
   end;
@@ -588,16 +589,21 @@ end;
 procedure TfrmCategories.VSTResize(Sender: TObject);
 var
   X: integer;
-
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
-  (Sender as TLazVirtualStringTree).Header.Columns[0].Width := round(ScreenRatio * 25 / 100);
-  X := (VST.Width - VST.Header.Columns[0].Width) div 100;
-  VST.Header.Columns[1].Width := 37 * X; // category / subcategory
-  VST.Header.Columns[2].Width := VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (62 * X); // comment
-  VST.Header.Columns[3].Width := 17 * X; // status
-  VST.Header.Columns[4].Width := 8 * X; // ID
+  try
+    (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+      round(ScreenRatio * 25 / 100);
+    X := (VST.Width - VST.Header.Columns[0].Width) div 100;
+    VST.Header.Columns[1].Width := 37 * X; // category / subcategory
+    VST.Header.Columns[2].Width :=
+      VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (64 * X); // comment
+    VST.Header.Columns[3].Width := 13 * X; // status
+    VST.Header.Columns[4].Width := 7 * X; // ID
+    VST.Header.Columns[7].Width := 7 * X; // type
+  except
+  end;
 end;
 
 procedure TfrmCategories.cbxTypeKeyUp(Sender: TObject; var Key: word;
@@ -614,7 +620,8 @@ procedure TfrmCategories.ediNameExit(Sender: TObject);
 begin
   if Sender.ClassType = TEdit then
     (Sender as TEdit).Font.Bold := False
-  else if Sender.ClassType = TComboBox then begin
+  else if Sender.ClassType = TComboBox then
+  begin
     (Sender as TComboBox).Font.Bold := False;
     ComboBoxExit((Sender as TComboBox));
   end
@@ -639,13 +646,13 @@ begin
     if (Key = 13) then
     begin
       if (cbxTo.Visible = True) then
-      begin
-        cbxTo.SetFocus;
-        //cbxTo.DroppedDown := True;
-      end
+        cbxTo.SetFocus
       else
       begin
-        memComment.SetFocus;
+        if cbxKind.Enabled = True then
+          cbxKind.SetFocus
+        else
+          memComment.SetFocus;
       end;
     end;
   except
@@ -703,11 +710,10 @@ end;
 
 procedure TfrmCategories.btnPrintClick(Sender: TObject);
 var
-  FileName: String;
-
+  FileName: string;
 begin
-  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Templates' +
-      DirectorySeparator + 'categories.lrf';
+  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
+    'Templates' + DirectorySeparator + 'categories.lrf';
 
   if FileExists(FileName) = False then
   begin
@@ -740,15 +746,14 @@ begin
 end;
 
 procedure TfrmCategories.btnPrintMouseDown(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+  Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 var
-  FileName: String;
-
+  FileName: string;
 begin
   if btnPrint.Enabled = False then Exit;
 
-  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Templates' +
-      DirectorySeparator + 'categories.lrf';
+  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
+    'Templates' + DirectorySeparator + 'categories.lrf';
 
   if FileExists(FileName) = False then
   begin
@@ -758,12 +763,12 @@ begin
 
   // right mouse button = show design report
   if Button = mbRight then
-    begin
-      frmMain.Report.LoadFromFile(FileName);
-      frmMain.Report.DesignReport;
-    end
-    else if Button = mbLeft then
-      btnPrintClick(btnPrint);
+  begin
+    frmMain.Report.LoadFromFile(FileName);
+    frmMain.Report.DesignReport;
+  end
+  else if Button = mbLeft then
+    btnPrintClick(btnPrint);
 end;
 
 procedure TfrmCategories.btnSelectClick(Sender: TObject);
@@ -775,11 +780,23 @@ begin
   VST.SetFocus;
 end;
 
-procedure TfrmCategories.cbxToKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+procedure TfrmCategories.cbxKindKeyUp(Sender: TObject; var Key: word;
+  Shift: TShiftState);
 begin
   if (Key = 13) then
   begin
     memComment.SetFocus;
+  end;
+end;
+
+procedure TfrmCategories.cbxToKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if (Key = 13) then
+  begin
+    if cbxKind.Enabled = True then
+      cbxKind.SetFocus
+    else
+      memComment.SetFocus;
   end;
 end;
 
@@ -789,7 +806,6 @@ var
   slDel: TStringList;
   N: PVirtualNode;
   S: string;
-
 begin
   try
     if (frmMain.Conn.Connected = False) or (VST.SelectedCount = 0) or
@@ -847,14 +863,14 @@ begin
             VST.Text[VST.FocusedNode, 1], mtConfirmation, mbYesNo, 0) <> mrYes then
             Exit;
         else
-          if MessageDlg(Message_00, AnsiReplaceStr(Question_02,
-            '%', IntToStr(VST.SelectedCount)), mtConfirmation, mbYesNo, 0) <> mrYes then
+          if MessageDlg(Message_00, AnsiReplaceStr(Question_02, '%',
+            IntToStr(VST.SelectedCount)), mtConfirmation, mbYesNo, 0) <> mrYes then
             Exit;
       end
     else if I > 0 then // show all transaction to delete
     begin
       frmDelete.Hint := 'd_category IN (' + S + ')' + separ +
-        'sch_category IN (' + S + ')' + separ + 'budcat_category IN (' + S + ')' ;
+        'sch_category IN (' + S + ')' + separ + 'budcat_category IN (' + S + ')';
       frmDelete.pnlCaption2.Caption := Question_06;
 
       if frmDelete.ShowModal <> mrOk then
@@ -876,7 +892,8 @@ end;
 procedure TfrmCategories.btnSaveClick(Sender: TObject);
 begin
   // check category
-  if (cbxTo.ItemIndex = -1) and (cbxType.ItemIndex = 1) then begin
+  if (cbxTo.ItemIndex = -1) and (cbxType.ItemIndex = 1) then
+  begin
     ShowMessage(ReplaceStr(Error_04, '%', AnsiUpperCase(lblTo.Caption)));
     cbxTo.SetFocus;
     Exit;
@@ -899,26 +916,27 @@ begin
     begin
       if (cbxType.ItemIndex = 0) then
         frmMain.QRY.SQL.Text :=
-          'INSERT INTO categories (cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment) VALUES '
-          + '(:NAME, 0, :PARENTNAME, :STATUS, :COMMENT);'
+          'INSERT OR IGNORE INTO categories (cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment, cat_type) VALUES '
+          + '(:NAME, 0, :PARENTNAME, :STATUS, :COMMENT, :TYPE);'
       else
         frmMain.QRY.SQL.Text :=
-          'INSERT INTO categories (cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment) VALUES '
+          'INSERT OR IGNORE INTO categories (cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment, cat_type) VALUES '
           + '(:NAME, (SELECT cat_id FROM categories WHERE cat_parent_ID = 0 AND cat_name = :CATEGORY), '
-          + ':PARENTNAME, :STATUS, :COMMENT);';
+          + ':PARENTNAME, :STATUS, :COMMENT, :TYPE);';
     end
     else
     begin
       // Edit selected category
       VST.Tag := StrToInt(VST.Text[VST.GetFirstSelected(), 4]);
       frmMain.QRY.SQL.Text :=
-        'UPDATE categories SET ' +                          // update
+        'UPDATE OR IGNORE categories SET ' +                  // update
         'cat_name = :NAME, ' +                                // name
         'cat_parent_ID = ' + IfThen(cbxType.ItemIndex = 0, '0',
         '(SELECT cat_id FROM categories WHERE cat_parent_ID = 0 AND cat_name = :CATEGORY)')
         + ', cat_parent_name = :PARENTNAME, ' +                 // parent name
         'cat_status = :STATUS, ' +                           // status
-        'cat_comment = :COMMENT ' +                         // comment
+        'cat_comment = :COMMENT, ' +                         // comment
+        'cat_type = :TYPE ' + // type (0 = all, 1 = credit, 2 = debit, 3 = transfer)
         'WHERE cat_id = :ID;';
 
       frmMain.QRY.Params.ParamByName('ID').AsInteger := VST.Tag;
@@ -939,6 +957,7 @@ begin
     else       //      CategoryAdded := False;
       frmMain.QRY.Params.ParamByName('PARENTNAME').AsString :=
         AnsiUpperCase(cbxTo.Items[cbxTo.ItemIndex]);
+    frmMain.QRY.Params.ParamByName('TYPE').AsInteger := cbxKind.ItemIndex;
 
     //ShowMessage(frmmain.QRY.SQL.Text);
     frmMain.QRY.Prepare;
@@ -976,6 +995,7 @@ begin
         cbxTo.Visible := False;
         pnlDetail.Tag := 1;
         cbxTo.Tag := 0;
+        cbxKind.Enabled := True;
       end
       else
       begin
@@ -983,6 +1003,7 @@ begin
         lblTo.Caption := Caption_61;
         lblTo.Visible := True;
         cbxTo.Visible := True;
+        cbxKind.Enabled := False;
 
         // adding record
         if btnSave.Tag = 0 then
@@ -999,8 +1020,7 @@ begin
             begin
               if frmMain.QRY.RecNo = 1 then
                 cbxTo.ItemIndex :=
-                  cbxTo.Items.IndexOf(AnsiUpperCase(
-                  frmMain.QRY.Fields[0].AsString));
+                  cbxTo.Items.IndexOf(AnsiUpperCase(frmMain.QRY.Fields[0].AsString));
               frmMain.QRY.Next;
             end;
             frmMain.QRY.Close;
@@ -1030,12 +1050,38 @@ begin
 end;
 
 procedure TfrmCategories.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
 begin
   if pnlButton.Visible = True then
   begin
     btnCancelClick(btnCancel);
     CloseAction := Forms.caNone;
     Exit;
+  end;
+
+  // write position and window size
+  if frmSettings.chkLastFormsSize.Checked = True then
+  begin
+    try
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmCategories.Name, '') <>
+        IntToStr(frmCategories.Left) + separ + // form left
+      IntToStr(frmCategories.Top) + separ +  // form top
+      IntToStr(frmCategories.Width) + separ + // form width
+      IntToStr(frmCategories.Height) + separ + // form height
+      IntToStr(frmCategories.pnlDetail.Width) then
+        INI.WriteString('POSITION', frmCategories.Name,
+          IntToStr(frmCategories.Left) + separ + // form left
+          IntToStr(frmCategories.Top) + separ +  // form top
+          IntToStr(frmCategories.Width) + separ + // form width
+          IntToStr(frmCategories.Height) + separ + // form height
+          IntToStr(frmCategories.pnlDetail.Width));
+    finally
+      INI.Free;
+    end;
   end;
 end;
 
@@ -1053,7 +1099,65 @@ begin
 end;
 
 procedure TfrmCategories.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmCategories.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmCategories.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmCategories.Width := Screen.Width - 400 - (200 - ScreenRatio)
+      else
+        frmCategories.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmCategories.Height := Screen.Height - 200 - (200 - ScreenRatio)
+      else
+        frmCategories.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmCategories.left := (Screen.Width - frmCategories.Width) div 2
+      else
+        frmCategories.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmCategories.Top := ((Screen.Height - frmCategories.Height) div 2) - 75
+      else
+        frmCategories.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 100) or (I > 300) then
+        frmCategories.pnlDetail.Width := 220
+      else
+        frmCategories.pnlDetail.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;
@@ -1084,7 +1188,7 @@ begin
   popPrint.Enabled := VST.RootNodeCount > 0;
   actPrint.Enabled := VST.RootNodeCount > 0;
 
-  SetNodeHeight(frmCategories.VST);
+  SetNodeHeight(VST);
   VST.SetFocus;
   VST.ClearSelection;
 end;
@@ -1103,7 +1207,6 @@ procedure UpdateCategories;
 var
   Category: PCategory;
   P, C: PVirtualNode;
-
 begin
   try
     // update list of all items
@@ -1117,48 +1220,55 @@ begin
     Screen.Cursor := crHourGlass;
     frmCategories.VST.BeginUpdate;
 
-          // GET SUBCATEGORIES ===========================================================================
-          frmMain.QRY.SQL.Text := 'SELECT ' + // select
-            'cat_name,' + // category name
-            'cat_comment,' + // comment
-            'cat_status,' + // status
-            'cat_parent_ID,' + // cat_parent_ID
-            'cat_parent_name,' + // parent name
-            'cat_time,' + // time
-            'cat_id ' + // id
-            'FROM categories ' +
-            'ORDER BY cat_parent_name, cat_parent_ID;';
-          frmMain.QRY.Open;
+    // GET SUBCATEGORIES ===========================================================================
+    frmMain.QRY.SQL.Text := // query
+      'SELECT ' + // select
+      'cat_name,' + // category name
+      'cat_comment,' + // comment
+      'cat_status,' + // status
+      'cat_parent_ID,' + // cat_parent_ID
+      'cat_parent_name,' + // parent name
+      'cat_time,' + // time
+      'cat_id, ' + // id
+      'cat_type ' + // kind
+      'FROM categories ' + // from
+      'ORDER BY cat_parent_name, cat_parent_ID;';
+    frmMain.QRY.Open;
 
-         while not frmMain.QRY.EOF do
-            begin
-              // parent node (category)
-              If frmMain.QRY.Fields[3].AsInteger = 0 then begin
-                frmCategories.VST.RootNodeCount := frmCategories.VST.RootNodeCount + 1;
-                P := frmCategories.VST.GetLast();
-                Category := frmCategories.VST.GetNodeData(P);
-                Category.Name := AnsiUpperCase(frmMain.QRY.Fields[0].AsString);
-                frmCategories.cbxTo.Items.Add(Category.Name);
-              end
-              Else begin
-                // child node (subcategory)
-                frmCategories.VST.ChildCount[P] := frmCategories.VST.ChildCount[P] + 1;
-                C := frmCategories.VST.GetLastChild(P);
-                Category := frmCategories.VST.GetNodeData(C);
-                Category.Name := IfThen(frmSettings.chkDisplaySubCatCapital.Checked = True,
-                  AnsiUpperCase(frmMain.QRY.Fields[0].AsString), AnsiLowerCase(frmMain.QRY.Fields[0].AsString));
-              end;
+    while not frmMain.QRY.EOF do
+    begin
+      // parent node (category)
+      if frmMain.QRY.Fields[3].AsInteger = 0 then
+      begin
+        frmCategories.VST.RootNodeCount := frmCategories.VST.RootNodeCount + 1;
+        P := frmCategories.VST.GetLast();
+        Category := frmCategories.VST.GetNodeData(P);
+        Category.Name := AnsiUpperCase(frmMain.QRY.Fields[0].AsString);
+        frmCategories.cbxTo.Items.Add(Category.Name);
+      end
+      else
+      begin
+        // child node (subcategory)
+        frmCategories.VST.ChildCount[P] := frmCategories.VST.ChildCount[P] + 1;
+        C := frmCategories.VST.GetLastChild(P);
+        Category := frmCategories.VST.GetNodeData(C);
+        Category.Name :=
+          IfThen(frmSettings.chkDisplaySubCatCapital.Checked = True,
+          AnsiUpperCase(frmMain.QRY.Fields[0].AsString), AnsiLowerCase(
+          frmMain.QRY.Fields[0].AsString));
+      end;
 
-              // common data
-              Category.Comment := frmMain.QRY.Fields[1].AsString;
-              Category.Status := frmMain.QRY.Fields[2].AsInteger;
-              Category.Parent_ID := frmMain.QRY.Fields[3].AsInteger;
-              Category.Parent_name := frmMain.QRY.Fields[4].AsString;
-              Category.Time := frmMain.QRY.Fields[5].AsString;
-              Category.ID := frmMain.QRY.Fields[6].AsInteger;
-              frmMain.QRY.Next;
-            end;
-          frmMain.QRY.Close;
+      // common data
+      Category.Comment := frmMain.QRY.Fields[1].AsString;
+      Category.Status := frmMain.QRY.Fields[2].AsInteger;
+      Category.Parent_ID := frmMain.QRY.Fields[3].AsInteger;
+      Category.Parent_name := frmMain.QRY.Fields[4].AsString;
+      Category.Time := frmMain.QRY.Fields[5].AsString;
+      Category.ID := frmMain.QRY.Fields[6].AsInteger;
+      Category.Kind := frmMain.QRY.Fields[7].AsInteger;
+      frmMain.QRY.Next;
+    end;
+    frmMain.QRY.Close;
 
     frmCategories.VST.FullExpand();
     frmCategories.VST.EndUpdate;
@@ -1168,56 +1278,20 @@ begin
       frmCategories.cbxTo.ItemIndex := 0;
 
     // =============================================================================================
-    // update list of categories in frmMain and frmDetail
+    // update list of categories in frmMain
     frmMain.cbxCategory.Clear;
-    frmDetail.cbxCategory.Clear;
 
     if (frmCategories.VST.RootNodeCount > 0) and
       (frmCategories.cbxStatus.Items.Count > 0) then
       for P in frmCategories.VST.Nodes() do
-      begin
-        // list of categories in frmMAIN [not archive status]
-        if (frmCategories.VST.Text[P, 3] <> frmCategories.cbxStatus.Items[2]) then
-          frmMain.cbxCategory.Items.Add(
-            IfThen(frmCategories.VST.GetNodeLevel(P) = 0,
-            frmCategories.VST.Text[P, 1], AnsiUpperCase(frmCategories.VST.Text[P, 6]) +
-            ' | ' + frmCategories.VST.Text[P, 1]));
-        // list of categories in frmDETAIL [active status only !!!]
-        if (frmCategories.VST.Text[P, 3] = frmCategories.cbxStatus.Items[0]) then
-          frmDetail.cbxCategory.Items.Add(
-            IfThen(frmCategories.VST.GetNodeLevel(P) = 0,
-            frmCategories.VST.Text[P, 1], AnsiUpperCase(frmCategories.VST.Text[P, 6]) +
-            ' | ' + frmCategories.VST.Text[P, 1]));
-      end;
+        // list of categories in frmMAIN [only active status]
+        if (frmCategories.VST.GetNodeLevel(P) = 0) and
+          (frmCategories.VST.Text[P, 3] = frmCategories.cbxStatus.Items[0]) then
+          frmMain.cbxCategory.Items.Add(frmCategories.VST.Text[P, 1]);
 
     frmMain.cbxCategory.Items.Insert(0, '*');
     frmMain.cbxCategory.ItemIndex := 0;
     frmMain.cbxCategoryChange(frmMain.cbxCategory);
-
-    // =============================================================================================
-    // update list of categories in form Multiple additions
-    frmMultiple.cbxCategory.Clear;
-    frmMultiple.cbxCategory.Items := frmDetail.cbxCategory.Items;
-
-    // =============================================================================================
-    // update list of categories in form Scheduler
-    frmScheduler.cbxCategory.Clear;
-    frmScheduler.cbxCategory.Items := frmDetail.cbxCategory.Items;
-
-    // =============================================================================================
-    // update list of categories in form Edit
-    frmEdit.cbxCategory.Clear;
-    frmEdit.cbxCategory.Items := frmDetail.cbxCategory.Items;
-
-    // =============================================================================================
-    // update list of categories in form Edits
-    frmEdits.cbxCategory.Clear;
-    frmEdits.cbxCategory.Items := frmDetail.cbxCategory.Items;
-
-    // =============================================================================================
-    // update list of categories in form Edits
-    frmTemplates.cbxCategory.Clear;
-    frmTemplates.cbxCategory.Items := frmDetail.cbxCategory.Items;
 
     // =============================================================================================
     // items icon
@@ -1244,7 +1318,7 @@ begin
     if frmProperties.Visible = True then
       frmProperties.FormShow(frmProperties);
 
-    If frmBudget.Visible = True then
+    if frmBudget.Visible = True then
       UpdateBudget;
   except
     on E: Exception do

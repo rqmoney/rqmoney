@@ -1,7 +1,7 @@
 object frmFilter: TfrmFilter
-  Left = 732
+  Left = 418
   Height = 406
-  Top = 193
+  Top = 110
   Width = 300
   BorderIcons = [biSystemMenu]
   ClientHeight = 406
@@ -12,7 +12,7 @@ object frmFilter: TfrmFilter
   OnKeyPress = FormKeyPress
   OnResize = FormResize
   OnShow = FormShow
-  LCLVersion = '3.0.0.1'
+  LCLVersion = '3.0.0.3'
   Scaled = False
   object chkFilter: TCheckListBox
     Left = 5
@@ -22,8 +22,8 @@ object frmFilter: TfrmFilter
     Align = alClient
     BorderSpacing.Around = 5
     ItemHeight = 0
-    OnClickCheck = chkFilterClickCheck
     TabOrder = 0
+    OnClickCheck = chkFilterClickCheck
   end
   object pnlButtons: TPanel
     Left = 5
@@ -237,8 +237,8 @@ object frmFilter: TfrmFilter
       Width = 18
       Align = alLeft
       BorderSpacing.Left = 2
-      OnChange = chkSelectAllChange
       TabOrder = 0
+      OnChange = chkSelectAllChange
     end
   end
 end

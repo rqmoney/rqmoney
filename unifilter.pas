@@ -109,12 +109,10 @@ end;
 
 procedure TfrmFilter.FormCreate(Sender: TObject);
 begin
-  {$IFDEF WINDOWS}
   // set components height
   pnlFilterCaption.Height := PanelHeight;
   pnlButtons.Height := ButtonHeight;
   pnlBottom.Height := ButtonHeight;
-  {$ENDIF}
 end;
 
 procedure TfrmFilter.btnAllClick(Sender:TObject);

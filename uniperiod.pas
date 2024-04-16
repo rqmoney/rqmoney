@@ -7,8 +7,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, BCPanel, ExtCtrls,
-  StdCtrls, Buttons, Menus, ActnList, laz.VirtualTrees, DateTimePicker,
-  Math, BCMDButtonFocus, StrUtils, DateUtils;
+  StdCtrls, Buttons, Menus, ActnList, laz.VirtualTrees, DateTimePicker, LazUTF8,
+  Math, BCMDButtonFocus, StrUtils, DateUtils, IniFiles;
 
 type // middle grid (Periods)
   TBudPer = record
@@ -79,6 +79,8 @@ type
       Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode;
       CellRect: TRect; var ContentRect: TRect);
     procedure VSTChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure VSTCompareNodes(Sender: TBaseVirtualTree;
+      Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: integer);
     procedure VSTDblClick(Sender: TObject);
     procedure VSTEnter(Sender: TObject);
     procedure VSTGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -184,6 +186,24 @@ begin
   end;
 end;
 
+procedure TfrmPeriod.VSTCompareNodes(Sender: TBaseVirtualTree;
+  Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: integer);
+var
+  Data1, Data2: PBudPer;
+begin
+  try
+    Data1 := Sender.GetNodeData(Node1);
+    Data2 := Sender.GetNodeData(Node2);
+    case Column of
+      1, 2: Result := UTF8CompareText(AnsiLowerCase(Data1.Category + Data1.SubCategory),
+          AnsiLowerCase(Data2.Category + Data2.SubCategory));
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
+end;
+
 procedure TfrmPeriod.VSTDblClick(Sender: TObject);
 begin
   if VST.SelectedCount = 1 then
@@ -264,6 +284,9 @@ begin
 end;
 
 procedure TfrmPeriod.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
 begin
   if btnSave.Tag = 0 then
     if MessageDlg(Application.Title, Question_19, mtConfirmation, [mbYes, mbNo], 0) <>
@@ -273,29 +296,47 @@ begin
       Exit;
     end;
   btnSave.Tag := 0;
+
+  try
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmPeriod.Name, '') <>
+          IntToStr(frmPeriod.Left) + separ + // form left
+        IntToStr(frmPeriod.Top) + separ + // form top
+        IntToStr(frmPeriod.Width) + separ + // form width
+        IntToStr(frmPeriod.Height) + separ + // form height
+        IntToStr(frmPeriod.pnlLeft.Width) then
+          INI.WriteString('POSITION', frmPeriod.Name,
+            IntToStr(frmPeriod.Left) + separ + // form left
+            IntToStr(frmPeriod.Top) + separ + // form top
+            IntToStr(frmPeriod.Width) + separ + // form width
+            IntToStr(frmPeriod.Height) + separ + // form height
+            IntToStr(frmPeriod.pnlLeft.Width));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
 end;
 
 procedure TfrmPeriod.FormCreate(Sender: TObject);
 begin
-  {$IFDEF WINDOWS}
-  // form size
-  (Sender as TForm).Width := Round(800 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinWidth := Round(800 * (ScreenRatio / 100));
-  (Sender as TForm).Height := Round(400 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinHeight := Round(400 * (ScreenRatio / 100));
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
   // set components height
   VST.Header.Height := PanelHeight;
   pnlPeriodCaption.Height := PanelHeight;
   pnlBudgetCaption.Height := PanelHeight;
-
   pnlButtons.Height := ButtonHeight;
   pnlBottom.Height := ButtonHeight;
-  {$ENDIF}
+
+  // get form icon
+  frmMain.img16.GetIcon(21, (Sender as TForm).Icon);
 end;
 
 procedure TfrmPeriod.FormResize(Sender: TObject);
@@ -314,7 +355,65 @@ var
   BudPer: PBudPer;
   Budgets: PBudgets;
   Periods: PPeriods;
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmPeriod.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmPeriod.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmPeriod.Width := Screen.Width - 500 - (200 - ScreenRatio)
+      else
+        frmPeriod.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmPeriod.Height := Screen.Height - 400 - (200 - ScreenRatio)
+      else
+        frmPeriod.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmPeriod.left := (Screen.Width - frmPeriod.Width) div 2
+      else
+        frmPeriod.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmPeriod.Top := ((Screen.Height - frmPeriod.Height) div 2) - 75
+      else
+        frmPeriod.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 100) or (I > 350) then
+        frmPeriod.pnlLeft.Width := 220
+      else
+        frmPeriod.pnlLeft.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
+
   VST.BeginUpdate;
   VST.Clear;
   VST.RootNodeCount := 0;
@@ -379,7 +478,7 @@ begin
   lblDateFrom.Caption := FS_own.LongDayNames[DayOfTheWeek(datDateFrom.Date + 1)];
   datDateFrom.SetFocus;
   frmBudgets.popPeriodAdd.Tag := 0;
-  SetNodeHeight(frmPeriod.VST);
+  SetNodeHeight(VST);
 end;
 
 procedure TfrmPeriod.lblDateFromClick(Sender: TObject);

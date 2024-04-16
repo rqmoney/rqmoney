@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   Clipbrd, ExtCtrls, ComCtrls, Buttons, Menus, ActnList, Spin, BCPanel,
-  BCMDButtonFocus, LazUTF8, laz.VirtualTrees, Math, StrUtils;
+  BCMDButtonFocus, LazUTF8, laz.VirtualTrees, Math, StrUtils, IniFiles;
 
 type
   TCurrency = record
@@ -175,19 +175,6 @@ begin
     frmCurrencies.cbxStatus.Items.Add(Caption_57);
     frmCurrencies.cbxStatus.Items.Add(Caption_59);
 
-    // form size
-    (Sender as TForm).Width :=
-      Round((Screen.Width / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-      (Round(1020 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height :=
-      Round(Screen.Height / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-      4 * (250 - ScreenRatio);
-
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
-    {$IFDEF WINDOWS}
     // set components height
     VST.Header.Height := PanelHeight;
     pnlDetailCaption.Height := PanelHeight;
@@ -196,7 +183,9 @@ begin
     pnlButton.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
     btnValues.Height := ButtonHeight;
-    {$ENDIF}
+
+    // get form icon
+    frmMain.img16.GetIcon(12, (Sender as TForm).Icon);
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -503,6 +492,7 @@ begin
       'SELECT acc_name FROM accounts WHERE acc_currency = :CURRENCY';
     frmMain.QRY.Params.ParamByName('CURRENCY').AsString :=
       VST.Text[VST.GetFirstSelected(False), 1];
+    frmMain.QRY.Prepare;
     frmMain.QRY.Open;
 
     if frmMain.QRY.RecordCount > 0 then
@@ -567,13 +557,13 @@ begin
     // Add new category
     if btnSave.Tag = 0 then
       frmMain.QRY.SQL.Text :=
-        'INSERT INTO currencies (cur_code, cur_name, cur_default, cur_rate, cur_status) VALUES ('
+        'INSERT OR IGNORE INTO currencies (cur_code, cur_name, cur_default, cur_rate, cur_status) VALUES ('
         + ':CODE, :NAME, :DEFAULT, :RATE, :STATUS);'
     else
     begin
       // Edit selected category
       VST.Tag := StrToInt(VST.Text[VST.GetFirstSelected(False), 6]);
-      frmMain.QRY.SQL.Text := 'UPDATE currencies SET ' + // update
+      frmMain.QRY.SQL.Text := 'UPDATE OR IGNORE currencies SET ' + // update
         'cur_code = :CODE, ' + // code
         'cur_name = :NAME, ' + // name
         'cur_default = :DEFAULT, ' + // default
@@ -774,6 +764,10 @@ begin
 end;
 
 procedure TfrmCurrencies.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
 begin
   try
     if pnlButton.Visible = True then
@@ -782,6 +776,30 @@ begin
       CloseAction := Forms.caNone;
       Exit;
     end;
+
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmCurrencies.Name, '') <>
+          IntToStr(frmCurrencies.Left) + separ + // form left
+          IntToStr(frmCurrencies.Top) + separ + // form top
+          IntToStr(frmCurrencies.Width) + separ + // form width
+          IntToStr(frmCurrencies.Height) + separ + // form height
+          IntToStr(frmCurrencies.pnlRight.Width) then
+          INI.WriteString('POSITION', frmCurrencies.Name,
+          IntToStr(frmCurrencies.Left) + separ + // form left
+          IntToStr(frmCurrencies.Top) + separ + // form top
+          IntToStr(frmCurrencies.Width) + separ + // form width
+          IntToStr(frmCurrencies.Height) + separ + // form height
+          IntToStr(frmCurrencies.pnlRight.Width));
+      finally
+        INI.Free;
+      end;
+    end;
+
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -808,7 +826,65 @@ begin
 end;
 
 procedure TfrmCurrencies.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmCurrencies.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmCurrencies.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmCurrencies.Width := Screen.Width - 500 - (200 - ScreenRatio)
+      else
+        frmCurrencies.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmCurrencies.Height := Screen.Height - 500 - (200 - ScreenRatio)
+      else
+        frmCurrencies.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmCurrencies.left := (Screen.Width - frmCurrencies.Width) div 2
+      else
+        frmCurrencies.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmCurrencies.Top := ((Screen.Height - frmCurrencies.Height) div 2) - 75
+      else
+        frmCurrencies.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 100) or (I > 300) then
+        frmCurrencies.pnlDetail.Width := 220
+      else
+        frmCurrencies.pnlDetail.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;
@@ -1031,8 +1107,8 @@ begin
       // list of Currencies in frmACCOUNTS [active status only !!!]
       if currency.Status = 0 then
       begin
-        frmAccounts.cbxCurrency.Items.Add(currency.Code + ' | ' + currency.Name);
-        frmMain.cbxCurrency.Items.Add(currency.Code + ' | ' + currency.Name);
+        frmAccounts.cbxCurrency.Items.Add(currency.Code + separ_1 + currency.Name);
+        frmMain.cbxCurrency.Items.Add(currency.Code + separ_1 + currency.Name);
       end;
     end;
 

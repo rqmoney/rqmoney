@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   Clipbrd, ExtCtrls, ComCtrls, Buttons, Menus, ActnList, BCPanel,
-  BCMDButtonFocus, LazUTF8, laz.VirtualTrees, StrUtils, Math;
+  BCMDButtonFocus, LazUTF8, laz.VirtualTrees, StrUtils, Math, IniFiles;
 
 type
   TPayee = record
@@ -77,7 +77,6 @@ type
     pnlItems: TPanel;
     pnlBottom: TPanel;
     pnlHeight: TPanel;
-    pnlTip: TPanel;
     pnlWidth: TPanel;
     pnlItem: TPanel;
     popAdd: TMenuItem;
@@ -148,7 +147,7 @@ implementation
 
 uses
   uniMain, uniScheduler, uniSettings, uniEdit, uniProperties, uniTemplates,
-  uniMultiple, uniDetail, uniDelete, uniResources, uniEdits;
+  uniDetail, uniDelete, uniResources, uniEdits;
 
 { TfrmPayees }
 
@@ -162,25 +161,16 @@ begin
     frmPayees.cbxStatus.Items.Add(Caption_57);
     frmPayees.cbxStatus.Items.Add(Caption_59);
 
-    // form size
-    (Sender as TForm).Width := Round((Screen.Width /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - (Round(1020 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height := Round(Screen.Height /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - 3 * (250 - ScreenRatio);
-
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := (Screen.Height - 100 - (Sender as TForm).Height) div 2;
-
-    {$IFDEF WINDOWS}
+    // set component height
     VST.Header.Height := PanelHeight;
     pnlDetailCaption.Height := PanelHeight;
     pnlListCaption.Height := PanelHeight;
     pnlButtons.Height := ButtonHeight;
     pnlButton.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
-    {$ENDIF}
 
+    // get form icon
+    frmMain.img16.GetIcon(13, (Sender as TForm).Icon);
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -551,14 +541,14 @@ begin
     // Add new category
     if btnSave.Tag = 0 then
       frmMain.QRY.SQL.Text :=
-        'INSERT INTO payees (pee_name, pee_name_lower, pee_status, pee_comment) VALUES ('
+        'INSERT OR IGNORE INTO payees (pee_name, pee_name_lower, pee_status, pee_comment) VALUES ('
         +
         ':NAME, :NAMELOWER, :STATUS, :COMMENT);'
     else
     begin
       // Edit selected category
       VST.Tag := StrToInt(VST.Text[VST.FocusedNode, 4]);
-      frmMain.QRY.SQL.Text := 'UPDATE payees SET ' +  // update
+      frmMain.QRY.SQL.Text := 'UPDATE OR IGNORE payees SET ' +  // update
         'pee_name = :NAME, ' +               // name
         'pee_name_lower = :NAMELOWER, ' +   // name lower
         'pee_status = :STATUS, ' +          // status
@@ -771,12 +761,44 @@ begin
 end;
 
 procedure TfrmPayees.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
 begin
-  if pnlButton.Visible = True then
-  begin
-    btnCancelClick(btnCancel);
-    CloseAction := Forms.caNone;
-    Exit;
+  try
+    if pnlButton.Visible = True then
+    begin
+      btnCancelClick(btnCancel);
+      CloseAction := Forms.caNone;
+      Exit;
+    end;
+
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmPayees.Name, '') <>
+          IntToStr(frmPayees.Left) + separ + // form left
+        IntToStr(frmPayees.Top) + separ + // form top
+        IntToStr(frmPayees.Width) + separ + // form width
+        IntToStr(frmPayees.Height) + separ + // form height
+        IntToStr(frmPayees.pnlDetail.Width) then
+          INI.WriteString('POSITION', frmPayees.Name,
+            IntToStr(frmPayees.Left) + separ + // form left
+            IntToStr(frmPayees.Top) + separ + // form top
+            IntToStr(frmPayees.Width) + separ + // form width
+            IntToStr(frmPayees.Height) + separ + // form height
+            IntToStr(frmPayees.pnlDetail.Width));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
   end;
 end;
 
@@ -794,7 +816,65 @@ begin
 end;
 
 procedure TfrmPayees.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmPayees.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmPayees.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmPayees.Width := Screen.Width - 600 - (200 - ScreenRatio)
+      else
+        frmPayees.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmPayees.Height := Screen.Height - 400 - (200 - ScreenRatio)
+      else
+        frmPayees.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmPayees.left := (Screen.Width - frmPayees.Width) div 2
+      else
+        frmPayees.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmPayees.Top := ((Screen.Height - frmPayees.Height) div 2) - 75
+      else
+        frmPayees.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 150) or (I > 350) then
+        frmPayees.pnlDetail.Width := 220
+      else
+        frmPayees.pnlDetail.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;
@@ -825,7 +905,7 @@ begin
   popPrint.Enabled := VST.RootNodeCount > 0;
   actPrint.Enabled := VST.RootNodeCount > 0;
 
-  SetNodeHeight(frmPayees.VST);
+  SetNodeHeight(VST);
   VST.SetFocus;
   VST.ClearSelection;
 end;
@@ -868,6 +948,7 @@ begin
       frmMain.QRY.Close;
 
       frmPayees.VST.SortTree(1, sdAscending);
+      SetNodeHeight(frmPayees.VST);
       frmPayees.VST.EndUpdate;
       screen.Cursor := crDefault;
 
@@ -882,14 +963,12 @@ begin
     frmDetail.cbxPayee.Clear;
 
     for P in frmPayees.VST.Nodes() do
-    begin
-      // list of payees in frmMAIN [not archive status]
-      if (frmPayees.VST.Text[P, 3] <> frmPayees.cbxStatus.Items[2]) then
-        frmMain.cbxPayee.Items.Add(frmPayees.VST.Text[P, 1]);
-      // list of payees in frmDETAIL [active status only !!!]
+      // list of payees in frmMAIN and frmDETAIL [only active status]
       if (frmPayees.VST.Text[P, 3] = frmPayees.cbxStatus.Items[0]) then
+      begin
+        frmMain.cbxPayee.Items.Add(frmPayees.VST.Text[P, 1]);
         frmDetail.cbxPayee.Items.Add(frmPayees.VST.Text[P, 1]);
-    end;
+      end;
 
     frmMain.cbxPayee.Items.Insert(0, '*');
     frmMain.cbxPayee.ItemIndex := 0;
@@ -897,8 +976,8 @@ begin
 
     // =============================================================================================
     // update list of payees in form Multiple additions
-    frmMultiple.cbxPayee.Clear;
-    frmMultiple.cbxPayee.Items := frmDetail.cbxPayee.Items;
+    frmDetail.cbxPayeeX.Clear;
+    frmDetail.cbxPayeeX.Items := frmDetail.cbxPayee.Items;
 
     // =============================================================================================
     // update list of payees in form Scheduler

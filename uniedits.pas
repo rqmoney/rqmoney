@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  BCPanel, DateUtils, Buttons, ComCtrls, ActnList, CheckLst, Spin,
+  BCPanel, DateUtils, Buttons, ComCtrls, ActnList, CheckLst, Spin, IniFiles,
   LazUtf8, BCMDButtonFocus, StrUtils, laz.VirtualTrees, DateTimePicker;
 
 type
@@ -15,6 +15,13 @@ type
 
   TfrmEdits = class(TForm)
     actExit: TAction;
+    actAccounts: TAction;
+    actCalc: TAction;
+    actComments: TAction;
+    actCategories: TAction;
+    actPersons: TAction;
+    actPayees: TAction;
+    actTags: TAction;
     actSave: TAction;
     ActionList1: TActionList;
     btnAccount: TSpeedButton;
@@ -32,6 +39,7 @@ type
     cbxComment: TComboBox;
     cbxPayee: TComboBox;
     cbxPerson: TComboBox;
+    cbxSubcategory: TComboBox;
     cbxType: TComboBox;
     chkAccount: TCheckBox;
     chkAmount: TCheckBox;
@@ -45,7 +53,7 @@ type
     datDate: TDateTimePicker;
     lblDate: TLabel;
     pnlDate1: TPanel;
-    spiAmount: TFloatSpinEdit;
+    pnlSubcategory: TPanel;
     imgHeight: TImage;
     imgWidth: TImage;
     lblHeight: TLabel;
@@ -68,6 +76,7 @@ type
     pnlEditCaption: TBCPanel;
     pnlType: TPanel;
     pnlWidth: TPanel;
+    spiAmount: TEdit;
     splEdit: TSplitter;
     txtSelected: TStaticText;
     txtCount: TStaticText;
@@ -81,8 +90,11 @@ type
     procedure btnResetClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
     procedure btnTagClick(Sender: TObject);
+    procedure cbxAccountDropDown(Sender: TObject);
+    procedure cbxCategoryChange(Sender: TObject);
     procedure cbxCommentEnter(Sender: TObject);
     procedure cbxCommentExit(Sender: TObject);
+    procedure cbxTypeChange(Sender: TObject);
     procedure cbxTypeEnter(Sender: TObject);
     procedure cbxTypeExit(Sender: TObject);
     procedure chkAccountChange(Sender: TObject);
@@ -99,7 +111,9 @@ type
     procedure datDateChange(Sender: TObject);
     procedure datDateEnter(Sender: TObject);
     procedure datDateExit(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure lblDateClick(Sender: TObject);
+    procedure spiAmountClick(Sender: TObject);
     procedure spiAmountEnter(Sender: TObject);
     procedure spiAmountExit(Sender: TObject);
     procedure spiAmountKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -162,7 +176,7 @@ begin
   if chkAmount.Checked = True then
   begin
     chkAmount.Font.Style := [fsbold];
-    spiAmount.Value := 0.0;
+    spiAmount.Text := Format('%n', [0.0]);
     if frmEdits.Visible = True then
       spiAmount.SetFocus;
   end
@@ -175,22 +189,36 @@ end;
 
 procedure TfrmEdits.btnCategoryClick(Sender: TObject);
 begin
+  If chkCategory.Checked = False then
+    Exit;
   frmCategories.ShowModal;
+  cbxCategory.Tag := -1;
+  cbxTypeChange(cbxType);
+  cbxCategory.SetFocus;
 end;
 
 procedure TfrmEdits.btnCommentClick(Sender: TObject);
 begin
+  If chkComment.Checked = False then
+    Exit;
   frmComments.ShowModal;
+  cbxComment.SetFocus;
 end;
 
 procedure TfrmEdits.btnPayeeClick(Sender: TObject);
 begin
+  If chkPayee.Checked = False then
+    Exit;
   frmPayees.ShowModal;
+  cbxPayee.SetFocus;
 end;
 
 procedure TfrmEdits.btnPersonClick(Sender: TObject);
 begin
+  If chkPerson.Checked = False then
+    Exit;
   frmPersons.ShowModal;
+  cbxPerson.SetFocus;
 end;
 
 procedure TfrmEdits.btnResetClick(Sender: TObject);
@@ -218,9 +246,10 @@ end;
 
 procedure TfrmEdits.btnAmountClick(Sender: TObject);
 begin
+  If chkAmount.Checked = False then
+    Exit;
   frmMain.mnuCalcClick(frmMain.mnuCalc);
-  if frmEdits.Visible = True then
-    spiAmount.SetFocus;
+  spiAmount.SetFocus;
 end;
 
 procedure TfrmEdits.btnCancelClick(Sender: TObject);
@@ -230,19 +259,40 @@ end;
 
 procedure TfrmEdits.btnAccountClick(Sender: TObject);
 begin
-  frmAccounts.ShowModal;
+  if chkAccount.Checked = True then
+    frmAccounts.ShowModal;
 end;
 
 procedure TfrmEdits.chkCategoryChange(Sender: TObject);
+var
+  I: byte;
 begin
   cbxCategory.Enabled := chkCategory.Checked;
+  cbxSubcategory.Enabled := chkCategory.Checked;
   btnCategory.Enabled := chkCategory.Checked;
 
   if chkCategory.Checked = True then
   begin
     chkCategory.Font.Style := [fsbold];
+    cbxCategory.Tag := -1;
+    if (chkType.Checked = False) then
+    begin
+      I := 0;
+      cbxCategory.Items := frmMain.cbxCategory.Items;
+      cbxCategory.Items.Delete(0);
+    end
+    else
+    begin
+      I := cbxType.ItemIndex;
+      FillCategory(cbxCategory, I);
+    end;
+
+
     if cbxCategory.Items.Count > 0 then
+    begin
       cbxCategory.ItemIndex := 0;
+      cbxCategoryChange(cbxCategory);
+    end;
     if frmEdits.Visible = True then
       cbxCategory.SetFocus;
   end
@@ -250,6 +300,7 @@ begin
   begin
     chkCategory.Font.Style := [];
     cbxCategory.ItemIndex := -1;
+    cbxSubcategory.ItemIndex := -1;
   end;
   CheckBoxes;
 end;
@@ -355,11 +406,14 @@ begin
 end;
 
 procedure TfrmEdits.chkTypeChange(Sender: TObject);
+var
+  I: byte;
 begin
   cbxType.Enabled := chkType.Checked;
 
   if chkType.Checked = True then
   begin
+    cbxType.ItemIndex := cbxType.Tag;
     chkType.Font.Style := [fsbold];
     if cbxType.Items.Count > 0 then
       cbxType.ItemIndex := 0;
@@ -369,8 +423,29 @@ begin
   else
   begin
     chkType.Font.Style := [];
-    cbxType.ItemIndex := cbxType.Tag;
+    cbxType.Tag := cbxType.ItemIndex;
+    cbxType.ItemIndex := -1;
   end;
+
+  if chkCategory.Checked = True then
+  begin
+    cbxCategory.Tag := -1;
+    if (chkType.Checked = False) then
+    begin
+      I := 0;
+      cbxCategory.Items := frmMain.cbxCategory.Items;
+      cbxCategory.Items.Delete(0);
+    end
+    else
+    begin
+      I := cbxType.ItemIndex + 1;
+      FillCategory(cbxCategory, I);
+    end;
+    If cbxCategory.Items.Count > 0 then
+      cbxCategory.ItemIndex := 0;
+    cbxCategoryChange(cbxCategory);
+  end;
+
   CheckBoxes;
 end;
 
@@ -404,42 +479,83 @@ begin
   datDate.Font.Bold := False;
 end;
 
+procedure TfrmEdits.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+begin
+  // write position and window size
+  if frmSettings.chkLastFormsSize.Checked = True then
+  begin
+    try
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmEdits.Name, '') <>
+        IntToStr(frmEdits.Left) + separ + // form left
+      IntToStr(frmEdits.Top) + separ + // form top
+      IntToStr(frmEdits.Width) + separ + // form width
+      IntToStr(frmEdits.Height) + separ + // form height
+      IntToStr(frmEdits.pnlTag.Width) then
+        INI.WriteString('POSITION', frmEdits.Name,
+          IntToStr(frmEdits.Left) + separ + // form left
+          IntToStr(frmEdits.Top) + separ + // form top
+          IntToStr(frmEdits.Width) + separ + // form width
+          IntToStr(frmEdits.Height) + separ + // form height
+          IntToStr(frmEdits.pnlTag.Width));
+    finally
+      INI.Free;
+    end;
+  end;
+end;
+
 procedure TfrmEdits.lblDateClick(Sender: TObject);
 begin
   if datDate.Enabled = True then
     datDate.SetFocus;
 end;
 
+procedure TfrmEdits.spiAmountClick(Sender: TObject);
+begin
+  try
+    if TEdit(Sender).Tag = 0 then
+    begin
+      TEdit(Sender).SelectAll;
+      TEdit(Sender).Tag := 1;
+    end;
+  except
+  end;
+end;
+
 procedure TfrmEdits.spiAmountEnter(Sender: TObject);
 begin
   try
-    (Sender as TFloatSpinEdit).Hint := '';
-    (Sender as TFloatSpinEdit).Color := Color_focus;
-    (Sender as TFloatSpinEdit).Font.Style := [fsBold];
-    pnlAmount.Color := Color_panel_focus;
-  finally
+    if TEdit(Sender).Cursor = crHandPoint then
+    begin
+      TEdit(Sender).Cursor := crDefault;
+      TEdit(Sender).Font.Bold := True;
+    end;
+  except
   end;
 end;
 
 procedure TfrmEdits.spiAmountExit(Sender: TObject);
+var
+  D: double;
 begin
   try
-    (Sender as TFloatSpinEdit).Color := clDefault;
-    (Sender as TFloatSpinEdit).Font.Style := [];
-    (Sender as TFloatSpinEdit).SelLength := 0;
-    (Sender as TFloatSpinEdit).SelStart := Length((Sender as TFloatSpinEdit).Text);
-    pnlAmount.Color := frmEdits.Color;
-
-    if (Pos('+', (Sender as TFloatSpinEdit).Hint) > 0) or
-      (Pos('-', (Sender as TFloatSpinEdit).Hint) > 0) then
-      (Sender as TFloatSpinEdit).Value := CalculateText(Sender);
-  finally
+    TryStrToFloat(Eval(TEdit(Sender).Text), D);
+    TEdit(Sender).Text := Format('%n', [D], FS_own);
+    TEdit(Sender).Font.Style := [];
+    TEdit(Sender).SelStart := Length(TEdit(Sender).Text);
+    TEdit(Sender).SelLength := 0;
+    TEdit(Sender).Tag := 0;
+    TEdit(Sender).Cursor := crHandPoint;
+  except
   end;
 end;
 
 procedure TfrmEdits.spiAmountKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
-  (Sender as TFloatSpinEdit).Hint := (Sender as TFloatSpinEdit).Text;
   if Key = 13 then
   begin
     Key := 0;
@@ -449,24 +565,15 @@ end;
 
 procedure TfrmEdits.FormCreate(Sender: TObject);
 begin
-  {$IFDEF WINDOWS}
-  // form size
-  (Sender as TForm).Width := Round(600 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinWidth := Round(600 * (ScreenRatio / 100));
-  (Sender as TForm).Height := Round(500 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinHeight := Round(500 * (ScreenRatio / 100));
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
   // set components height
   pnlEditCaption.Height := PanelHeight;
   pnlBottom.Height := ButtonHeight + 4;
-  {$ENDIF}
 
   datDate.Date := Now();
   lblDate.Caption := DefaultFormatSettings.LongDayNames[DayOfTheWeek(datDate.Date + 1)];
+
+  // get form icon
+  frmMain.img16.GetIcon(19, (Sender as TForm).Icon);
 end;
 
 procedure TfrmEdits.FormResize(Sender: TObject);
@@ -481,7 +588,65 @@ begin
 end;
 
 procedure TfrmEdits.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmEdits.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmEdits.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmEdits.Width := 600
+      else
+        frmEdits.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmEdits.Height := 500
+      else
+        frmEdits.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmEdits.left := (Screen.Width - frmEdits.Width) div 2
+      else
+        frmEdits.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmEdits.Top := ((Screen.Height - frmEdits.Height) div 2) - 75
+      else
+        frmEdits.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 150) or (I > 400) then
+        frmEdits.pnlTag.Width := 220
+      else
+        frmEdits.pnlTag.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   case frmEdits.Tag of
     1: frmEdits.txtCount.Caption := IntToStr(frmMain.VST.SelectedCount);
     2: frmEdits.txtCount.Caption := IntToStr(frmRecycleBin.VST.SelectedCount);
@@ -497,7 +662,7 @@ begin
   frmEdits.cbxPayee.ItemIndex := -1;
   frmEdits.cbxPerson.ItemIndex := -1;
   frmEdits.lbxTag.CheckAll(cbUnchecked, False, False);
-  frmEdits.spiAmount.Value := 0.0;
+  frmEdits.spiAmount.Text := Format('%n', [0.0]);
   chkType.SetFocus;
 end;
 
@@ -602,6 +767,13 @@ begin
       ShowMessage(AnsiReplaceStr(Error_04, '%', AnsiUpperCase(chkCategory.Caption)));
       cbxCategory.SelStart := Length(cbxCategory.Text);
       cbxCategory.SetFocus;
+      Exit;
+    end;
+    if (cbxSubcategory.ItemIndex = -1) then
+    begin
+      ShowMessage(AnsiReplaceStr(Error_04, '%', AnsiUpperCase(chkCategory.Caption)));
+      cbxSubcategory.SelStart := Length(cbxSubcategory.Text);
+      cbxSubcategory.SetFocus;
       Exit;
     end;
   end;
@@ -725,10 +897,7 @@ begin
           IfThen(I < 16, ' ', ','), '') + // comma
 
           IfThen(frmEdits.chkCategory.Checked = True,
-          'd_category = (SELECT cat_id FROM categories WHERE cat_name = :CATEGORY1 ' +
-          'and cat_parent_ID = CASE WHEN :CATEGORY2 = 0 THEN 0 ELSE ' +
-          '(SELECT cat_id FROM categories WHERE cat_name = :CATEGORY2) END)' +
-          // subcategory
+          'd_category = :CATEGORY' + // category / subcategory
           IfThen(I < 32, ' ', ','), '') + // comma
 
           IfThen(frmEdits.chkPerson.Checked = True,
@@ -765,10 +934,7 @@ begin
           IfThen(I < 16, ' ', ','), '') + // comma
 
           IfThen(frmEdits.chkCategory.Checked = True,
-          'rec_category = (SELECT cat_id FROM categories WHERE cat_name = :CATEGORY1 ' +
-          'and cat_parent_ID = CASE WHEN :CATEGORY2 = 0 THEN 0 ELSE ' +
-          '(SELECT cat_id FROM categories WHERE cat_name = :CATEGORY2) END)' +
-          // subcategory
+          'rec_category = :CATEGORY' + // category / subcategory
           IfThen(I < 32, ' ', ','), '') + // comma
 
           IfThen(frmEdits.chkPerson.Checked = True,
@@ -807,10 +973,7 @@ begin
           IfThen(I < 16, ' ', ','), '') + // comma
 
           IfThen(frmEdits.chkCategory.Checked = True,
-          'pay_category = (SELECT cat_id FROM categories WHERE cat_name = :CATEGORY1 ' +
-          'and cat_parent_ID = CASE WHEN :CATEGORY2 = 0 THEN 0 ELSE ' +
-          '(SELECT cat_id FROM categories WHERE cat_name = :CATEGORY2) END)' +
-          // category + subcategory
+          'pay_category = :CATEGORY' + // category / subcategory
           IfThen(I < 32, ' ', ','), '') + // comma
 
           IfThen(frmEdits.chkPerson.Checked = True,
@@ -838,7 +1001,7 @@ begin
     // Get amount
     if frmEdits.chkAmount.Checked = True then
     begin
-      D := spiAmount.Value;
+      TryStrToFloat(spiAmount.Text, D);
       if (frmEdits.chkType.Checked = True) then
       begin
         if (frmEdits.cbxType.ItemIndex in [1, 3]) then
@@ -866,29 +1029,18 @@ begin
     if frmEdits.chkAccount.Checked = True then
     begin
       frmMain.QRY.Params.ParamByName('ACCOUNT').AsString :=
-        Field(' | ', frmEdits.cbxAccount.Items[frmEdits.cbxAccount.ItemIndex], 1);
+        Field(separ_1, frmEdits.cbxAccount.Items[frmEdits.cbxAccount.ItemIndex], 1);
       frmMain.QRY.Params.ParamByName('CURRENCY').AsString :=
-        Field(' | ', frmEdits.cbxAccount.Items[frmEdits.cbxAccount.ItemIndex], 2);
+        Field(separ_1, frmEdits.cbxAccount.Items[frmEdits.cbxAccount.ItemIndex], 2);
     end;
 
     // Get category
     if frmEdits.chkCategory.Checked = True then
-    begin
-      // Get category
-      Temp := AnsiUpperCase(frmEdits.cbxCategory.Items[frmEdits.cbxCategory.ItemIndex]);
-      if UTF8Pos(' | ', Temp) > 0 then
-      begin
-        frmMain.QRY.Params.ParamByName('CATEGORY1').AsString :=
-          AnsiLowerCase(Field(' | ', Temp, 2));
-        frmMain.QRY.Params.ParamByName('CATEGORY2').AsString :=
-          AnsiUpperCase(Field(' | ', Temp, 1));
-      end
-      else
-      begin
-        frmMain.QRY.Params.ParamByName('CATEGORY1').AsString := Temp;
-        frmMain.QRY.Params.ParamByName('CATEGORY2').AsInteger := 0;
-      end;
-    end;
+      frmMain.QRY.Params.ParamByName('CATEGORY').AsInteger :=
+        GetCategoryID(cbxCategory.Items[cbxCategory.ItemIndex] +
+        IfThen(cbxSubcategory.ItemIndex = 0, '', separ_1 +
+        cbxSubcategory.Items[cbxSubcategory.ItemIndex]));
+
 
     // Get person
     if frmEdits.chkPerson.Checked = True then
@@ -901,6 +1053,7 @@ begin
         frmEdits.cbxPayee.Text;
 
     //ShowMessage (frmMain.QRY.SQL.Text);
+    frmMain.QRY.Prepare;
     frmMain.QRY.ExecSQL;
     frmMain.Tran.Commit;
   end;
@@ -954,7 +1107,7 @@ begin
 
             frmMain.QRY.Params.ParamByName('ID').AsString := VSTX.Text[N, Column];
             frmMain.QRY.Params.ParamByName('TAG').AsString := frmEdits.lbxTag.Items[I];
-
+            frmMain.QRY.Prepare;
             frmMain.QRY.ExecSQL;
             frmMain.Tran.Commit;
           end;
@@ -968,8 +1121,31 @@ end;
 
 procedure TfrmEdits.btnTagClick(Sender: TObject);
 begin
+  if chkTag.Checked = False then
+    Exit;
   frmTags.ShowModal;
   lbxTag.SetFocus;
+end;
+
+procedure TfrmEdits.cbxAccountDropDown(Sender: TObject);
+begin
+  {$IFDEF WINDOWS}
+    ComboDDWidth(TComboBox(Sender));
+  {$ENDIF}
+end;
+
+procedure TfrmEdits.cbxCategoryChange(Sender: TObject);
+begin
+  if cbxCategory.ItemIndex = -1 then
+  begin
+    cbxSubcategory.Clear;
+    Exit;
+  end;
+
+  if cbxCategory.Tag <> cbxCategory.ItemIndex then
+    FillSubcategory(cbxCategory.Items[cbxCategory.ItemIndex], cbxSubcategory);
+
+  cbxCategory.Tag := cbxCategory.ItemIndex;
 end;
 
 procedure TfrmEdits.cbxCommentEnter(Sender: TObject);
@@ -997,6 +1173,16 @@ begin
       end;
 end;
 
+procedure TfrmEdits.cbxTypeChange(Sender: TObject);
+begin
+  if chkCategory.Checked = False then
+    Exit;
+
+  cbxCategory.Tag := -1;
+  FillCategory(cbxCategory, cbxType.ItemIndex);
+  cbxCategoryChange(cbxCategory);
+end;
+
 procedure TfrmEdits.cbxTypeEnter(Sender: TObject);
 begin
   (Sender as TComboBox).Font.Style := [fsBold];
@@ -1009,6 +1195,10 @@ begin
   (Sender as TComboBox).Font.Style := [];
   (Sender as TComboBox).Color := clDefault;
   (Sender as TComboBox).Parent.Color := frmEdits.Color;
+
+  if ((Sender as TComboBox).Name = 'cbxCategory') then
+    if (cbxSubcategory.ItemIndex < 1) then
+      cbxCategoryChange(cbxCategory);
 end;
 
 

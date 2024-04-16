@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   Clipbrd, Math, ExtCtrls, ComCtrls, Buttons, Menus, ActnList, LazUTF8,
-  BCPanel, BCMDButtonFocus, laz.VirtualTrees, StrUtils;
+  BCPanel, BCMDButtonFocus, laz.VirtualTrees, StrUtils, IniFiles;
 
 type
   TTagg = record
@@ -68,7 +68,6 @@ type
     pnlItems: TPanel;
     pnlBottom: TPanel;
     pnlHeight: TPanel;
-    pnlTip: TPanel;
     pnlWidth: TPanel;
     pnlItem: TPanel;
     popCopy: TMenuItem;
@@ -135,7 +134,7 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniSettings, uniScheduler, uniProperties, uniMultiple, uniDetail, uniEdit,
+  uniMain, uniSettings, uniScheduler, uniProperties, uniDetail, uniEdit,
   uniResources, uniEdits;
 
 { TfrmTags }
@@ -143,6 +142,7 @@ uses
 procedure TfrmTags.FormCreate(Sender: TObject);
 begin
   try
+    // images
     VST.Images := frmMain.img16;
     popList.Images := frmMain.imgButtons;
     imgHeight.Images := frmMain.imgSize;
@@ -150,17 +150,9 @@ begin
     imgItem.Images := frmMain.imgSize;
     imgItems.Images := frmMain.imgSize;
 
-    // form size
-    (Sender as TForm).Width := Round((Screen.Width /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - (Round(1020 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height := Round(Screen.Height /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - 4 * (250 - ScreenRatio);
+    // get form icon
+    frmMain.img16.GetIcon(11, (Sender as TForm).Icon);
 
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
-    {$IFDEF WINDOWS}
     // set components height
     VST.Header.Height := PanelHeight;
     pnlDetailCaption.Height := PanelHeight;
@@ -168,7 +160,6 @@ begin
     pnlButtons.Height := ButtonHeight;
     pnlButton.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
-    {$ENDIF}
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -399,7 +390,7 @@ begin
       else if VST.SelectedCount = 1 then
       begin
         imgItem.ImageIndex := 5;
-        lblItem.Caption := IntToStr(VST.GetFirstSelected(False).Index + 1) + '.';
+        lblItem.Caption := IntToStr(VST.GetFirstSelected().Index + 1) + '.';
       end
       else
       begin
@@ -531,13 +522,13 @@ begin
     // Add new record
     if btnSave.Tag = 0 then
       frmMain.QRY.SQL.Text :=
-        'INSERT INTO tags (tag_name, tag_comment) VALUES (:NAME, :COMMENT);'
+        'INSERT OR IGNORE INTO tags (tag_name, tag_comment) VALUES (:NAME, :COMMENT);'
     else
     begin
       // Edit selected record
       VST.Tag := StrToInt(VST.Text[VST.GetFirstSelected(False), 3]);
       frmMain.QRY.SQL.Text :=
-        'UPDATE tags SET tag_name = :NAME, tag_comment = :COMMENT WHERE tag_id = :ID;';
+        'UPDATE OR IGNORE tags SET tag_name = :NAME, tag_comment = :COMMENT WHERE tag_id = :ID;';
       frmMain.QRY.Params.ParamByName('ID').AsInteger := VST.Tag;
     end;
 
@@ -695,12 +686,44 @@ begin
 end;
 
 procedure TfrmTags.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
 begin
-  if pnlButton.Visible = True then
-  begin
-    btnCancelClick(btnCancel);
-    CloseAction := Forms.caNone;
-    Exit;
+  try
+    if pnlButton.Visible = True then
+    begin
+      btnCancelClick(btnCancel);
+      CloseAction := Forms.caNone;
+      Exit;
+    end;
+
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmTags.Name, '') <>
+          IntToStr(frmTags.Left) + separ + // form left
+        IntToStr(frmTags.Top) + separ + // form top
+        IntToStr(frmTags.Width) + separ + // form width
+        IntToStr(frmTags.Height) + separ + // form height
+        IntToStr(frmTags.pnlDetail.Width) then
+          INI.WriteString('POSITION', frmTags.Name,
+            IntToStr(frmTags.Left) + separ + // form left
+            IntToStr(frmTags.Top) + separ + // form top
+            IntToStr(frmTags.Width) + separ + // form width
+            IntToStr(frmTags.Height) + separ + // form height
+            IntToStr(frmTags.pnlDetail.Width));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
   end;
 end;
 
@@ -718,7 +741,65 @@ begin
 end;
 
 procedure TfrmTags.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmTags.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmTags.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmTags.Width := Screen.Width - 600 - (200 - ScreenRatio)
+      else
+        frmTags.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmTags.Height := Screen.Height - 400 - (200 - ScreenRatio)
+      else
+        frmTags.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmTags.left := (Screen.Width - frmTags.Width) div 2
+      else
+        frmTags.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmTags.Top := ((Screen.Height - frmTags.Height) div 2) - 75
+      else
+        frmTags.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 100) or (I > 300) then
+        frmTags.pnlDetail.Width := 220
+      else
+        frmTags.pnlDetail.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;
@@ -749,7 +830,7 @@ begin
   popPrint.Enabled := VST.RootNodeCount > 0;
   actPrint.Enabled := VST.RootNodeCount > 0;
 
-  SetNodeHeight(frmTags.VST);
+  SetNodeHeight(VST);
   VST.ClearSelection;
   VST.SetFocus;
 end;
@@ -809,8 +890,8 @@ begin
 
     // =============================================================================================
     // frmMultiple addtitions
-    frmMultiple.lbxTags.Clear;
-    frmMultiple.lbxTags.Items := frmDetail.lbxTag.Items;
+    frmDetail.lbxTagsX.Clear;
+    frmDetail.lbxTagsX.Items := frmDetail.lbxTag.Items;
 
     // =============================================================================================
     // frmEdit update list

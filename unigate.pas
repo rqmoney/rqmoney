@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, BCPanel, BCMDButtonFocus;
+  ExtCtrls, BCPanel, BCMDButtonFocus, IniFiles;
 
 type
 
@@ -51,7 +51,8 @@ type
     procedure ediGateChange(Sender: TObject);
     procedure ediGateExit(Sender: TObject);
     procedure ediGateKeyPress(Sender: TObject; var Key: char);
-    procedure ediGateKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure ediGateKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
@@ -69,11 +70,11 @@ var
 implementation
 
 uses
-  uniMain;
+  uniMain, uniSettings;
 
-{$R *.lfm}
+  {$R *.lfm}
 
-{ TfrmGate }
+  { TfrmGate }
 
 procedure TfrmGate.FormKeyPress(Sender: TObject; var Key: char);
 begin
@@ -96,7 +97,58 @@ begin
 end;
 
 procedure TfrmGate.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmGate.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmGate.Name, '-1•-1•0•0');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmGate.Width := Round(500 * (ScreenRatio / 100))
+      else
+        frmGate.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmGate.Height := Round(300 * (ScreenRatio / 100))
+      else
+        frmGate.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmGate.left := (Screen.Width - frmGate.Width) div 2
+      else
+        frmGate.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmGate.Top := ((Screen.Height - frmGate.Height) div 2) - 75
+      else
+        frmGate.Top := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   ediGate.Clear;
   btnOK.Enabled := False;
   ediGate.SetFocus;
@@ -120,7 +172,7 @@ end;
 procedure TfrmGate.FormCreate(Sender: TObject);
 begin
   frmGate.Caption := Application.Title;
-  frmMain.img16.GetIcon (4, (Sender as TForm).Icon);
+  frmMain.img16.GetIcon(5, (Sender as TForm).Icon);
   btn0.Caption := IntToStr(btn0.Tag);
   btn1.Caption := IntToStr(btn1.Tag);
   btn2.Caption := IntToStr(btn2.Tag);
@@ -132,26 +184,17 @@ begin
   btn8.Caption := IntToStr(btn8.Tag);
   btn9.Caption := IntToStr(btn9.Tag);
 
-  {$IFDEF WINDOWS}
-  // form size
-  (Sender as TForm).Width := Round(500 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinWidth := Round(500 * (ScreenRatio / 100));
-  (Sender as TForm).Height := Round(300 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinHeight := Round(300 * (ScreenRatio / 100));
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
+  // set components height
   pnlCaption.Height := PanelHeight;
   pnlBottom.Height := ButtonHeight + 2;
-  {$ENDIF}
+
+  // get form icon
+  frmMain.img16.GetIcon(5, (Sender as TForm).Icon);
 end;
 
 procedure TfrmGate.btn0Click(Sender: TObject);
 var
   Str: string;
-
 begin
   Str := ediGate.Text;
   Insert((Sender as TBCMDButtonFocus).Caption, Str, lblGate.Tag + 1);
@@ -162,7 +205,7 @@ end;
 
 procedure TfrmGate.btnOKClick(Sender: TObject);
 begin
-  frmGate.ModalResult := mrOK;
+  frmGate.ModalResult := mrOk;
 end;
 
 procedure TfrmGate.btnBackClick(Sender: TObject);
@@ -189,16 +232,43 @@ end;
 
 procedure TfrmGate.ediGateKeyPress(Sender: TObject; var Key: char);
 begin
-  If Ord(Key) = 13 then begin
+  if Ord(Key) = 13 then
+  begin
     Key := Chr(0);
     btnOKClick(btnOK);
   end;
 end;
 
-procedure TfrmGate.ediGateKeyUp(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmGate.ediGateKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
   btnOK.Enabled := Length(ediGate.Text) > 4;
+end;
+
+procedure TfrmGate.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+begin
+  // write position and window size
+  if frmSettings.chkLastFormsSize.Checked = True then
+  begin
+    try
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmGate.Name, '') <>
+        IntToStr(frmGate.Left) + separ + // form left
+      IntToStr(frmGate.Top) + separ + // form top
+      IntToStr(frmGate.Width) + separ + // form width
+      IntToStr(frmGate.Height) then
+        INI.WriteString('POSITION', frmGate.Name,
+          IntToStr(frmGate.Left) + separ + // form left
+          IntToStr(frmGate.Top) + separ + // form top
+          IntToStr(frmGate.Width) + separ + // form width
+          IntToStr(frmGate.Height));
+    finally
+      INI.Free;
+    end;
+  end;
 end;
 
 end.

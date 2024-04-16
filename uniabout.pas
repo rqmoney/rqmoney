@@ -24,7 +24,6 @@ type
     lblLink2: TLabel;
     lblLGPL: TLabel;
     lblLicense: TLabel;
-    lblProgress: TLabel;
     lblThanks: TLabel;
     lblDonate: TLabel;
     lblEmail: TLabel;
@@ -136,7 +135,6 @@ end;
 
 procedure TfrmAbout.FormCreate(Sender:TObject);
 begin
-  {$IFDEF WINDOWS}
   // form size
   (Sender as TForm).Width := Round(400 * (ScreenRatio / 100));
   (Sender as TForm).Constraints.MinWidth := Round(400 * (ScreenRatio / 100));
@@ -147,15 +145,22 @@ begin
   (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
   (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
 
-  pnlBottom.Height := ButtonHeight;
-  {$ENDIF}
+  // get form icon
+  frmMain.img16.GetIcon(26, (Sender as TForm).Icon);
 
+  pnlBottom.Height := ButtonHeight;
 
   tabAbout.TabIndex := 0;
 
   lblProgram.Caption := Application.Title;
-  lblReleased.Caption := FormatDateTime(FS_own.LongDateFormat, EncodeDate(2023, 11, 25));
-  lblVersion.Hint := '3.8';
+  // ===========================================================================
+  // ***************************************************************************
+  lblReleased.Hint := '2024-04-14'; // IMPORTANT DATE OF RELEASE !!!
+  // ***************************************************************************
+  // ===========================================================================
+  lblReleased.Caption := FormatDateTime(FS_own.LongDateFormat,
+    StrToDate(lblReleased.Hint, 'YYYY-MM-DD', '-'));
+  lblVersion.Hint := '3.9.1';
   lblLicense.Hint := 'https://en.wikipedia.org/wiki/GNU_General_Public_License';
   lblWebsite.Caption := 'www.rqmoney.eu';
   lblDeveloped.Caption := 'Lazarus';
@@ -176,8 +181,7 @@ begin
   lblLGPL.Caption := 'https://www.gnu.org/licenses/';
   lblLGPL.Hint := lblLGPL.Caption;
 
-  pnlButtons.Height := ProgramFontSize;
-  frmAbout.Caption := IntToStr(ProgramFontSize);
+  pnlButtons.Height := PanelHeight;
   lblLink2.Caption := 'Icons8';
   lblLink2.Hint := 'https://icons8.com/';
 end;

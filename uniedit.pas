@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, LazUTF8,
-  DateUtils, Buttons, ComCtrls, ActnList, CheckLst, sqldb, DB, sqlite3conn,
+  DateUtils, Buttons, ComCtrls, ActnList, CheckLst, sqldb, DB, sqlite3conn, IniFiles,
   BCMDButtonFocus, StrUtils, laz.VirtualTrees, DateTimePicker, LCLType, Spin;
 
 type
@@ -15,6 +15,13 @@ type
 
   TfrmEdit = class(TForm)
     actExit: TAction;
+    actAccounts: TAction;
+    actCalc: TAction;
+    actComments: TAction;
+    actCategories: TAction;
+    actTags: TAction;
+    actPersons: TAction;
+    actPayees: TAction;
     actSave: TAction;
     ActionList1: TActionList;
     btnAccount: TSpeedButton;
@@ -28,6 +35,7 @@ type
     btnTag: TSpeedButton;
     cbxAccount: TComboBox;
     cbxCategory: TComboBox;
+    cbxSubcategory: TComboBox;
     cbxComment: TComboBox;
     cbxPayee: TComboBox;
     cbxPerson: TComboBox;
@@ -42,6 +50,7 @@ type
     gbxPerson: TGroupBox;
     gbxType: TGroupBox;
     lblDate: TLabel;
+    Panel1: TPanel;
     pnlButtons: TPanel;
     pnlDate: TPanel;
     pnlLeft: TPanel;
@@ -56,7 +65,7 @@ type
     pnlHeight: TPanel;
     pnlTagTop: TPanel;
     pnlWidth: TPanel;
-    spiAmount: TFloatSpinEdit;
+    spiAmount: TEdit;
     splEdit: TSplitter;
     procedure btnAccountClick(Sender: TObject);
     procedure btnAmountClick(Sender: TObject);
@@ -67,13 +76,19 @@ type
     procedure btnPersonClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
     procedure btnTagClick(Sender: TObject);
+    procedure cbxAccountDropDown(Sender: TObject);
     procedure cbxAccountKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure cbxCategoryChange(Sender: TObject);
+    procedure cbxCategoryExit(Sender: TObject);
     procedure cbxCategoryKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxCommentEnter(Sender: TObject);
     procedure cbxCommentExit(Sender: TObject);
     procedure cbxCommentKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxPayeeKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxPersonKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure cbxSubcategoryExit(Sender: TObject);
+    procedure cbxSubcategoryKeyUp(Sender: TObject; var Key: word;
+      Shift: TShiftState);
     procedure cbxTypeChange(Sender: TObject);
     procedure cbxTypeEnter(Sender: TObject);
     procedure cbxTypeExit(Sender: TObject);
@@ -85,7 +100,9 @@ type
     procedure datDateEnter(Sender: TObject);
     procedure datDateExit(Sender: TObject);
     procedure datDateKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure lblDateClick(Sender: TObject);
+    procedure spiAmountClick(Sender: TObject);
     procedure spiAmountEnter(Sender: TObject);
     procedure spiAmountExit(Sender: TObject);
     procedure spiAmountKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -96,7 +113,8 @@ type
     procedure lbxTagExit(Sender: TObject);
     procedure lbxTagKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure pnlButtonsResize(Sender: TObject);
-    procedure splEditCanResize(Sender: TObject; var NewSize: integer; var Accept: boolean);
+    procedure splEditCanResize(Sender: TObject; var NewSize: integer;
+      var Accept: boolean);
   private
 
   public
@@ -120,21 +138,27 @@ uses
 procedure TfrmEdit.btnCategoryClick(Sender: TObject);
 begin
   frmCategories.ShowModal;
+  cbxCategory.Tag := -1;
+  cbxTypeChange(cbxType);
+  cbxCategory.SetFocus;
 end;
 
 procedure TfrmEdit.btnCommentClick(Sender: TObject);
 begin
   frmComments.ShowModal;
+  cbxComment.SetFocus;
 end;
 
 procedure TfrmEdit.btnPayeeClick(Sender: TObject);
 begin
   frmPayees.ShowModal;
+  cbxPayee.SetFocus;
 end;
 
 procedure TfrmEdit.btnPersonClick(Sender: TObject);
 begin
   frmPersons.ShowModal;
+  cbxPerson.SetFocus;
 end;
 
 procedure TfrmEdit.btnAmountClick(Sender: TObject);
@@ -166,7 +190,7 @@ end;
 
 procedure TfrmEdit.datDateChange(Sender: TObject);
 begin
-  lblDate.Caption := DefaultFormatSettings.LongDayNames[DayOfTheWeek(datDate.Date+1)];
+  lblDate.Caption := DefaultFormatSettings.LongDayNames[DayOfTheWeek(datDate.Date + 1)];
 end;
 
 procedure TfrmEdit.datDateDropDown(Sender: TObject);
@@ -191,7 +215,7 @@ begin
     Key := 0;
     spiAmount.SetFocus;
   end
-  Else If (key = 27) and (datDate.Tag = 0) then
+  else if (key = 27) and (datDate.Tag = 0) then
   begin
     Key := 0;
     btnCancelClick(btnCancel);
@@ -199,33 +223,82 @@ begin
   datDate.Tag := 0;
 end;
 
+procedure TfrmEdit.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+begin
+  // write position and window size
+  if frmSettings.chkLastFormsSize.Checked = True then
+  begin
+    try
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmEdit.Name, '') <>
+        IntToStr(frmEdit.Left) + separ + // form left
+      IntToStr(frmEdit.Top) + separ + // form top
+      IntToStr(frmEdit.Width) + separ + // form width
+      IntToStr(frmEdit.Height) + separ + // form height
+      IntToStr(frmEdit.gbxTag.Width) then
+        INI.WriteString('POSITION', frmEdit.Name,
+          IntToStr(frmEdit.Left) + separ + // form left
+          IntToStr(frmEdit.Top) + separ + // form top
+          IntToStr(frmEdit.Width) + separ + // form width
+          IntToStr(frmEdit.Height) + separ + // form height
+          IntToStr(frmEdit.gbxTag.Width));
+    finally
+      INI.Free;
+    end;
+  end;
+end;
+
 procedure TfrmEdit.lblDateClick(Sender: TObject);
 begin
   datDate.SetFocus;
 end;
 
+procedure TfrmEdit.spiAmountClick(Sender: TObject);
+begin
+  try
+    if TEdit(Sender).Tag = 0 then
+    begin
+      TEdit(Sender).SelectAll;
+      TEdit(Sender).Tag := 1;
+    end;
+  except
+  end;
+end;
+
 procedure TfrmEdit.spiAmountEnter(Sender: TObject);
 begin
-  (Sender as TFloatSpinEdit).Font.Style := [fsBold];
-  (Sender as TFloatSpinEdit).Hint := '';
+  try
+    if TEdit(Sender).Cursor = crHandPoint then
+    begin
+      TEdit(Sender).Cursor := crDefault;
+      TEdit(Sender).Font.Bold := True;
+    end;
+  except
+  end;
 end;
 
 procedure TfrmEdit.spiAmountExit(Sender: TObject);
+var
+  D: double;
 begin
-  (Sender as TFloatSpinEdit).Font.Style := [];
-  (Sender as TFloatSpinEdit).SelLength := 0;
-  (Sender as TFloatSpinEdit).SelStart := Length((Sender as TFloatSpinEdit).Text);
-
-  if (Pos('+', (Sender as TFloatSpinEdit).Hint) > 0) or (Pos('-', (Sender as TFloatSpinEdit).Hint) > 0) then
-    (Sender as TFloatSpinEdit).Value := CalculateText(Sender);
-
-  (Sender as TFloatSpinEdit).SelLength := 0;
+  try
+    TryStrToFloat(Eval(TEdit(Sender).Text), D);
+    TEdit(Sender).Text := Format('%n', [D], FS_own);
+    TEdit(Sender).Font.Style := [];
+    TEdit(Sender).SelStart := Length(TEdit(Sender).Text);
+    TEdit(Sender).SelLength := 0;
+    TEdit(Sender).Tag := 0;
+    TEdit(Sender).Cursor := crHandPoint;
+  except
+  end;
 end;
 
 procedure TfrmEdit.spiAmountKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
-  (Sender as TFloatSpinEdit).Hint := (Sender as TFloatSpinEdit).Text;
-
   if Key = 13 then
   begin
     Key := 0;
@@ -235,22 +308,12 @@ end;
 
 procedure TfrmEdit.FormCreate(Sender: TObject);
 begin
-  {$IFDEF WINDOWS}
-  // form size
-  (Sender as TForm).Width := Round(550 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinWidth := Round(500 * (ScreenRatio / 100));
-  (Sender as TForm).Height := Round(450 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinHeight := Round(450 * (ScreenRatio / 100));
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
   // set components height
   pnlBottom.Height := ButtonHeight + 4;
-  {$ENDIF}
+  lblDate.Caption := DefaultFormatSettings.LongDayNames[DayOfTheWeek(datDate.Date + 1)];
 
-  lblDate.Caption := DefaultFormatSettings.LongDayNames[DayOfTheWeek(datDate.Date+1)];
+  // get form icon
+  frmMain.img16.GetIcon(19, (Sender as TForm).Icon);
 end;
 
 procedure TfrmEdit.FormResize(Sender: TObject);
@@ -264,11 +327,65 @@ end;
 
 procedure TfrmEdit.FormShow(Sender: TObject);
 var
-  Temp: string;
-  I, Column: integer;
+  I: integer;
   D: double;
-  VSTX: TLazVirtualStringTree;
+  INI: TINIFile;
+  S: string;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmEdit.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmEdit.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmEdit.Width := 600
+      else
+        frmEdit.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmEdit.Height := 500
+      else
+        frmEdit.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmEdit.left := (Screen.Width - frmEdit.Width) div 2
+      else
+        frmEdit.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmEdit.Top := ((Screen.Height - frmEdit.Height) div 2) - 75
+      else
+        frmEdit.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 150) or (I > 400) then
+        frmEdit.gbxTag.Width := 220
+      else
+        frmEdit.gbxTag.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   if (frmMain.Conn.Connected = False) then
     Exit;
 
@@ -288,32 +405,14 @@ begin
     end;
 
     case frmEdit.Tag of
-      1: begin
-        VSTX := frmMain.VST;
-        Column := 10;
-      end;
-      2: begin
-        VSTX := frmRecycleBin.VST;
-        Column := 10;
-      end;
-      5: begin // frmWrite for editing payments
-        VSTX := frmWrite.VST;
-        Column := 10;
-      end;
-      6: begin
-        VSTX := frmSchedulers.VST1;
-        Column := 4;
-      end;
-      7: begin
-        VSTX := frmCalendar.VST;
-        Column := 6;
-      end;
-      8: begin // frmWrite for Writing payments
-        VSTX := frmWrite.VST;
-        Column := 10;
-      end;
+      1: btnSave.Tag := StrToInt(frmMain.VST.Text[frmMain.VST.GetFirstSelected(), 10]);
+      2: btnSave.Tag := StrToInt(frmRecycleBin.VST.Text[frmRecycleBin.VST.GetFirstSelected(), 10]);
+      5: btnSave.Tag := StrToInt(frmWrite.VST.Text[frmWrite.VST.GetFirstSelected(), 10]);
+      6: btnSave.Tag := StrToInt(frmSchedulers.VST1.Text[frmSchedulers.VST1.GetFirstSelected(), 4]);
+      7: btnSave.Tag := StrToInt(frmCalendar.VST.Text[frmCalendar.VST.GetFirstSelected(), 6]);
+      8: btnSave.Tag := StrToInt(frmWrite.VST.Text[frmWrite.VST.GetFirstChecked(), 10]);
     end;
-  finally
+  except
   end;
 
   // ===========================================================================================
@@ -346,15 +445,22 @@ begin
           'SELECT rec_date as date, ' + // 0
           'rec_comment as comment, ' + // 1
           'rec_sum as amount, ' + sLineBreak + // 2
-          '(SELECT acc_currency FROM accounts WHERE acc_id = rec_account) as currency, ' + // 3
-          sLineBreak + '(SELECT acc_name FROM accounts WHERE acc_id = rec_account) as account, ' + // 4
-          sLineBreak + '(SELECT cat_parent_id FROM categories WHERE cat_id = rec_category) as cat_parent_id, '
-          + sLineBreak + // cat_parent_id  5
-          '(SELECT cat_parent_name FROM categories WHERE cat_id = rec_category) as cat_parent_name, ' +
-          sLineBreak + // cat_parent_name 6
-          '(SELECT cat_name FROM categories WHERE cat_id = rec_category) as cat_name, ' + sLineBreak +
+          '(SELECT acc_currency FROM accounts WHERE acc_id = rec_account) as currency, '
+          +
+          // 3
+          sLineBreak +
+          '(SELECT acc_name FROM accounts WHERE acc_id = rec_account) as account, ' + // 4
+          sLineBreak +
+          '(SELECT cat_parent_id FROM categories WHERE cat_id = rec_category) as cat_parent_id, '
+          +
+          sLineBreak + // cat_parent_id  5
+          '(SELECT cat_parent_name FROM categories WHERE cat_id = rec_category) as cat_parent_name, '
+          + sLineBreak + // cat_parent_name 6
+          '(SELECT cat_name FROM categories WHERE cat_id = rec_category) as cat_name, ' +
+          sLineBreak +
           // cat_name 7
-          '(SELECT per_name FROM persons WHERE per_id = rec_person) as person, ' + sLineBreak +
+          '(SELECT per_name FROM persons WHERE per_id = rec_person) as person, ' +
+          sLineBreak +
           // person 8
           '(SELECT pee_name FROM payees WHERE pee_id = rec_payee) as payee, ' + // 9
           'rec_id as ID, ' + // 10
@@ -388,20 +494,16 @@ begin
   finally
   end;
 
-  if frmEdit.Tag = 8 then
-    frmMain.QRY.Params.ParamByName('ID').AsString :=
-      VSTX.Text[VSTX.GetFirstChecked(), Column]
-  else
-    frmMain.QRY.Params.ParamByName('ID').AsString :=
-      VSTX.Text[VSTX.GetFirstSelected(), Column];
-
+  frmMain.QRY.Params.ParamByName('ID').AsInteger := btnSave.Tag;
   frmMain.QRY.Open;
+
   try
     // type
     cbxType.ItemIndex := frmMain.QRY.FieldByName('type').AsInteger;
     cbxType.Tag := frmMain.QRY.FieldByName('type').AsInteger;
     cbxType.Hint := IfThen(frmEdit.cbxType.Tag in [1, 3], '-', '+');
   finally
+    cbxTypeChange(cbxType);
   end;
 
   // date 2
@@ -416,11 +518,12 @@ begin
   try
     TryStrToFloat(frmMain.QRY.FieldByName('amount').AsString, D);
     spiAmount.Hint := FloatToStr(-D);
-    spiAmount.Hint := AnsiReplaceStr(frmEdit.spiAmount.Hint, DefaultFormatSettings.DecimalSeparator, '.');
+    spiAmount.Hint := AnsiReplaceStr(frmEdit.spiAmount.Hint,
+      DefaultFormatSettings.DecimalSeparator, '.');
 
     if frmMain.QRY.FieldByName('type').AsInteger in [1, 3] then
       D := -D;
-    spiAmount.Value := D;
+    spiAmount.Text := Format('%n', [D], FS_own);
   finally
   end;
 
@@ -440,7 +543,7 @@ begin
     begin
       cbxAccount.ItemIndex :=
         frmEdit.cbxAccount.Items.IndexOf(frmMain.QRY.FieldByName('account').AsString +
-        ' | ' + frmMain.QRY.FieldByName('currency').AsString);
+        separ_1 + frmMain.QRY.FieldByName('currency').AsString);
     end;
   finally
   end;
@@ -451,17 +554,20 @@ begin
     begin
       I := frmMain.QRY.FieldByName('cat_parent_ID').AsInteger;
       if I = 0 then
-        Temp := frmMain.QRY.FieldByName('cat_name').AsString
+      begin
+        cbxCategory.ItemIndex :=
+          cbxCategory.Items.IndexOf(frmMain.QRY.FieldByName('cat_name').AsString);
+        cbxCategoryChange(cbxCategory);
+        cbxSubcategory.ItemIndex := 0;
+      end
       else
-        Temp := frmMain.QRY.FieldByName('cat_parent_name').AsString + ' | ' +
-          IfThen(frmSettings.chkDisplaySubCatCapital.Checked = True,
-          AnsiUpperCase(frmMain.QRY.FieldByName('cat_name').AsString),
-          frmMain.QRY.FieldByName('cat_name').AsString);
-
-      frmEdit.cbxCategory.ItemIndex :=
-        frmEdit.cbxCategory.Items.IndexOf(Temp);
-      frmEdit.cbxCategory.Hint :=
-        frmEdit.cbxCategory.Items[frmEdit.cbxCategory.ItemIndex];
+      begin
+        cbxCategory.ItemIndex :=
+          cbxCategory.Items.IndexOf(frmMain.QRY.FieldByName('cat_parent_name').AsString);
+        cbxCategoryChange(cbxCategory);
+        cbxSubcategory.ItemIndex :=
+          cbxSubcategory.Items.IndexOf(frmMain.QRY.FieldByName('cat_name').AsString);
+      end;
     end;
   except
   end;
@@ -508,12 +614,7 @@ begin
     end;
 
     // Get ID
-    if frmEdit.Tag = 8 then
-      frmMain.QRY.Params.ParamByName('ID').AsString :=
-        VSTX.Text[VSTX.GetFirstChecked(), Column]
-    else
-      frmMain.QRY.Params.ParamByName('ID').AsString :=
-        VSTX.Text[VSTX.GetFirstSelected(False), Column];
+    frmMain.QRY.Params.ParamByName('ID').AsInteger := btnSave.Tag;
   finally
   end;
 
@@ -559,7 +660,8 @@ begin
   btnSave.Width := (pnlButtons.Width - 10) div 3;
 end;
 
-procedure TfrmEdit.splEditCanResize(Sender: TObject; var NewSize: integer; var Accept: boolean);
+procedure TfrmEdit.splEditCanResize(Sender: TObject; var NewSize: integer;
+  var Accept: boolean);
 begin
   imgWidth.ImageIndex := 2;
   lblWidth.Caption := IntToStr(gbxTag.Width);
@@ -571,9 +673,8 @@ end;
 procedure TfrmEdit.btnSaveClick(Sender: TObject);
 var
   Temp: string;
-  VSTX: TLazVirtualStringTree;
   D: double;
-  I, J, Column: integer;
+  I, J: integer;
 begin
   if btnSave.Enabled = False then Exit;
 
@@ -606,6 +707,15 @@ begin
     Exit;
   end;
 
+  // check subcategories
+  if cbxSubcategory.ItemIndex = -1 then
+  begin
+    ShowMessage(ReplaceStr(Error_04, '%', AnsiUpperCase(gbxCategory.Caption)));
+    cbxSubcategory.SelStart := Length(cbxSubcategory.Text);
+    cbxSubcategory.SetFocus;
+    Exit;
+  end;
+
   // check persons
   if cbxPerson.ItemIndex = -1 then
   begin
@@ -625,21 +735,23 @@ begin
   end;
 
   // check date restrictions
-  If frmSettings.rbtTransactionsAddDate.Checked = True then
-    If (datDate.date < frmSettings.datTransactionsAddDate.Date) then
-  begin
-    ShowMessage(Error_29 + ' ' + DateToStr(frmSettings.datTransactionsAddDate.Date) + sLineBreak + Error_28);
-    Exit;
-  end;
+  if frmSettings.rbtTransactionsAddDate.Checked = True then
+    if (datDate.date < frmSettings.datTransactionsAddDate.Date) then
+    begin
+      ShowMessage(Error_29 + ' ' + DateToStr(frmSettings.datTransactionsAddDate.Date) +
+        sLineBreak + Error_28);
+      Exit;
+    end;
 
   // check days restrictions
-  If frmSettings.rbtTransactionsAddDays.Checked = True then
-    If (datDate.date < Round(Now - frmSettings.spiTransactionsAddDays.Value)) then
-  begin
-    ShowMessage(Error_29 + ' ' + DateToStr(Round(Now - frmSettings.spiTransactionsAddDays.Value)) +
-      sLineBreak + Error_28);
-    Exit;
-  end;
+  if frmSettings.rbtTransactionsAddDays.Checked = True then
+    if (datDate.date < Round(Now - frmSettings.spiTransactionsAddDays.Value)) then
+    begin
+      ShowMessage(Error_29 + ' ' +
+        DateToStr(Round(Now - frmSettings.spiTransactionsAddDays.Value)) +
+        sLineBreak + Error_28);
+      Exit;
+    end;
 
   // for import
   if frmEdit.Tag = 100 then
@@ -648,48 +760,26 @@ begin
     Exit;
   end;
 
-  // edit transaction
-  case frmEdit.Tag of
-    1: begin
-      VSTX := frmMain.VST;
-      Column := 10;
-    end;
-    2: begin
-      VSTX := frmRecycleBin.VST;
-      Column := 10;
-    end;
-    5, 8: begin
-      VSTX := frmWrite.VST;
-      Column := 10;
-    end;
-    6: begin
-      VSTX := frmSchedulers.VST1;
-      Column := 4;
-    end;
-    7: begin
-      VSTX := frmCalendar.VST;
-      Column := 6;
-    end;
-  end;
-
   // ===========================================================================
   // DELETE TAGS
   // ===========================================================================
 
-  if frmEdit.Tag <> 8 then
-  begin
-    case frmEdit.Tag of
-      1: frmMain.QRY.SQL.Text := 'DELETE FROM data_tags WHERE dt_data = :ID;';
-      2: frmMain.QRY.SQL.Text := 'DELETE FROM recycle_tags WHERE rt_recycle = :ID;';
-      else
-        frmMain.QRY.SQL.Text := 'DELETE FROM payments_tags WHERE pt_payment = :ID;';
+  try
+    if frmEdit.Tag <> 8 then
+    begin
+      case frmEdit.Tag of
+        1: frmMain.QRY.SQL.Text := 'DELETE FROM data_tags WHERE dt_data = :ID;';
+        2: frmMain.QRY.SQL.Text := 'DELETE FROM recycle_tags WHERE rt_recycle = :ID;';
+        else
+          frmMain.QRY.SQL.Text := 'DELETE FROM payments_tags WHERE pt_payment = :ID;';
+      end;
+
+      frmMain.QRY.Params.ParamByName('ID').AsInteger := btnSave.Tag;
+      frmMain.QRY.Prepare;
+      frmMain.QRY.ExecSQL;
+      frmMain.Tran.Commit;
     end;
-
-    frmMain.QRY.Params.ParamByName('ID').AsString :=
-      VSTX.Text[VSTX.GetFirstSelected(False), Column];
-
-    frmMain.QRY.ExecSQL;
-    frmMain.Tran.Commit;
+  except
   end;
 
   // ===========================================================================
@@ -706,11 +796,11 @@ begin
         'd_comment_lower = :COMMENTLOWER, ' + sLineBreak + // comment lower case
         'd_account = (SELECT acc_id FROM accounts WHERE acc_name = :ACCOUNT ' +
         'and acc_currency = :CURRENCY), ' + sLineBreak + // account
-        'd_category = (SELECT cat_id FROM categories WHERE cat_name = :CATEGORY1 ' +
-        'and cat_parent_ID = CASE WHEN :CATEGORY2 = 0 THEN 0 ELSE ' +
-        '(SELECT cat_id FROM categories WHERE cat_name = :CATEGORY2) END), ' + sLineBreak + // category
-        'd_person = (SELECT per_id FROM persons WHERE per_name = :PERSON), ' + sLineBreak + // person
-        'd_payee = (SELECT pee_id FROM payees WHERE pee_name = :PAYEE) ' + sLineBreak + // payee
+        'd_category = :CATEGORY, ' + sLineBreak + // category
+        'd_person = (SELECT per_id FROM persons WHERE per_name = :PERSON), ' +
+        sLineBreak + // person
+        'd_payee = (SELECT pee_id FROM payees WHERE pee_name = :PAYEE) ' +
+        sLineBreak + // payee
         ' WHERE d_id = :ID;'; // where clausule
 
     2: frmMain.QRY.SQL.Text := 'UPDATE recycles SET ' + // update
@@ -720,23 +810,24 @@ begin
         'rec_comment = :COMMENT, ' + sLineBreak + // comment
         'rec_account = (SELECT acc_id FROM accounts WHERE acc_name = :ACCOUNT ' +
         'and acc_currency = :CURRENCY), ' + sLineBreak + // account
-        'rec_category = (SELECT cat_id FROM categories WHERE cat_name = :CATEGORY1 ' +
-        'and cat_parent_ID = CASE WHEN :CATEGORY2 = 0 THEN 0 ELSE ' +
-        '(SELECT cat_id FROM categories WHERE cat_name = :CATEGORY2) END), ' + sLineBreak + // category
-        'rec_person = (SELECT per_id FROM persons WHERE per_name = :PERSON), ' + sLineBreak + // person
-        'rec_payee = (SELECT pee_id FROM payees WHERE pee_name = :PAYEE) ' + sLineBreak + // payee
+        'rec_category = :CATEGORY, ' + sLineBreak + // category
+        'rec_person = (SELECT per_id FROM persons WHERE per_name = :PERSON), ' +
+        sLineBreak + // person
+        'rec_payee = (SELECT pee_id FROM payees WHERE pee_name = :PAYEE) ' +
+        sLineBreak + // payee
         ' WHERE rec_id = :ID;'; // where clausule
 
     8: // Add scheduled payment to main table
       frmMain.QRY.SQL.Text := 'INSERT OR IGNORE INTO data (' +
         'd_date, d_type, d_comment, d_comment_lower, d_sum, ' +
-        'd_person, d_category, d_account, d_payee, d_order) ' + sLineBreak +
-        'VALUES (:DATE, :TYPE, :COMMENT, :COMMENTLOWER, :AMOUNT, ' + // d_sum
-        '(SELECT per_id FROM persons WHERE per_name = :PERSON), ' + sLineBreak + // d_person
-        ' (SELECT cat_id FROM categories WHERE cat_name = :CATEGORY1 ' +
-        'and cat_parent_ID = CASE WHEN :CATEGORY2 = 0 THEN 0 ELSE ' +
-        '(SELECT cat_id FROM categories WHERE cat_name = :CATEGORY2) END), ' + sLineBreak + // d_category
-        '(SELECT acc_id FROM accounts ' + 'WHERE acc_name = :ACCOUNT and acc_currency = :CURRENCY), ' +
+        'd_person, d_category, d_account, d_payee, d_order) ' +
+        sLineBreak + 'VALUES (:DATE, :TYPE, :COMMENT, :COMMENTLOWER, :AMOUNT, '
+        + // d_sum
+        '(SELECT per_id FROM persons WHERE per_name = :PERSON), ' +
+        sLineBreak + // d_person
+        ':CATEGORY, ' + sLineBreak + // d_category
+        '(SELECT acc_id FROM accounts ' +
+        'WHERE acc_name = :ACCOUNT and acc_currency = :CURRENCY), ' +
         sLineBreak + // d_account
         '(SELECT pee_id FROM payees WHERE pee_name = :PAYEE),' + sLineBreak + // d_payee
         '(SELECT COUNT(d_date) FROM data WHERE d_date = :DATE) + 1);';
@@ -748,20 +839,18 @@ begin
         'pay_comment = :COMMENT, ' + // comment
         'pay_account = (SELECT acc_id FROM accounts WHERE acc_name = :ACCOUNT ' +
         'and acc_currency = :CURRENCY), ' + sLineBreak + // account
-        'pay_category = (SELECT cat_id FROM categories WHERE cat_name = :CATEGORY1 ' +
-        'and cat_parent_ID = CASE WHEN :CATEGORY2 = 0 THEN 0 ELSE ' +
-        '(SELECT cat_id FROM categories WHERE cat_name = :CATEGORY2) END), ' + sLineBreak + // category
-        'pay_person = (SELECT per_id FROM persons WHERE per_name = :PERSON), ' + sLineBreak + // person
-        'pay_payee = (SELECT pee_id FROM payees WHERE pee_name = :PAYEE), ' + sLineBreak + // payee
+        'pay_category = :CATEGORY, ' + sLineBreak + // category
+        'pay_person = (SELECT per_id FROM persons WHERE per_name = :PERSON), ' +
+        sLineBreak + // person
+        'pay_payee = (SELECT pee_id FROM payees WHERE pee_name = :PAYEE), ' +
+        sLineBreak + // payee
         'pay_type = :TYPE ' + sLineBreak + // type
         ' WHERE pay_id = :ID;'; // where clausule
   end;
 
   // Get ID
   if frmEdit.Tag <> 8 then
-    frmMain.QRY.Params.ParamByName('ID').AsString :=
-      VSTX.Text[VSTX.GetFirstSelected(), Column];
-
+    frmMain.QRY.Params.ParamByName('ID').AsInteger := btnSave.Tag;
 
   // Get Type
   frmMain.QRY.Params.ParamByName('TYPE').AsInteger :=
@@ -772,7 +861,10 @@ begin
     FormatDateTime('YYYY-MM-DD', frmEdit.datDate.Date);
 
   // Get amount
-  D := frmEdit.spiAmount.Value;
+  Temp := AnsiReplaceStr(frmEdit.spiAmount.Text, FS_own.ThousandSeparator, '');
+  Temp := AnsiReplaceStr(Temp, '.', FS_own.DecimalSeparator);
+  Temp := AnsiReplaceStr(Temp, ',', FS_own.DecimalSeparator);
+  TryStrToFloat(Temp, D);
   if (frmEdit.cbxType.ItemIndex in [1, 3]) then
     D := -D;
 
@@ -800,22 +892,15 @@ begin
 
   // Get account and currency
   frmMain.QRY.Params.ParamByName('ACCOUNT').AsString :=
-    Field(' | ', frmEdit.cbxAccount.Items[frmEdit.cbxAccount.ItemIndex], 1);
+    Field(separ_1, frmEdit.cbxAccount.Items[frmEdit.cbxAccount.ItemIndex], 1);
   frmMain.QRY.Params.ParamByName('CURRENCY').AsString :=
-    Field(' | ', frmEdit.cbxAccount.Items[frmEdit.cbxAccount.ItemIndex], 2);
+    Field(separ_1, frmEdit.cbxAccount.Items[frmEdit.cbxAccount.ItemIndex], 2);
 
   // Get category
-  Temp := AnsiUpperCase(frmEdit.cbxCategory.Items[frmEdit.cbxCategory.ItemIndex]);
-  if UTF8Pos(' | ', Temp) > 0 then
-  begin
-    frmMain.QRY.Params.ParamByName('CATEGORY1').AsString := AnsiLowerCase(Field(' | ', Temp, 2));
-    frmMain.QRY.Params.ParamByName('CATEGORY2').AsString := AnsiUpperCase(Field(' | ', Temp, 1));
-  end
-  else
-  begin
-    frmMain.QRY.Params.ParamByName('CATEGORY1').AsString := Temp;
-    frmMain.QRY.Params.ParamByName('CATEGORY2').AsInteger := 0;
-  end;
+  frmMain.QRY.Params.ParamByName('CATEGORY').AsInteger :=
+    GetCategoryID(cbxCategory.Items[cbxCategory.ItemIndex] +
+    IfThen(cbxSubcategory.ItemIndex = 0, '', separ_1 +
+    cbxSubcategory.Items[cbxSubcategory.ItemIndex]));
 
   // Get person
   frmMain.QRY.Params.ParamByName('PERSON').AsString :=
@@ -831,15 +916,15 @@ begin
 
   if frmEdit.Tag = 8 then
   begin
-
     J := frmMain.Conn.GetInsertID;
 
     // =========================================================================================
     // update date of writed payment
     // =========================================================================================
     frmMain.QRY.SQL.Text :=
-      'UPDATE payments SET pay_date_paid = "' + FormatDateTime('YYYY-MM-DD', frmEdit.datDate.Date) +
-      '" WHERE pay_id = ' + frmWrite.VST.Text[frmWrite.VST.GetFirstChecked(), 10] + ';';
+      'UPDATE payments SET pay_date_paid = "' +
+      FormatDateTime('YYYY-MM-DD', frmEdit.datDate.Date) + '" WHERE pay_id = ' +
+      frmWrite.VST.Text[frmWrite.VST.GetFirstChecked(), 10] + ';';
     frmMain.QRY.ExecSQL;
     frmMain.Tran.Commit;
   end;
@@ -863,11 +948,10 @@ begin
       if frmEdit.Tag = 8 then
         frmMain.QRY.Params.ParamByName('ID').AsInteger := J
       else
-        frmMain.QRY.Params.ParamByName('ID').AsString :=
-          VSTX.Text[VSTX.GetFirstSelected(False), Column];
+        frmMain.QRY.Params.ParamByName('ID').AsInteger := btnSave.Tag;
 
       frmMain.QRY.Params.ParamByName('TAG_NAME').AsString := frmEdit.lbxTag.Items[I];
-
+      frmMain.QRY.Prepare;
       frmMain.QRY.ExecSQL;
       frmMain.Tran.Commit;
     end;
@@ -881,6 +965,13 @@ begin
   lbxTag.SetFocus;
 end;
 
+procedure TfrmEdit.cbxAccountDropDown(Sender: TObject);
+begin
+  {$IFDEF WINDOWS}
+    ComboDDWidth(TComboBox(Sender));
+  {$ENDIF}
+end;
+
 procedure TfrmEdit.cbxAccountKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
   if Key = 13 then
@@ -890,12 +981,46 @@ begin
   end;
 end;
 
+procedure TfrmEdit.cbxCategoryChange(Sender: TObject);
+begin
+  if cbxCategory.ItemIndex = -1 then
+  begin
+    cbxSubcategory.Clear;
+    Exit;
+  end;
+
+  if cbxCategory.Tag <> cbxCategory.ItemIndex then
+    FillSubcategory(cbxCategory.Items[cbxCategory.ItemIndex], cbxSubcategory);
+
+  cbxCategory.Tag := cbxCategory.ItemIndex;
+end;
+
+procedure TfrmEdit.cbxCategoryExit(Sender: TObject);
+var
+  NeedUpdate: boolean;
+begin
+  ComboBoxExit((Sender as TCombobox));
+  NeedUpdate := False;
+
+  if (cbxSubcategory.ItemIndex = -1) or (cbxCategory.ItemIndex = -1) then
+  begin
+    cbxCategory.ItemIndex := cbxCategory.Items.IndexOf(cbxCategory.Text);
+    NeedUpdate := True;
+  end;
+
+  if (cbxCategory.ItemIndex = -1) then
+    cbxSubcategory.Clear
+  else
+  if NeedUpdate = True then
+    FillSubcategory(cbxCategory.Text, cbxSubcategory);
+end;
+
 procedure TfrmEdit.cbxCategoryKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
   if Key = 13 then
   begin
     Key := 0;
-    cbxPerson.SetFocus;
+    cbxSubcategory.SetFocus;
   end;
 end;
 
@@ -910,7 +1035,8 @@ var
 begin
   if ((Sender as TComboBox).Items.Count > 0) and ((Sender as TComboBox).Text <> '') then
     for W := 0 to (Sender as TComboBox).Items.Count - 1 do
-      if AnsiLowerCase((Sender as TComboBox).Items[W]) = AnsiLowerCase((Sender as TComboBox).Text) then
+      if AnsiLowerCase((Sender as TComboBox).Items[W]) = AnsiLowerCase(
+        (Sender as TComboBox).Text) then
       begin
         (Sender as TComboBox).ItemIndex := W;
         break;
@@ -947,6 +1073,23 @@ begin
   end;
 end;
 
+procedure TfrmEdit.cbxSubcategoryExit(Sender: TObject);
+begin
+  if (cbxSubcategory.ItemIndex = -1) then
+    cbxSubcategory.ItemIndex := cbxSubcategory.Items.IndexOf(cbxSubcategory.Text);
+  ComboBoxExit(cbxSubcategory);
+end;
+
+procedure TfrmEdit.cbxSubcategoryKeyUp(Sender: TObject; var Key: word;
+  Shift: TShiftState);
+begin
+  if Key = 13 then
+  begin
+    Key := 0;
+    cbxPerson.SetFocus;
+  end;
+end;
+
 procedure TfrmEdit.cbxTypeChange(Sender: TObject);
 begin
   case cbxType.ItemIndex of
@@ -954,6 +1097,9 @@ begin
     else
       gbxAccount.Caption := Caption_77;
   end;
+  cbxCategory.Tag := -1;
+  FillCategory(cbxCategory, cbxType.ItemIndex);
+  cbxCategoryChange(cbxCategory);
 end;
 
 procedure TfrmEdit.cbxTypeEnter(Sender: TObject);

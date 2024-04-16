@@ -7,7 +7,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  ActnList, StrUtils, LCLType, LCLProc, laz.VirtualTrees, Buttons;
+  ActnList, StrUtils, LCLType, LCLProc, laz.VirtualTrees, Buttons,
+  IniFiles;
 
 type
 
@@ -17,6 +18,9 @@ type
     actCancel: TAction;
     ActionList1: TActionList;
     btnSave: TBitBtn;
+    imgHeight: TImage;
+    imgWidth: TImage;
+    lblHeight: TLabel;
     lblShortcut: TStaticText;
     lblAction1: TLabel;
     lblAction: TLabel;
@@ -24,14 +28,22 @@ type
     lblShortCutOld: TLabel;
     lblShortCutNew: TLabel;
     lblTip: TLabel;
+    lblWidth: TLabel;
+    pnlBottom: TPanel;
+    pnlHeight: TPanel;
     pnlOld: TPanel;
     pnlNew: TPanel;
     pnlShortCut: TPanel;
     pnlAction: TPanel;
+    pnlWidth: TPanel;
     procedure btnCancelClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
     procedure btnSaveKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure btnSaveKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
 
   public
@@ -46,7 +58,7 @@ implementation
 {$R *.lfm}
 
 uses
-  uniResources, uniSettings;
+  uniMain, uniResources, uniSettings;
 
 { TfrmShortCut }
 
@@ -117,6 +129,114 @@ begin
   //  frmShortCut.Caption := IntToStr(key);
   if RightStr(lblShortcut.Caption, 1) = '+' then
     lblShortcut.Caption := '';
+end;
+
+procedure TfrmShortCut.FormClose(Sender: TObject; var CloseAction: TCloseAction
+  );
+var
+  INI: TINIFile;
+  INIFile: string;
+
+begin
+  try
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmShortCut.Name, '') <>
+          IntToStr(frmShortCut.Left) + separ + // form left
+        IntToStr(frmShortCut.Top) + separ + // form top
+        IntToStr(frmShortCut.Width) + separ + // form width
+        IntToStr(frmShortCut.Height) then
+          INI.WriteString('POSITION', frmShortCut.Name,
+            IntToStr(frmShortCut.Left) + separ + // form left
+            IntToStr(frmShortCut.Top) + separ + // form top
+            IntToStr(frmShortCut.Width) + separ + // form width
+            IntToStr(frmShortCut.Height));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
+end;
+
+procedure TfrmShortCut.FormCreate(Sender: TObject);
+begin
+  // set height
+  pnlBottom.Height := ButtonHeight;
+
+  // get form icon
+  frmMain.img16.GetIcon(32, (Sender as TForm).Icon);
+end;
+
+procedure TfrmShortCut.FormResize(Sender: TObject);
+begin
+  try
+    lblWidth.Caption := IntToStr(frmShortCut.Width);
+    lblHeight.Caption := IntToStr(frmShortCut.Height);
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
+end;
+
+procedure TfrmShortCut.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
+begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmShortCut.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmShortCut.Name, '-1•-1•0•0');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmShortCut.Width := Round(400 * (ScreenRatio / 100))
+      else
+        frmShortCut.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmShortCut.Height := Round(250 * (ScreenRatio / 100))
+      else
+        frmShortCut.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmShortCut.left := (Screen.Width - frmShortCut.Width) div 2
+      else
+        frmShortCut.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmShortCut.Top := ((Screen.Height - frmShortCut.Height) div 2) - 75
+      else
+        frmShortCut.Top := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
 end;
 
 end.

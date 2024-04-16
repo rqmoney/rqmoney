@@ -1,7 +1,7 @@
 object frmGate: TfrmGate
-  Left = 756
+  Left = 404
   Height = 300
-  Top = 294
+  Top = 182
   Width = 500
   BorderIcons = [biSystemMenu]
   ClientHeight = 300
@@ -9,33 +9,35 @@ object frmGate: TfrmGate
   Constraints.MinHeight = 300
   Constraints.MinWidth = 500
   KeyPreview = True
+  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.1'
+  LCLVersion = '3.0.0.3'
+  Scaled = False
   object Panel2: TPanel
     Left = 5
-    Height = 192
-    Top = 78
+    Height = 226
+    Top = 44
     Width = 490
     Align = alClient
     AutoSize = True
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 192
+    ClientHeight = 226
     ClientWidth = 490
     TabOrder = 0
     object pnlNumeric: TPanel
       Left = 6
-      Height = 180
+      Height = 214
       Top = 6
       Width = 160
       Align = alLeft
       BorderSpacing.Around = 5
       BevelOuter = bvLowered
-      ClientHeight = 180
+      ClientHeight = 214
       ClientWidth = 160
       Constraints.MinWidth = 160
       TabOrder = 1
@@ -330,19 +332,19 @@ object frmGate: TfrmGate
       end
       object Panel13: TPanel
         Left = 4
-        Height = 52
+        Height = 86
         Top = 124
         Width = 152
         Align = alClient
         BorderSpacing.Around = 3
         BevelOuter = bvNone
-        ClientHeight = 52
+        ClientHeight = 86
         ClientWidth = 152
         TabOrder = 0
         object btn0: TBCMDButtonFocus
           Cursor = crHandPoint
           Left = 3
-          Height = 50
+          Height = 84
           Top = 1
           Width = 37
           Animation = True
@@ -369,7 +371,7 @@ object frmGate: TfrmGate
         object btnBack: TBCMDButtonFocus
           Cursor = crHandPoint
           Left = 43
-          Height = 50
+          Height = 84
           Top = 1
           Width = 106
           Animation = True
@@ -397,14 +399,14 @@ object frmGate: TfrmGate
     end
     object Panel3: TPanel
       Left = 171
-      Height = 180
+      Height = 214
       Top = 6
       Width = 313
       Align = alClient
       AutoSize = True
       BorderSpacing.Around = 5
       BevelOuter = bvLowered
-      ClientHeight = 180
+      ClientHeight = 214
       ClientWidth = 313
       TabOrder = 0
       object lblGate: TLabel
@@ -423,7 +425,7 @@ object frmGate: TfrmGate
       end
       object ediGate: TEdit
         Left = 36
-        Height = 28
+        Height = 23
         Top = 22
         Width = 241
         Align = alTop
@@ -434,18 +436,18 @@ object frmGate: TfrmGate
         BorderSpacing.Bottom = 5
         BorderSpacing.Around = 5
         EchoMode = emPassword
+        PasswordChar = '*'
+        TabOrder = 0
         OnChange = ediGateChange
         OnExit = ediGateExit
         OnKeyPress = ediGateKeyPress
         OnKeyUp = ediGateKeyUp
-        PasswordChar = '*'
-        TabOrder = 0
       end
       object btnOK: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 36
         Height = 25
-        Top = 65
+        Top = 60
         Width = 241
         Animation = True
         StyleNormal.Color = clWhite
@@ -476,7 +478,7 @@ object frmGate: TfrmGate
   end
   object pnlFileName: TPanel
     Left = 5
-    Height = 63
+    Height = 29
     Top = 5
     Width = 490
     Align = alTop
@@ -484,12 +486,12 @@ object frmGate: TfrmGate
     BorderSpacing.Bottom = 5
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 63
+    ClientHeight = 29
     ClientWidth = 490
     TabOrder = 1
     object lblFileName1: TStaticText
       Left = 4
-      Height = 18
+      Height = 1
       Top = 22
       Width = 482
       Align = alTop
@@ -506,8 +508,8 @@ object frmGate: TfrmGate
     end
     object lblFileName2: TStaticText
       Left = 4
-      Height = 18
-      Top = 41
+      Height = 1
+      Top = 24
       Width = 482
       Align = alTop
       AutoSize = True
@@ -572,16 +574,16 @@ object frmGate: TfrmGate
     ClientWidth = 494
     TabOrder = 2
     object pnlHeight: TPanel
-      Left = 372
+      Left = 342
       Height = 18
       Top = 2
-      Width = 120
+      Width = 150
       Align = alRight
       BorderSpacing.Around = 1
       BevelOuter = bvLowered
       ClientHeight = 18
-      ClientWidth = 120
-      Constraints.MinWidth = 120
+      ClientWidth = 150
+      Constraints.MinWidth = 150
       ParentFont = False
       TabOrder = 0
       object imgHeight: TImage
@@ -590,6 +592,7 @@ object frmGate: TfrmGate
         Top = 2
         Width = 16
         Align = alLeft
+        AutoSize = True
         BorderSpacing.Left = 3
         BorderSpacing.Around = 1
         Center = True
@@ -600,26 +603,27 @@ object frmGate: TfrmGate
         Left = 22
         Height = 14
         Top = 2
-        Width = 96
+        Width = 126
         Align = alClient
         Alignment = taCenter
         AutoSize = False
         BorderSpacing.Around = 1
+        Layout = tlCenter
         ParentColor = False
         ParentFont = False
       end
     end
     object pnlWidth: TPanel
-      Left = 251
+      Left = 191
       Height = 18
       Top = 2
-      Width = 120
+      Width = 150
       Align = alRight
       BorderSpacing.Around = 1
       BevelOuter = bvLowered
       ClientHeight = 18
-      ClientWidth = 120
-      Constraints.MinWidth = 120
+      ClientWidth = 150
+      Constraints.MinWidth = 150
       ParentFont = False
       TabOrder = 1
       object imgWidth: TImage
@@ -628,6 +632,7 @@ object frmGate: TfrmGate
         Top = 2
         Width = 16
         Align = alLeft
+        AutoSize = True
         BorderSpacing.Left = 3
         BorderSpacing.Around = 1
         Center = True
@@ -637,11 +642,12 @@ object frmGate: TfrmGate
         Left = 22
         Height = 14
         Top = 2
-        Width = 96
+        Width = 126
         Align = alClient
         Alignment = taCenter
         AutoSize = False
         BorderSpacing.Around = 1
+        Layout = tlCenter
         ParentColor = False
         ParentFont = False
       end

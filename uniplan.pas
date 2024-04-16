@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  ActnList, Spin, BCMDButtonFocus, BCPanel;
+  ActnList, Spin, BCMDButtonFocus, BCPanel, IniFiles;
 
 type
 
@@ -18,7 +18,14 @@ type
     ActionList1: TActionList;
     btnCancel: TBCMDButtonFocus;
     btnSave: TBCMDButtonFocus;
+    imgHeight: TImage;
+    imgWidth: TImage;
+    lblHeight: TLabel;
     lblNote: TLabel;
+    lblWidth: TLabel;
+    pnlBottom: TPanel;
+    pnlHeight: TPanel;
+    pnlWidth: TPanel;
     spiPlan: TFloatSpinEdit;
     lblDate: TLabel;
     lblDate1: TLabel;
@@ -29,8 +36,11 @@ type
     pnlPlanCaption1: TBCPanel;
     procedure btnCancelClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure pnlClientResize(Sender: TObject);
   private
 
   public
@@ -45,39 +55,137 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain;
+  uniMain, uniSettings;
 
-{ TfrmPlan }
+  { TfrmPlan }
 
 procedure TfrmPlan.btnSaveClick(Sender: TObject);
 begin
-  frmPlan.ModalResult := mrOK;
+  frmPlan.ModalResult := mrOk;
+end;
+
+procedure TfrmPlan.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+begin
+  try
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmPlan.Name, '') <>
+          IntToStr(frmPlan.Left) + separ + // form left
+        IntToStr(frmPlan.Top) + separ + // form top
+        IntToStr(frmPlan.Width) + separ + // form width
+        IntToStr(frmPlan.Height) then
+          INI.WriteString('POSITION', frmPlan.Name,
+            IntToStr(frmPlan.Left) + separ + // form left
+            IntToStr(frmPlan.Top) + separ + // form top
+            IntToStr(frmPlan.Width) + separ + // form width
+            IntToStr(frmPlan.Height));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
 end;
 
 procedure TfrmPlan.FormCreate(Sender: TObject);
 begin
-  {$IFDEF WINDOWS}
-  // form size
-  (Sender as TForm).Width := Round(300 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinWidth := Round(300 * (ScreenRatio / 100));
-  (Sender as TForm).Height := Round(250 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinHeight := Round(250 * (ScreenRatio / 100));
+  try
+    // set components height
+    pnlPlanCaption1.Height := PanelHeight;
+    pnlPlanCaption2.Height := PanelHeight;
+    pnlButtons.Height := ButtonHeight;
+    pnlBottom.Height := ButtonHeight;
 
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
+    // get form icon
+    frmMain.img16.GetIcon(21, (Sender as TForm).Icon);
+  except
+  end;
+end;
 
-  // set components height
-  pnlPlanCaption1.Height := PanelHeight;
-  pnlPlanCaption2.Height := PanelHeight;
-  pnlButtons.Height := ButtonHeight;
-  {$ENDIF}
+procedure TfrmPlan.FormResize(Sender: TObject);
+begin
+  try
+    lblWidth.Caption := IntToStr(frmPlan.Width);
+    lblHeight.Caption := IntToStr(frmPlan.Height);
+    pnlPlanCaption2.Repaint;
+    pnlPlanCaption1.Repaint;
+    pnlButtons.Repaint;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
 end;
 
 procedure TfrmPlan.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmPlan.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmPlan.Name, '-1•-1•0•0');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmPlan.Width := 500
+      else
+        frmPlan.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmPlan.Height := 400
+      else
+        frmPlan.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmPlan.left := (Screen.Width - frmPlan.Width) div 2
+      else
+        frmPlan.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmPlan.Top := ((Screen.Height - frmPlan.Height) div 2) - 75
+      else
+        frmPlan.Top := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   spiPlan.SetFocus;
   spiPlan.SelectAll;
+end;
+
+procedure TfrmPlan.pnlClientResize(Sender: TObject);
+begin
+  spiPlan.BorderSpacing.Left := Round(pnlClient.Width div 3);
+  spiPlan.BorderSpacing.Right := Round(pnlClient.Width div 3);
 end;
 
 procedure TfrmPlan.btnCancelClick(Sender: TObject);
@@ -86,4 +194,3 @@ begin
 end;
 
 end.
-

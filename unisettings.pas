@@ -8,9 +8,9 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   LazUTF8, StdCtrls, ComCtrls, Buttons, dateutils, LCLIntf, laz.VirtualTrees,
-  FileCtrl, uniMultiple, ExCheckCtrls, BCTypes, BCMDButtonFocus, BCPanel,
+  FileCtrl, BCTypes, BCMDButtonFocus, BCPanel,
   IniFiles, strutils, Math, LCLTranslator, Spin, LCLProc, ActnList,
-  LCLType, CalendarLite, DateTimePicker;
+  LCLType, CheckLst, CalendarLite, DateTimePicker;
 
 type // bottom grid (Key)
   TKey = record
@@ -48,17 +48,24 @@ type
     btnSave: TBCMDButtonFocus;
     cbxFirstWeekDay: TComboBox;
     cbxReportFont: TComboBox;
+    chkButtonsVisibility: TCheckListBox;
+    chkBackupQuestion: TCheckBox;
     chkChartRotateLabels: TCheckBox;
     chkChartShowLegend: TCheckBox;
     chkChartWrapLabelsText: TCheckBox;
     chkChartZeroBalance: TCheckBox;
-    chkCloseDbWarning: TCheckBoxEx;
+    chkCloseDbWarning: TCheckBox;
+    chkEncryptDatabase: TCheckBox;
     chkDisplayFontBold: TCheckBox;
     chkDisplaySubCatCapital: TCheckBox;
     chkEnableSelfTransfer: TCheckBox;
-    chkPrintSummarySeparately: TCheckBoxEx;
+    chkLastUsedFilterDate: TCheckBox;
+    chkOpenNewTransaction: TCheckBox;
     chkPaymentSeparately: TCheckBox;
     chkNewVersion: TCheckBox;
+    chkPrintSummarySeparately: TCheckBox;
+    chkRedColorButtonDelete: TCheckBox;
+    chkSelectAll: TCheckBox;
     datTransactionsAddDate: TDateTimePicker;
     datTransactionsEditDate: TDateTimePicker;
     datTransactionsDeleteDate: TDateTimePicker;
@@ -72,6 +79,8 @@ type
     gbxTransactionsRestrictions: TGroupBox;
     gbxTransactionsAdd: TGroupBox;
     imgFlags: TImageList;
+    lblButtonsSize: TLabel;
+    lblButtonsVisibility: TLabel;
     lblTransactionsAddDays: TLabel;
     lblChartRotateDegree: TLabel;
     lblTransactionsAddDate: TLabel;
@@ -79,6 +88,9 @@ type
     lblTransactionsDeleteDate: TLabel;
     lblTransactionsEditDays: TLabel;
     lblTransactionsDeleteDays: TLabel;
+    pnlButtonVisibilityTop: TPanel;
+    pnlButtonsVisibility: TPanel;
+    pnlButtonsSize: TPanel;
     pnlTransactionsAddDays: TPanel;
     Panel3: TPanel;
     pnlCharts: TPage;
@@ -93,6 +105,8 @@ type
     pnlTransactionsDeleteDate: TPanel;
     pnlTransactionsEditDays: TPanel;
     pnlTransactionsDeleteDays: TPanel;
+    rbtButtonsSize24: TRadioButton;
+    rbtButtonsSize32: TRadioButton;
     rbtTransactionsAddDate: TRadioButton;
     rbtTransactionsAddDays: TRadioButton;
     rbtTransactionsDeleteDays: TRadioButton;
@@ -116,7 +130,6 @@ type
     cbxGridFontName: TComboBox;
     spiTransactionsAddDays: TSpinEdit;
     spiPayments: TSpinEdit;
-    chkOpenNewTransaction: TCheckBoxEx;
     chkBackupMessage: TCheckBox;
     chkBoldFont: TCheckBox;
     chkDoBackup: TCheckBox;
@@ -237,6 +250,7 @@ type
     tabLanguage: TTabSheet;
     tabFormat: TTabSheet;
     tabPayments: TTabSheet;
+    tabButtons: TTabSheet;
     tabTables: TTabSheet;
     tabTool: TPageControl;
     tabTransferMFontColor: TTabSheet;
@@ -257,11 +271,14 @@ type
     procedure btnSaveClick(Sender: TObject);
     procedure cbxFirstWeekDayChange(Sender: TObject);
     procedure cbxGridFontNameChange(Sender: TObject);
+    procedure chkButtonsVisibilityClickCheck(Sender: TObject);
     procedure chkChartRotateLabelsChange(Sender: TObject);
     procedure chkChartShowLegendChange(Sender: TObject);
     procedure chkChartZeroBalanceChange(Sender: TObject);
     procedure chkDisplayFontBoldChange(Sender: TObject);
     procedure chkDisplaySubCatCapitalChange(Sender: TObject);
+    procedure chkEncryptDatabaseChange(Sender: TObject);
+    procedure chkSelectAllChange(Sender: TObject);
     procedure datTransactionsAddDateChange(Sender: TObject);
     procedure datTransactionsDeleteDateChange(Sender: TObject);
     procedure datTransactionsEditDateChange(Sender: TObject);
@@ -269,6 +286,7 @@ type
     procedure lblTransactionsAddDateClick(Sender: TObject);
     procedure lblTransactionsDeleteDateClick(Sender: TObject);
     procedure lblTransactionsEditDateClick(Sender: TObject);
+    procedure rbtButtonsSize24Change(Sender: TObject);
     procedure rbtTransactionsAddDaysChange(Sender: TObject);
     procedure rbtTransactionsAddDateChange(Sender: TObject);
     procedure rbtTransactionsDeleteDaysChange(Sender: TObject);
@@ -349,7 +367,7 @@ implementation
 
 uses
   uniMain, uniAbout, uniAccounts, uniPersons, uniScheduler, uniEdit, uniDelete,
-  uniCounter, uniCurrencies, uniProperties, uniSchedulers, uniShortCut,
+  uniCounter, uniCurrencies, uniProperties, uniSchedulers, uniShortCut, uniImage,
   uniPayees, uniCategories, uniHolidays, uniTags, uniComments, uniValues, uniBudgets,
   uniGuide, uniPassword, uniSQLResults, uniHistory, uniWrite, uniManyCurrencies,
   uniSuccess, uniGate, uniSQL, uniRecycleBin, uniFilter, uniImport, uniDetail,
@@ -368,33 +386,22 @@ var
   Lang: PLang;
 begin
   try
-    // form size
-    (Sender as TForm).Width := Round(
-      (Screen.Width / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-      (Round(920 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height :=
-      Round(Screen.Height / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-      4 * (250 - ScreenRatio);
-
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := ((Screen.Height - frmSettings.Height) div 2) - 75;
-
     frmSettings.Tag := 1;
 
-    {$IFDEF WINDOWS}
     // set components height
     VSTKeys.Header.Height := PanelHeight;
     VSTLang.Header.Height := PanelHeight;
     pnlButtons.Height := ButtonHeight;
     pnlButtonsKeys.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
-    {$ENDIF}
 
     tabGlobal.TabIndex := 0;
     tabVisualSettings.TabIndex := 0;
     tabFontColor.TabIndex := 0;
     tabTool.TabIndex := 0;
+
+    // get form icon
+    frmMain.img16.GetIcon(25, (Sender as TForm).Icon);
 
     // list of all reports
     filListReports.Directory :=
@@ -443,10 +450,20 @@ begin
       ShowErrorMessage(E);
   end;
 
+  // frmMain buttons size
+  rbtButtonsSize24.Caption := '24 px';
+  rbtButtonsSize32.Caption := '32 px';
+
+  // frmMain buttons visibility (fill the list of buttons)
+  for I := 0 to frmMain.tooMenu.ControlCount - 1 do
+  begin
+    chkButtonsVisibility.Items.Add('');
+    chkButtonsVisibility.CheckAll(cbChecked, False, False);
+  end;
+
   // =================================================================================
   // LANGUAGE
   // =================================================================================
-
   try
     // read languages from folder LANGUAGES
     lbxLanguage1.Directory := ExtractFileDir(Application.ExeName) +
@@ -478,7 +495,7 @@ begin
     on E: Exception do
       ShowErrorMessage(E);
   end;
-  SetNodeHeight(VSTLang);
+  // SetNodeHeight(VSTLang);
 
   // =================================================================================
   // CREATE INI FILE
@@ -493,7 +510,7 @@ begin
       INI := TINIFile.Create(INIFile);
       try
         // writing values to the INI file.
-        INI.WriteInteger('GLOBAL', 'Version', 2);
+        INI.WriteInteger('GLOBAL', 'Version', 3);
         INI.WriteString('GLOBAL', 'Language',
           AnsiLowerCase(LeftStr(GetLang, 2)) + '.po');
 
@@ -538,13 +555,17 @@ begin
         INI.WriteString('VISUAL_SETTINGS', 'FontName',
           GetFontData(frmMain.Font.Handle).Name);
         INI.WriteInteger('VISUAL_SETTINGS', 'FontSize', 10);
-        INI.WriteBool('VISUAL_SETTINGS', 'SummaryPieChartVisible', frmMain.chkShowPieChart.Checked);
+        INI.WriteBool('VISUAL_SETTINGS', 'SummaryPieChartVisible', True);
+        INI.WriteBool('VISUAL_SETTINGS', 'RedColoredButtonDelete', True);
+        INI.WriteInteger('VISUAL_SETTINGS', 'ButtonsSize', 24);
+        INI.WriteString('VISUAL_SETTINGS', 'ButtonsVisibility', StringOfChar('1', 28));
 
         // ---------------------------------------------------
         INI.WriteBool('ON_START', 'OpenLastFile', chkLastUsedFile.Checked);
         INI.WriteString('ON_START', 'LastFile', '');
         INI.WriteBool('ON_START', 'OpenLastFormsSize', chkLastFormsSize.Checked);
         INI.WriteBool('ON_START', 'OpenLastFilter', chkLastUsedFilter.Checked);
+        INI.WriteBool('ON_START', 'OpenLastFilterDate', chkLastUsedFilterDate.Checked);
         INI.WriteBool('ON_START', 'TablesColumnsAutoWidth', chkAutoColumnWidth.Checked);
         INI.WriteBool('ON_START', 'CheckNewVersion', True);
 
@@ -586,14 +607,16 @@ begin
         INI.WriteString('BACKUP', 'Folder', '');
         INI.WriteInteger('BACKUP', 'Count', traBackupCount.Position);
         INI.WriteBool('BACKUP', 'ShowMessage', chkBackupMessage.Checked);
+        INI.WriteBool('BACKUP', 'ConfirmDialog', chkBackupQuestion.Checked);
 
         // ---------------------------------------------------
         INI.WriteBool('ON_CLOSE', 'ConfirmDialog', chkCloseDbWarning.Checked);
+        INI.WriteBool('ON_CLOSE', 'EncryptDatabase', chkEncryptDatabase.Checked);
 
         // ---------------------------------------------------
         // record
-        INI.WriteString('KEYS', 'record_add', 'INS');
-        INI.WriteString('KEYS', 'record_add_multi', 'CTRL+INS');
+        INI.WriteString('KEYS', 'record_add_simple', 'INS');
+        INI.WriteString('KEYS', 'record_add_multiple', 'CTRL+INS');
         INI.WriteString('KEYS', 'record_edit', 'SPACE');
         INI.WriteString('KEYS', 'record_duplicate', 'SHIFT+INS');
         INI.WriteString('KEYS', 'record_delete', 'DEL');
@@ -648,6 +671,10 @@ begin
         INI.WriteString('KEYS', 'filter_expand', 'CTRL+SHIFT+F2');
         INI.WriteString('KEYS', 'filter_collapse', 'CTRL+SHIFT+F3');
 
+        // detail
+        INI.WriteString('KEYS', 'new_transaction_simple', 'F1');
+        INI.WriteString('KEYS', 'new_transaction_multiple', 'F2');
+
         // ---------------------------------------------------
         INI.UpdateFile;
         INI.Free;
@@ -676,20 +703,76 @@ begin
     try
       // update to version 2
       // =========================================================
-      if INI.ReadInteger('GLOBAL', 'Version', 1) = 1 then
+      if INI.ReadInteger('GLOBAL', 'Version', 1) < 2 then
       begin
 
         // delete old previous key(s)
         INI.DeleteKey('ON_START', 'SummaryColumnsAutoWidth');
         INI.DeleteKey('ON_START', 'TransactionsColumnsAutoWidth');
+
         // write new key
         INI.WriteBool('ON_START', 'TablesColumnsAutoWidth', chkAutoColumnWidth.Checked);
+
         // update version
         INI.WriteInteger('GLOBAL', 'Version', 2);
       end;
+    except
+    end;
 
+    try
+      // update to version 3
       // =========================================================
+      if INI.ReadInteger('GLOBAL', 'Version', 2) < 3 then
+      begin
+        {INI.WriteInteger('frmDetail', 'SimpleForm', frmDetail.pnlSimple.Tag);
+        INI.WriteInteger('frmDetail', 'MultipleForm', frmDetail.pnlMultiple.Tag);
+        INI.WriteInteger('frmDetail', 'pnlLeft', frmDetail.pnlLeft.Width);
+        INI.WriteInteger('frmDetail', 'pnlDetail', frmDetail.pnlDetail.Width);}
 
+        // add new transactions key
+        INI.WriteString('KEYS', 'new_transaction_simple', 'F1');
+        INI.WriteString('KEYS', 'new_transaction_multiple', 'F2');
+
+        // delete old sections with forms size, position, ...
+        INI.EraseSection(frmAccounts.Name);
+        INI.EraseSection(frmBudget.Name);
+        INI.EraseSection(frmBudgets.Name);
+        INI.EraseSection(frmCalendar.Name);
+        INI.EraseSection(frmCategories.Name);
+        INI.EraseSection(frmComments.Name);
+        INI.EraseSection(frmCounter.Name);
+        INI.EraseSection(frmCurrencies.Name);
+        INI.EraseSection(frmDelete.Name);
+        INI.EraseSection(frmDetail.Name);
+        INI.EraseSection(frmEdit.Name);
+        INI.EraseSection(frmEdits.Name);
+        INI.EraseSection(frmHistory.Name);
+        INI.EraseSection(frmHolidays.Name);
+        INI.EraseSection(frmLinks.Name);
+        INI.EraseSection(frmMain.Name);
+        INI.EraseSection(frmPayees.Name);
+        INI.EraseSection(frmPeriod.Name);
+        INI.EraseSection(frmPersons.Name);
+        INI.EraseSection(frmRecycleBin.Name);
+        INI.EraseSection(frmScheduler.Name);
+        INI.EraseSection(frmSchedulers.Name);
+        INI.EraseSection(frmSettings.Name);
+        INI.EraseSection(frmSQL.Name);
+        INI.EraseSection(frmSQLResult.Name);
+        INI.EraseSection(frmTags.Name);
+        INI.EraseSection(frmTemplates.Name);
+        INI.EraseSection(frmValues.Name);
+        INI.EraseSection(frmWrite.Name);
+        INI.EraseSection('frmMultiple');
+
+        // update version
+        INI.WriteInteger('GLOBAL', 'Version', 3);
+      end;
+    except
+    end;
+
+    try
+      // =========================================================
       // reading values from the INI file.
       // set language
       TempStr := INI.ReadString('GLOBAL', 'Language',
@@ -701,7 +784,10 @@ begin
         ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Languages',
         TempStr,
         True);
+    except
+    end;
 
+    try
       // ---------------------------------------------------
       // SET GLOBAL SETTINGS
       // ---------------------------------------------------
@@ -734,7 +820,10 @@ begin
         rbtSettingsUserChange(rbtSettingsUser);
       end;
       frmMain.Calendar.StartingDayOfWeek := TDayOfWeek(cbxFirstWeekDay.ItemIndex);
+    except
+    end;
 
+    try
       // =======================================================================================
       // set PROGRAM settings
 
@@ -746,6 +835,8 @@ begin
         INI.ReadInteger('VISUAL_SETTINGS', 'CaptionsColor', 14446080);
       btnCaptionColorFont.Tag :=
         INI.ReadInteger('VISUAL_SETTINGS', 'CaptionsColorFont', 14803425);
+      frmSettings.chkRedColorButtonDelete.Checked :=
+        INI.ReadBool('VISUAL_SETTINGS', 'RedColoredButtonDelete', True);
 
       // Rows color
       btnOddRowColorBack.Tag :=
@@ -791,7 +882,10 @@ begin
         else
           rbtTransfersMColorAll.Checked := True;
       end;
+    except
+    end;
 
+    try
       // grid font name
       cbxGridFontName.ItemIndex :=
         cbxGridFontName.Items.IndexOf(INI.ReadString('VISUAL_SETTINGS',
@@ -804,8 +898,36 @@ begin
       spiGridFontSize.Value := INI.ReadInteger('VISUAL_SETTINGS', 'FontSize', 10);
 
       // summary pie chart visibility
-      frmMain.chkShowPieChart.Checked := INI.ReadBool('VISUAL_SETTINGS', 'SummaryPieChartVisible', True);
+      frmMain.chkShowPieChart.Checked :=
+        INI.ReadBool('VISUAL_SETTINGS', 'SummaryPieChartVisible', True);
+    except
+    end;
 
+    try
+      // Button size (24 px or 32 px) in frmMain
+      I := INI.ReadInteger('VISUAL_SETTINGS', 'ButtonsSize', 24);
+      if I = 24 then
+        rbtButtonsSize24.Checked := True
+      else
+        rbtButtonsSize32.Checked := True;
+
+      // Button visibility (in frmMain)
+      SystemFS := False;
+      TempStr := INI.ReadString('VISUAL_SETTINGS', 'ButtonsVisibility',
+        StringOfChar('1', 28));
+      for I := 0 to chkButtonsVisibility.Items.Count - 1 do
+      begin
+        chkButtonsVisibility.Checked[I] := StrToBool(MidStr(TempStr, I + 1, 1));
+        frmMain.tooMenu.Controls[I].Visible := chkButtonsVisibility.Checked[I];
+        if chkButtonsVisibility.Checked[I] = True then
+          SystemFS := True;
+      end;
+      frmMain.tooMenu.Visible := SystemFS;
+      chkSelectAll.Checked := SystemFS;
+    except
+    end;
+
+    try
       // ---------------------------------------------------
       cbxReportFont.ItemIndex :=
         cbxReportFont.Items.IndexOf(INI.ReadString('REPORTS', 'FontName',
@@ -824,7 +946,10 @@ begin
       spiChartRotateLabels.Value := I;
 
       chkChartWrapLabelsText.Checked := INI.ReadBool('REPORTS', 'ChartWrap', True);
+    except
+    end;
 
+    try
       // ---------------------------------------------------
       chkOpenNewTransaction.Checked :=
         INI.ReadBool('TRANSACTIONS', 'OpenFormAuto', False);
@@ -878,7 +1003,10 @@ begin
           spiTransactionsDeleteDays.Value := StrToInt(TempStr);
         end;
       end;
+    except
+    end;
 
+    try
       // ---------------------------------------------------
       chkSaturday.Checked := INI.ReadBool('SCHEDULER', 'Saturday', True);
       chkSunday.Checked := INI.ReadBool('SCHEDULER', 'Sunday', True);
@@ -892,6 +1020,10 @@ begin
       chkShowDifference.Checked := INI.ReadBool('BUDGETS', 'ShowDifference', False);
       chkShowIndex.Checked := INI.ReadBool('BUDGETS', 'ShowIndex', False);
 
+    except
+    end;
+
+    try
       // ---------------------------------------------------
       chkDoBackup.Checked := INI.ReadBool('BACKUP', 'DoBackup', chkDoBackup.Checked);
       btnBackupFolder.Caption :=
@@ -901,7 +1033,12 @@ begin
       traBackupCountChange(traBackupCount);
       chkBackupMessage.Checked :=
         INI.ReadBool('BACKUP', 'ShowMessage', chkBackupMessage.Checked);
+      chkBackupQuestion.Checked :=
+        INI.ReadBool('BACKUP', 'ConfirmDialog', chkBackupQuestion.Checked);
+    except
+    end;
 
+    try
       // =======================================================================================
       // last used file
       if INI.ReadBool('ON_START', 'OpenLastFile', True) = True then
@@ -915,8 +1052,16 @@ begin
         chkLastUsedFile.Checked := False;
       end;
 
+    except
+    end;
+
+    try
       // last used filter
       chkLastUsedFilter.Checked := INI.ReadBool('ON_START', 'OpenLastFilter', True);
+
+      // last used date filter
+      chkLastUsedFilterDate.Checked :=
+        INI.ReadBool('ON_START', 'OpenLastFilterDate', True);
 
       // last used main form size
       chkLastFormsSize.Checked := INI.ReadBool('ON_START', 'OpenLastFormsSize', True);
@@ -926,361 +1071,17 @@ begin
 
       // ---------------------------------------------------
       chkCloseDbWarning.Checked := INI.ReadBool('ON_CLOSE', 'ConfirmDialog', True);
+      chkEncryptDatabase.Checked := INI.ReadBool('ON_CLOSE', 'EncryptDatabase', True);
 
-      // FORMS SIZE AND POSITION
-      if chkLastFormsSize.Checked = True then
-      begin
-        // frmMain
-        frmMain.Position := poDesigned;
-        frmMain.Width := INI.ReadInteger('frmMain', 'Width', frmMain.Width);
-        frmMain.Height := INI.ReadInteger('frmMain', 'Height', frmMain.Height);
-        frmMain.Left := INI.ReadInteger('frmMain', 'Left',
-          (Screen.Width - frmMain.Width) div 2);
-        frmMain.Top := INI.ReadInteger('frmMain', 'Top',
-          ((Screen.Height - frmMain.Height) div 2) - 75);
-        frmMain.pnlFilter.Width :=
-          INI.ReadInteger('frmMain', 'pnlFilter', frmMain.pnlFilter.Width);
-        frmMain.pnlSummary.Height :=
-          INI.ReadInteger('frmMain', 'pnlSummary', frmMain.pnlSummary.Height);
-        frmMain.vstBalance.Height := INI.ReadInteger('frmMain', 'ChartBalance', 200);
+    except
+    end;
 
-        // frmDetail
-        frmDetail.Position := poDesigned;
-        frmDetail.Width := INI.ReadInteger('frmDetail', 'Width', frmDetail.Width);
-        frmDetail.Height := INI.ReadInteger('frmDetail', 'Height', frmDetail.Height);
-        frmDetail.Left := INI.ReadInteger('frmDetail', 'Left',
-          (Screen.Width - frmDetail.Width) div 2);
-        frmDetail.Top := INI.ReadInteger('frmDetail', 'Top',
-          ((Screen.Height - frmDetail.Height) div 2) - 75);
-        frmDetail.pnlRight.Width :=
-          INI.ReadInteger('frmDetail', 'pnlRight', frmDetail.pnlRight.Width);
-        frmDetail.pnlRight.Tag := frmDetail.pnlRight.Width;
-
-        // frmMultiple
-        frmMultiple.Position := poDesigned;
-        frmMultiple.Width :=
-          INI.ReadInteger('frmMultiple', 'Width', frmMultiple.Width);
-        frmMultiple.Height :=
-          INI.ReadInteger('frmMultiple', 'Height', frmMultiple.Height);
-        frmMultiple.Left := INI.ReadInteger('frmMultiple', 'Left',
-          (Screen.Width - frmMultiple.Width) div 2);
-        frmMultiple.Top := INI.ReadInteger('frmMultiple', 'Top',
-          ((Screen.Height - frmMultiple.Height) div 2) - 75);
-        frmMultiple.pnlLeft.Width :=
-          INI.ReadInteger('frmMultiple', 'pnlLeft', frmMultiple.pnlLeft.Width);
-        frmMultiple.pnlDetail.Width :=
-          INI.ReadInteger('frmMultiple', 'pnlRight', frmMultiple.pnlDetail.Width);
-
-        // frmEdit
-        frmEdit.Position := poDesigned;
-        frmEdit.Width := INI.ReadInteger('frmEdit', 'Width', frmEdit.Width);
-        frmEdit.Height := INI.ReadInteger('frmEdit', 'Height', frmEdit.Height);
-        frmEdit.Left := INI.ReadInteger('frmEdit', 'Left',
-          (Screen.Width - frmEdit.Width) div 2);
-        frmEdit.Top := INI.ReadInteger('frmEdit', 'Top',
-          ((Screen.Height - frmEdit.Height) div 2) - 75);
-        frmEdit.gbxTag.Width :=
-          INI.ReadInteger('frmEdit', 'pnlRight', frmEdit.gbxTag.Width);
-
-        // frmEdits
-        frmEdits.Position := poDesigned;
-        frmEdits.Width := INI.ReadInteger('frmEdits', 'Width', frmEdits.Width);
-        frmEdits.Height := INI.ReadInteger('frmEdits', 'Height', frmEdits.Height);
-        frmEdits.Left := INI.ReadInteger('frmEdits', 'Left',
-          (Screen.Width - frmEdits.Width) div 2);
-        frmEdits.Top := INI.ReadInteger('frmEdits', 'Top',
-          ((Screen.Height - frmEdits.Height) div 2) - 75);
-        frmEdits.pnlTag.Width :=
-          INI.ReadInteger('frmEdits', 'pnlRight', frmEdits.pnlTag.Width);
-
-        // frmCalendar
-        frmCalendar.Position := poDesigned;
-        frmCalendar.Width :=
-          INI.ReadInteger('frmCalendar', 'Width', frmCalendar.Width);
-        frmCalendar.Height :=
-          INI.ReadInteger('frmCalendar', 'Height', frmCalendar.Height);
-        frmCalendar.Left := INI.ReadInteger('frmCalendar', 'Left',
-          (Screen.Width - frmCalendar.Width) div 2);
-        frmCalendar.Top := INI.ReadInteger('frmCalendar', 'Top',
-          ((Screen.Height - frmCalendar.Height) div 2) - 75);
-        frmCalendar.pnlLeft.Width :=
-          INI.ReadInteger('frmCalendar', 'pnlLeft', frmCalendar.pnlLeft.Width);
-
-        // frmCategories
-        frmCategories.Position := poDesigned;
-        frmCategories.Width :=
-          INI.ReadInteger('frmCategories', 'Width', frmCategories.Width);
-        frmCategories.Height :=
-          INI.ReadInteger('frmCategories', 'Height', frmCategories.Height);
-        frmCategories.Left :=
-          INI.ReadInteger('frmCategories', 'Left', (Screen.Width -
-          frmCategories.Width) div 2);
-        frmCategories.Top :=
-          INI.ReadInteger('frmCategories', 'Top',
-          ((Screen.Height - frmCategories.Height) div 2) - 75);
-        frmCategories.pnlDetail.Width :=
-          INI.ReadInteger('frmCategories', 'pnlRight', frmCategories.pnlDetail.Width);
-
-        // frmCurrencies
-        frmCurrencies.Position := poDesigned;
-        frmCurrencies.Width :=
-          INI.ReadInteger('frmCurrencies', 'Width', frmCurrencies.Width);
-        frmCurrencies.Height :=
-          INI.ReadInteger('frmCurrencies', 'Height', frmCurrencies.Height);
-        frmCurrencies.Left :=
-          INI.ReadInteger('frmCurrencies', 'Left', (Screen.Width -
-          frmCurrencies.Width) div 2);
-        frmCurrencies.Top :=
-          INI.ReadInteger('frmCurrencies', 'Top',
-          ((Screen.Height - frmCurrencies.Height) div 2) - 75);
-        frmCurrencies.pnlRight.Width :=
-          INI.ReadInteger('frmCurrencies', 'pnlRight', frmCurrencies.pnlRight.Width);
-
-        // frmValues
-        frmValues.Position := poDesigned;
-        frmValues.Width := INI.ReadInteger('frmValues', 'Width', frmValues.Width);
-        frmValues.Height := INI.ReadInteger('frmValues', 'Height', frmValues.Height);
-        frmValues.Left := INI.ReadInteger('frmValues', 'Left',
-          (Screen.Width - frmValues.Width) div 2);
-        frmValues.Top := INI.ReadInteger('frmValues', 'Top',
-          ((Screen.Height - frmValues.Height) div 2) - 75);
-        frmValues.pnlDetail.Width :=
-          INI.ReadInteger('frmValues', 'pnlRight', frmValues.pnlDetail.Width);
-
-        // frmAccounts
-        frmAccounts.Position := poDesigned;
-        frmAccounts.Width :=
-          INI.ReadInteger('frmAccounts', 'Width', frmAccounts.Width);
-        frmAccounts.Height :=
-          INI.ReadInteger('frmAccounts', 'Height', frmAccounts.Height);
-        frmAccounts.pnlDetail.Width :=
-          INI.ReadInteger('frmAccounts', 'pnlRight', frmAccounts.pnlDetail.Width);
-        frmAccounts.Left := INI.ReadInteger('frmAccounts', 'Left',
-          (Screen.Width - frmAccounts.Width) div 2);
-        frmAccounts.Top := INI.ReadInteger('frmAccounts', 'Top',
-          ((Screen.Height - frmAccounts.Height) div 2) - 75);
-
-        // frmPersons
-        frmPersons.Position := poDesigned;
-        frmPersons.Width := INI.ReadInteger('frmPersons', 'Width', frmPersons.Width);
-        frmPersons.Height :=
-          INI.ReadInteger('frmPersons', 'Height', frmPersons.Height);
-        frmPersons.Left := INI.ReadInteger('frmPersons', 'Left',
-          (Screen.Width - frmPersons.Width) div 2);
-        frmPersons.Top := INI.ReadInteger('frmPersons', 'Top',
-          ((Screen.Height - frmPersons.Height) div 2) - 75);
-        frmPersons.pnlDetail.Width :=
-          INI.ReadInteger('frmPersons', 'pnlRight', frmPersons.pnlDetail.Width);
-
-        // frmPayees
-        frmPayees.Position := poDesigned;
-        frmPayees.Width := INI.ReadInteger('frmPayees', 'Width', frmPayees.Width);
-        frmPayees.Height := INI.ReadInteger('frmPayees', 'Height', frmPayees.Height);
-        frmPayees.Left := INI.ReadInteger('frmPayees', 'Left',
-          (Screen.Width - frmPayees.Width) div 2);
-        frmPayees.Top := INI.ReadInteger('frmPayees', 'Top',
-          ((Screen.Height - frmPayees.Height) div 2) - 75);
-        frmPayees.pnlDetail.Width :=
-          INI.ReadInteger('frmPayees', 'pnlRight', frmPayees.pnlDetail.Width);
-
-        // frmTags
-        frmTags.Position := poDesigned;
-        frmTags.Width := INI.ReadInteger('frmTags', 'Width', frmTags.Width);
-        frmTags.Height := INI.ReadInteger('frmTags', 'Height', frmTags.Height);
-        frmTags.Left := INI.ReadInteger('frmTags', 'Left',
-          (Screen.Width - frmTags.Width) div 2);
-        frmTags.Top := INI.ReadInteger('frmTags', 'Top',
-          ((Screen.Height - frmTags.Height) div 2) - 75);
-        frmTags.pnlDetail.Width :=
-          INI.ReadInteger('frmTags', 'pnlRight', frmTags.pnlDetail.Width);
-
-        // frmHolidays
-        frmHolidays.Position := poDesigned;
-        frmHolidays.Width :=
-          INI.ReadInteger('frmHolidays', 'Width', frmHolidays.Width);
-        frmHolidays.Height :=
-          INI.ReadInteger('frmHolidays', 'Height', frmHolidays.Height);
-        frmHolidays.Left := INI.ReadInteger('frmHolidays', 'Left',
-          (Screen.Width - frmHolidays.Width) div 2);
-        frmHolidays.Top := INI.ReadInteger('frmHolidays', 'Top',
-          ((Screen.Height - frmHolidays.Height) div 2) - 75);
-        frmHolidays.pnlDetail.Width :=
-          INI.ReadInteger('frmHolidays', 'pnlRight', frmHolidays.pnlDetail.Width);
-
-        // frmComments
-        frmComments.Position := poDesigned;
-        frmComments.Width :=
-          INI.ReadInteger('frmComments', 'Width', frmComments.Width);
-        frmComments.Height :=
-          INI.ReadInteger('frmComments', 'Height', frmComments.Height);
-        frmComments.pnlDetail.Width :=
-          INI.ReadInteger('frmComments', 'pnlRight', frmComments.pnlDetail.Width);
-        frmComments.Left := INI.ReadInteger('frmComments', 'Left',
-          (Screen.Width - frmComments.Width) div 2);
-        frmComments.Top := INI.ReadInteger('frmComments', 'Top',
-          ((Screen.Height - frmComments.Height) div 2) - 75);
-
-        // frmSQL
-        frmSQL.Position := poDesigned;
-        frmSQL.Left := INI.ReadInteger('frmSQL', 'Left', frmSQL.Left);
-        frmSQL.Top := INI.ReadInteger('frmSQL', 'Top', frmSQL.Top);
-        frmSQL.Width := INI.ReadInteger('frmSQL', 'Width', frmSQL.Width);
-        frmSQL.Height := INI.ReadInteger('frmSQL', 'Height', frmSQL.Height);
-
-        // frmSQLResult
-        frmSQLResult.Position := poDesigned;
-        frmSQLResult.Left :=
-          INI.ReadInteger('frmSQLResult', 'Left', frmSQLResult.Left);
-        frmSQLResult.Top := INI.ReadInteger('frmSQLResult', 'Top', frmSQLResult.Top);
-        frmSQLResult.Width :=
-          INI.ReadInteger('frmSQLResult', 'Width', frmSQLResult.Width);
-        frmSQLResult.Height :=
-          INI.ReadInteger('frmSQLResult', 'Height', frmSQLResult.Height);
-
-        // frmRecycleBin
-        frmRecycleBin.Position := poDesigned;
-        frmRecycleBin.Left :=
-          INI.ReadInteger('frmRecycleBin', 'Left', frmRecycleBin.Left);
-        frmRecycleBin.Top :=
-          INI.ReadInteger('frmRecycleBin', 'Top', frmRecycleBin.Top);
-        frmRecycleBin.Width :=
-          INI.ReadInteger('frmRecycleBin', 'Width', frmRecycleBin.Width);
-        frmRecycleBin.Height :=
-          INI.ReadInteger('frmRecycleBin', 'Height', frmRecycleBin.Height);
-
-        // frmSchedulers
-        frmSchedulers.Width :=
-          INI.ReadInteger('frmSchedulers', 'Width', frmSchedulers.Width);
-        frmSchedulers.Height :=
-          INI.ReadInteger('frmSchedulers', 'Height', frmSchedulers.Height);
-        frmSchedulers.pnlRight.Width :=
-          INI.ReadInteger('frmSchedulers', 'pnlRight', frmSchedulers.pnlRight.Width);
-        frmSchedulers.Position := poDesigned;
-        frmSchedulers.Left := INI.ReadInteger('frmSchedulers', 'Left',
-          (Screen.Width - frmSchedulers.Width) div 2);
-        frmSchedulers.Top := INI.ReadInteger('frmSchedulers', 'Top',
-          ((Screen.Height - frmSchedulers.Height) div 2) - 75);
-
-        // frmScheduler
-        frmScheduler.Position := poDesigned;
-        frmScheduler.Width := INI.ReadInteger('frmScheduler', 'Width',
-          frmScheduler.Width);
-        frmScheduler.Height :=
-          INI.ReadInteger('frmScheduler', 'Height', frmScheduler.Height);
-        frmScheduler.Left := INI.ReadInteger('frmScheduler', 'Left',
-          (Screen.Width - frmScheduler.Width) div 2);
-        frmScheduler.Top := INI.ReadInteger('frmScheduler', 'Top',
-          ((Screen.Height - frmScheduler.Height) div 2) - 75);
-        frmScheduler.pnlRight.Width :=
-          INI.ReadInteger('frmScheduler', 'pnlRight', frmScheduler.pnlRight.Width);
-
-        // frmWrite
-        frmWrite.Position := poDesigned;
-        frmWrite.Width := INI.ReadInteger('frmWrite', 'Width', frmWrite.Width);
-        frmWrite.Height := INI.ReadInteger('frmWrite', 'Height', frmWrite.Height);
-        frmWrite.Left := INI.ReadInteger('frmWrite', 'Left',
-          (Screen.Width - frmWrite.Width) div 2);
-        frmWrite.Top := INI.ReadInteger('frmWrite', 'Top',
-          ((Screen.Height - frmWrite.Height) div 2) - 75);
-
-        // frmDelete
-        frmDelete.Position := poDesigned;
-        frmDelete.Left := INI.ReadInteger('frmDelete', 'Left', frmDelete.Left);
-        frmDelete.Top := INI.ReadInteger('frmDelete', 'Top', frmDelete.Top);
-        frmDelete.Width := INI.ReadInteger('frmDelete', 'Width', frmDelete.Width);
-        frmDelete.Height := INI.ReadInteger('frmDelete', 'Height', frmDelete.Height);
-
-        // frmHistory
-        frmHistory.Position := poDesigned;
-        frmHistory.Left := INI.ReadInteger('frmHistory', 'Left', frmHistory.Left);
-        frmHistory.Top := INI.ReadInteger('frmHistory', 'Top', frmHistory.Top);
-        frmHistory.Width := INI.ReadInteger('frmHistory', 'Width', frmHistory.Width);
-        frmHistory.Height :=
-          INI.ReadInteger('frmHistory', 'Height', frmHistory.Height);
-
-        // frmCounter
-        frmCounter.Position := poDesigned;
-        frmCounter.Width := INI.ReadInteger('frmCounter', 'Width', frmCounter.Width);
-        frmCounter.Height :=
-          INI.ReadInteger('frmCounter', 'Height', frmCounter.Height);
-        frmCounter.Left := INI.ReadInteger('frmCounter', 'Left',
-          (Screen.Width - frmCounter.Width) div 2);
-        frmCounter.Top := INI.ReadInteger('frmCounter', 'Top',
-          ((Screen.Height - frmCounter.Height) div 2) - 75);
-
-        {$IFDEF WINDOWS}
-        // frmSettings
-        frmSettings.Position := poDesigned;
-        frmSettings.Width := INI.ReadInteger('frmSettings', 'Width', frmSettings.Width);
-        frmSettings.Height := INI.ReadInteger('frmSettings', 'Height', frmSettings.Height);
-        frmSettings.Left := INI.ReadInteger('frmSettings', 'Left', (Screen.Width - frmSettings.Width) div 2);
-        frmSettings.Top := INI.ReadInteger('frmSettings', 'Top', ((Screen.Height - frmSettings.Height) div 2) - 75);
-        frmSettings.treSettings.Width :=
-          INI.ReadInteger('frmSettings', 'pnlLeft', frmSettings.treSettings.Width);
-        {$ENDIF}
-
-        // frmBudgets
-        frmBudgets.Position := poDesigned;
-        frmBudgets.tabLeft.Width :=
-          INI.ReadInteger('frmBudgets', 'pnlLeft', frmBudgets.tabLeft.Width);
-        frmBudgets.pnlPeriods.Width :=
-          INI.ReadInteger('frmBudgets', 'pnlPeriods', frmBudgets.pnlPeriods.Width);
-        frmBudgets.Left := INI.ReadInteger('frmBudgets', 'Left',
-          (Screen.Width - frmBudgets.Width) div 2);
-        frmBudgets.Top := INI.ReadInteger('frmBudgets', 'Top',
-          ((Screen.Height - frmBudgets.Height) div 2) - 75);
-
-        // frmBudget
-        frmBudget.Position := poDesigned;
-        frmBudget.Width := INI.ReadInteger('frmBudget', 'Width', frmBudget.Width);
-        frmBudget.Height := INI.ReadInteger('frmBudget', 'Height', frmBudget.Height);
-        frmBudget.Left := INI.ReadInteger('frmBudget', 'Left',
-          (Screen.Width - frmBudget.Width) div 2);
-        frmBudget.Top := INI.ReadInteger('frmBudget', 'Top',
-          ((Screen.Height - frmBudget.Height) div 2) - 75);
-        frmBudget.pnlLeft.Width :=
-          INI.ReadInteger('frmBudget', 'pnlLeft', frmBudget.pnlLeft.Width);
-
-        // frmPeriod
-        frmPeriod.Position := poDesigned;
-        frmPeriod.Width := INI.ReadInteger('frmPeriod', 'Width', frmPeriod.Width);
-        frmPeriod.Height := INI.ReadInteger('frmPeriod', 'Height', frmPeriod.Height);
-        frmPeriod.Left := INI.ReadInteger('frmPeriod', 'Left',
-          (Screen.Width - frmPeriod.Width) div 2);
-        frmPeriod.Top := INI.ReadInteger('frmPeriod', 'Top',
-          ((Screen.Height - frmPeriod.Height) div 2) - 75);
-        frmPeriod.pnlLeft.Width :=
-          INI.ReadInteger('frmPeriod', 'pnlLeft', frmPeriod.pnlLeft.Width);
-
-        // frmTemplates
-        frmTemplates.Position := poDesigned;
-        frmTemplates.Left :=
-          INI.ReadInteger(frmTemplates.Name, 'Left', frmTemplates.Left);
-        frmTemplates.Top := INI.ReadInteger(frmTemplates.Name, 'Top', frmTemplates.Top);
-        frmTemplates.Width := INI.ReadInteger(frmTemplates.Name,
-          'Width', frmTemplates.Width);
-        frmTemplates.Height :=
-          INI.ReadInteger(frmTemplates.Name, 'Height', frmTemplates.Height);
-        frmTemplates.pnlLeft.Width :=
-          INI.ReadInteger(frmTemplates.Name, 'pnlLeft', frmTemplates.pnlLeft.Width);
-
-        // frmLinks
-        frmLinks.Position := poDesigned;
-        frmLinks.Width := INI.ReadInteger('frmLinks', 'Width', frmLinks.Width);
-        frmLinks.Height := INI.ReadInteger('frmLinks', 'Height', frmLinks.Height);
-        frmLinks.Left := INI.ReadInteger('frmLinks', 'Left',
-          (Screen.Width - frmLinks.Width) div 2);
-        frmLinks.Top := INI.ReadInteger('frmLinks', 'Top',
-          ((Screen.Height - frmLinks.Height) div 2) - 75);
-        frmLinks.pnlDetail.Width :=
-          INI.ReadInteger('frmLinks', 'pnlRight', frmLinks.pnlDetail.Width);
-      end;
-
-      // set columns width on all tables (manually or automatic) - THIS IS AFTER FORMS RESIZING !!!
-      chkAutoColumnWidth.Checked :=
-        INI.ReadBool('ON_START', 'TablesColumnsAutoWidth', True);
-      if chkAutoColumnWidth.Checked = True then
-      begin
+    // set columns width on all tables (manually or automatic) - THIS IS AFTER FORMS RESIZING !!!
+    chkAutoColumnWidth.Checked :=
+      INI.ReadBool('ON_START', 'TablesColumnsAutoWidth', True);
+    if chkAutoColumnWidth.Checked = True then
+    begin
+      try
         frmAccounts.VSTResize(frmAccounts.VST);
         frmBudget.VSTResize(frmBudget.VST);
         frmBudgets.VSTPeriodsResize(frmBudgets.VSTPeriods);
@@ -1297,7 +1098,10 @@ begin
         frmLinks.VSTResize(frmLinks.VST);
         frmMain.VSTResize(frmMain.VST);
         frmMain.VSTSummaryResize(frmMain.VSTSummary);
-        frmMultiple.VSTResize(frmMultiple.VST);
+        frmMain.VSTBalanceResize(frmMain.VSTBalance);
+        frmMain.VSTChronoResize(frmMain.VSTChrono);
+        frmMain.VSTCrossResize(frmMain.VSTCross);
+        frmDetail.VSTResize(frmDetail.VST);
         frmPayees.VSTResize(frmPayees.VST);
         frmPeriod.VSTResize(frmPeriod.VST);
         frmPersons.VSTResize(frmPersons.VST);
@@ -1308,10 +1112,13 @@ begin
         frmTags.VSTResize(frmTags.VST);
         frmValues.VSTResize(frmValues.VST);
         frmWrite.VSTResize(frmWrite.VST);
+      except
+      end;
 
-      end
-      else
-      begin
+    end
+    else
+    begin
+      try
         // table Transactions
         for I := 1 to frmMain.VST.Header.Columns.Count - 1 do
           frmMain.VST.Header.Columns[I].Width :=
@@ -1334,6 +1141,12 @@ begin
         for I := 1 to frmMain.VSTChrono.Header.Columns.Count - 1 do
           frmMain.VSTChrono.Header.Columns[I].Width :=
             INI.ReadInteger('frmMain', 'ChronoCol_' +
+            RightStr('0' + IntToStr(I), 2), 100);
+
+        // table Report - Cross
+        for I := 1 to frmMain.VSTCross.Header.Columns.Count - 1 do
+          frmMain.VSTCross.Header.Columns[I].Width :=
+            INI.ReadInteger('frmMain', 'CrossTableCol_' +
             RightStr('0' + IntToStr(I), 2), 100);
 
         // table frmWrite
@@ -1426,10 +1239,10 @@ begin
             INI.ReadInteger('frmRecycleBin', 'Col_' +
             RightStr('0' + IntToStr(I), 2), 100);
 
-        // table frmMultiple
-        for I := 1 to frmMultiple.VST.Header.Columns.Count - 1 do
-          frmMultiple.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmMultiple', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // table frmDetail
+        for I := 1 to frmDetail.VST.Header.Columns.Count - 1 do
+          frmDetail.VST.Header.Columns[I].Width :=
+            INI.ReadInteger('frmDetail', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
 
         // table frmHolidays
         for I := 1 to frmHolidays.VST.Header.Columns.Count - 1 do
@@ -1470,26 +1283,30 @@ begin
         for I := 1 to frmCalendar.VST.Header.Columns.Count - 1 do
           frmCalendar.VST.Header.Columns[I].Width :=
             INI.ReadInteger('frmCalendar', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+      except
       end;
+    end;
 
+    try
       // ---------------------------------------------------------------------------
       // SHORTCUTS
       // ---------------------------------------------------------------------------
       // actions
       VSTKeys.Clear;
       VSTKeys.RootNodeCount := 0;
+      VSTKeys.BeginUpdate;
 
       // -----------------------------------
       VSTKeys.RootNodeCount := VSTKeys.RootNodeCount + 1;
       Key := VSTKeys.GetNodeData(VSTKeys.GetLast());
-      Key.action := 'record_add';
+      Key.action := 'record_add_simple';
       Key.shortcut := INI.ReadString('KEYS', Key.action, 'INS');
       UpdateShortCuts(key.action, TextToShortCut(Key.shortcut));
 
-      // -----------------------------------
+      //// -----------------------------------
       VSTKeys.RootNodeCount := VSTKeys.RootNodeCount + 1;
       Key := VSTKeys.GetNodeData(VSTKeys.GetLast());
-      Key.action := 'record_add_multi';
+      Key.action := 'record_add_multiple';
       Key.shortcut := INI.ReadString('KEYS', Key.action, 'CTRL+INS');
       UpdateShortCuts(key.action, TextToShortCut(Key.shortcut));
 
@@ -1804,10 +1621,29 @@ begin
       // ---------------------------------------------------------------------------
       UpdateShortCuts(key.action, TextToShortCut(Key.shortcut));
 
+      // -----------------------------------
+      VSTKeys.RootNodeCount := VSTKeys.RootNodeCount + 1;
+      Key := VSTKeys.GetNodeData(VSTKeys.GetLast());
+      Key.action := 'new_transaction_simple';
+      Key.shortcut := INI.ReadString('KEYS', Key.action, 'F1');
+      // ---------------------------------------------------------------------------
+      UpdateShortCuts(key.action, TextToShortCut(Key.shortcut));
+
+      // -----------------------------------
+      VSTKeys.RootNodeCount := VSTKeys.RootNodeCount + 1;
+      Key := VSTKeys.GetNodeData(VSTKeys.GetLast());
+      Key.action := 'new_transaction_multiple';
+      Key.shortcut := INI.ReadString('KEYS', Key.action, 'F2');
+      // ---------------------------------------------------------------------------
+      UpdateShortCuts(key.action, TextToShortCut(Key.shortcut));
+
       INI.Free;
+      VSTKeys.EndUpdate;
+      SetNodeHeight(VSTKeys);
     except
       on E: Exception do
       begin
+        VSTKeys.EndUpdate;
         ShowErrorMessage(E);
         INI.Free;
       end;
@@ -1816,7 +1652,6 @@ begin
   end;
 
   // INI file END procedure ======================================================
-
   try
     frmSettings.Tag := 0;
     ediShortDateFormatChange(ediShortDateFormat);
@@ -1832,7 +1667,6 @@ begin
     on E: Exception do
       ShowErrorMessage(E);
   end;
-
   try
     UpdateSettings;
   except
@@ -1868,10 +1702,20 @@ end;
 procedure TfrmSettings.btnSaveClick(Sender: TObject);
 var
   INI: TINIFile;
-  INIFile: string;
+  INIFile, S: string;
+  B: byte;
   Key: PKey;
   P: PVirtualNode;
 begin
+  // check if backup folder exists
+  if (chkDoBackup.Checked = True) then
+    if DirectoryExists(btnBackupFolder.Caption) = False then
+    begin
+      ShowMessage(AnsiReplaceStr(Caption_224, '%', sLineBreak));
+      frmSettings.treSettings.Items[11].Selected := True;
+      Exit;
+    end;
+
   case MessageDlg(Application.Title, Question_04, mtConfirmation,
       [mbYes, mbNo, mbCancel], 0) of
     mrNo:
@@ -1912,6 +1756,7 @@ begin
     INI.WriteBool('ON_START', 'OpenLastFile', chkLastUsedFile.Checked);
     INI.WriteBool('ON_START', 'OpenLastFormsSize', chkLastFormsSize.Checked);
     INI.WriteBool('ON_START', 'OpenLastFilter', chkLastUsedFilter.Checked);
+    INI.WriteBool('ON_START', 'OpenLastFilterDate', chkLastUsedFilterDate.Checked);
     INI.WriteBool('ON_START', 'TablesColumnsAutoWidth', chkAutoColumnWidth.Checked);
 
     if chkAutoColumnWidth.Checked = True then
@@ -1940,6 +1785,15 @@ begin
     INI.WriteString('VISUAL_SETTINGS', 'FontName',
       cbxGridFontName.Items[cbxGridFontName.ItemIndex]);
     INI.WriteInteger('VISUAL_SETTINGS', 'FontSize', spiGridFontSize.Value);
+    INI.WriteBool('VISUAL_SETTINGS', 'RedColoredButtonDelete',
+      chkRedColorButtonDelete.Checked);
+    INI.WriteInteger('VISUAL_SETTINGS', 'ButtonsSize',
+      IfThen(rbtButtonsSize24.Checked = True, 24, 32));
+
+    S := '';
+    for B := 0 to chkButtonsVisibility.Items.Count - 1 do
+      S := S + IfThen(chkButtonsVisibility.Checked[B] = True, '1', '0');
+    INI.WriteString('VISUAL_SETTINGS', 'ButtonsVisibility', S);
 
     // Reports
     // ---------------------------------------------------
@@ -1998,9 +1852,11 @@ begin
     INI.WriteString('BACKUP', 'Folder', btnBackupFolder.Caption);
     INI.WriteInteger('BACKUP', 'Count', traBackupCount.Position);
     INI.WriteBool('BACKUP', 'ShowMessage', chkBackupMessage.Checked);
+    INI.WriteBool('BACKUP', 'ConfirmDialog', chkBackupQuestion.Checked);
 
     // ---------------------------------------------------
     INI.WriteBool('ON_CLOSE', 'ConfirmDialog', chkCloseDbWarning.Checked);
+    INI.WriteBool('ON_CLOSE', 'EncryptDatabase', chkEncryptDatabase.Checked);
 
     // write key shortcuts
     P := frmSettings.VSTKeys.GetFirst();
@@ -2052,14 +1908,17 @@ begin
     frmDelete.VST1.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmDelete.VST2.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmDelete.VST3.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
+    frmDetail.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmHistory.VST1.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmHistory.VST2.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmHolidays.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmLinks.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmMain.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
+    frmMain.VSTBalance.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
+    frmMain.VSTChrono.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
+    frmMain.VSTCross.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmMain.VSTSummaries.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmMain.VSTSummary.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
-    frmMultiple.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmPayees.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmPeriod.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmPersons.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
@@ -2073,11 +1932,30 @@ begin
     frmTemplates.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmValues.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmWrite.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
-
   except
     on E: Exception do
       ShowErrorMessage(E);
   end;
+end;
+
+procedure TfrmSettings.chkButtonsVisibilityClickCheck(Sender: TObject);
+var
+  I: byte;
+  ShowToolBar: boolean;
+begin
+  frmMain.tooMenu.BeginUpdateBounds;
+  frmMain.tooMenu.Controls[chkButtonsVisibility.ItemIndex].Visible :=
+    chkButtonsVisibility.Checked[chkButtonsVisibility.ItemIndex];
+
+  ShowToolBar := False;
+  for I := frmMain.tooMenu.ControlCount - 1 downto 0 do
+  begin
+    frmMain.tooMenu.Controls[I].Left := 0;
+    if chkButtonsVisibility.Checked[I] = True then
+      ShowToolBar := True;
+  end;
+  frmMain.tooMenu.Visible := ShowToolBar;
+  frmMain.tooMenu.EndUpdateBounds;
 end;
 
 procedure TfrmSettings.chkChartRotateLabelsChange(Sender: TObject);
@@ -2118,6 +1996,44 @@ begin
     frmBudgets.VSTBudCat.Repaint;
 end;
 
+procedure TfrmSettings.chkEncryptDatabaseChange(Sender: TObject);
+var
+  Temp: string;
+begin
+  if (frmMain.Conn.Connected = True) and
+    (frmSettings.chkEncryptDatabase.Checked = True) then
+  begin
+    // check if database is protected by password
+    frmMain.QRY.SQL.Text :=
+      'SELECT set_value FROM settings WHERE set_parameter = "password"';
+    frmMain.QRY.Open;
+    Temp := frmMain.QRY.Fields[0].AsString;
+    frmMain.QRY.Close;
+    if Length(Temp) = 0 then
+      if MessageDlg(Application.Title, AnsiReplaceStr(Question_28, '%', sLineBreak),
+        mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+        frmPassword.ShowModal;
+  end;
+end;
+
+procedure TfrmSettings.chkSelectAllChange(Sender: TObject);
+var
+  I: byte;
+begin
+  if chkSelectAll.Checked = True then
+  begin
+    chkButtonsVisibility.CheckAll(cbChecked, False, False);
+    frmMain.tooMenu.Visible := True;
+  end
+  else
+  begin
+    chkButtonsVisibility.CheckAll(cbUnchecked, False, False);
+    frmMain.tooMenu.Visible := False;
+  end;
+  for I := 0 to chkButtonsVisibility.Items.Count - 1 do
+    frmMain.tooMenu.Controls[I].Visible := chkButtonsVisibility.Checked[I];
+end;
+
 procedure TfrmSettings.datTransactionsAddDateChange(Sender: TObject);
 begin
   lblTransactionsAddDate.Caption :=
@@ -2155,6 +2071,28 @@ end;
 procedure TfrmSettings.lblTransactionsEditDateClick(Sender: TObject);
 begin
   datTransactionsEditDate.SetFocus;
+end;
+
+procedure TfrmSettings.rbtButtonsSize24Change(Sender: TObject);
+var
+  I: byte;
+  Img: TImageList;
+begin
+  if (Panels.PageIndex = 2) and (tabVisualSettings.TabIndex <> 2) then
+    Exit;
+
+  if TRadioButton(Sender).Checked = False then
+    Exit;
+
+  frmMain.tooMenu.Height := Round(TRadioButton(Sender).Tag * 1.5);
+
+  if TRadioButton(Sender).Tag = 24 then
+    Img := frmMain.img24
+  else
+    Img := frmMain.img32;
+
+  for I := 0 to frmMain.tooMenu.ControlCount - 1 do
+    TSpeedButton(frmMain.tooMenu.Controls[I]).Images := Img;
 end;
 
 procedure TfrmSettings.rbtTransactionsAddDaysChange(Sender: TObject);
@@ -2207,6 +2145,7 @@ begin
     frmMain.VSTSummaryResize(frmMain.VSTSummary);
     SetNodeHeight(frmSettings.VSTKeys);
     SetNodeHeight(frmSettings.VSTLang);
+    SetNodeHeight(frmDetail.VST);
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -2234,34 +2173,73 @@ begin
     on E: Exception do
       ShowErrorMessage(E);
   end;
-
 end;
 
 procedure TfrmSettings.FormShow(Sender: TObject);
 var
-  I: byte;
+  I: integer;
   N: PVirtualNode;
   Lang: PLang;
   INI: TIniFile;
+  INIFile, TempStr: string;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
   try
-    {$IFDEF LINUX}
-    if FileExists(ChangeFileExt(ParamStr(0), '.ini')) = True then
+    INIFile := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(INIFile) = True then
     begin
-      INI := TINIFile.Create(ChangeFileExt(ParamStr(0), '.ini'));
+      INI := TINIFile.Create(INIFile);
+      TempStr := INI.ReadString('POSITION', frmSettings.Name, '-1•-1•0•0•0');
 
-      // frmSettings
       frmSettings.Position := poDesigned;
-      frmSettings.Width := INI.ReadInteger('frmSettings', 'Width', frmSettings.Width);
-      frmSettings.Height := INI.ReadInteger('frmSettings', 'Height', frmSettings.Height);
-      frmSettings.Left := INI.ReadInteger('frmSettings', 'Left', (Screen.Width - frmSettings.Width) div 2);
-      frmSettings.Top := INI.ReadInteger('frmSettings', 'Top', ((Screen.Height - frmSettings.Height) div 2) - 75);
-      frmSettings.treSettings.Width :=
-        INI.ReadInteger('frmSettings', 'pnlLeft', frmSettings.treSettings.Width);
-      INI.Free;
-    end;
-    {$ENDIF}
+      // width
+      TryStrToInt(Field(Separ, TempStr, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmSettings.Width := Round(800 * (ScreenRatio / 100))
+      else
+        frmSettings.Width := I;
 
+      /// height
+      TryStrToInt(Field(Separ, TempStr, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmSettings.Height := Round(400 * (ScreenRatio / 100))
+      else
+        frmSettings.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, TempStr, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmSettings.left := (Screen.Width - frmSettings.Width) div 2
+      else
+        frmSettings.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, TempStr, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmSettings.Top := ((Screen.Height - frmSettings.Height) div 2) - 75
+      else
+        frmSettings.Top := I;
+
+      // panels
+      TryStrToInt(Field(Separ, TempStr, 5), I);
+      if (I < 100) or (I > 400) then
+        frmSettings.treSettings.Width := Round(200 * (ScreenRatio / 100))
+      else
+        frmSettings.treSettings.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
+  Screen.Cursor := crHourGlass;
+
+  try
     // global settings
     N := VSTLang.GetFirst();
     while Assigned(N) do
@@ -2294,6 +2272,14 @@ begin
     pnlOddRowColor.Tag := btnOddRowColorBack.Tag;
     spiGridFontSize.Tag := spiGridFontSize.Value;
     cbxGridFontName.Tag := cbxGridFontName.ItemIndex;
+    chkRedColorButtonDelete.Tag := IfThen(chkRedColorButtonDelete.Checked = True, 1, 0);
+    pnlButtonsSize.Tag := IfThen(rbtButtonsSize24.Checked = True, 24, 32);
+
+    chkButtonsVisibility.Hint := '';
+    for I := 0 to chkButtonsVisibility.Items.Count - 1 do
+      chkButtonsVisibility.Hint :=
+        chkButtonsVisibility.Hint + IfThen(chkButtonsVisibility.Checked[I] =
+        True, '1', '0');
 
     // reports
     cbxReportFont.Tag := cbxReportFont.ItemIndex;
@@ -2349,6 +2335,7 @@ begin
     chkLastUsedFile.Tag := IfThen(chkLastUsedFile.Checked = True, 1, 0);
     chkLastFormsSize.Tag := IfThen(chkLastUsedFile.Checked = True, 1, 0);
     chkLastUsedFilter.Tag := IfThen(chkLastUsedFilter.Checked = True, 1, 0);
+    chkLastUsedFilterDate.Tag := IfThen(chkLastUsedFilterDate.Checked = True, 1, 0);
 
     frmMain.VST.Hint := '';
     for I := 1 to frmMain.VST.Header.Columns.Count - 1 do
@@ -2390,9 +2377,15 @@ begin
     btnBackupFolder.Hint := btnBackupFolder.Caption;
     traBackupCount.Tag := traBackupCount.Position;
     chkBackupMessage.Tag := IfThen(chkBackupMessage.Checked = True, 1, 0);
+    chkBackupQuestion.Tag := IfThen(chkBackupQuestion.Checked = True, 1, 0);
 
     // on close
     chkCloseDbWarning.Tag := IfThen(chkCloseDbWarning.Checked = True, 1, 0);
+    chkEncryptDatabase.Tag := IfThen(chkEncryptDatabase.Checked = True, 1, 0);
+
+    SetNodeHeight(VSTLang);
+    Screen.Cursor := crDefault;
+    //    ShowMessage(IntToStr(treSettings.Width));
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -2474,9 +2467,29 @@ begin
 end;
 
 procedure TfrmSettings.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
 begin
   if btnSave.Tag = 0 then
     btnCancelClick(btnCancel);
+
+  try
+    INIFile := ChangeFileExt(ParamStr(0), '.ini');
+    INI := TINIFile.Create(INIFile);
+    if frmSettings.chkLastFormsSize.Checked = True then
+      // save main window position
+      INI.WriteString('POSITION', frmSettings.Name,
+        IntToStr(frmSettings.Left) + separ + // form left
+        IntToStr(frmSettings.Top) + separ + // form top
+        IntToStr(frmSettings.Width) + separ + // form width
+        IntToStr(frmSettings.Height) + separ + // form height
+        IntToStr(frmSettings.treSettings.Width)) // left panel width
+    else
+      INI.DeleteKey('POSITION', frmSettings.Name);
+  finally
+    INI.Free;
+  end;
 end;
 
 procedure TfrmSettings.cbxReportFontChange(Sender: TObject);
@@ -2518,6 +2531,7 @@ begin
   gbxBackupCount.Visible := chkDoBackup.Checked;
   gbxBackupFolder.Visible := chkDoBackup.Checked;
   chkBackupMessage.Visible := chkDoBackup.Checked;
+  chkBackupQuestion.Visible := chkDoBackup.Checked;
 
   if btnBackupFolder.Enabled = False then
   begin
@@ -2623,6 +2637,10 @@ begin
     UpdateSettings;
     frmMain.VST.Repaint;
     frmMain.VSTSummary.Repaint;
+    frmMain.VSTSummaries.Repaint;
+    frmMain.VSTBalance.Repaint;
+    frmMain.VSTChrono.Repaint;
+    frmMain.VSTCross.Repaint;
     frmSchedulers.VST.Repaint;
     frmSchedulers.VST1.Repaint;
     frmWrite.VST.Repaint;
@@ -2721,6 +2739,9 @@ begin
         43: Key.shortcut := 'CTRL+SHIFT+F2';
         44: Key.shortcut := 'CTRL+SHIFT+F3';
 
+        // new transaction
+        45: Key.shortcut := 'F1';
+        46: Key.shortcut := 'F2';
       end;
       P := VSTKeys.GetNext(P);
     end;
@@ -2750,6 +2771,8 @@ var
   I: byte;
   N: PVirtualNode;
   Lang: PLang;
+  S: string;
+  ShowToolBar: boolean;
 begin
   // get back all temporarely settings
   try
@@ -2826,6 +2849,12 @@ begin
       pnlOddRowColor.Color := btnOddRowColorBack.Tag;
     end;
 
+    // chkRedColorButtonDelete
+    if BoolToStr(chkRedColorButtonDelete.Checked) <>
+      IntToStr(chkRedColorButtonDelete.Tag) then
+      chkRedColorButtonDelete.Checked :=
+        StrToBool(IntToStr(chkRedColorButtonDelete.Tag));
+
     //// credit color
     if pnlCreditTransactionsColor.Tag <> tabCreditFontColor.Tag then
       pnlCreditTransactionsColor.Tag := tabCreditFontColor.Tag;
@@ -2878,6 +2907,31 @@ begin
       spiGridFontSizeChange(spiGridFontSize);
     end;
 
+    // frmMain buttons size
+    if (pnlButtonsSize.Tag = 24) and (rbtButtonsSize24.Checked = False) then
+      rbtButtonsSize24.Checked := True
+    else if (pnlButtonsSize.Tag = 32) and (rbtButtonsSize32.Checked = False) then
+      rbtButtonsSize32.Checked := True;
+
+    // frmMain buttons visibility
+    S := '';
+    for I := 0 to chkButtonsVisibility.Items.Count - 1 do
+      S := S + IfThen(chkButtonsVisibility.Checked[I] = True, '1', '0');
+    if S <> chkButtonsVisibility.Hint then
+    begin
+      ShowToolBar := False;
+      for I := 0 to chkButtonsVisibility.Items.Count - 1 do
+      begin
+        chkButtonsVisibility.Checked[I] :=
+          StrToBool(MidStr(chkButtonsVisibility.Hint, I + 1, 1));
+        frmMain.tooMenu.Controls[I].Visible := chkButtonsVisibility.Checked[I];
+        if chkButtonsVisibility.Checked[I] = True then
+          ShowToolBar := True;
+      end;
+      frmMain.tooMenu.Visible := ShowToolBar;
+      chkSelectAll.Checked := ShowToolBar;
+    end;
+
     // ----------------------------------------------------------------------------
     // on start settings
     // ----------------------------------------------------------------------------
@@ -2890,9 +2944,14 @@ begin
     if BoolToStr(chkLastFormsSize.Checked) <> IntToStr(chkLastFormsSize.Tag) then
       chkLastFormsSize.Checked := StrToBool(IntToStr(chkLastFormsSize.Tag));
 
-    // rbtOnStartFilterOff
+    // chkLastUsedFilter
     if BoolToStr(chkLastUsedFilter.Checked) <> IntToStr(chkLastUsedFilter.Tag) then
       chkLastUsedFilter.Checked := StrToBool(IntToStr(chkLastUsedFilter.Tag));
+
+    // chkLastUsedFilterDate
+    if BoolToStr(chkLastUsedFilterDate.Checked) <>
+      IntToStr(chkLastUsedFilterDate.Tag) then
+      chkLastUsedFilterDate.Checked := StrToBool(IntToStr(chkLastUsedFilterDate.Tag));
 
     // chkAutoColumnWidth
     if BoolToStr(chkAutoColumnWidth.Checked) <> IntToStr(chkAutoColumnWidth.Tag) then
@@ -3052,9 +3111,14 @@ begin
     if BoolToStr(chkBackupMessage.Checked) <> IntToStr(chkBackupMessage.Tag) then
       chkBackupMessage.Checked := StrToBool(IntToStr(chkBackupMessage.Tag));
 
+    if BoolToStr(chkBackupQuestion.Checked) <> IntToStr(chkBackupQuestion.Tag) then
+      chkBackupQuestion.Checked := StrToBool(IntToStr(chkBackupQuestion.Tag));
+
     // on close
     if BoolToStr(chkCloseDbWarning.Checked) <> IntToStr(chkCloseDbWarning.Tag) then
       chkCloseDbWarning.Checked := StrToBool(IntToStr(chkCloseDbWarning.Tag));
+    if BoolToStr(chkEncryptDatabase.Checked) <> IntToStr(chkEncryptDatabase.Tag) then
+      chkEncryptDatabase.Checked := StrToBool(IntToStr(chkEncryptDatabase.Tag));
 
     UpdateSettings;
     btnSave.Tag := 1;
@@ -3227,13 +3291,7 @@ begin
           end;
           2: Panels.PageIndex := 1; // on run
           3: Panels.PageIndex := 2; // visual
-          4: begin
-            Panels.PageIndex := 3; // transactions
-            chkOpenNewTransaction.AutoSize := True;
-            chkOpenNewTransaction.WordWrap := False;
-            chkOpenNewTransaction.WordWrap := True;
-            pnlTransactionsClient.Repaint;
-          end;
+          4: Panels.PageIndex := 3; // transactions
           5: Panels.PageIndex := 4; // reports
           6: Panels.PageIndex := 5; // Charts
           7: Panels.PageIndex := 6; // tools
@@ -3408,14 +3466,13 @@ begin
 
     // Forms color
     {$IFDEF WINDOWS}
-    frmMultiple.Color := $00DEDEDE; // gray
-    frmDetail.Color := frmMultiple.Color;
-    frmEdit.Color := frmMultiple.Color;
-    frmEdits.Color := frmMultiple.Color;
-    frmScheduler.Color := frmMultiple.Color;
-    frmMain.pnlFilter.Color := frmMultiple.Color;
-    frmSQL.Color := frmMultiple.Color;
-    frmPlan.Color := frmMultiple.Color;
+    frmDetail.Color := $00DEDEDE; // gray
+    frmEdit.Color := frmDetail.Color;
+    frmEdits.Color := frmDetail.Color;
+    frmScheduler.Color := frmDetail.Color;
+    frmMain.pnlFilter.Color := frmDetail.Color;
+    frmSQL.Color := frmDetail.Color;
+    frmPlan.Color := frmDetail.Color;
     {$ENDIF}
 
     // ===============================================================================
@@ -3454,11 +3511,18 @@ begin
 
     // buttons
     SetBtnProperty(frmMain.btnAdd);
-    SetBtnProperty(frmMain.btnAddMulti);
     SetBtnProperty(frmMain.btnDuplicate);
     SetBtnProperty(frmMain.btnEdit);
     SetBtnProperty(frmMain.btnCopy);
-    SetBtnProperty(frmMain.btnDelete);
+
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmMain.btnDelete.StyleNormal.Color := clRed;
+      frmMain.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmMain.btnDelete);
+
     SetBtnProperty(frmMain.btnPrint);
     SetBtnProperty(frmMain.btnSelect);
     SetBtnProperty(frmMain.btnHistory);
@@ -3478,6 +3542,8 @@ begin
     SetBtnProperty(frmDetail.btnCancel);
     SetBtnProperty(frmDetail.btnSave);
     SetBtnProperty(frmDetail.btnSettings);
+    SetBtnProperty(frmDetail.btnCancelX);
+    SetBtnProperty(frmDetail.btnSaveX);
 
     // ===============================================================================
     // frmEdit
@@ -3494,23 +3560,27 @@ begin
     SetBtnProperty(frmEdits.btnCancel);
 
     // ===============================================================================
-    // frmMultiple buttons
+    // frmDetail buttons
     // ===============================================================================
     // panels
-    SetPanelProperty(frmMultiple.pnlBasicCaption);
-    SetPanelProperty(frmMultiple.pnlListCaption);
-    SetPanelProperty(frmMultiple.pnlDetailCaption);
+    SetPanelProperty(frmDetail.pnlBasicCaption);
+    SetPanelProperty(frmDetail.pnlListCaption);
+    SetPanelProperty(frmDetail.pnlDetailCaption);
 
     // buttons
-    SetBtnProperty(frmMultiple.btnSave);
-    SetBtnProperty(frmMultiple.btnCancel);
-    SetBtnProperty(frmMultiple.btnAdd);
-    SetBtnProperty(frmMultiple.btnEdit);
-    SetBtnProperty(frmMultiple.btnDelete);
-    SetBtnProperty(frmMultiple.btnSelect);
-    SetBtnProperty(frmMultiple.btnDuplicate);
-    SetBtnProperty(frmMultiple.btnExit);
-    SetBtnProperty(frmMultiple.btnWrite);
+    SetBtnProperty(frmDetail.btnSave);
+    SetBtnProperty(frmDetail.btnCancel);
+    SetBtnProperty(frmDetail.btnAdd);
+    SetBtnProperty(frmDetail.btnEdit);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmDetail.btnDelete.StyleNormal.Color := clRed;
+      frmDetail.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmDetail.btnDelete);
+    SetBtnProperty(frmDetail.btnSelect);
+    SetBtnProperty(frmDetail.btnDuplicate);
 
     // ===============================================================================
     // frmCounter buttons
@@ -3534,7 +3604,13 @@ begin
     // buttons
     SetBtnProperty(frmAccounts.btnAdd);
     SetBtnProperty(frmAccounts.btnEdit);
-    SetBtnProperty(frmAccounts.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmAccounts.btnDelete.StyleNormal.Color := clRed;
+      frmAccounts.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmAccounts.btnDelete);
     SetBtnProperty(frmAccounts.btnCopy);
     SetBtnProperty(frmAccounts.btnPrint);
     SetBtnProperty(frmAccounts.btnSave);
@@ -3552,7 +3628,13 @@ begin
     // buttons
     SetBtnProperty(frmCurrencies.btnAdd);
     SetBtnProperty(frmCurrencies.btnEdit);
-    SetBtnProperty(frmCurrencies.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmCurrencies.btnDelete.StyleNormal.Color := clRed;
+      frmCurrencies.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmCurrencies.btnDelete);
     SetBtnProperty(frmCurrencies.btnCopy);
     SetBtnProperty(frmCurrencies.btnPrint);
     SetBtnProperty(frmCurrencies.btnSave);
@@ -3576,7 +3658,13 @@ begin
     // buttons
     SetBtnProperty(frmValues.btnAdd);
     SetBtnProperty(frmValues.btnEdit);
-    SetBtnProperty(frmValues.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmValues.btnDelete.StyleNormal.Color := clRed;
+      frmValues.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmValues.btnDelete);
     SetBtnProperty(frmValues.btnSelect);
     SetBtnProperty(frmValues.btnCopy);
     SetBtnProperty(frmValues.btnSave);
@@ -3593,7 +3681,13 @@ begin
     // buttons
     SetBtnProperty(frmComments.btnAdd);
     SetBtnProperty(frmComments.btnEdit);
-    SetBtnProperty(frmComments.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmComments.btnDelete.StyleNormal.Color := clRed;
+      frmComments.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmComments.btnDelete);
     SetBtnProperty(frmComments.btnCopy);
     SetBtnProperty(frmComments.btnPrint);
     SetBtnProperty(frmComments.btnSave);
@@ -3611,7 +3705,13 @@ begin
     // buttons
     SetBtnProperty(frmHolidays.btnAdd);
     SetBtnProperty(frmHolidays.btnEdit);
-    SetBtnProperty(frmHolidays.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmHolidays.btnDelete.StyleNormal.Color := clRed;
+      frmHolidays.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmHolidays.btnDelete);
     SetBtnProperty(frmHolidays.btnCopy);
     SetBtnProperty(frmHolidays.btnPrint);
     SetBtnProperty(frmHolidays.btnSave);
@@ -3629,7 +3729,13 @@ begin
     // buttons
     SetBtnProperty(frmPersons.btnAdd);
     SetBtnProperty(frmPersons.btnEdit);
-    SetBtnProperty(frmPersons.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmPersons.btnDelete.StyleNormal.Color := clRed;
+      frmPersons.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmPersons.btnDelete);
     SetBtnProperty(frmPersons.btnCopy);
     SetBtnProperty(frmPersons.btnPrint);
     SetBtnProperty(frmPersons.btnSave);
@@ -3647,7 +3753,13 @@ begin
     // buttons
     SetBtnProperty(frmPayees.btnAdd);
     SetBtnProperty(frmPayees.btnEdit);
-    SetBtnProperty(frmPayees.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmPayees.btnDelete.StyleNormal.Color := clRed;
+      frmPayees.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmPayees.btnDelete);
     SetBtnProperty(frmPayees.btnCopy);
     SetBtnProperty(frmPayees.btnPrint);
     SetBtnProperty(frmPayees.btnSave);
@@ -3665,7 +3777,13 @@ begin
     // buttons
     SetBtnProperty(frmCategories.btnAdd);
     SetBtnProperty(frmCategories.btnEdit);
-    SetBtnProperty(frmCategories.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmCategories.btnDelete.StyleNormal.Color := clRed;
+      frmCategories.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmCategories.btnDelete);
     SetBtnProperty(frmCategories.btnCopy);
     SetBtnProperty(frmCategories.btnPrint);
     SetBtnProperty(frmCategories.btnSave);
@@ -3683,7 +3801,13 @@ begin
     // buttons
     SetBtnProperty(frmTags.btnAdd);
     SetBtnProperty(frmTags.btnEdit);
-    SetBtnProperty(frmTags.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmTags.btnDelete.StyleNormal.Color := clRed;
+      frmTags.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmTags.btnDelete);
     SetBtnProperty(frmTags.btnCopy);
     SetBtnProperty(frmTags.btnPrint);
     SetBtnProperty(frmTags.btnSave);
@@ -3764,6 +3888,16 @@ begin
     // buttons
     SetBtnProperty(frmSQL.btnExit);
     SetBtnProperty(frmSQL.btnExecute);
+    SetBtnProperty(frmSQL.btnDiagram);
+
+    // ===============================================================================
+    // frmSQL buttons
+    // ===============================================================================
+    // panels
+
+    // buttons
+    SetBtnProperty(frmImage.btnExit);
+    SetBtnProperty(frmImage.btnCopy);
 
     // ===============================================================================
     // frmSQLResult buttons
@@ -3808,7 +3942,13 @@ begin
     // buttons
     SetBtnProperty(frmRecycleBin.btnExit);
     SetBtnProperty(frmRecycleBin.btnEdit);
-    SetBtnProperty(frmRecycleBin.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmRecycleBin.btnDelete.StyleNormal.Color := clRed;
+      frmRecycleBin.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmRecycleBin.btnDelete);
     SetBtnProperty(frmRecycleBin.btnRestore);
     SetBtnProperty(frmRecycleBin.btnSelect);
 
@@ -3844,7 +3984,13 @@ begin
 
     // buttons
     SetBtnProperty(frmDelete.btnCancel);
-    SetBtnProperty(frmDelete.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmDelete.btnDelete.StyleNormal.Color := clRed;
+      frmDelete.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmDelete.btnDelete);
 
     // ===============================================================================
     // frmHistory buttons
@@ -3876,13 +4022,25 @@ begin
 
     // buttons
     SetBtnProperty(frmSchedulers.btnAdd);
-    SetBtnProperty(frmSchedulers.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmSchedulers.btnDelete.StyleNormal.Color := clRed;
+      frmSchedulers.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmSchedulers.btnDelete);
     SetBtnProperty(frmSchedulers.btnCalendar);
     SetBtnProperty(frmSchedulers.btnExit);
 
     SetBtnProperty(frmSchedulers.btnAdd1);
     SetBtnProperty(frmSchedulers.btnEdit1);
-    SetBtnProperty(frmSchedulers.btnDelete1);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmSchedulers.btnDelete1.StyleNormal.Color := clRed;
+      frmSchedulers.btnDelete1.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmSchedulers.btnDelete1);
 
     // ===============================================================================
     // frmWrite
@@ -3892,7 +4050,13 @@ begin
 
     // buttons
     SetBtnProperty(frmWrite.btnEdit);
-    SetBtnProperty(frmWrite.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmWrite.btnDelete.StyleNormal.Color := clRed;
+      frmWrite.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmWrite.btnDelete);
     SetBtnProperty(frmWrite.btnCalendar);
     SetBtnProperty(frmWrite.btnSettings);
     SetBtnProperty(frmWrite.btnExit);
@@ -3934,7 +4098,13 @@ begin
 
     // buttons
     SetBtnProperty(frmCalendar.btnEdit);
-    SetBtnProperty(frmCalendar.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmCalendar.btnDelete.StyleNormal.Color := clRed;
+      frmCalendar.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmCalendar.btnDelete);
     SetBtnProperty(frmCalendar.btnExit);
 
     // ===============================================================================
@@ -4015,7 +4185,13 @@ begin
     SetBtnProperty(frmTemplates.btnExit);
     SetBtnProperty(frmTemplates.btnAdd);
     SetBtnProperty(frmTemplates.btnEdit);
-    SetBtnProperty(frmTemplates.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmTemplates.btnDelete.StyleNormal.Color := clRed;
+      frmTemplates.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmTemplates.btnDelete);
 
     // ===============================================================================
     // frmLinks buttons
@@ -4027,7 +4203,13 @@ begin
     // buttons
     SetBtnProperty(frmLinks.btnAdd);
     SetBtnProperty(frmLinks.btnEdit);
-    SetBtnProperty(frmLinks.btnDelete);
+    if frmSettings.chkRedColorButtonDelete.Checked = True then
+    begin
+      frmLinks.btnDelete.StyleNormal.Color := clRed;
+      frmLinks.btnDelete.StyleNormal.TextColor := clWhite;
+    end
+    else
+      SetBtnProperty(frmLinks.btnDelete);
     SetBtnProperty(frmLinks.btnCopy);
     SetBtnProperty(frmLinks.btnPrint);
     SetBtnProperty(frmLinks.btnSave);
@@ -4090,57 +4272,61 @@ begin
     // ------------------------------------------------------------------------
     if Action = 'record_add' then
     begin
-      frmMain.actAdd.ShortCut := S;
-      frmMain.popAdd.ShortCut := S;
-      frmMain.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmMain.actAddSimple.ShortCut := S;
+      frmMain.popAddSimple.ShortCut := S;
+      frmMain.btnAdd.Hint := Hint_01 + ':' + sLineBreak + Caption_319 +
+        ' [' + ShortCutToText(frmMain.popAddSimple.ShortCut) + ']' +
+        sLineBreak + Caption_320 + ' [' + frmMain.pnlButtons.Hint + ']';
       frmHolidays.actAdd.ShortCut := S;
       frmHolidays.popAdd.ShortCut := S;
       frmHolidays.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
       frmComments.actAdd.ShortCut := S;
       frmComments.popAdd.ShortCut := S;
-      frmComments.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmComments.btnAdd.Hint := frmHolidays.btnAdd.Hint;
       frmTags.actAdd.ShortCut := S;
       frmTags.popAdd.ShortCut := S;
-      frmTags.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmTags.btnAdd.Hint := frmHolidays.btnAdd.Hint;
       frmCurrencies.actAdd.ShortCut := S;
       frmCurrencies.popAdd.ShortCut := S;
-      frmCurrencies.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCurrencies.btnAdd.Hint := frmHolidays.btnAdd.Hint;
       frmPayees.actAdd.ShortCut := S;
       frmPayees.popAdd.ShortCut := S;
-      frmPayees.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPayees.btnAdd.Hint := frmHolidays.btnAdd.Hint;
       frmAccounts.actAdd.ShortCut := S;
       frmAccounts.popAdd.ShortCut := S;
-      frmAccounts.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmAccounts.btnAdd.Hint := frmHolidays.btnAdd.Hint;
       frmCategories.actAdd.ShortCut := S;
       frmCategories.popAdd.ShortCut := S;
-      frmCategories.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCategories.btnAdd.Hint := frmHolidays.btnAdd.Hint;
       frmPersons.actAdd.ShortCut := S;
       frmPersons.popAdd.ShortCut := S;
-      frmPersons.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPersons.btnAdd.Hint := frmHolidays.btnAdd.Hint;
       frmSchedulers.actAdd.ShortCut := S;
       frmSchedulers.popAdd.ShortCut := S;
       frmSchedulers.popAdd1.ShortCut := S;
-      frmSchedulers.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      frmSchedulers.btnAdd1.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmSchedulers.btnAdd.Hint := frmHolidays.btnAdd.Hint;
+      frmSchedulers.btnAdd1.Hint := frmHolidays.btnAdd.Hint;
       frmBudgets.actBudgetAdd.ShortCut := S;
       frmBudgets.popBudgetAdd.ShortCut := S;
-      frmBudgets.btnBudgetAdd.Hint :=
-        Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      frmMultiple.actAdd.ShortCut := S;
-      frmMultiple.popAdd.ShortCut := S;
-      frmMultiple.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmBudgets.btnBudgetAdd.Hint := frmHolidays.btnAdd.Hint;
+      frmDetail.actAdd.ShortCut := S;
+      frmDetail.popAdd.ShortCut := S;
+      frmDetail.btnAdd.Hint := frmHolidays.btnAdd.Hint;
       frmTemplates.actAdd.ShortCut := S;
-      frmTemplates.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmTemplates.btnAdd.Hint := frmHolidays.btnAdd.Hint;
       frmLinks.actAdd.ShortCut := S;
       frmLinks.popAdd.ShortCut := S;
-      frmLinks.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmLinks.btnAdd.Hint := frmHolidays.btnAdd.Hint;
     end
     // ------------------------------------------------------------------------
-    else if Action = 'record_add_multi' then
+    else if Action = 'record_add_multiple' then
     begin
-      frmMain.actAddMulti.ShortCut := S;
-      frmMain.btnAddMulti.Hint := Hint_19 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      ;
+      frmMain.actAddMultiple.ShortCut := S;
+      frmMain.popAddMulitple.ShortCut := S;
+      frmMain.pnlButtons.Hint := ShortCutToText(S);
+      frmMain.btnAdd.Hint := Hint_01 + ':' + sLineBreak + Caption_319 +
+        ' [' + ShortCutToText(frmMain.popAddSimple.ShortCut) + ']' +
+        sLineBreak + Caption_320 + ' [' + frmMain.pnlButtons.Hint + ']';
     end
     // ------------------------------------------------------------------------
     else if Action = 'record_edit' then
@@ -4150,53 +4336,51 @@ begin
       frmMain.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
       frmHolidays.actEdit.ShortCut := S;
       frmHolidays.popEdit.ShortCut := S;
-      frmHolidays.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmHolidays.btnEdit.Hint := frmMain.btnEdit.Hint;
       frmComments.actEdit.ShortCut := S;
       frmComments.popEdit.ShortCut := S;
-      frmComments.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmComments.btnEdit.Hint := frmMain.btnEdit.Hint;
       frmTags.actEdit.ShortCut := S;
       frmTags.popEdit.ShortCut := S;
-      frmTags.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmTags.btnEdit.Hint := frmMain.btnEdit.Hint;
       frmCurrencies.actEdit.ShortCut := S;
       frmCurrencies.popEdit.ShortCut := S;
-      frmCurrencies.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCurrencies.btnEdit.Hint := frmMain.btnEdit.Hint;
       frmPayees.actEdit.ShortCut := S;
       frmPayees.popEdit.ShortCut := S;
-      frmPayees.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPayees.btnEdit.Hint := frmMain.btnEdit.Hint;
       frmAccounts.actEdit.ShortCut := S;
       frmAccounts.popEdit.ShortCut := S;
-      frmAccounts.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmAccounts.btnEdit.Hint := frmMain.btnEdit.Hint;
       frmCategories.actEdit.ShortCut := S;
       frmCategories.popEdit.ShortCut := S;
-      frmCategories.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCategories.btnEdit.Hint := frmMain.btnEdit.Hint;
       frmPersons.actEdit.ShortCut := S;
       frmPersons.popEdit.ShortCut := S;
-      frmPersons.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPersons.btnEdit.Hint := frmMain.btnEdit.Hint;
       frmSchedulers.actEdit.ShortCut := S;
       frmSchedulers.popEdit1.ShortCut := S;
-      frmSchedulers.btnEdit1.Hint :=
-        Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmSchedulers.btnEdit1.Hint := frmMain.btnEdit.Hint;
       frmBudgets.actBudgetEdit.ShortCut := S;
       frmBudgets.popBudgetEdit.ShortCut := S;
-      frmBudgets.btnBudgetEdit.Hint :=
-        Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmBudgets.btnBudgetEdit.Hint := frmMain.btnEdit.Hint;
       frmWrite.actEdit.ShortCut := S;
       frmWrite.popEdit.ShortCut := S;
-      frmWrite.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      frmSettings.btnChange.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmWrite.btnEdit.Hint := frmMain.btnEdit.Hint;
+      frmSettings.btnChange.Hint := frmMain.btnEdit.Hint;
       frmSettings.actChange.ShortCut := S;
       frmRecycleBin.actEdit.ShortCut := S;
-      frmRecycleBin.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      frmMultiple.actEdit.ShortCut := S;
-      frmMultiple.popEdit.ShortCut := S;
-      frmMultiple.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmRecycleBin.btnEdit.Hint := frmMain.btnEdit.Hint;
+      frmDetail.actEdit.ShortCut := S;
+      frmDetail.popEdit.ShortCut := S;
+      frmDetail.btnEdit.Hint := frmMain.btnEdit.Hint;
       frmCalendar.actEdit.ShortCut := S;
-      frmCalendar.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCalendar.btnEdit.Hint := frmMain.btnEdit.Hint;
       frmTemplates.actEdit.ShortCut := S;
-      frmTemplates.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmTemplates.btnEdit.Hint := frmMain.btnEdit.Hint;
       frmLinks.actEdit.ShortCut := S;
       frmLinks.popEdit.ShortCut := S;
-      frmLinks.btnEdit.Hint := Hint_02 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmLinks.btnEdit.Hint := frmMain.btnEdit.Hint;
 
     end
     // ------------------------------------------------------------------------
@@ -4205,14 +4389,12 @@ begin
       frmMain.actDuplicate.ShortCut := S;
       frmMain.popDuplicate.ShortCut := S;
       frmMain.btnDuplicate.Hint := Hint_18 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      frmMultiple.actDuplicate.ShortCut := S;
-      frmMultiple.popDuplicate.ShortCut := S;
-      frmMultiple.btnDuplicate.Hint :=
-        Hint_18 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmDetail.actDuplicate.ShortCut := S;
+      frmDetail.popDuplicate.ShortCut := S;
+      frmDetail.btnDuplicate.Hint := frmMain.btnDuplicate.Hint;
       frmBudgets.actBudgetDuplicate.ShortCut := S;
       frmBudgets.popBudgetDuplicate.ShortCut := S;
-      frmBudgets.btnBudgetDuplicate.Hint :=
-        Hint_18 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmBudgets.btnBudgetDuplicate.Hint := frmMain.btnDuplicate.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'record_delete' then
@@ -4222,55 +4404,49 @@ begin
       frmMain.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
       frmHolidays.actDelete.ShortCut := S;
       frmHolidays.popDelete.ShortCut := S;
-      frmHolidays.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmHolidays.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmComments.actDelete.ShortCut := S;
       frmComments.popDelete.ShortCut := S;
-      frmComments.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmComments.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmTags.actDelete.ShortCut := S;
       frmTags.popDelete.ShortCut := S;
-      frmTags.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmTags.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmCurrencies.actDelete.ShortCut := S;
       frmCurrencies.popDelete.ShortCut := S;
-      frmCurrencies.btnDelete.Hint :=
-        Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCurrencies.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmPayees.actDelete.ShortCut := S;
       frmPayees.popDelete.ShortCut := S;
-      frmPayees.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPayees.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmAccounts.actDelete.ShortCut := S;
       frmAccounts.popDelete.ShortCut := S;
-      frmAccounts.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmAccounts.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmCategories.actDelete.ShortCut := S;
       frmCategories.popDelete.ShortCut := S;
-      frmCategories.btnDelete.Hint :=
-        Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCategories.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmPersons.actDelete.ShortCut := S;
       frmPersons.popDelete.ShortCut := S;
-      frmPersons.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPersons.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmSchedulers.actDelete.ShortCut := S;
       frmSchedulers.popDelete.ShortCut := S;
-      frmSchedulers.btnDelete.Hint :=
-        Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmSchedulers.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmBudgets.actBudgetDelete.ShortCut := S;
       frmBudgets.popBudgetDelete.ShortCut := S;
-      frmBudgets.btnBudgetDelete.Hint :=
-        Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmBudgets.btnBudgetDelete.Hint := frmMain.btnDelete.Hint;
       frmWrite.actDelete.ShortCut := S;
       frmWrite.popDelete.ShortCut := S;
-      frmWrite.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmWrite.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmRecycleBin.actDelete.ShortCut := S;
-      frmRecycleBin.btnDelete.Hint :=
-        Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      frmMultiple.actDelete.ShortCut := S;
-      frmMultiple.popDelete.ShortCut := S;
-      frmMultiple.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmRecycleBin.btnDelete.Hint := frmMain.btnDelete.Hint;
+      frmDetail.actDelete.ShortCut := S;
+      frmDetail.popDelete.ShortCut := S;
+      frmDetail.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmCalendar.actDelete.ShortCut := S;
-      frmCalendar.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCalendar.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmTemplates.actDelete.ShortCut := S;
-      frmTemplates.btnDelete.Hint :=
-        Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmTemplates.btnDelete.Hint := frmMain.btnDelete.Hint;
       frmLinks.actDelete.ShortCut := S;
       frmLinks.popDelete.ShortCut := S;
-      frmLinks.btnDelete.Hint := Hint_03 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmLinks.btnDelete.Hint := frmMain.btnDelete.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'record_copy_all' then
@@ -4278,38 +4454,38 @@ begin
       frmMain.actCopy.ShortCut := S;
       frmMain.popCopy.ShortCut := S;
       frmMain.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      frmMain.btnReportCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmMain.btnReportCopy.Hint := frmMain.btnCopy.Hint;
       frmHolidays.actCopy.ShortCut := S;
       frmHolidays.popCopy.ShortCut := S;
-      frmHolidays.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmHolidays.btnCopy.Hint := frmMain.btnCopy.Hint;
       frmComments.actCopy.ShortCut := S;
       frmComments.popCopy.ShortCut := S;
-      frmComments.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmComments.btnCopy.Hint := frmMain.btnCopy.Hint;
       frmTags.actCopy.ShortCut := S;
       frmTags.popCopy.ShortCut := S;
-      frmTags.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmTags.btnCopy.Hint := frmMain.btnCopy.Hint;
       frmCurrencies.actCopy.ShortCut := S;
       frmCurrencies.popCopy.ShortCut := S;
-      frmCurrencies.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCurrencies.btnCopy.Hint := frmMain.btnCopy.Hint;
       frmPayees.actCopy.ShortCut := S;
       frmPayees.popCopy.ShortCut := S;
-      frmPayees.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPayees.btnCopy.Hint := frmMain.btnCopy.Hint;
       frmAccounts.actCopy.ShortCut := S;
       frmAccounts.popCopy.ShortCut := S;
-      frmAccounts.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmAccounts.btnCopy.Hint := frmMain.btnCopy.Hint;
       frmCategories.actCopy.ShortCut := S;
       frmCategories.popCopy.ShortCut := S;
-      frmCategories.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCategories.btnCopy.Hint := frmMain.btnCopy.Hint;
       frmPersons.actCopy.ShortCut := S;
       frmPersons.popCopy.ShortCut := S;
-      frmPersons.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPersons.btnCopy.Hint := frmMain.btnCopy.Hint;
       frmSQLResult.actCopy.ShortCut := S;
-      frmSQLResult.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmSQLResult.btnCopy.Hint := frmMain.btnCopy.Hint;
       frmCounter.actCopy.ShortCut := S;
-      frmCounter.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCounter.btnCopy.Hint := frmMain.btnCopy.Hint;
       frmLinks.actCopy.ShortCut := S;
       frmLinks.popCopy.ShortCut := S;
-      frmLinks.btnCopy.Hint := Hint_09 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmLinks.btnCopy.Hint := frmMain.btnCopy.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'record_copy_selected' then
@@ -4324,39 +4500,36 @@ begin
       frmMain.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
       frmHolidays.actSelect.ShortCut := S;
       frmHolidays.popSelect.ShortCut := S;
-      frmHolidays.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmHolidays.btnSelect.Hint := frmMain.btnSelect.Hint;
       frmComments.actSelect.ShortCut := S;
       frmComments.popSelect.ShortCut := S;
-      frmComments.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmComments.btnSelect.Hint := frmMain.btnSelect.Hint;
       frmTags.actSelect.ShortCut := S;
       frmTags.popSelect.ShortCut := S;
-      frmTags.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmTags.btnSelect.Hint := frmMain.btnSelect.Hint;
       frmCurrencies.actSelect.ShortCut := S;
       frmCurrencies.popSelect.ShortCut := S;
-      frmCurrencies.btnSelect.Hint :=
-        Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCurrencies.btnSelect.Hint := frmMain.btnSelect.Hint;
       frmPayees.actSelect.ShortCut := S;
       frmPayees.popSelect.ShortCut := S;
-      frmPayees.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPayees.btnSelect.Hint := frmMain.btnSelect.Hint;
       frmAccounts.actSelect.ShortCut := S;
       frmAccounts.popSelect.ShortCut := S;
-      frmAccounts.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmAccounts.btnSelect.Hint := frmMain.btnSelect.Hint;
       frmCategories.actSelect.ShortCut := S;
       frmCategories.popSelect.ShortCut := S;
-      frmCategories.btnSelect.Hint :=
-        Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCategories.btnSelect.Hint := frmMain.btnSelect.Hint;
       frmPersons.actSelect.ShortCut := S;
       frmPersons.popSelect.ShortCut := S;
-      frmPersons.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPersons.btnSelect.Hint := frmMain.btnSelect.Hint;
       frmRecycleBin.actSelect.ShortCut := S;
       frmRecycleBin.btnSelect.Hint :=
-        Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
+        frmMain.btnSelect.Hint;
       frmSQLResult.actSelect.ShortCut := S;
-      frmSQLResult.btnSelect.Hint :=
-        Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmSQLResult.btnSelect.Hint := frmMain.btnSelect.Hint;
       frmLinks.actSelect.ShortCut := S;
       frmLinks.popSelect.ShortCut := S;
-      frmLinks.btnSelect.Hint := Hint_22 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmLinks.btnSelect.Hint := frmMain.btnSelect.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'record_print_all' then
@@ -4364,37 +4537,34 @@ begin
       frmMain.actPrint.ShortCut := S;
       frmMain.popPrint.ShortCut := S;
       frmMain.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      frmMain.btnReportPrint.Hint :=
-        Hint_13 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmMain.btnReportPrint.Hint := frmMain.btnPrint.Hint;
       frmHolidays.actPrint.ShortCut := S;
       frmHolidays.popPrint.ShortCut := S;
-      frmHolidays.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmHolidays.btnPrint.Hint := frmMain.btnPrint.Hint;
       frmComments.actPrint.ShortCut := S;
       frmComments.popPrint.ShortCut := S;
-      frmComments.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmComments.btnPrint.Hint := frmMain.btnPrint.Hint;
       frmTags.actPrint.ShortCut := S;
       frmTags.popPrint.ShortCut := S;
-      frmTags.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmTags.btnPrint.Hint := frmMain.btnPrint.Hint;
       frmCurrencies.actPrint.ShortCut := S;
       frmCurrencies.popPrint.ShortCut := S;
-      frmCurrencies.btnPrint.Hint :=
-        Hint_13 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCurrencies.btnPrint.Hint := frmMain.btnPrint.Hint;
       frmPayees.actPrint.ShortCut := S;
       frmPayees.popPrint.ShortCut := S;
-      frmPayees.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPayees.btnPrint.Hint := frmMain.btnPrint.Hint;
       frmAccounts.actPrint.ShortCut := S;
       frmAccounts.popPrint.ShortCut := S;
-      frmAccounts.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmAccounts.btnPrint.Hint := frmMain.btnPrint.Hint;
       frmCategories.actPrint.ShortCut := S;
       frmCategories.popPrint.ShortCut := S;
-      frmCategories.btnPrint.Hint :=
-        Hint_13 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCategories.btnPrint.Hint := frmMain.btnPrint.Hint;
       frmPersons.actPrint.ShortCut := S;
       frmPersons.popPrint.ShortCut := S;
-      frmPersons.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPersons.btnPrint.Hint := frmMain.btnPrint.Hint;
       frmLinks.actPrint.ShortCut := S;
       frmLinks.popPrint.ShortCut := S;
-      frmLinks.btnPrint.Hint := Hint_13 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmLinks.btnPrint.Hint := frmMain.btnPrint.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'record_print_selected' then
@@ -4414,38 +4584,35 @@ begin
     begin
       frmDetail.actSave.ShortCut := S;
       frmDetail.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      frmMultiple.actSave.ShortCut := S;
-      frmMultiple.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      frmMultiple.btnWrite.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
       frmAccounts.actSave.ShortCut := S;
-      frmAccounts.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmAccounts.btnSave.Hint := frmDetail.btnSave.Hint;
       frmCurrencies.actSave.ShortCut := S;
-      frmCurrencies.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCurrencies.btnSave.Hint := frmDetail.btnSave.Hint;
       frmCategories.actSave.ShortCut := S;
-      frmCategories.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmCategories.btnSave.Hint := frmDetail.btnSave.Hint;
       frmPersons.actSave.ShortCut := S;
-      frmPersons.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPersons.btnSave.Hint := frmDetail.btnSave.Hint;
       frmPayees.actSave.ShortCut := S;
-      frmPayees.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmPayees.btnSave.Hint := frmDetail.btnSave.Hint;
       frmValues.actSave.ShortCut := S;
-      frmValues.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmValues.btnSave.Hint := frmDetail.btnSave.Hint;
       frmHolidays.actSave.ShortCut := S;
-      frmHolidays.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmHolidays.btnSave.Hint := frmDetail.btnSave.Hint;
       frmTags.actSave.ShortCut := S;
-      frmTags.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmTags.btnSave.Hint := frmDetail.btnSave.Hint;
       frmComments.actSave.ShortCut := S;
-      frmComments.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmComments.btnSave.Hint := frmDetail.btnSave.Hint;
       frmEdit.actSave.ShortCut := S;
-      frmEdit.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmEdit.btnSave.Hint := frmDetail.btnSave.Hint;
       frmEdits.actSave.ShortCut := S;
-      frmEdits.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmEdits.btnSave.Hint := frmDetail.btnSave.Hint;
       frmWrite.popSave.ShortCut := S;
       frmWrite.actSave.ShortCut := S;
-      frmWrite.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmWrite.btnSave.Hint := frmDetail.btnSave.Hint;
       frmScheduler.actSave.ShortCut := S;
-      frmScheduler.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmScheduler.btnSave.Hint := frmDetail.btnSave.Hint;
       frmTemplates.actSave.ShortCut := S;
-      frmTemplates.btnSave.Hint := Hint_04 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmTemplates.btnSave.Hint := frmDetail.btnSave.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'record_swap' then
@@ -4512,7 +4679,24 @@ begin
       frmMain.mnuProperties.ShortCut := S;
       frmMain.btnProperties.Hint := Hint_38 + sLineBreak + '[' + ShortCutToText(S) + ']';
     end
+
     // ------------------------------------------------------------------------
+    else if Action = 'new_transaction_simple' then
+    begin
+      frmDetail.actSimple.ShortCut := S;
+      frmDetail.tabKind.Tabs[0].Text :=
+        ' ' + Caption_319 + ' [' + ShortCutToText(frmDetail.actSimple.ShortCut) +
+        ']' + ' ';
+    end
+
+    // ------------------------------------------------------------------------
+    else if Action = 'new_transaction_multiple' then
+    begin
+      frmDetail.actMultiple.ShortCut := S;
+      frmDetail.tabKind.Tabs[1].Text :=
+        ' ' + Caption_320 + ' [' + ShortCutToText(frmDetail.actMultiple.ShortCut) +
+        ']' + ' ';
+    end
 
     // ------------------------------------------------------------------------
     else if Action = 'list_links' then
@@ -4528,44 +4712,143 @@ begin
     // ------------------------------------------------------------------------
     else if Action = 'list_tags' then
     begin
+      // frmMain
       frmMain.mnuTags.ShortCut := S;
       frmMain.btnTags.Hint := Hint_41 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      // frmDetial
+      frmDetail.actTags.ShortCut := S;
+      frmDetail.btnTag.Hint := frmMain.btnTags.Hint;
+      frmDetail.btnTagsX.Hint := frmMain.btnTags.Hint;
+      // frmEdit
+      frmEdit.actTags.ShortCut := S;
+      frmEdit.btnTag.Hint := frmMain.btnTags.Hint;
+      // frmEdits
+      frmEdits.actTags.ShortCut := S;
+      frmEdits.btnTag.Hint := frmMain.btnTags.Hint;
+      // frmScheduler
+      frmScheduler.actTags.ShortCut := S;
+      frmScheduler.btnTag.Hint := frmMain.btnTags.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'list_currencies' then
     begin
+      //frmMain
       frmMain.mnuCurrencies.ShortCut := S;
       frmMain.btnCurrencies.Hint := Hint_42 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      // frmAccounts
+      frmAccounts.actCurrencies.ShortCut := S;
+      frmAccounts.btnCurrency.Hint := frmMain.btnCurrencies.Hint;
+      // frmCounter
+      frmCounter.actCurrencies.ShortCut := S;
+      frmCounter.btnCurrencies.Hint := frmMain.btnCurrencies.Hint;
+      // frmCalendar
+      frmCalendar.actCurrencies.ShortCut := S;
+      frmCalendar.btnCurrencies.Hint := frmMain.btnCurrencies.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'list_payees' then
     begin
+      // frmMain
       frmMain.mnuPayees.ShortCut := S;
       frmMain.btnPayees.Hint := Hint_43 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      // frmDetail
+      frmDetail.actPayee.ShortCut := S;
+      frmDetail.btnPayee.Hint := frmMain.btnPayees.Hint;
+      frmDetail.btnPayeeX.Hint := frmMain.btnPayees.Hint;
+      // frmEdit
+      frmEdit.actPayees.ShortCut := S;
+      frmEdit.btnPayee.Hint := frmMain.btnPayees.Hint;
+      // frmEdits
+      frmEdits.actPayees.ShortCut := S;
+      frmEdits.btnPayee.Hint := frmMain.btnPayees.Hint;
+      // frmScheduler
+      frmScheduler.actPayees.ShortCut := S;
+      frmScheduler.btnPayee.Hint := frmMain.btnPayees.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'list_comments' then
     begin
+      // frmMain
       frmMain.mnuComments.ShortCut := S;
       frmMain.btnComments.Hint := Hint_44 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      // frmDetail
+      frmDetail.actComments.ShortCut := S;
+      frmDetail.btnComment.Hint := frmMain.btnComments.Hint;
+      frmDetail.btnCommentX.Hint := frmMain.btnComments.Hint;
+      // frmEdit
+      frmEdit.actComments.ShortCut := S;
+      frmEdit.btnComment.Hint := frmMain.btnComments.Hint;
+      // frmEdits
+      frmEdits.actComments.ShortCut := S;
+      frmEdits.btnComment.Hint := frmMain.btnComments.Hint;
+      // frmScheduler
+      frmScheduler.actComments.ShortCut := S;
+      frmScheduler.btnComment.Hint := frmMain.btnComments.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'list_accounts' then
     begin
+      // frmMain
       frmMain.mnuAccounts.ShortCut := S;
       frmMain.btnAccounts.Hint := Hint_45 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      // frmDetail
+      frmDetail.actAccounts.ShortCut := S;
+      frmDetail.btnAccountFrom.Hint := frmMain.btnAccounts.Hint;
+      frmDetail.btnAccountTo.Hint := frmMain.btnAccounts.Hint;
+      frmDetail.btnAccountX.Hint := frmMain.btnAccounts.Hint;
+      // frmEdit
+      frmEdit.actAccounts.ShortCut := S;
+      frmEdit.btnAccount.Hint := frmMain.btnAccounts.Hint;
+      // frmEdits
+      frmEdits.actAccounts.ShortCut := S;
+      frmEdits.btnAccount.Hint := frmMain.btnAccounts.Hint;
+      // frmScheduler
+      frmScheduler.actAccounts.ShortCut := S;
+      frmScheduler.btnAccountFrom.Hint := frmMain.btnAccounts.Hint;
+      frmScheduler.btnAccountTo.Hint := frmMain.btnAccounts.Hint;
+      // frmCalendar
+      frmCalendar.actAccounts.ShortCut := S;
+      frmCalendar.btnAccounts.Hint := frmMain.btnAccounts.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'list_categories' then
     begin
+      // frmMain
       frmMain.mnuCategories.ShortCut := S;
       frmMain.btnCategories.Hint := Hint_46 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      // frmDetial
+      frmDetail.actCategories.ShortCut := S;
+      frmDetail.btnCategory.Hint := frmMain.btnCategories.Hint;
+      frmDetail.btnCategoryX.Hint := frmMain.btnCategories.Hint;
+      // frmEdit
+      frmEdit.actCategories.ShortCut := S;
+      frmEdit.btnCategory.Hint := frmMain.btnCategories.Hint;
+      // frmEdits
+      frmEdits.actCategories.ShortCut := S;
+      frmEdits.btnCategory.Hint := frmMain.btnCategories.Hint;
+      // frmScheduler
+      frmScheduler.actCategories.ShortCut := S;
+      frmScheduler.btnCategory.Hint := frmMain.btnCategories.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'list_persons' then
     begin
+      // frmMain
       frmMain.mnuPersons.ShortCut := S;
       frmMain.btnPersons.Hint := Hint_47 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      // frmDetail
+      frmDetail.actPersons.ShortCut := S;
+      frmDetail.btnPerson.Hint := frmMain.btnPersons.Hint;
+      frmDetail.btnPersonX.Hint := frmMain.btnPersons.Hint;
+      // frmEdit
+      frmEdit.actPersons.ShortCut := S;
+      frmEdit.btnPerson.Hint := frmMain.btnPersons.Hint;
+      // frmEdits
+      frmEdits.actPersons.ShortCut := S;
+      frmEdits.btnPerson.Hint := frmMain.btnPersons.Hint;
+      // frmScheduler
+      frmScheduler.actPersons.ShortCut := S;
+      frmScheduler.btnPerson.Hint := frmMain.btnPersons.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'tool_scheduler' then
@@ -4585,10 +4868,9 @@ begin
       frmMain.mnuCalendar.ShortCut := S;
       frmMain.btnCalendar.Hint := Hint_52 + sLineBreak + '[' + ShortCutToText(S) + ']';
       frmWrite.actCalendar.ShortCut := S;
-      frmWrite.btnCalendar.Hint := Hint_52 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmWrite.btnCalendar.Hint := frmMain.btnCalendar.Hint;
       frmSchedulers.actCalendar.ShortCut := S;
-      frmSchedulers.btnCalendar.Hint :=
-        Hint_52 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmSchedulers.btnCalendar.Hint := frmMain.btnCalendar.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'tool_budget' then
@@ -4612,8 +4894,24 @@ begin
     // ------------------------------------------------------------------------
     else if Action = 'tool_calc' then
     begin
+      // frmMain
       frmMain.mnuCalc.ShortCut := S;
       frmMain.btnCalc.Hint := Hint_56 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      // frmDetail
+      frmDetail.actCalc.ShortCut := S;
+      frmDetail.btnAmountFrom.Hint := frmMain.btnCalc.Hint;
+      frmDetail.btnAmountTo.Hint := frmMain.btnCalc.Hint;
+      frmDetail.btnAmountX.Hint := frmMain.btnCalc.Hint;
+      // frmEdit
+      frmEdit.actCalc.ShortCut := S;
+      frmEdit.btnAmount.Hint := frmMain.btnCalc.Hint;
+      // frmEdits
+      frmEdits.actCalc.ShortCut := S;
+      frmEdits.btnAmount.Hint := frmMain.btnCalc.Hint;
+      // frmScheduler
+      frmScheduler.actCalc.ShortCut := S;
+      frmScheduler.btnAmountFrom.Hint := frmMain.btnCalc.Hint;
+      frmScheduler.btnAmountTo.Hint := frmMain.btnCalc.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'settings' then
@@ -4621,9 +4919,8 @@ begin
       frmMain.mnuSettings.ShortCut := S;
       frmMain.btnSettings.Hint := Hint_57 + sLineBreak + '[' + ShortCutToText(S) + ']';
       frmWrite.actSettings.ShortCut := S;
-      frmWrite.btnSettings.Hint := Hint_57 + sLineBreak + '[' + ShortCutToText(S) + ']';
-      frmScheduler.btnSettings.Hint :=
-        Hint_57 + sLineBreak + '[' + ShortCutToText(S) + ']';
+      frmWrite.btnSettings.Hint := frmMain.btnSettings.Hint;
+      frmScheduler.btnSettings.Hint := frmMain.btnSettings.Hint;
     end
     // ------------------------------------------------------------------------
     else if Action = 'about' then

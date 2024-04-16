@@ -7,7 +7,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls, StdCtrls,
-  ActnList, Buttons, BCPanel, BCMDButtonFocus, LazUTF8, Math, laz.VirtualTrees, StrUtils;
+  ActnList, Buttons, BCPanel, BCMDButtonFocus, LazUTF8, Math, laz.VirtualTrees,
+  StrUtils, IniFiles;
 
 type // main grid (Delete1)
   TDelete1 = record
@@ -80,10 +81,10 @@ type
     VST2: TLazVirtualStringTree;
     procedure btnCancelClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure pnlBottomResize(Sender: TObject);
     procedure VST1BeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -127,31 +128,16 @@ uses
 
 procedure TfrmDelete.FormCreate(Sender: TObject);
 begin
-  // form size and position
-  frmDelete.Width := IfThen(Screen.PixelsPerInch / 96 > 1, Screen.Width, Round(0.8 * Screen.Width));
-  frmDelete.Height := IfThen(Screen.PixelsPerInch / 96 > 1, Screen.Height - 150, Round(0.8 * Screen.Height));
-  frmDelete.Left := IfThen(Screen.PixelsPerInch / 96 > 1, 0, (Screen.Width - frmDelete.Width) div 2);
-  frmDelete.Top := IfThen(Screen.PixelsPerInch / 96 > 1, 0, (Screen.Height - 100 - frmDelete.Height) div 2);
-
-  VST1.Images := frmMain.ImgTypes;
-
   // set components height
-  VST1.Header.Height := ProgramFontSize + 4;
-  if VST1.Header.Height < 20 then
-    VST1.Header.Height := 20;
+  VST1.Header.Height := PanelHeight;
+  VST2.Header.Height := PanelHeight;
+  VST3.Header.Height := PanelHeight;
+  pnlCaption1.Height := PanelHeight;
+  pnlCaption2.Height := PanelHeight;
+  pnlBottom.Height := ButtonHeight;
 
-  VST2.Header.Height := ProgramFontSize + 4;
-  if VST2.Header.Height < 20 then
-    VST2.Header.Height := 20;
-
-  VST3.Header.Height := ProgramFontSize + 4;
-  if VST3.Header.Height < 20 then
-    VST3.Header.Height := 20;
-
-  pnlCaption1.Height := ProgramFontSize + 4;
-  pnlCaption2.Height := ProgramFontSize + 4;
-
-  pnlBottom.Height := ProgramFontSize + 4;
+  // get form icon
+  frmMain.img16.GetIcon(34, (Sender as TForm).Icon);
 end;
 
 procedure TfrmDelete.btnCancelClick(Sender: TObject);
@@ -162,6 +148,34 @@ end;
 procedure TfrmDelete.btnDeleteClick(Sender: TObject);
 begin
   frmDelete.ModalResult := mrOk;
+end;
+
+procedure TfrmDelete.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
+begin
+  // write position and window size
+  if frmSettings.chkLastFormsSize.Checked = True then
+  begin
+    try
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmDelete.Name, '') <>
+        IntToStr(frmDelete.Left) + separ + // form left
+      IntToStr(frmDelete.Top) + separ + // form top
+      IntToStr(frmDelete.Width) + separ + // form width
+      IntToStr(frmDelete.Height) then
+        INI.WriteString('POSITION', frmDelete.Name,
+          IntToStr(frmDelete.Left) + separ + // form left
+          IntToStr(frmDelete.Top) + separ + // form top
+          IntToStr(frmDelete.Width) + separ + // form width
+          IntToStr(frmDelete.Height)); // form height
+    finally
+      INI.Free;
+    end;
+  end;
 end;
 
 procedure TfrmDelete.FormResize(Sender: TObject);
@@ -176,11 +190,61 @@ end;
 
 procedure TfrmDelete.FormShow(Sender: TObject);
 var
+  INI: TINIFile;
+  S: string;
+  I: integer;
   Delete1: PDelete1;
   Delete2: PDelete2;
   Delete3: PDelete3;
   P: PVirtualNode;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmDelete.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmDelete.Name, '-1•-1•0•0');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmDelete.Width := Screen.Width - 200 - (200 - ScreenRatio)
+      else
+        frmDelete.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmDelete.Height := Screen.Height - 200 - (200 - ScreenRatio)
+      else
+        frmDelete.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmDelete.left := (Screen.Width - frmDelete.Width) div 2
+      else
+        frmDelete.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmDelete.Top := ((Screen.Height - frmDelete.Height) div 2) - 75
+      else
+        frmDelete.Top := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   frmDelete.tabDelete.TabIndex := 0;
 
   // =======================================================================================
@@ -242,7 +306,7 @@ begin
   end;
   frmMain.QRY.Close;
 
-  SetNodeHeight(frmDelete.VST1);
+  SetNodeHeight(VST1);
   frmDelete.VST1.EndUpdate;
   screen.Cursor := crDefault;
 
@@ -309,7 +373,7 @@ begin
   end;
   frmMain.QRY.Close;
 
-  SetNodeHeight(frmDelete.VST2);
+  SetNodeHeight(VST2);
   frmDelete.VST2.EndUpdate;
   screen.Cursor := crDefault;
 
@@ -354,7 +418,7 @@ begin
     end;
     frmMain.QRY.Close;
 
-    SetNodeHeight(frmDelete.VST3);
+    SetNodeHeight(VST3);
     frmDelete.VST3.EndUpdate;
     screen.Cursor := crDefault;
   end;
@@ -363,16 +427,11 @@ begin
     AnsiReplaceStr(Menu_44, '&', '') + ' (' + IntToStr(VST3.RootNodeCount) + ')';
 end;
 
-procedure TfrmDelete.pnlBottomResize(Sender: TObject);
-begin
-  btnCancel.BorderSpacing.Left :=
-    (pnlBottom.Width - btnDelete.Width - btnCancel.Width - 2) div 2;
-end;
-
 procedure TfrmDelete.VST1BeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
+  if Column = 0 then Exit;
   TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clRed,
     RGBToColor(255, 120, 120)); //frmSettings.pnlOddRowColor.Color);
   TargetCanvas.FillRect(CellRect);
@@ -459,16 +518,17 @@ end;
 procedure TfrmDelete.VST1Resize(Sender: TObject);
 var
   X: integer;
-
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
   try
-    (Sender as TLazVirtualStringTree).Header.Columns[0].Width := round(Screen.PixelsPerInch div 96 * 25);
+    (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+      round(Screen.PixelsPerInch div 96 * 25);
     X := (VST1.Width - VST1.Header.Columns[0].Width) div 100;
 
     VST1.Header.Columns[1].Width := 10 * X; // date
-    VST1.Header.Columns[2].Width := VST1.Width - VST2.Header.Columns[0].Width - ScrollBarWidth - (80 * X); // comment
+    VST1.Header.Columns[2].Width :=
+      VST1.Width - VST2.Header.Columns[0].Width - ScrollBarWidth - (80 * X); // comment
     VST1.Header.Columns[3].Width := 10 * X; // amount
     VST1.Header.Columns[4].Width := 5 * X; // currency
     VST1.Header.Columns[5].Width := 11 * X; // account
@@ -514,7 +574,8 @@ begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
   try
-    (Sender as TLazVirtualStringTree).Header.Columns[0].Width := round(Screen.PixelsPerInch div 96 * 25);
+    (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+      round(Screen.PixelsPerInch div 96 * 25);
     X := (VST2.Width - VST2.Header.Columns[0].Width) div 100;
 
     VST2.Header.Columns[1].Width := 11 * X; // date from
@@ -522,7 +583,8 @@ begin
     VST2.Header.Columns[3].Width := 5 * X; // periodicity
     VST2.Header.Columns[4].Width := 11 * X; // amount
     VST2.Header.Columns[5].Width := 5 * X; // currency
-    VST2.Header.Columns[6].Width := VST2.Width - VST2.Header.Columns[0].Width - ScrollBarWidth - (88 * X);
+    VST2.Header.Columns[6].Width :=
+      VST2.Width - VST2.Header.Columns[0].Width - ScrollBarWidth - (88 * X);
     // comment
     VST2.Header.Columns[7].Width := 9 * X; // account
     VST2.Header.Columns[8].Width := 9 * X; // category
@@ -557,15 +619,16 @@ end;
 procedure TfrmDelete.VST3Resize(Sender: TObject);
 var
   X: integer;
-
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
   try
-    (Sender as TLazVirtualStringTree).Header.Columns[0].Width := round(Screen.PixelsPerInch div 96 * 25);
+    (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+      round(Screen.PixelsPerInch div 96 * 25);
     X := (VST3.Width - VST3.Header.Columns[0].Width) div 100;
 
-    VST3.Header.Columns[1].Width := VST3.Width - VST3.Header.Columns[0].Width - ScrollBarWidth - (70 * X);
+    VST3.Header.Columns[1].Width :=
+      VST3.Width - VST3.Header.Columns[0].Width - ScrollBarWidth - (70 * X);
     VST3.Header.Columns[2].Width := 30 * X; // category
     VST3.Header.Columns[3].Width := 30 * X; // subcategory
     VST3.Header.Columns[4].Width := 10 * X; // ID

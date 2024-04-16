@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, Buttons, ActnList, BCPanel, BCMDButtonFocus, StrUtils, Math;
+  StdCtrls, Buttons, ActnList, BCPanel, BCMDButtonFocus, StrUtils, IniFiles;
 
 type
 
@@ -67,6 +67,7 @@ type
     procedure ediOldEnter(Sender: TObject);
     procedure ediOldExit(Sender: TObject);
     procedure ediOldKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -87,7 +88,7 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniProperties, uniGate, uniResources;
+  uniMain, uniProperties, uniGate, uniResources, uniSettings;
 
 { TfrmPassword }
 
@@ -287,20 +288,43 @@ begin
   end;
 end;
 
+procedure TfrmPassword.FormClose(Sender: TObject; var CloseAction: TCloseAction
+  );
+var
+  INI: TINIFile;
+  INIFile: string;
+
+begin
+  try
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmPassword.Name, '') <>
+          IntToStr(frmPassword.Left) + separ + // form left
+        IntToStr(frmPassword.Top) + separ + // form top
+        IntToStr(frmPassword.Width) + separ + // form width
+        IntToStr(frmPassword.Height) then
+          INI.WriteString('POSITION', frmPassword.Name,
+            IntToStr(frmPassword.Left) + separ + // form left
+            IntToStr(frmPassword.Top) + separ + // form top
+            IntToStr(frmPassword.Width) + separ + // form width
+            IntToStr(frmPassword.Height));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
+
+end;
+
 procedure TfrmPassword.FormCreate(Sender: TObject);
 begin
-  {$IFDEF WINDOWS}
-  // form size
-  (Sender as TForm).Width := Round(350 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinWidth := Round(350 * (ScreenRatio / 100));
-  (Sender as TForm).Height := Round(350 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinHeight := Round(350 * (ScreenRatio / 100));
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-  {$ENDIF}
-
   btn0.Caption := IntToStr(btn0.Tag);
   btn1.Caption := IntToStr(btn1.Tag);
   btn2.Caption := IntToStr(btn2.Tag);
@@ -312,11 +336,11 @@ begin
   btn8.Caption := IntToStr(btn8.Tag);
   btn9.Caption := IntToStr(btn9.Tag);
 
-  // set components height
-  {$IFDEF WINDOWS}
   pnlPasswordCaption.Height := PanelHeight;
   pnlBottom.Height := ButtonHeight;
-  {$ENDIF}
+
+  // get form icon
+  frmMain.img16.GetIcon(5, (Sender as TForm).Icon);
 end;
 
 procedure TfrmPassword.FormResize(Sender: TObject);
@@ -334,9 +358,57 @@ end;
 
 procedure TfrmPassword.FormShow(Sender: TObject);
 var
-  Old: string;
-
+  S, Old: string;
+  INI: TINIFile;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmPassword.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmPassword.Name, '-1•-1•0•0');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmPassword.Width := Round(450 * (ScreenRatio / 100))
+      else
+        frmPassword.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmPassword.Height := Round(350 * (ScreenRatio / 100))
+      else
+        frmPassword.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmPassword.left := (Screen.Width - frmPassword.Width) div 2
+      else
+        frmPassword.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmPassword.Top := ((Screen.Height - frmPassword.Height) div 2) - 75
+      else
+        frmPassword.Top := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   ediOld.Clear;
   ediNew.Clear;
   ediConfirm.Clear;

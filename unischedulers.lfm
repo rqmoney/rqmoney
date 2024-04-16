@@ -1,78 +1,41 @@
 object frmSchedulers: TfrmSchedulers
-  Left = 555
+  Left = 642
   Height = 400
-  Top = 210
+  Top = 264
   Width = 950
   ClientHeight = 400
   ClientWidth = 950
   Constraints.MinHeight = 400
   Constraints.MinWidth = 600
-  Icon.Data = {
-    7E04000000000100010010100000010020006804000016000000280000001000
-    0000200000000100200000000000000400006400000064000000000000000000
-    0000000000003886BACA3782B4FF3782B4FF5BAADFFF469FDCFF3B99D9FF3B99
-    D9FF3B99D9FF3B99D9FF3B99D9FF3B99D9FF3B99D9FC3B98D8BA000000000000
-    00003986B9513883B6FB3782B4FF3782B4FF5CAADFFF48A0DCFF3B99D9FF3B99
-    D9FF3B99D9FF3B99D9FF3B99D9FF3B99D9FF3B99D9FF3B99D9FF3A98D9510000
-    000079A2BD7B5892B9FF4F8CB6FF3C84B5FF5DABDFFF4BA2DDFF409BDAFF3E9A
-    DAFF3C99D9FF3B99D9FF3B99D9FF3B99D9FF3B99D9FF3B99D9FF6A8BCAB6B47B
-    BB41E0E3E5ECD5DDE3FF9DB4C3FF4181ACFF5EABDFFF4EA4DEFF439DDBFF419C
-    DBFF3E9BDAFF3D9AD9FF3B99D9FF3B99D9FF3B99D9FF3B99D9FF8386C3F2B47B
-    BBB8769FBA7B5893B9FF4582AAFF3A83B3FF5FACE0FF51A6DFFF469ED9FF4095
-    CDFF3D8FC5FF3C8DC4FF3B8DC4FF3A8FC8FF3B98D7FF3B99D9FF8487C4F4B47B
-    BBC63782B4553782B4FF3782B4FF3782B4FF60ACE0FF54A7DFFF4396CDFF4192
-    C9FF3E90C7FF3F92CBFF3C8FC7FF3D92CBFF3D99D7FF3C9AD9FF9495ADF5BC8A
-    A7BF3782B4553782B4FF3782B4FF3782B4FF61ADE0FF58A9E0FF4291C6FF408E
-    C4FF4395CCFF4091C8FF3C8BC1FF3D8EC4FF419CD9FF409CDAFFA3AF8CF5DBC3
-    5FBE3782B4553782B4FF3782B4FF3782B4FF62AEE1FF5AABE1FF4391C5FF4290
-    C5FF4698CFFF489CD5FF3E8DC3FF4295CDFF4297D1FF449EDBFF9DB28EF4DCC4
-    5DC63782B4553782B4FF3782B4FF3782B4FF64AEE1FF5EADE2FF4A98CDFF4999
-    CEFF4290C5FF4391C6FF4291C6FF4293C9FF469BD5FF48A0DCFF84A2A3F5B7AF
-    79C03782B4553883B5FF428BBBFF3C86B8FF65AFE1FF61AEE2FF57A6DBFF4794
-    C8FF4695C9FF4999CEFF4494C9FF4392C8FF4DA3DDFF4CA2DDFF437DD6F63968
-    DBBDDBDBDBFFDBDBDBFF99ACB9FF3F7FAAFF66B0E1FF64B0E3FF60ADE1FF5EAC
-    E1FF54A3D7FF4E9DD2FF51A2D8FF54A6DEFF52A6DEFF50A5DEFF3679E2F4245D
-    EBC69BB9CD8E70A2C3FF6095BAFF3D83B3FF67B0E2FF67B2E3FF63AFE2FF61AE
-    E2FF5FADE1FF5DACE1FF5AAAE0FF58A9E0FF56A8DFFF54A7DFFF3779E3F4245D
-    ECC33984B5553883B4FF3782B4FF3782B4FF68B1E2FF6AB4E4FF68B2E3FF66B1
-    E3FF64AFE2FF62AEE2FF5FADE1FF5DACE1FF5AAAE0FF58A9E0FF3F84DFCE235E
-    EC4D4990BF553D87B8FF3782B4FF3782B4FF69B1E2FF6DB5E5FF6BB4E4FF69B3
-    E4FF67B1E3FF65B0E3FF62AFE2FF60AEE2FF5EACE1FF5CABE1FF549CCE8A0000
-    00005C97C1496AA1C7F35C99C1FF5896C0FF80BCE4FF8CC3E8FF8EC3E7FF8CC2
-    E7FF8AC1E6FF89C1E6FF87BFE6FF85BEE5FF8DC2E6FF99C3DEFF3682B3520000
-    0000000000006BA1C4B4A6C4D8FFADC8DAFFB4CDDFFFBBD1E0FFBED2E1FFBDD2
-    E0FFBDD2E0FFBDD2E0FFBDD2E0FFBBD0DFFFA2C2D6FC6FA3C5BA000000000000
-    00000000563A0000F739000028000000757400006E700000656C000000250000
-    00000000D0250000000000004395000132BA00002000000178740000726C8003
-    6F00
-  }
+  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.1'
+  LCLVersion = '3.2.0.0'
+  Scaled = False
   object pnlList: TPanel
     Left = 5
     Height = 390
     Top = 5
-    Width = 575
+    Width = 545
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
     ClientHeight = 390
-    ClientWidth = 575
+    ClientWidth = 545
     Constraints.MinWidth = 500
     TabOrder = 0
     object pnlButtons: TPanel
       Left = 2
       Height = 25
       Top = 337
-      Width = 571
+      Width = 541
       Align = alBottom
       BorderSpacing.Around = 1
       BevelOuter = bvNone
       ClientHeight = 25
-      ClientWidth = 571
+      ClientWidth = 541
       Constraints.MinHeight = 25
       ParentColor = False
       ParentFont = False
@@ -166,7 +129,7 @@ object frmSchedulers: TfrmSchedulers
       end
       object btnExit: TBCMDButtonFocus
         Cursor = crHandPoint
-        Left = 418
+        Left = 388
         Height = 23
         Top = 1
         Width = 150
@@ -198,7 +161,7 @@ object frmSchedulers: TfrmSchedulers
       Left = 1
       Height = 20
       Top = 1
-      Width = 573
+      Width = 543
       Align = alTop
       Background.Color = clBtnFace
       Background.Gradient1.StartColor = 16744448
@@ -239,7 +202,7 @@ object frmSchedulers: TfrmSchedulers
       Left = 4
       Height = 310
       Top = 24
-      Width = 567
+      Width = 537
       Align = alClient
       BorderSpacing.Around = 3
       Header.AutoSizeIndex = 0
@@ -311,12 +274,13 @@ object frmSchedulers: TfrmSchedulers
       Images = frmMain.ImgTypes
       PopupMenu = popList
       TabOrder = 2
-      TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSort, toAutoTristateTracking, toAutoDeleteMovedNodes]
+      TreeOptions.AutoOptions = [toAutoSort, toAutoChangeScale]
       TreeOptions.MiscOptions = [toFullRepaintOnResize, toInitOnSave, toReportMode, toToggleOnDblClick, toWheelPanning]
       TreeOptions.PaintOptions = [toShowVertGridLines]
       TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
       OnBeforeCellPaint = VSTBeforeCellPaint
       OnChange = VSTChange
+      OnCompareNodes = VSTCompareNodes
       OnDblClick = VSTDblClick
       OnGetText = VSTGetText
       OnPaintText = VSTPaintText
@@ -328,15 +292,15 @@ object frmSchedulers: TfrmSchedulers
       Left = 1
       Height = 22
       Top = 367
-      Width = 573
+      Width = 543
       Align = alBottom
       BorderSpacing.Top = 5
       BevelOuter = bvNone
       ClientHeight = 22
-      ClientWidth = 573
+      ClientWidth = 543
       TabOrder = 3
       object pnlHeight: TPanel
-        Left = 452
+        Left = 422
         Height = 20
         Top = 1
         Width = 120
@@ -368,11 +332,12 @@ object frmSchedulers: TfrmSchedulers
           Align = alClient
           Alignment = taCenter
           BorderSpacing.Around = 1
+          Layout = tlCenter
           ParentColor = False
         end
       end
       object pnlWidth: TPanel
-        Left = 331
+        Left = 301
         Height = 20
         Top = 1
         Width = 120
@@ -404,6 +369,7 @@ object frmSchedulers: TfrmSchedulers
           Align = alClient
           Alignment = taCenter
           BorderSpacing.Around = 1
+          Layout = tlCenter
           ParentColor = False
         end
       end
@@ -440,6 +406,7 @@ object frmSchedulers: TfrmSchedulers
           Align = alClient
           Alignment = taCenter
           BorderSpacing.Around = 1
+          Layout = tlCenter
           ParentColor = False
         end
       end
@@ -476,6 +443,7 @@ object frmSchedulers: TfrmSchedulers
           Align = alClient
           Alignment = taCenter
           BorderSpacing.Around = 1
+          Layout = tlCenter
           ParentColor = False
         end
       end
@@ -483,7 +451,7 @@ object frmSchedulers: TfrmSchedulers
         Left = 243
         Height = 20
         Top = 1
-        Width = 87
+        Width = 57
         Align = alClient
         BorderSpacing.Around = 1
         BevelOuter = bvLowered
@@ -494,7 +462,7 @@ object frmSchedulers: TfrmSchedulers
     end
   end
   object splList: TSplitter
-    Left = 585
+    Left = 555
     Height = 400
     Top = 0
     Width = 5
@@ -503,22 +471,23 @@ object frmSchedulers: TfrmSchedulers
     ResizeAnchor = akRight
   end
   object pnlRight: TPanel
-    Left = 595
+    Left = 565
     Height = 390
     Top = 5
-    Width = 350
+    Width = 380
     Align = alRight
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
     ClientHeight = 390
-    ClientWidth = 350
+    ClientWidth = 380
+    Constraints.MaxWidth = 650
     Constraints.MinWidth = 1
     TabOrder = 2
     object pnlPaymentsCaption: TBCPanel
       Left = 1
       Height = 20
       Top = 1
-      Width = 348
+      Width = 378
       Align = alTop
       Background.Color = clBtnFace
       Background.Gradient1.StartColor = 16744448
@@ -559,7 +528,7 @@ object frmSchedulers: TfrmSchedulers
       Left = 4
       Height = 310
       Top = 24
-      Width = 342
+      Width = 372
       Align = alClient
       BorderSpacing.Around = 3
       Header.AutoSizeIndex = 0
@@ -599,9 +568,11 @@ object frmSchedulers: TfrmSchedulers
       Header.Options = [hoColumnResize, hoShowImages, hoShowSortGlyphs, hoVisible, hoHeaderClickAutoSort]
       Header.Style = hsFlatButtons
       Images = frmMain.ImgTypes
+      ParentShowHint = False
       PopupMenu = popDate
+      ShowHint = True
       TabOrder = 1
-      TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSort, toAutoTristateTracking, toAutoDeleteMovedNodes]
+      TreeOptions.AutoOptions = [toAutoSort, toAutoChangeScale]
       TreeOptions.MiscOptions = [toFullRepaintOnResize, toInitOnSave, toReportMode, toToggleOnDblClick, toWheelPanning]
       TreeOptions.PaintOptions = [toShowVertGridLines]
       TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
@@ -618,12 +589,12 @@ object frmSchedulers: TfrmSchedulers
       Left = 2
       Height = 25
       Top = 337
-      Width = 346
+      Width = 376
       Align = alBottom
       BorderSpacing.Around = 1
       BevelOuter = bvNone
       ClientHeight = 25
-      ClientWidth = 346
+      ClientWidth = 376
       Constraints.MinHeight = 25
       ParentColor = False
       ParentFont = False
@@ -634,7 +605,7 @@ object frmSchedulers: TfrmSchedulers
         Left = 3
         Height = 23
         Top = 1
-        Width = 34
+        Width = 64
         Animation = True
         StyleNormal.Color = clWhite
         StyleNormal.TextColor = clBlack
@@ -660,7 +631,7 @@ object frmSchedulers: TfrmSchedulers
       end
       object btnEdit1: TBCMDButtonFocus
         Cursor = crHandPoint
-        Left = 40
+        Left = 70
         Height = 23
         Top = 1
         Width = 150
@@ -689,7 +660,7 @@ object frmSchedulers: TfrmSchedulers
       end
       object btnDelete1: TBCMDButtonFocus
         Cursor = crHandPoint
-        Left = 193
+        Left = 223
         Height = 23
         Top = 1
         Width = 150
@@ -721,12 +692,12 @@ object frmSchedulers: TfrmSchedulers
       Left = 1
       Height = 22
       Top = 367
-      Width = 348
+      Width = 378
       Align = alBottom
       BorderSpacing.Top = 5
       BevelOuter = bvNone
       ClientHeight = 22
-      ClientWidth = 348
+      ClientWidth = 378
       Constraints.MaxHeight = 36
       Constraints.MinHeight = 18
       ParentFont = False
@@ -752,6 +723,7 @@ object frmSchedulers: TfrmSchedulers
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Around = 1
+          Center = True
           ImageIndex = -1
           Images = frmMain.imgSize
         end
@@ -763,6 +735,7 @@ object frmSchedulers: TfrmSchedulers
           Align = alClient
           Alignment = taCenter
           BorderSpacing.Around = 1
+          Layout = tlCenter
           ParentColor = False
           ParentFont = False
         end
@@ -788,6 +761,7 @@ object frmSchedulers: TfrmSchedulers
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Around = 1
+          Center = True
           ImageIndex = 7
           Images = frmMain.imgSize
         end
@@ -799,6 +773,7 @@ object frmSchedulers: TfrmSchedulers
           Align = alClient
           Alignment = taCenter
           BorderSpacing.Around = 1
+          Layout = tlCenter
           ParentColor = False
           ParentFont = False
         end
@@ -807,12 +782,12 @@ object frmSchedulers: TfrmSchedulers
         Left = 203
         Height = 20
         Top = 1
-        Width = 144
+        Width = 174
         Align = alClient
         BorderSpacing.Around = 1
         BevelOuter = bvLowered
         ClientHeight = 20
-        ClientWidth = 144
+        ClientWidth = 174
         ParentFont = False
         TabOrder = 2
         object imgItems2: TImage
@@ -824,6 +799,7 @@ object frmSchedulers: TfrmSchedulers
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Around = 1
+          Center = True
           ImageIndex = 9
           Images = frmMain.imgSize
         end
@@ -831,10 +807,11 @@ object frmSchedulers: TfrmSchedulers
           Left = 22
           Height = 16
           Top = 2
-          Width = 120
+          Width = 150
           Align = alClient
           Alignment = taCenter
           BorderSpacing.Around = 1
+          Layout = tlCenter
           ParentColor = False
           ParentFont = False
         end

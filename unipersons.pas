@@ -7,7 +7,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, ComCtrls, Buttons, Menus, ActnList, BCPanel,
+  ExtCtrls, ComCtrls, Buttons, Menus, ActnList, BCPanel, IniFiles,
   BCMDButtonFocus, LazUTF8, laz.VirtualTrees, StrUtils, Math;
 
 type
@@ -15,9 +15,9 @@ type
     Name: string;
     NameLower: string;
     Comment: string;
-    Status: Integer;
-    Time: String;
-    ID: Integer;
+    Status: integer;
+    Time: string;
+    ID: integer;
   end;
   PPerson = ^TPerson;
 
@@ -79,7 +79,6 @@ type
     pnlItems: TPanel;
     pnlBottom: TPanel;
     pnlHeight: TPanel;
-    pnlTip: TPanel;
     pnlWidth: TPanel;
     pnlItem: TPanel;
     popAdd: TMenuItem;
@@ -95,7 +94,8 @@ type
     procedure btnCopyClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
     procedure btnPrintClick(Sender: TObject);
-    procedure btnPrintMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure btnPrintMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
     procedure btnSelectClick(Sender: TObject);
     procedure cbxStatusEnter(Sender: TObject);
     procedure cbxStatusExit(Sender: TObject);
@@ -123,14 +123,14 @@ type
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
     procedure VSTChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
-    procedure VSTCompareNodes(Sender: TBaseVirtualTree; Node1,
-      Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
+    procedure VSTCompareNodes(Sender: TBaseVirtualTree;
+      Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: integer);
     procedure VSTDblClick(Sender: TObject);
     procedure VSTGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean;
       var ImageIndex: integer);
     procedure VSTGetNodeDataSize(Sender: TBaseVirtualTree;
-      var NodeDataSize: Integer);
+      var NodeDataSize: integer);
     procedure VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure VSTPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas;
@@ -153,9 +153,9 @@ implementation
 
 uses
   uniMain, uniSettings, uniScheduler, uniEdit, uniProperties, uniTemplates,
-  uniMultiple, uniDetail, uniDelete, uniResources, uniEdits;
+  uniDetail, uniDelete, uniResources, uniEdits;
 
-{ TfrmPersons }
+  { TfrmPersons }
 
 
 procedure TfrmPersons.FormCreate(Sender: TObject);
@@ -167,24 +167,16 @@ begin
     frmPersons.cbxStatus.Items.Add(Caption_57);
     frmPersons.cbxStatus.Items.Add(Caption_59);
 
-    // form size
-    (Sender as TForm).Width := Round((Screen.Width /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - (Round(1020 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height := Round(Screen.Height /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - 3 * (250 - ScreenRatio);
-
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := (Screen.Height - 100 - (Sender as TForm).Height) div 2;
-
-    {$IFDEF WINDOWS}
+    // set component height
     VST.Header.Height := PanelHeight;
     pnlDetailCaption.Height := PanelHeight;
     pnlListCaption.Height := PanelHeight;
     pnlButtons.Height := ButtonHeight;
     pnlButton.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
-    {$ENDIF}
+
+    // get form icon
+    frmMain.img16.GetIcon(17, (Sender as TForm).Icon);
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -240,7 +232,8 @@ end;
 
 procedure TfrmPersons.btnEditClick(Sender: TObject);
 begin
-  if (VST.Enabled = False) or (VST.SelectedCount = 0) or (frmMain.Conn.Connected = False) then
+  if (VST.Enabled = False) or (VST.SelectedCount = 0) or
+    (frmMain.Conn.Connected = False) then
     Exit;
 
   try
@@ -313,7 +306,6 @@ var
   I: integer;
   IDs: string;
   N: PVirtualNode;
-
 begin
   try
     if (frmMain.Conn.Connected = False) or (vST.RootNodeCount = 0) or
@@ -411,72 +403,72 @@ end;
 
 procedure TfrmPersons.btnPrintClick(Sender: TObject);
 var
- FileName: String;
-
+  FileName: string;
 begin
- if btnPrint.Enabled = False then Exit;
+  if btnPrint.Enabled = False then Exit;
 
- FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Templates' +
-     DirectorySeparator + 'persons.lrf';
+  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
+    'Templates' + DirectorySeparator + 'persons.lrf';
 
- if FileExists(FileName) = False then
- begin
-   ShowMessage(Error_14 + sLineBreak + FileName);
-   Exit;
- end;
+  if FileExists(FileName) = False then
+  begin
+    ShowMessage(Error_14 + sLineBreak + FileName);
+    Exit;
+  end;
 
- // left mouse button = show report
- try
-   frmMain.Report.Tag := 10;
-   frmMain.Report.LoadFromFile(FileName);
-   frmMain.Report.FindObject('lblName').Memo.Text := AnsiUpperCase(lblName.Caption);
-   frmMain.Report.FindObject('lblComment').Memo.Text :=
-     AnsiUpperCase(lblComment.Caption);
-   //    frmMain.Report.FindObject('lblStamp').Memo.Text := AnsiUpperCase(lblStamp.Caption);
-   frmMain.Report.FindObject('lblStatus').Memo.Text :=
-     AnsiUpperCase(lblStatus.Caption);
-   frmMain.Report.FindObject('lblID').Memo.Text :=
-     AnsiUpperCase(VST.Header.Columns[4].Text);
-   frmMain.Report.FindObject('lblFooter').Memo.Text :=
-     AnsiUpperCase(Application.Title + ' - ' + frmPersons.Caption);
+  // left mouse button = show report
+  try
+    frmMain.Report.Tag := 10;
+    frmMain.Report.LoadFromFile(FileName);
+    frmMain.Report.FindObject('lblName').Memo.Text := AnsiUpperCase(lblName.Caption);
+    frmMain.Report.FindObject('lblComment').Memo.Text :=
+      AnsiUpperCase(lblComment.Caption);
+    //    frmMain.Report.FindObject('lblStamp').Memo.Text := AnsiUpperCase(lblStamp.Caption);
+    frmMain.Report.FindObject('lblStatus').Memo.Text :=
+      AnsiUpperCase(lblStatus.Caption);
+    frmMain.Report.FindObject('lblID').Memo.Text :=
+      AnsiUpperCase(VST.Header.Columns[4].Text);
+    frmMain.Report.FindObject('lblFooter').Memo.Text :=
+      AnsiUpperCase(Application.Title + ' - ' + frmPersons.Caption);
 
-   frmMain.Report.ShowReport;
+    frmMain.Report.ShowReport;
 
-   VST.SetFocus;
+    VST.SetFocus;
 
- except
-   on E: Exception do
-     ShowErrorMessage(E);
- end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
 end;
 
-procedure TfrmPersons.btnPrintMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TfrmPersons.btnPrintMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: integer);
 var
- FileName: String;
-
+  FileName: string;
 begin
- FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Templates' +
-     DirectorySeparator + 'persons.lrf';
+  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
+    'Templates' + DirectorySeparator + 'persons.lrf';
 
- if FileExists(FileName) = False then
- begin
-   ShowMessage(Error_14 + sLineBreak + FileName);
-   Exit;
- end;
+  if FileExists(FileName) = False then
+  begin
+    ShowMessage(Error_14 + sLineBreak + FileName);
+    Exit;
+  end;
 
- // right mouse button = show design report
- if Button = mbRight then
-   begin
-     frmMain.Report.LoadFromFile(FileName);
-     frmMain.Report.DesignReport;
-   end
-   else if Button = mbLeft then
-     btnPrintClick(btnPrint);
+  // right mouse button = show design report
+  if Button = mbRight then
+  begin
+    frmMain.Report.LoadFromFile(FileName);
+    frmMain.Report.DesignReport;
+  end
+  else if Button = mbLeft then
+    btnPrintClick(btnPrint);
 end;
 
 procedure TfrmPersons.btnSelectClick(Sender: TObject);
 begin
-  if (VST.Enabled = False) or (VST.RootNodeCount < 1) or (frmMain.Conn.Connected = False) then
+  if (VST.Enabled = False) or (VST.RootNodeCount < 1) or
+    (frmMain.Conn.Connected = False) then
     Exit;
   VST.SelectAll(False);
   VST.SetFocus;
@@ -572,14 +564,14 @@ begin
     if btnSave.Tag = 0 then
       // Add new record
       frmMain.QRY.SQL.Text :=
-        'INSERT INTO persons (per_name, per_name_lower, per_status, per_comment) VALUES ('
+        'INSERT OR IGNORE INTO persons (per_name, per_name_lower, per_status, per_comment) VALUES ('
         + ':NAME, :NAMELOWER, :STATUS, :COMMENT)'
     else
     begin
       // Edit selected record
       VST.Tag := StrToInt(VST.Text[VST.FocusedNode, 4]);
       frmMain.QRY.SQL.Text :=
-        'UPDATE persons SET ' +            // update
+        'UPDATE OR IGNORE persons SET ' +            // update
         'per_name = :NAME, ' +            // name
         'per_name_lower = :NAMELOWER, ' + // name lower
         'per_status = :STATUS, ' +        // status
@@ -694,11 +686,10 @@ begin
   end;
 end;
 
-procedure TfrmPersons.VSTCompareNodes(Sender: TBaseVirtualTree; Node1,
-  Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
+procedure TfrmPersons.VSTCompareNodes(Sender: TBaseVirtualTree;
+  Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: integer);
 var
   Data1, Data2: PPerson;
-
 begin
   Data1 := Sender.GetNodeData(Node1);
   Data2 := Sender.GetNodeData(Node2);
@@ -726,7 +717,7 @@ begin
 end;
 
 procedure TfrmPersons.VSTGetNodeDataSize(Sender: TBaseVirtualTree;
-  var NodeDataSize: Integer);
+  var NodeDataSize: integer);
 begin
   NodeDataSize := SizeOf(TPerson);
 end;
@@ -735,7 +726,6 @@ procedure TfrmPersons.VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
   Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
 var
   Person: PPerson;
-
 begin
   Person := Sender.GetNodeData(Node);
   try
@@ -756,9 +746,8 @@ procedure TfrmPersons.VSTPaintText(Sender: TBaseVirtualTree;
   TextType: TVSTTextType);
 var
   Person: PPerson;
-
 begin
-  If vsSelected in node.States then exit;
+  if vsSelected in node.States then exit;
 
   Person := Sender.GetNodeData(Node);
   case Person.Status of
@@ -771,14 +760,15 @@ end;
 procedure TfrmPersons.VSTResize(Sender: TObject);
 var
   X: integer;
-
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
-  (Sender as TLazVirtualStringTree).Header.Columns[0].Width := round(ScreenRatio * 25 / 100);
+  (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+    round(ScreenRatio * 25 / 100);
   X := (VST.Width - VST.Header.Columns[0].Width) div 100;
   VST.Header.Columns[1].Width := 33 * X; // name
-  VST.Header.Columns[2].Width := VST.Width - ScrollBarWidth - VST.Header.Columns[0].Width - (60 * X); // comment
+  VST.Header.Columns[2].Width :=
+    VST.Width - ScrollBarWidth - VST.Header.Columns[0].Width - (60 * X); // comment
   VST.Header.Columns[3].Width := 17 * X; // status
   VST.Header.Columns[4].Width := 10 * X; // ID
 end;
@@ -789,12 +779,44 @@ begin
 end;
 
 procedure TfrmPersons.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
 begin
-  if pnlButton.Visible = True then
-  begin
-    btnCancelClick(btnCancel);
-    CloseAction := Forms.caNone;
-    Exit;
+  try
+    if pnlButton.Visible = True then
+    begin
+      btnCancelClick(btnCancel);
+      CloseAction := Forms.caNone;
+      Exit;
+    end;
+
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmPersons.Name, '') <>
+          IntToStr(frmPersons.Left) + separ + // form left
+        IntToStr(frmPersons.Top) + separ + // form top
+        IntToStr(frmPersons.Width) + separ + // form width
+        IntToStr(frmPersons.Height) + separ + // form height
+        IntToStr(frmPersons.pnlDetail.Width) then
+          INI.WriteString('POSITION', frmPersons.Name,
+            IntToStr(frmPersons.Left) + separ + // form left
+            IntToStr(frmPersons.Top) + separ + // form top
+            IntToStr(frmPersons.Width) + separ + // form width
+            IntToStr(frmPersons.Height) + separ + // form height
+            IntToStr(frmPersons.pnlDetail.Width));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
   end;
 end;
 
@@ -812,7 +834,65 @@ begin
 end;
 
 procedure TfrmPersons.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmPersons.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmPersons.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmPersons.Width := Screen.Width - 600 - (200 - ScreenRatio)
+      else
+        frmPersons.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmPersons.Height := Screen.Height - 400 - (200 - ScreenRatio)
+      else
+        frmPersons.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmPersons.left := (Screen.Width - frmPersons.Width) div 2
+      else
+        frmPersons.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmPersons.Top := ((Screen.Height - frmPersons.Height) div 2) - 75
+      else
+        frmPersons.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 150) or (I > 350) then
+        frmPersons.pnlDetail.Width := 220
+      else
+        frmPersons.pnlDetail.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;
@@ -843,7 +923,7 @@ begin
   popPrint.Enabled := VST.RootNodeCount > 0;
   actPrint.Enabled := VST.RootNodeCount > 0;
 
-  SetNodeHeight(frmPersons.VST);
+  SetNodeHeight(VST);
   VST.SetFocus;
   VST.ClearSelection;
 end;
@@ -868,7 +948,6 @@ procedure UpdatePersons;
 var
   Person: PPerson;
   P: PVirtualNode;
-
 begin
   try
     frmPersons.VST.Clear;
@@ -882,28 +961,29 @@ begin
     screen.Cursor := crHourGlass;
     frmPersons.VST.BeginUpdate;
 
-      frmMain.QRY.SQL.Text :=
-        'SELECT per_name, per_name_lower, per_comment, per_status, ' +
-        'per_time, per_ID FROM persons';
-      frmMain.QRY.Open;
-      while not (frmMain.QRY.EOF) do
-      begin
-        frmPersons.VST.RootNodeCount := frmPersons.VST.RootNodeCount + 1;
-        P := frmPersons.VST.GetLast();
-        Person := frmPersons.VST.GetNodeData(P);
-        Person.Name := frmMain.QRY.Fields[0].AsString;
-        Person.NameLower := frmMain.QRY.Fields[1].AsString;
-        Person.Comment := frmMain.QRY.Fields[2].AsString;
-        Person.Status := frmMain.QRY.Fields[3].AsInteger;
-        Person.Time := frmMain.QRY.Fields[4].AsString;
-        Person.ID := frmMain.QRY.Fields[5].AsInteger;
-        frmMain.QRY.Next;
-      end;
-      frmMain.QRY.Close;
+    frmMain.QRY.SQL.Text :=
+      'SELECT per_name, per_name_lower, per_comment, per_status, ' +
+      'per_time, per_ID FROM persons';
+    frmMain.QRY.Open;
+    while not (frmMain.QRY.EOF) do
+    begin
+      frmPersons.VST.RootNodeCount := frmPersons.VST.RootNodeCount + 1;
+      P := frmPersons.VST.GetLast();
+      Person := frmPersons.VST.GetNodeData(P);
+      Person.Name := frmMain.QRY.Fields[0].AsString;
+      Person.NameLower := frmMain.QRY.Fields[1].AsString;
+      Person.Comment := frmMain.QRY.Fields[2].AsString;
+      Person.Status := frmMain.QRY.Fields[3].AsInteger;
+      Person.Time := frmMain.QRY.Fields[4].AsString;
+      Person.ID := frmMain.QRY.Fields[5].AsInteger;
+      frmMain.QRY.Next;
+    end;
+    frmMain.QRY.Close;
 
-      frmPersons.VST.SortTree(1, sdAscending);
-      frmPersons.VST.EndUpdate;
-      screen.Cursor := crDefault;
+    frmPersons.VST.SortTree(1, sdAscending);
+    SetNodeHeight(frmPersons.VST);
+    frmPersons.VST.EndUpdate;
+    screen.Cursor := crDefault;
 
     // =============================================================================================
     // update list of persons in form Main
@@ -913,15 +993,12 @@ begin
     if (frmPersons.VST.RootNodeCount > 0) and
       (frmPersons.cbxStatus.Items.Count > 0) then
       for P in frmPersons.VST.Nodes() do
-      begin
-        // list of Persons in frmMAIN [not archive status]
-        if (frmPersons.VST.Text[P, 3] <> frmPersons.cbxStatus.Items[2]) then
-          frmMain.cbxPerson.Items.Add(frmPersons.VST.Text[P, 1]);
-
-        // list of Persons in frmDETAIL [active status only !!!]
+        // list of Persons in frmMAIN and frmDETAIL [only active status]
         if (frmPersons.VST.Text[P, 3] = frmPersons.cbxStatus.Items[0]) then
+        begin
           frmDetail.cbxPerson.Items.Add(frmPersons.VST.Text[P, 1]);
-      end;
+          frmMain.cbxPerson.Items.Add(frmPersons.VST.Text[P, 1]);
+        end;
 
     frmMain.cbxPerson.Items.Insert(0, '*');
     frmMain.cbxPerson.ItemIndex := 0;
@@ -929,8 +1006,8 @@ begin
 
     // =============================================================================================
     // update list of persons in form Multiple Addtitions
-    frmMultiple.cbxPerson.Clear;
-    frmMultiple.cbxPerson.Items := frmDetail.cbxPerson.Items;
+    frmDetail.cbxPersonX.Clear;
+    frmDetail.cbxPersonX.Items := frmDetail.cbxPerson.Items;
 
     // =============================================================================================
     // update list of persons in form Scheduler

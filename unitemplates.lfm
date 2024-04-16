@@ -1,10 +1,10 @@
 object frmTemplates: TfrmTemplates
-  Left = 466
-  Height = 856
-  Top = 108
+  Left = 440
+  Height = 600
+  Top = 195
   Width = 1000
   ActiveControl = pnlLeft
-  ClientHeight = 856
+  ClientHeight = 600
   ClientWidth = 1000
   Constraints.MinHeight = 600
   Constraints.MinWidth = 800
@@ -13,16 +13,17 @@ object frmTemplates: TfrmTemplates
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.1'
+  LCLVersion = '3.2.0.0'
+  Scaled = False
   object pnlClient: TPanel
     Left = 270
-    Height = 846
+    Height = 590
     Top = 5
     Width = 725
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 846
+    ClientHeight = 590
     ClientWidth = 725
     TabOrder = 1
     OnResize = pnlClientResize
@@ -84,17 +85,22 @@ object frmTemplates: TfrmTemplates
         Width = 701
         Align = alClient
         BorderSpacing.Around = 5
-        Font.Height = 13
-        Font.Name = 'DejaVu Sans Mono'
+        Font.Height = -13
+        Font.Name = 'Fixedsys'
         Font.Pitch = fpFixed
         Font.Quality = fqNonAntialiased
+        Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
         TabOrder = 1
-        Gutter.Width = 57
+        BookMarkOptions.DrawBookmarksFirst = False
+        BookMarkOptions.EnableKeys = False
+        BookMarkOptions.GlyphsVisible = False
+        Gutter.Width = 0
         Gutter.MouseActions = <>
         RightGutter.Width = 0
         RightGutter.MouseActions = <>
+        InsertMode = False
         Keystrokes = <        
           item
             Command = ecUp
@@ -519,7 +525,10 @@ object frmTemplates: TfrmTemplates
         MouseActions = <>
         MouseTextActions = <>
         MouseSelActions = <>
+        Options = [eoAutoIndent, eoScrollPastEol]
+        Options2 = [eoFoldedCopyPaste]
         VisibleSpecialChars = [vscSpace, vscTabAtLast]
+        ReadOnly = True
         RightEdge = 0
         ScrollBars = ssAutoBoth
         SelectedColor.BackPriority = 50
@@ -542,50 +551,17 @@ object frmTemplates: TfrmTemplates
         LineHighlightColor.Foreground = clNone
         WantTabs = False
         inline SynLeftGutterPartList1: TSynGutterPartList
-          object SynGutterMarks1: TSynGutterMarks
-            Width = 24
-            MouseActions = <>
-          end
-          object SynGutterLineNumber1: TSynGutterLineNumber
-            Width = 17
-            MouseActions = <>
-            MarkupInfo.Background = clBtnFace
-            MarkupInfo.Foreground = clNone
-            DigitCount = 2
-            ShowOnlyLineNumbersMultiplesOf = 1
-            ZeroStart = False
-            LeadingZeros = False
-          end
-          object SynGutterChanges1: TSynGutterChanges
-            Width = 4
-            MouseActions = <>
-            ModifiedColor = 59900
-            SavedColor = clGreen
-          end
-          object SynGutterSeparator1: TSynGutterSeparator
-            Width = 2
-            MouseActions = <>
-            MarkupInfo.Background = clWhite
-            MarkupInfo.Foreground = clGray
-          end
-          object SynGutterCodeFolding1: TSynGutterCodeFolding
-            MouseActions = <>
-            MarkupInfo.Background = clNone
-            MarkupInfo.Foreground = clGray
-            MouseActionsExpanded = <>
-            MouseActionsCollapsed = <>
-          end
         end
       end
     end
     object pnlBottom: TPanel
       Left = 6
-      Height = 551
+      Height = 295
       Top = 261
       Width = 713
       Align = alClient
       BorderSpacing.Around = 5
-      ClientHeight = 551
+      ClientHeight = 295
       ClientWidth = 713
       TabOrder = 1
       object pnlBottomCaption: TBCPanel
@@ -632,20 +608,11 @@ object frmTemplates: TfrmTemplates
       object VST: TLazVirtualStringTree
         Cursor = 63
         Left = 3
-        Height = 524
+        Height = 268
         Top = 24
         Width = 707
         Align = alClient
         BorderSpacing.Around = 2
-        ClipboardFormats.Strings = (
-          'CSV'
-          'HTML Format'
-          'Plain text'
-          'Rich Text Format'
-          'Rich Text Format Without Objects'
-          'Unicode text'
-          'Virtual Tree Data'
-        )
         DefaultNodeHeight = 20
         DragMode = dmAutomatic
         DragOperations = []
@@ -668,7 +635,7 @@ object frmTemplates: TfrmTemplates
         Images = frmMain.ImgTypes
         TabOrder = 1
         TextMargin = 2
-        TreeOptions.AutoOptions = [toAutoScroll, toAutoScrollOnExpand, toAutoSort]
+        TreeOptions.AutoOptions = [toAutoScroll, toAutoScrollOnExpand, toAutoSort, toAutoChangeScale]
         TreeOptions.MiscOptions = [toFullRepaintOnResize, toGridExtensions, toReportMode, toWheelPanning]
         TreeOptions.PaintOptions = [toHideFocusRect, toHotTrack, toShowVertGridLines, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
@@ -684,7 +651,7 @@ object frmTemplates: TfrmTemplates
     object pnlBottom1: TPanel
       Left = 6
       Height = 24
-      Top = 817
+      Top = 561
       Width = 713
       Align = alBottom
       BorderSpacing.Left = 4
@@ -696,35 +663,37 @@ object frmTemplates: TfrmTemplates
       ClientWidth = 713
       TabOrder = 2
       object pnlHeight: TPanel
-        Left = 510
+        Left = 410
         Height = 20
         Top = 2
-        Width = 100
+        Width = 150
         Align = alRight
         AutoSize = True
         BorderSpacing.Around = 1
         BevelOuter = bvLowered
         ClientHeight = 20
-        ClientWidth = 100
-        Constraints.MinWidth = 100
+        ClientWidth = 150
+        Constraints.MinWidth = 150
         ParentFont = False
         TabOrder = 0
         object imgHeight: TImage
           Left = 5
           Height = 16
           Top = 2
-          Width = 14
+          Width = 16
           Align = alLeft
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Around = 1
           Center = True
+          ImageIndex = 1
+          Images = frmMain.imgSize
         end
         object lblHeight: TLabel
-          Left = 20
+          Left = 22
           Height = 16
           Top = 2
-          Width = 78
+          Width = 126
           Align = alClient
           Alignment = taCenter
           BorderSpacing.Around = 1
@@ -734,35 +703,36 @@ object frmTemplates: TfrmTemplates
         end
       end
       object pnlWidth: TPanel
-        Left = 611
+        Left = 561
         Height = 20
         Top = 2
-        Width = 100
+        Width = 150
         Align = alRight
         AutoSize = True
         BorderSpacing.Around = 1
         BevelOuter = bvLowered
         ClientHeight = 20
-        ClientWidth = 100
-        Constraints.MinWidth = 100
+        ClientWidth = 150
+        Constraints.MinWidth = 150
         ParentFont = False
         TabOrder = 1
         object imgWidth: TImage
           Left = 5
           Height = 16
           Top = 2
-          Width = 14
+          Width = 16
           Align = alLeft
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Around = 1
           Center = True
+          Images = frmMain.imgSize
         end
         object lblWidth: TLabel
-          Left = 20
+          Left = 22
           Height = 16
           Top = 2
-          Width = 78
+          Width = 126
           Align = alClient
           Alignment = taCenter
           BorderSpacing.Around = 1
@@ -775,19 +745,19 @@ object frmTemplates: TfrmTemplates
   end
   object splTemplates: TSplitter
     Left = 260
-    Height = 856
+    Height = 600
     Top = 0
     Width = 5
   end
   object pnlLeft: TPanel
     Tag = 1
     Left = 5
-    Height = 846
+    Height = 590
     Top = 5
     Width = 250
     Align = alLeft
     BorderSpacing.Around = 5
-    ClientHeight = 846
+    ClientHeight = 590
     ClientWidth = 250
     Constraints.MaxWidth = 400
     Constraints.MinWidth = 200
@@ -886,7 +856,7 @@ object frmTemplates: TfrmTemplates
     end
     object tabTemplates: TNotebook
       Left = 1
-      Height = 822
+      Height = 566
       Top = 23
       Width = 248
       PageIndex = 0
@@ -896,13 +866,13 @@ object frmTemplates: TfrmTemplates
         OnBeforeShow = Page1BeforeShow
         object pnlTemplate: TPanel
           Left = 5
-          Height = 98
+          Height = 81
           Top = 5
           Width = 238
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 5
-          ClientHeight = 98
+          ClientHeight = 81
           ClientWidth = 238
           TabOrder = 0
           object lblTemplates: TLabel
@@ -918,33 +888,34 @@ object frmTemplates: TfrmTemplates
           end
           object cbxTemplates: TComboBox
             Left = 6
-            Height = 45
+            Height = 23
             Top = 12
             Width = 226
             Align = alTop
             BorderSpacing.Around = 5
-            ItemHeight = 0
-            OnChange = cbxTemplatesChange
+            DropDownCount = 20
+            ItemHeight = 15
             Style = csDropDownList
             TabOrder = 0
+            OnChange = cbxTemplatesChange
           end
           object pnlButtons: TPanel
             Left = 6
-            Height = 30
-            Top = 62
+            Height = 35
+            Top = 40
             Width = 226
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 5
             BevelOuter = bvLowered
-            ClientHeight = 30
+            ClientHeight = 35
             ClientWidth = 226
             TabOrder = 1
             OnResize = pnlButtonsResize
             object btnAdd: TBCMDButtonFocus
               Cursor = crHandPoint
               Left = 5
-              Height = 20
+              Height = 25
               Top = 5
               Width = 70
               Animation = True
@@ -973,7 +944,7 @@ object frmTemplates: TfrmTemplates
             object btnEdit: TBCMDButtonFocus
               Cursor = crHandPoint
               Left = 79
-              Height = 20
+              Height = 25
               Top = 5
               Width = 68
               Animation = True
@@ -1002,7 +973,7 @@ object frmTemplates: TfrmTemplates
             object btnDelete: TBCMDButtonFocus
               Cursor = crHandPoint
               Left = 151
-              Height = 20
+              Height = 25
               Top = 5
               Width = 70
               Animation = True
@@ -1034,7 +1005,7 @@ object frmTemplates: TfrmTemplates
         object pnlImport: TPanel
           Left = 5
           Height = 64
-          Top = 753
+          Top = 497
           Width = 238
           Align = alBottom
           AutoSize = True
@@ -1105,7 +1076,7 @@ object frmTemplates: TfrmTemplates
         object pnlImport1: TPanel
           Left = 5
           Height = 64
-          Top = 753
+          Top = 497
           Width = 238
           Align = alBottom
           AutoSize = True
@@ -1172,39 +1143,39 @@ object frmTemplates: TfrmTemplates
         end
         object scrClient: TScrollBox
           Left = 0
-          Height = 541
-          Top = 207
+          Height = 293
+          Top = 199
           Width = 248
-          HorzScrollBar.Page = 231
-          VertScrollBar.Page = 541
+          HorzScrollBar.Page = 227
+          VertScrollBar.Page = 293
           Align = alClient
           BorderStyle = bsNone
-          ClientHeight = 541
-          ClientWidth = 235
+          ClientHeight = 293
+          ClientWidth = 231
           TabOrder = 0
           object pnlAmount: TPanel
             Left = 3
-            Height = 135
-            Top = 111
-            Width = 229
+            Height = 138
+            Top = 119
+            Width = 225
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 3
-            ClientHeight = 135
-            ClientWidth = 229
+            ClientHeight = 138
+            ClientWidth = 225
             TabOrder = 1
             object pnlAmountCaption: TPanel
               Tag = 1
               Left = 2
               Height = 18
               Top = 2
-              Width = 225
+              Width = 221
               Align = alTop
               Alignment = taLeftJustify
               BorderSpacing.Around = 1
               BevelOuter = bvNone
               ClientHeight = 18
-              ClientWidth = 225
+              ClientWidth = 221
               Color = clGray
               Font.Color = clWhite
               Font.Style = [fsBold]
@@ -1214,7 +1185,7 @@ object frmTemplates: TfrmTemplates
               TabOrder = 0
               OnClick = pnlAmountCaptionClick
               object imgAmount: TImage
-                Left = 208
+                Left = 204
                 Height = 16
                 Top = 1
                 Width = 16
@@ -1225,31 +1196,31 @@ object frmTemplates: TfrmTemplates
             end
             object pnlAmountClient: TPanel
               Left = 1
-              Height = 113
+              Height = 116
               Top = 21
-              Width = 227
+              Width = 223
               Align = alClient
               BevelOuter = bvNone
-              ClientHeight = 113
-              ClientWidth = 227
+              ClientHeight = 116
+              ClientWidth = 223
               TabOrder = 1
               object pnlDecimal: TPanel
                 Left = 2
-                Height = 28
-                Top = 34
-                Width = 223
+                Height = 23
+                Top = 29
+                Width = 219
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Around = 2
                 BevelOuter = bvNone
-                ClientHeight = 28
-                ClientWidth = 223
+                ClientHeight = 23
+                ClientWidth = 219
                 TabOrder = 1
                 object lblDecimal: TLabel
                   Left = 1
-                  Height = 26
+                  Height = 21
                   Top = 1
-                  Width = 191
+                  Width = 187
                   Align = alClient
                   AutoSize = False
                   BorderSpacing.Around = 1
@@ -1257,37 +1228,37 @@ object frmTemplates: TfrmTemplates
                   ParentColor = False
                 end
                 object ediDecimal: TEdit
-                  Left = 193
-                  Height = 28
+                  Left = 189
+                  Height = 23
                   Top = 0
                   Width = 30
                   Align = alRight
                   Alignment = taCenter
                   CharCase = ecUppercase
                   MaxLength = 1
+                  TabOrder = 0
                   OnEnter = ediNameEnter
                   OnExit = ediNameExit
-                  TabOrder = 0
                 end
               end
               object pnlAmountColumn: TPanel
                 Left = 2
-                Height = 30
+                Height = 25
                 Top = 2
-                Width = 223
+                Width = 219
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Around = 2
                 BevelOuter = bvNone
-                ClientHeight = 30
-                ClientWidth = 223
+                ClientHeight = 25
+                ClientWidth = 219
                 ParentFont = False
                 TabOrder = 0
                 object lblAmountColumn: TLabel
                   Left = 1
-                  Height = 28
+                  Height = 23
                   Top = 1
-                  Width = 155
+                  Width = 151
                   Align = alClient
                   AutoSize = False
                   BorderSpacing.Around = 1
@@ -1295,8 +1266,8 @@ object frmTemplates: TfrmTemplates
                   ParentColor = False
                 end
                 object spiAmount: TSpinEdit
-                  Left = 157
-                  Height = 28
+                  Left = 153
+                  Height = 23
                   Top = 1
                   Width = 65
                   Align = alRight
@@ -1312,20 +1283,20 @@ object frmTemplates: TfrmTemplates
               end
               object gbxAmountTest: TGroupBox
                 Left = 2
-                Height = 17
-                Top = 94
-                Width = 223
+                Height = 35
+                Top = 79
+                Width = 219
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Around = 2
-                ClientHeight = 0
-                ClientWidth = 221
+                ClientHeight = 15
+                ClientWidth = 215
                 TabOrder = 3
                 object lblAmountTest: TLabel
                   Left = 0
                   Height = 15
                   Top = 0
-                  Width = 221
+                  Width = 215
                   Align = alTop
                   Alignment = taCenter
                   Constraints.MinHeight = 15
@@ -1336,21 +1307,21 @@ object frmTemplates: TfrmTemplates
               end
               object pnlThousand: TPanel
                 Left = 2
-                Height = 28
-                Top = 64
-                Width = 223
+                Height = 23
+                Top = 54
+                Width = 219
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Around = 2
                 BevelOuter = bvNone
-                ClientHeight = 28
-                ClientWidth = 223
+                ClientHeight = 23
+                ClientWidth = 219
                 TabOrder = 2
                 object lblThousand: TLabel
                   Left = 1
-                  Height = 26
+                  Height = 21
                   Top = 1
-                  Width = 191
+                  Width = 187
                   Align = alClient
                   AutoSize = False
                   BorderSpacing.Around = 1
@@ -1358,44 +1329,44 @@ object frmTemplates: TfrmTemplates
                   ParentColor = False
                 end
                 object ediThousand: TEdit
-                  Left = 193
-                  Height = 28
+                  Left = 189
+                  Height = 23
                   Top = 0
                   Width = 30
                   Align = alRight
                   Alignment = taCenter
                   CharCase = ecUppercase
                   MaxLength = 1
+                  TabOrder = 0
                   OnEnter = ediNameEnter
                   OnExit = ediNameExit
-                  TabOrder = 0
                 end
               end
             end
           end
           object pnlDate: TPanel
             Left = 3
-            Height = 105
+            Height = 113
             Top = 3
-            Width = 229
+            Width = 225
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 3
-            ClientHeight = 105
-            ClientWidth = 229
+            ClientHeight = 113
+            ClientWidth = 225
             TabOrder = 0
             object pnlDateCaption: TPanel
               Tag = 1
               Left = 2
               Height = 18
               Top = 2
-              Width = 225
+              Width = 221
               Align = alTop
               Alignment = taLeftJustify
               BorderSpacing.Around = 1
               BevelOuter = bvNone
               ClientHeight = 18
-              ClientWidth = 225
+              ClientWidth = 221
               Color = clGray
               Font.Color = clWhite
               Font.Style = [fsBold]
@@ -1405,7 +1376,7 @@ object frmTemplates: TfrmTemplates
               TabOrder = 0
               OnClick = pnlDateCaptionClick
               object imgDate: TImage
-                Left = 208
+                Left = 204
                 Height = 16
                 Top = 1
                 Width = 16
@@ -1418,32 +1389,32 @@ object frmTemplates: TfrmTemplates
             end
             object pnlDateClient: TPanel
               Left = 1
-              Height = 83
+              Height = 91
               Top = 21
-              Width = 227
+              Width = 223
               Align = alClient
               AutoSize = True
               BevelOuter = bvNone
-              ClientHeight = 83
-              ClientWidth = 227
+              ClientHeight = 91
+              ClientWidth = 223
               TabOrder = 1
               object pnlFormat: TPanel
                 Left = 2
-                Height = 28
-                Top = 34
-                Width = 223
+                Height = 23
+                Top = 29
+                Width = 219
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Around = 2
                 BevelOuter = bvNone
-                ClientHeight = 28
-                ClientWidth = 223
+                ClientHeight = 23
+                ClientWidth = 219
                 TabOrder = 1
                 object lblFormat: TLabel
                   Left = 1
-                  Height = 26
+                  Height = 21
                   Top = 1
-                  Width = 115
+                  Width = 111
                   Align = alClient
                   AutoSize = False
                   BorderSpacing.Around = 1
@@ -1451,37 +1422,37 @@ object frmTemplates: TfrmTemplates
                   ParentColor = False
                 end
                 object ediFormat: TEdit
-                  Left = 117
-                  Height = 28
+                  Left = 113
+                  Height = 23
                   Top = 0
                   Width = 106
                   Align = alRight
                   Alignment = taCenter
                   MaxLength = 20
+                  TabOrder = 0
                   OnChange = ediSeparatorChange
                   OnEnter = ediNameEnter
                   OnExit = ediNameExit
-                  TabOrder = 0
                 end
               end
               object pnlDateColumn: TPanel
                 Left = 2
-                Height = 30
+                Height = 25
                 Top = 2
-                Width = 223
+                Width = 219
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Around = 2
                 BevelOuter = bvNone
-                ClientHeight = 30
-                ClientWidth = 223
+                ClientHeight = 25
+                ClientWidth = 219
                 ParentFont = False
                 TabOrder = 0
                 object lblDateColumn: TLabel
                   Left = 1
-                  Height = 28
+                  Height = 23
                   Top = 1
-                  Width = 155
+                  Width = 151
                   Align = alClient
                   AutoSize = False
                   BorderSpacing.Around = 1
@@ -1489,8 +1460,8 @@ object frmTemplates: TfrmTemplates
                   ParentColor = False
                 end
                 object spiDate: TSpinEdit
-                  Left = 157
-                  Height = 28
+                  Left = 153
+                  Height = 23
                   Top = 1
                   Width = 65
                   Align = alRight
@@ -1506,20 +1477,20 @@ object frmTemplates: TfrmTemplates
               end
               object gbxDateTest: TGroupBox
                 Left = 2
-                Height = 17
-                Top = 64
-                Width = 223
+                Height = 35
+                Top = 54
+                Width = 219
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Around = 2
-                ClientHeight = 0
-                ClientWidth = 221
+                ClientHeight = 15
+                ClientWidth = 215
                 TabOrder = 2
                 object lblDateTest: TLabel
                   Left = 0
                   Height = 15
                   Top = 0
-                  Width = 221
+                  Width = 215
                   Align = alTop
                   Alignment = taCenter
                   Constraints.MinHeight = 15
@@ -1533,27 +1504,27 @@ object frmTemplates: TfrmTemplates
           end
           object pnlType: TPanel
             Left = 3
-            Height = 136
-            Top = 249
-            Width = 229
+            Height = 115
+            Top = 260
+            Width = 225
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 3
-            ClientHeight = 136
-            ClientWidth = 229
+            ClientHeight = 115
+            ClientWidth = 225
             TabOrder = 2
             object pnlTypeCaption: TPanel
               Tag = 1
               Left = 2
               Height = 18
               Top = 2
-              Width = 225
+              Width = 221
               Align = alTop
               Alignment = taLeftJustify
               BorderSpacing.Around = 1
               BevelOuter = bvNone
               ClientHeight = 18
-              ClientWidth = 225
+              ClientWidth = 221
               Color = clGray
               Font.Color = clWhite
               Font.Style = [fsBold]
@@ -1563,7 +1534,7 @@ object frmTemplates: TfrmTemplates
               TabOrder = 0
               OnClick = pnlTypeCaptionClick
               object imgType: TImage
-                Left = 208
+                Left = 204
                 Height = 16
                 Top = 1
                 Width = 16
@@ -1574,31 +1545,31 @@ object frmTemplates: TfrmTemplates
             end
             object pnlTypeClient: TPanel
               Left = 1
-              Height = 114
+              Height = 93
               Top = 21
-              Width = 227
+              Width = 223
               Align = alClient
               BevelOuter = bvNone
-              ClientHeight = 114
-              ClientWidth = 227
+              ClientHeight = 93
+              ClientWidth = 223
               TabOrder = 1
               object pnlCredit: TPanel
                 Left = 2
-                Height = 28
-                Top = 54
-                Width = 223
+                Height = 23
+                Top = 43
+                Width = 219
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Around = 2
                 BevelOuter = bvNone
-                ClientHeight = 28
-                ClientWidth = 223
+                ClientHeight = 23
+                ClientWidth = 219
                 TabOrder = 1
                 object lblCredit: TLabel
                   Left = 1
-                  Height = 26
+                  Height = 21
                   Top = 1
-                  Width = 191
+                  Width = 147
                   Align = alClient
                   AutoSize = False
                   BorderSpacing.Around = 1
@@ -1606,37 +1577,36 @@ object frmTemplates: TfrmTemplates
                   ParentColor = False
                 end
                 object ediCredit: TEdit
-                  Left = 193
-                  Height = 28
+                  Left = 149
+                  Height = 23
                   Top = 0
-                  Width = 30
+                  Width = 70
                   Align = alRight
                   Alignment = taCenter
-                  CharCase = ecUppercase
-                  MaxLength = 1
+                  TabOrder = 0
+                  OnChange = ediCreditChange
                   OnEnter = ediNameEnter
                   OnExit = ediNameExit
-                  TabOrder = 0
                 end
               end
               object pnlTypeColumn: TPanel
                 Left = 2
-                Height = 52
+                Height = 41
                 Top = 0
-                Width = 223
+                Width = 219
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Left = 2
                 BorderSpacing.Right = 2
                 BevelOuter = bvNone
-                ClientHeight = 52
-                ClientWidth = 223
+                ClientHeight = 41
+                ClientWidth = 219
                 ParentFont = False
                 TabOrder = 0
                 object spiType: TSpinEdit
-                  Left = 157
-                  Height = 28
-                  Top = 24
+                  Left = 153
+                  Height = 23
+                  Top = 18
                   Width = 65
                   Align = alRight
                   Alignment = taCenter
@@ -1654,49 +1624,49 @@ object frmTemplates: TfrmTemplates
                 object rbtTypeColumn: TRadioButton
                   Tag = 1
                   Left = 1
-                  Height = 28
-                  Top = 24
-                  Width = 155
+                  Height = 23
+                  Top = 18
+                  Width = 151
                   Align = alClient
                   BorderSpacing.Left = 1
                   BorderSpacing.Right = 1
-                  OnChange = rbtTypeSymbolChange
                   ParentColor = False
                   TabOrder = 1
+                  OnChange = rbtTypeSymbolChange
                 end
                 object rbtTypeSymbol: TRadioButton
                   Left = 1
-                  Height = 23
+                  Height = 17
                   Top = 1
-                  Width = 221
+                  Width = 217
                   Align = alTop
                   BorderSpacing.Left = 1
                   BorderSpacing.Top = 1
                   BorderSpacing.Right = 1
                   Checked = True
-                  OnChange = rbtTypeSymbolChange
                   ParentColor = False
                   TabOrder = 0
                   TabStop = True
+                  OnChange = rbtTypeSymbolChange
                 end
               end
               object pnlDebit: TPanel
                 Left = 2
-                Height = 28
-                Top = 84
-                Width = 223
+                Height = 23
+                Top = 68
+                Width = 219
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Around = 2
                 BevelOuter = bvNone
-                ClientHeight = 28
-                ClientWidth = 223
+                ClientHeight = 23
+                ClientWidth = 219
                 TabOrder = 2
                 object lblDebit: TLabel
                   Left = 1
-                  Height = 26
+                  Height = 21
                   Top = 1
-                  Width = 191
+                  Width = 147
                   Align = alClient
                   AutoSize = False
                   BorderSpacing.Around = 1
@@ -1704,43 +1674,42 @@ object frmTemplates: TfrmTemplates
                   ParentColor = False
                 end
                 object ediDebit: TEdit
-                  Left = 193
-                  Height = 28
+                  Left = 149
+                  Height = 23
                   Top = 0
-                  Width = 30
+                  Width = 70
                   Align = alRight
                   Alignment = taCenter
-                  CharCase = ecUppercase
-                  MaxLength = 1
+                  TabOrder = 0
+                  OnChange = ediCreditChange
                   OnEnter = ediNameEnter
                   OnExit = ediNameExit
-                  TabOrder = 0
                 end
               end
             end
           end
           object pnlComment: TPanel
             Left = 3
-            Height = 120
-            Top = 388
-            Width = 229
+            Height = 97
+            Top = 378
+            Width = 225
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 3
-            ClientHeight = 120
-            ClientWidth = 229
+            ClientHeight = 97
+            ClientWidth = 225
             TabOrder = 4
             object pnlCommentCaption: TPanel
               Left = 2
               Height = 18
               Top = 2
-              Width = 225
+              Width = 221
               Align = alTop
               Alignment = taLeftJustify
               BorderSpacing.Around = 1
               BevelOuter = bvNone
               ClientHeight = 18
-              ClientWidth = 225
+              ClientWidth = 221
               Color = clGray
               Font.Color = clWhite
               Font.Style = [fsBold]
@@ -1750,7 +1719,7 @@ object frmTemplates: TfrmTemplates
               TabOrder = 0
               OnClick = pnlCommentCaptionClick
               object imgComment: TImage
-                Left = 208
+                Left = 204
                 Height = 16
                 Top = 1
                 Width = 16
@@ -1761,69 +1730,70 @@ object frmTemplates: TfrmTemplates
             end
             object pnlCommentClient: TPanel
               Left = 1
-              Height = 98
+              Height = 75
               Top = 21
-              Width = 227
+              Width = 223
               Align = alClient
               BevelOuter = bvNone
-              ClientHeight = 98
-              ClientWidth = 227
+              ClientHeight = 75
+              ClientWidth = 223
               TabOrder = 1
               object rbtCommentManually: TRadioButton
                 Left = 1
-                Height = 23
-                Top = 23
-                Width = 225
+                Height = 17
+                Top = 17
+                Width = 221
                 Align = alTop
                 BorderSpacing.Left = 1
                 BorderSpacing.Right = 1
-                OnChange = rbtCommentManuallyChange
                 ParentColor = False
                 TabOrder = 2
+                OnChange = rbtCommentManuallyChange
               end
               object rbtCommentAuto: TRadioButton
                 Left = 1
-                Height = 23
-                Top = 46
-                Width = 225
+                Height = 17
+                Top = 34
+                Width = 221
                 Align = alTop
                 BorderSpacing.Left = 1
                 BorderSpacing.Right = 1
-                OnChange = rbtCommentAutoChange
                 ParentColor = False
                 TabOrder = 0
+                OnChange = rbtCommentAutoChange
               end
               object cbxComment: TComboBox
                 Left = 20
-                Height = 28
-                Top = 69
-                Width = 205
+                Height = 23
+                Top = 51
+                Width = 201
                 Align = alTop
                 BorderSpacing.Left = 20
                 BorderSpacing.Right = 2
                 BorderSpacing.Bottom = 1
+                DropDownCount = 20
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 15
+                TabOrder = 1
                 OnEnter = cbxCommentEnter
                 OnExit = cbxCommentExit
-                TabOrder = 1
               end
               object rbtCommentColumn: TRadioButton
                 Left = 1
-                Height = 23
+                Height = 17
                 Top = 0
-                Width = 225
+                Width = 221
                 Align = alTop
                 BorderSpacing.Left = 1
                 BorderSpacing.Right = 1
                 Checked = True
-                OnChange = rbtCommentColumnChange
                 ParentColor = False
                 TabOrder = 3
                 TabStop = True
+                OnChange = rbtCommentColumnChange
               end
               object spiComment: TSpinEdit
-                Left = 157
+                Left = 153
                 Height = 28
                 Top = 3
                 Width = 65
@@ -1843,26 +1813,26 @@ object frmTemplates: TfrmTemplates
           end
           object pnlCategory: TPanel
             Left = 3
-            Height = 98
-            Top = 612
-            Width = 229
+            Height = 106
+            Top = 562
+            Width = 225
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 3
-            ClientHeight = 98
-            ClientWidth = 229
+            ClientHeight = 106
+            ClientWidth = 225
             TabOrder = 5
             object pnlCategoryCaption: TPanel
               Left = 2
               Height = 18
               Top = 2
-              Width = 225
+              Width = 221
               Align = alTop
               Alignment = taLeftJustify
               BorderSpacing.Around = 1
               BevelOuter = bvNone
               ClientHeight = 18
-              ClientWidth = 225
+              ClientWidth = 221
               Color = clGray
               Font.Color = clWhite
               Font.Style = [fsBold]
@@ -1872,7 +1842,7 @@ object frmTemplates: TfrmTemplates
               TabOrder = 0
               OnClick = pnlCategoryCaptionClick
               object imgCategory: TImage
-                Left = 208
+                Left = 204
                 Height = 16
                 Top = 1
                 Width = 16
@@ -1883,81 +1853,99 @@ object frmTemplates: TfrmTemplates
             end
             object pnlCategoryClient: TPanel
               Left = 1
-              Height = 76
+              Height = 84
               Top = 21
-              Width = 227
+              Width = 223
               Align = alClient
               AutoSize = True
               BevelOuter = bvNone
-              ClientHeight = 76
-              ClientWidth = 227
+              ClientHeight = 84
+              ClientWidth = 223
               TabOrder = 1
               object rbtCategoryManually: TRadioButton
                 Left = 2
-                Height = 23
+                Height = 17
                 Top = 0
-                Width = 223
+                Width = 219
                 Align = alTop
                 BorderSpacing.Left = 2
                 BorderSpacing.Right = 2
                 Checked = True
-                OnChange = rbtCategoryManuallyChange
                 ParentColor = False
                 TabOrder = 0
                 TabStop = True
+                OnChange = rbtCategoryManuallyChange
               end
               object rbtCategoryAuto: TRadioButton
                 Tag = 1
                 Left = 2
-                Height = 23
-                Top = 23
-                Width = 223
+                Height = 17
+                Top = 17
+                Width = 219
                 Align = alTop
                 BorderSpacing.Left = 2
                 BorderSpacing.Right = 2
-                OnChange = rbtCategoryManuallyChange
                 ParentColor = False
                 TabOrder = 1
+                OnChange = rbtCategoryManuallyChange
               end
               object cbxCategory: TComboBox
                 Left = 20
-                Height = 28
-                Top = 46
-                Width = 205
+                Height = 23
+                Top = 34
+                Width = 201
                 Align = alTop
                 BorderSpacing.Left = 20
                 BorderSpacing.Right = 2
                 BorderSpacing.Bottom = 2
+                DropDownCount = 20
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 15
+                TabOrder = 2
+                OnChange = cbxCategoryChange
                 OnEnter = cbxCommentEnter
                 OnExit = cbxCommentExit
-                TabOrder = 2
+              end
+              object cbxSubcategory: TComboBox
+                Left = 20
+                Height = 23
+                Top = 59
+                Width = 201
+                Align = alTop
+                BorderSpacing.Left = 20
+                BorderSpacing.Right = 2
+                BorderSpacing.Bottom = 2
+                DropDownCount = 20
+                Enabled = False
+                ItemHeight = 15
+                TabOrder = 3
+                OnEnter = cbxCommentEnter
+                OnExit = cbxCommentExit
               end
             end
           end
           object pnlPerson: TPanel
             Left = 3
-            Height = 98
-            Top = 713
-            Width = 229
+            Height = 81
+            Top = 671
+            Width = 225
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 3
-            ClientHeight = 98
-            ClientWidth = 229
+            ClientHeight = 81
+            ClientWidth = 225
             TabOrder = 6
             object pnlPersonCaption: TPanel
               Left = 2
               Height = 18
               Top = 2
-              Width = 225
+              Width = 221
               Align = alTop
               Alignment = taLeftJustify
               BorderSpacing.Around = 1
               BevelOuter = bvNone
               ClientHeight = 18
-              ClientWidth = 225
+              ClientWidth = 221
               Color = clGray
               Font.Color = clWhite
               Font.Style = [fsBold]
@@ -1967,7 +1955,7 @@ object frmTemplates: TfrmTemplates
               TabOrder = 0
               OnClick = pnlPersonCaptionClick
               object imgPerson: TImage
-                Left = 208
+                Left = 204
                 Height = 16
                 Top = 1
                 Width = 16
@@ -1978,81 +1966,82 @@ object frmTemplates: TfrmTemplates
             end
             object pnlPersonClient: TPanel
               Left = 1
-              Height = 76
+              Height = 59
               Top = 21
-              Width = 227
+              Width = 223
               Align = alClient
               AutoSize = True
               BevelOuter = bvNone
-              ClientHeight = 76
-              ClientWidth = 227
+              ClientHeight = 59
+              ClientWidth = 223
               TabOrder = 1
               object rbtPersonManually: TRadioButton
                 Left = 2
-                Height = 23
+                Height = 17
                 Top = 0
-                Width = 223
+                Width = 219
                 Align = alTop
                 BorderSpacing.Left = 2
                 BorderSpacing.Right = 2
                 Checked = True
-                OnChange = rbtPersonManuallyChange
                 ParentColor = False
                 TabOrder = 0
                 TabStop = True
+                OnChange = rbtPersonManuallyChange
               end
               object rbtPersonAuto: TRadioButton
                 Tag = 1
                 Left = 2
-                Height = 23
-                Top = 23
-                Width = 223
+                Height = 17
+                Top = 17
+                Width = 219
                 Align = alTop
                 BorderSpacing.Left = 2
                 BorderSpacing.Right = 2
-                OnChange = rbtPersonManuallyChange
                 ParentColor = False
                 TabOrder = 1
+                OnChange = rbtPersonManuallyChange
               end
               object cbxPerson: TComboBox
                 Left = 20
-                Height = 28
-                Top = 46
-                Width = 205
+                Height = 23
+                Top = 34
+                Width = 201
                 Align = alTop
                 BorderSpacing.Left = 20
                 BorderSpacing.Right = 2
                 BorderSpacing.Bottom = 2
+                DropDownCount = 20
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 15
+                TabOrder = 2
                 OnEnter = cbxCommentEnter
                 OnExit = cbxCommentExit
-                TabOrder = 2
               end
             end
           end
           object pnlPayee: TPanel
             Left = 3
-            Height = 98
-            Top = 814
-            Width = 229
+            Height = 81
+            Top = 755
+            Width = 225
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 3
-            ClientHeight = 98
-            ClientWidth = 229
+            ClientHeight = 81
+            ClientWidth = 225
             TabOrder = 7
             object pnlPayeeCaption: TPanel
               Left = 2
               Height = 18
               Top = 2
-              Width = 225
+              Width = 221
               Align = alTop
               Alignment = taLeftJustify
               BorderSpacing.Around = 1
               BevelOuter = bvNone
               ClientHeight = 18
-              ClientWidth = 225
+              ClientWidth = 221
               Color = clGray
               Font.Color = clWhite
               Font.Style = [fsBold]
@@ -2062,7 +2051,7 @@ object frmTemplates: TfrmTemplates
               TabOrder = 0
               OnClick = pnlPayeeCaptionClick
               object imgPayee: TImage
-                Left = 208
+                Left = 204
                 Height = 16
                 Top = 1
                 Width = 16
@@ -2073,81 +2062,82 @@ object frmTemplates: TfrmTemplates
             end
             object pnlPayeeClient: TPanel
               Left = 1
-              Height = 76
+              Height = 59
               Top = 21
-              Width = 227
+              Width = 223
               Align = alClient
               AutoSize = True
               BevelOuter = bvNone
-              ClientHeight = 76
-              ClientWidth = 227
+              ClientHeight = 59
+              ClientWidth = 223
               TabOrder = 1
               object rbtPayeeManually: TRadioButton
                 Left = 2
-                Height = 23
+                Height = 17
                 Top = 0
-                Width = 223
+                Width = 219
                 Align = alTop
                 BorderSpacing.Left = 2
                 BorderSpacing.Right = 2
                 Checked = True
-                OnChange = rbtPayeeManuallyChange
                 ParentColor = False
                 TabOrder = 0
                 TabStop = True
+                OnChange = rbtPayeeManuallyChange
               end
               object rbtPayeeAuto: TRadioButton
                 Tag = 1
                 Left = 2
-                Height = 23
-                Top = 23
-                Width = 223
+                Height = 17
+                Top = 17
+                Width = 219
                 Align = alTop
                 BorderSpacing.Left = 2
                 BorderSpacing.Right = 2
-                OnChange = rbtPayeeManuallyChange
                 ParentColor = False
                 TabOrder = 1
+                OnChange = rbtPayeeManuallyChange
               end
               object cbxPayee: TComboBox
                 Left = 20
-                Height = 28
-                Top = 46
-                Width = 205
+                Height = 23
+                Top = 34
+                Width = 201
                 Align = alTop
                 BorderSpacing.Left = 20
                 BorderSpacing.Right = 2
                 BorderSpacing.Bottom = 2
+                DropDownCount = 20
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 15
+                TabOrder = 2
                 OnEnter = cbxCommentEnter
                 OnExit = cbxCommentExit
-                TabOrder = 2
               end
             end
           end
           object pnlAccount: TPanel
             Left = 3
-            Height = 98
-            Top = 511
-            Width = 229
+            Height = 81
+            Top = 478
+            Width = 225
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 3
-            ClientHeight = 98
-            ClientWidth = 229
+            ClientHeight = 81
+            ClientWidth = 225
             TabOrder = 3
             object pnlAccountCaption: TPanel
               Left = 2
               Height = 18
               Top = 2
-              Width = 225
+              Width = 221
               Align = alTop
               Alignment = taLeftJustify
               BorderSpacing.Around = 1
               BevelOuter = bvNone
               ClientHeight = 18
-              ClientWidth = 225
+              ClientWidth = 221
               Color = clGray
               Font.Color = clWhite
               Font.Style = [fsBold]
@@ -2157,7 +2147,7 @@ object frmTemplates: TfrmTemplates
               TabOrder = 0
               OnClick = pnlAccountCaptionClick
               object imgAccount: TImage
-                Left = 208
+                Left = 204
                 Height = 16
                 Top = 1
                 Width = 16
@@ -2168,69 +2158,70 @@ object frmTemplates: TfrmTemplates
             end
             object pnlAccountClient: TPanel
               Left = 1
-              Height = 76
+              Height = 59
               Top = 21
-              Width = 227
+              Width = 223
               Align = alClient
               AutoSize = True
               BevelOuter = bvNone
-              ClientHeight = 76
-              ClientWidth = 227
+              ClientHeight = 59
+              ClientWidth = 223
               TabOrder = 1
               object rbtAccountManually: TRadioButton
                 Left = 2
-                Height = 23
+                Height = 17
                 Top = 0
-                Width = 223
+                Width = 219
                 Align = alTop
                 BorderSpacing.Left = 2
                 BorderSpacing.Right = 2
                 Checked = True
-                OnChange = rbtAccountManuallyChange
                 ParentColor = False
                 TabOrder = 0
                 TabStop = True
+                OnChange = rbtAccountManuallyChange
               end
               object rbtAccountAuto: TRadioButton
                 Tag = 1
                 Left = 2
-                Height = 23
-                Top = 23
-                Width = 223
+                Height = 17
+                Top = 17
+                Width = 219
                 Align = alTop
                 BorderSpacing.Left = 2
                 BorderSpacing.Right = 2
-                OnChange = rbtAccountManuallyChange
                 ParentColor = False
                 TabOrder = 1
+                OnChange = rbtAccountManuallyChange
               end
               object cbxAccount: TComboBox
                 Left = 20
-                Height = 28
-                Top = 46
-                Width = 205
+                Height = 23
+                Top = 34
+                Width = 201
                 Align = alTop
                 BorderSpacing.Left = 20
                 BorderSpacing.Right = 2
                 BorderSpacing.Bottom = 2
+                DropDownCount = 20
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 15
+                TabOrder = 2
                 OnEnter = cbxCommentEnter
                 OnExit = cbxCommentExit
-                TabOrder = 2
               end
             end
           end
         end
         object pnlTemplateName: TPanel
           Left = 3
-          Height = 53
+          Height = 48
           Top = 3
           Width = 242
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 3
-          ClientHeight = 53
+          ClientHeight = 48
           ClientWidth = 242
           TabOrder = 2
           object lblName: TLabel
@@ -2253,27 +2244,27 @@ object frmTemplates: TfrmTemplates
           end
           object ediName: TEdit
             Left = 3
-            Height = 28
+            Height = 23
             Top = 22
             Width = 236
             Align = alTop
             Alignment = taCenter
             BorderSpacing.Around = 2
+            TabOrder = 0
             OnChange = ediNameChange
             OnEnter = ediNameEnter
             OnExit = ediNameExit
-            TabOrder = 0
           end
         end
         object pnlOrigin: TPanel
           Left = 3
-          Height = 145
-          Top = 59
+          Height = 142
+          Top = 54
           Width = 242
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 3
-          ClientHeight = 145
+          ClientHeight = 142
           ClientWidth = 242
           TabOrder = 3
           object pnlOriginCaption: TPanel
@@ -2309,29 +2300,29 @@ object frmTemplates: TfrmTemplates
           end
           object pnlOriginClient: TPanel
             Left = 1
-            Height = 123
+            Height = 120
             Top = 21
             Width = 240
             Align = alClient
             BevelOuter = bvNone
-            ClientHeight = 123
+            ClientHeight = 120
             ClientWidth = 240
             TabOrder = 1
             object pnlSeparator: TPanel
               Left = 2
-              Height = 28
-              Top = 68
+              Height = 23
+              Top = 76
               Width = 236
               Align = alTop
               AutoSize = True
               BorderSpacing.Around = 2
               BevelOuter = bvNone
-              ClientHeight = 28
+              ClientHeight = 23
               ClientWidth = 236
               TabOrder = 1
               object lblSeparator: TLabel
                 Left = 1
-                Height = 26
+                Height = 21
                 Top = 1
                 Width = 199
                 Align = alClient
@@ -2342,60 +2333,60 @@ object frmTemplates: TfrmTemplates
               end
               object ediSeparator: TEdit
                 Left = 201
-                Height = 28
+                Height = 23
                 Top = 0
                 Width = 35
                 Align = alRight
                 Alignment = taCenter
                 MaxLength = 1
+                TabOrder = 0
                 OnChange = ediSeparatorChange
                 OnEnter = ediNameEnter
                 OnExit = ediNameExit
-                TabOrder = 0
               end
             end
             object chkQuotes: TCheckBox
               Left = 2
-              Height = 23
-              Top = 98
+              Height = 17
+              Top = 101
               Width = 236
               Align = alTop
               BorderSpacing.Around = 2
+              TabOrder = 2
               OnChange = chkQuotesChange
               OnEnter = chkQuotesEnter
               OnExit = chkQuotesExit
-              TabOrder = 2
             end
             object gbxImport: TGroupBox
               Left = 3
-              Height = 62
+              Height = 70
               Top = 3
               Width = 234
               Align = alTop
               AutoSize = True
               BorderSpacing.Around = 3
-              ClientHeight = 45
-              ClientWidth = 232
+              ClientHeight = 50
+              ClientWidth = 230
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
               object pnlFirstLine: TPanel
                 Left = 0
-                Height = 30
+                Height = 25
                 Top = 0
-                Width = 232
+                Width = 230
                 Align = alTop
                 AutoSize = True
                 BevelOuter = bvNone
-                ClientHeight = 30
-                ClientWidth = 232
+                ClientHeight = 25
+                ClientWidth = 230
                 ParentFont = False
                 TabOrder = 0
                 object lblStartLine: TLabel
                   Left = 72
-                  Height = 28
+                  Height = 23
                   Top = 1
-                  Width = 159
+                  Width = 157
                   Align = alClient
                   AutoSize = False
                   BorderSpacing.Around = 1
@@ -2404,7 +2395,7 @@ object frmTemplates: TfrmTemplates
                 end
                 object spiFirst: TSpinEdit
                   Left = 1
-                  Height = 28
+                  Height = 23
                   Top = 1
                   Width = 65
                   Align = alLeft
@@ -2420,21 +2411,21 @@ object frmTemplates: TfrmTemplates
               end
               object pnlEndLine: TPanel
                 Left = 0
-                Height = 30
-                Top = 30
-                Width = 232
+                Height = 25
+                Top = 25
+                Width = 230
                 Align = alTop
                 AutoSize = True
                 BevelOuter = bvNone
-                ClientHeight = 30
-                ClientWidth = 232
+                ClientHeight = 25
+                ClientWidth = 230
                 ParentFont = False
                 TabOrder = 1
                 object lblEndLine: TLabel
                   Left = 72
-                  Height = 28
+                  Height = 23
                   Top = 1
-                  Width = 159
+                  Width = 157
                   Align = alClient
                   AutoSize = False
                   BorderSpacing.Around = 1
@@ -2443,7 +2434,7 @@ object frmTemplates: TfrmTemplates
                 end
                 object spiLast: TSpinEdit
                   Left = 1
-                  Height = 28
+                  Height = 23
                   Top = 1
                   Width = 65
                   Align = alLeft

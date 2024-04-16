@@ -7,7 +7,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ActnList, LazUtf8,
-  StdCtrls, Menus, BCPanel, BCMDButtonFocus, laz.VirtualTrees, StrUtils, Math, ComCtrls;
+  StdCtrls, Menus, BCPanel, BCMDButtonFocus, laz.VirtualTrees, StrUtils, Math, ComCtrls,
+  DateUtils, IniFiles;
 
 type // main grid (Write)
   TWrite = record
@@ -85,7 +86,9 @@ type
     procedure btnDeleteClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure btnSettingsClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    //procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure pnlBottomResize(Sender: TObject);
@@ -129,29 +132,6 @@ implementation
 uses
   uniMain, uniSettings, uniCalendar, uniResources, uniEdit, uniwriting, uniEdits;
 
-procedure TfrmWrite.FormCreate(Sender: TObject);
-begin
-  // form size
-  (Sender as TForm).Width :=
-    Round((Screen.Width / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-    (Round(420 / (ScreenRatio / 100)) - ScreenRatio));
-  (Sender as TForm).Height :=
-    Round(Screen.Height / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-    3 * (250 - ScreenRatio);
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 100 - (Sender as TForm).Height) div 2;
-
-  {$IFDEF WINDOWS}
-    // set components height
-  VST.Header.Height := PanelHeight;
-  pnlListCaption.Height := PanelHeight;
-  pnlButtons.Height := ButtonHeight;
-  pnlBottom.Height := ButtonHeight;
-  {$ENDIF}
-end;
-
 procedure TfrmWrite.FormResize(Sender: TObject);
 begin
   lblWidth.Caption := IntToStr((Sender as TForm).Width);
@@ -161,7 +141,58 @@ begin
 end;
 
 procedure TfrmWrite.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmWrite.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmWrite.Name, '-1•-1•0•0');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmWrite.Width := Screen.Width - 300 - (200 - ScreenRatio)
+      else
+        frmWrite.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmWrite.Height := Screen.Height - 400 - (200 - ScreenRatio)
+      else
+        frmWrite.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmWrite.left := (Screen.Width - frmWrite.Width) div 2
+      else
+        frmWrite.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmWrite.Top := ((Screen.Height - frmWrite.Height) div 2) - 75
+      else
+        frmWrite.Top := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   if frmMain.Conn.Connected = True then
     UpdatePayments;
 
@@ -180,7 +211,7 @@ begin
   popSave.Enabled := VST.CheckedCount > 0;
   actSave.Enabled := VST.CheckedCount > 0;
 
-  SetNodeHeight(frmWrite.VST);
+  SetNodeHeight(VST);
   VST.SetFocus;
   VST.ClearSelection;
 end;
@@ -318,10 +349,18 @@ procedure TfrmWrite.VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
   Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
 var
   Write: PWrite;
+  B: Byte;
+
 begin
   Write := Sender.GetNodeData(Node);
   case Column of
-    1: CellText := DateToStr(StrToDate(Write.Date, 'YYYY-MM-DD', '-'));
+    1: begin
+        B := DayOfTheWeek(StrToDate(Write.Date, 'YYYY-MM-DD', '-')) + 1;
+        if B = 8 then
+          B := 1;
+        CellText := FS_own.ShortDayNames[B] + ' ' +
+          DateToStr(StrToDate(Write.Date, 'YYYY-MM-DD', '-'), FS_own);
+      end;
     2: CellText := Write.Comment;
     3: CellText := Format('%n', [Write.Amount], FS_own);
     4: CellText := Write.currency;
@@ -554,6 +593,49 @@ begin
   frmSettings.ShowModal;
 end;
 
+procedure TfrmWrite.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+begin
+  try
+  // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmWrite.Name, '') <>
+          IntToStr(frmWrite.Left) + separ + // form left
+        IntToStr(frmWrite.Top) + separ + // form top
+        IntToStr(frmWrite.Width) + separ + // form width
+        IntToStr(frmWrite.Height) then
+          INI.WriteString('POSITION', frmWrite.Name,
+            IntToStr(frmWrite.Left) + separ + // form left
+            IntToStr(frmWrite.Top) + separ + // form top
+            IntToStr(frmWrite.Width) + separ + // form width
+            IntToStr(frmWrite.Height));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
+end;
+
+procedure TfrmWrite.FormCreate(Sender: TObject);
+begin
+  VST.Header.Height := PanelHeight;
+  pnlButtons.Height := ButtonHeight;
+  pnlBottom.Height := ButtonHeight;
+  pnlListCaption.Height := PanelHeight;
+
+  // get form icon
+  frmMain.img16.GetIcon(19, (Sender as TForm).Icon);
+end;
+
 procedure TfrmWrite.btnSaveClick(Sender: TObject);
 var
   N: PVirtualNode;
@@ -654,6 +736,7 @@ begin
         frmMain.QRY.Params.ParamByName('COMMENT').AsString := VST.Text[N, 2];
         frmMain.QRY.Params.ParamByName('COMMENT_LOWER').AsString :=
           AnsiLowerCase(VST.Text[N, 2]);
+        frmMain.QRY.Prepare;
         frmMain.QRY.ExecSQL;
         frmMain.Tran.Commit;
 

@@ -1,16 +1,21 @@
 object frmShortCut: TfrmShortCut
-  Left = 714
-  Height = 229
-  Top = 333
+  Left = 725
+  Height = 250
+  Top = 194
   Width = 400
-  AutoSize = True
   BorderIcons = [biSystemMenu]
-  ClientHeight = 229
+  ClientHeight = 250
   ClientWidth = 400
-  Constraints.MinHeight = 200
+  Color = 14606046
+  Constraints.MinHeight = 250
   Constraints.MinWidth = 400
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnResize = FormResize
+  OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.1'
+  LCLVersion = '3.0.0.3'
+  Scaled = False
   object pnlAction: TPanel
     Left = 5
     Height = 42
@@ -21,6 +26,7 @@ object frmShortCut: TfrmShortCut
     BorderSpacing.Around = 5
     ClientHeight = 42
     ClientWidth = 390
+    ParentBackground = False
     TabOrder = 1
     object lblAction1: TLabel
       Left = 3
@@ -44,7 +50,6 @@ object frmShortCut: TfrmShortCut
       BorderSpacing.Around = 2
       Constraints.MinHeight = 17
       Font.Color = clGreen
-      Font.Height = 15
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
@@ -52,14 +57,15 @@ object frmShortCut: TfrmShortCut
   end
   object pnlShortCut: TPanel
     Left = 5
-    Height = 84
-    Top = 109
+    Height = 117
+    Top = 99
     Width = 390
-    Align = alTop
+    Align = alClient
     AutoSize = True
     BorderSpacing.Around = 5
-    ClientHeight = 84
+    ClientHeight = 117
     ClientWidth = 390
+    ParentBackground = False
     TabOrder = 0
     object pnlNew: TPanel
       Left = 1
@@ -72,6 +78,7 @@ object frmShortCut: TfrmShortCut
       ClientHeight = 55
       ClientWidth = 388
       Constraints.MinHeight = 30
+      ParentBackground = False
       TabOrder = 0
       object lblShortCutNew: TLabel
         Left = 2
@@ -97,7 +104,6 @@ object frmShortCut: TfrmShortCut
         BorderSpacing.Around = 2
         Constraints.MinHeight = 25
         Font.Color = clRed
-        Font.Height = 20
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
@@ -119,22 +125,22 @@ object frmShortCut: TfrmShortCut
     end
   end
   object pnlOld: TPanel
-    Left = 0
+    Left = 5
     Height = 42
-    Top = 57
-    Width = 400
+    Top = 52
+    Width = 390
     Align = alTop
     AutoSize = True
-    BorderSpacing.Top = 10
-    BorderSpacing.Bottom = 10
+    BorderSpacing.Around = 5
     ClientHeight = 42
-    ClientWidth = 400
+    ClientWidth = 390
+    ParentBackground = False
     TabOrder = 2
     object lblShortcutOld1: TLabel
       Left = 3
       Height = 17
       Top = 3
-      Width = 394
+      Width = 384
       Align = alTop
       Alignment = taCenter
       BorderSpacing.Around = 2
@@ -146,34 +152,128 @@ object frmShortCut: TfrmShortCut
       Left = 3
       Height = 17
       Top = 22
-      Width = 394
+      Width = 384
       Align = alTop
       Alignment = taCenter
       BorderSpacing.Around = 2
       Constraints.MinHeight = 17
       Font.Color = clBlue
-      Font.Height = 20
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
     end
   end
-  object btnSave: TBitBtn
-    Left = 105
-    Height = 30
-    Top = 198
-    Width = 190
-    Align = alTop
-    AutoSize = True
-    BorderSpacing.Left = 100
-    BorderSpacing.Right = 100
-    BorderSpacing.Bottom = 5
+  object pnlBottom: TPanel
+    Left = 5
+    Height = 24
+    Top = 221
+    Width = 390
+    Align = alBottom
     BorderSpacing.Around = 5
-    Constraints.MinHeight = 30
-    OnClick = btnSaveClick
-    OnKeyDown = btnSaveKeyDown
-    OnKeyUp = btnSaveKeyUp
+    BevelOuter = bvLowered
+    ClientHeight = 24
+    ClientWidth = 390
+    ParentBackground = False
     TabOrder = 3
+    object pnlHeight: TPanel
+      Left = 263
+      Height = 20
+      Top = 2
+      Width = 125
+      Align = alRight
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 125
+      Constraints.MinWidth = 125
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 0
+      object imgHeight: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        Center = True
+        ImageIndex = 1
+        Images = frmMain.imgSize
+      end
+      object lblHeight: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 101
+        Align = alClient
+        Alignment = taCenter
+        AutoSize = False
+        BorderSpacing.Around = 1
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+    object pnlWidth: TPanel
+      Left = 137
+      Height = 20
+      Top = 2
+      Width = 125
+      Align = alRight
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 125
+      Constraints.MinWidth = 125
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 1
+      object imgWidth: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        Center = True
+        Images = frmMain.imgSize
+      end
+      object lblWidth: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 101
+        Align = alClient
+        Alignment = taCenter
+        AutoSize = False
+        BorderSpacing.Around = 1
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+    object btnSave: TBitBtn
+      Cursor = crHandPoint
+      Left = 2
+      Height = 20
+      Top = 2
+      Width = 130
+      Align = alLeft
+      AutoSize = True
+      BorderSpacing.Around = 1
+      Color = clNone
+      Constraints.MinWidth = 130
+      Font.Style = [fsBold]
+      OnClick = btnSaveClick
+      OnKeyDown = btnSaveKeyDown
+      OnKeyUp = btnSaveKeyUp
+      ParentFont = False
+      TabOrder = 2
+    end
   end
   object ActionList1: TActionList
     Left = 216

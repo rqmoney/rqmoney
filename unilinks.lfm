@@ -1,7 +1,7 @@
 object frmLinks: TfrmLinks
-  Left = 99
+  Left = 611
   Height = 400
-  Top = 166
+  Top = 253
   Width = 1000
   ClientHeight = 400
   ClientWidth = 1000
@@ -12,7 +12,8 @@ object frmLinks: TfrmLinks
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.1'
+  LCLVersion = '3.0.0.3'
+  Scaled = False
   object pnlBottom: TPanel
     Left = 0
     Height = 22
@@ -291,7 +292,7 @@ object frmLinks: TfrmLinks
       IncrementalSearchStart = ssAlwaysStartOver
       PopupMenu = popList
       TabOrder = 1
-      TreeOptions.AutoOptions = [toAutoScroll]
+      TreeOptions.AutoOptions = [toAutoScroll, toAutoChangeScale]
       TreeOptions.MiscOptions = [toReportMode, toWheelPanning]
       TreeOptions.PaintOptions = [toHideFocusRect, toShowVertGridLines, toUseBlendedImages]
       TreeOptions.SelectionOptions = [toDisableDrawSelection, toFullRowSelect, toMultiSelect]
@@ -701,8 +702,8 @@ object frmLinks: TfrmLinks
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
-          OnChange = ediNameChange
           TabOrder = 0
+          OnChange = ediNameChange
         end
       end
       object pnlComment: TPanel
@@ -777,8 +778,8 @@ object frmLinks: TfrmLinks
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
-          OnChange = ediNameChange
           TabOrder = 0
+          OnChange = ediNameChange
         end
       end
       object pnlshortcut: TPanel
@@ -803,9 +804,9 @@ object frmLinks: TfrmLinks
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Around = 1
+          TabOrder = 0
           OnEnter = chkCtrlEnter
           OnExit = chkCtrlExit
-          TabOrder = 0
         end
         object lblShortcut: TLabel
           Left = 3
@@ -829,9 +830,9 @@ object frmLinks: TfrmLinks
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Around = 1
+          TabOrder = 1
           OnEnter = chkCtrlEnter
           OnExit = chkCtrlExit
-          TabOrder = 1
         end
         object chkAlt: TCheckBox
           Left = 4
@@ -842,9 +843,9 @@ object frmLinks: TfrmLinks
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Around = 1
+          TabOrder = 2
           OnEnter = chkCtrlEnter
           OnExit = chkCtrlExit
-          TabOrder = 2
         end
         object cbxShortCut: TComboBox
           Left = 4
@@ -857,9 +858,9 @@ object frmLinks: TfrmLinks
           BorderSpacing.Bottom = 2
           BorderSpacing.Around = 1
           ItemHeight = 15
-          OnChange = ediNameChange
           Style = csDropDownList
           TabOrder = 3
+          OnChange = ediNameChange
         end
       end
     end

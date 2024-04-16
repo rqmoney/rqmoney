@@ -7,7 +7,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ComCtrls, ExtCtrls, Buttons, Menus, StrUtils, Math, LCLProc, LazUTF8,
+  ComCtrls, ExtCtrls, Buttons, Menus, StrUtils, Math, LCLProc, LazUTF8, IniFiles,
   laz.VirtualTrees, DateTimePicker, Clipbrd, ActnList, Spin, BCPanel,
   BCMDButtonFocus, Variants, DateUtils;
 
@@ -35,6 +35,7 @@ type
     actDelete: TAction;
     actEdit: TAction;
     actExit: TAction;
+    actCurrencies: TAction;
     ActionList1: TActionList;
     actPrint: TAction;
     actSave: TAction;
@@ -92,7 +93,6 @@ type
     pnlCurrency: TPanel;
     pnlAmount: TPanel;
     pnlBottom: TPanel;
-    pnlTip: TPanel;
     pnlWidth: TPanel;
     popAdd: TMenuItem;
     popCopy: TMenuItem;
@@ -113,6 +113,7 @@ type
     procedure btnPrintMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure btnSelectClick(Sender: TObject);
+    procedure cbxCurrencyDropDown(Sender: TObject);
     procedure cbxCurrencyExit(Sender: TObject);
     procedure cbxCurrencyKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxStatusKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -168,7 +169,7 @@ implementation
 
 uses
   uniMain, uniCurrencies, uniSettings, uniScheduler, uniEdit,
-  uniProperties, uniMultiple, uniDetail, uniResources, uniTemplates,
+  uniProperties, uniDetail, uniResources, uniTemplates,
   uniDelete, uniEdits;
 
   { TfrmAccounts }
@@ -177,18 +178,6 @@ uses
 procedure TfrmAccounts.FormCreate(Sender: TObject);
 begin
   try
-    // form size
-    (Sender as TForm).Width := Round((Screen.Width /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-      (Round(620 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height := Round(Screen.Height /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - 4 * (250 - ScreenRatio);
-
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
-    {$IFDEF WINDOWS}
     // set components height
     VST.Header.Height := PanelHeight;
     pnlDetailCaption.Height := PanelHeight;
@@ -196,11 +185,13 @@ begin
     pnlBottom.Height := ButtonHeight;
     pnlButtons.Height := ButtonHeight;
     pnlButton.Height := ButtonHeight;
-    {$ENDIF}
+
+    // get form icon
+    frmMain.img16.GetIcon(15, (Sender as TForm).Icon);
 
     datdate.Date := Now;
-    lblDate1.Caption := DefaultFormatSettings.LongDayNames[DayOfTheWeek(
-      datDate.Date + 1)];
+    lblDate1.Caption :=
+      DefaultFormatSettings.LongDayNames[DayOfTheWeek(datDate.Date + 1)];
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -476,6 +467,13 @@ begin
 
   VST.SelectAll(False);
   VST.SetFocus;
+end;
+
+procedure TfrmAccounts.cbxCurrencyDropDown(Sender: TObject);
+begin
+  {$IFDEF WINDOWS}
+    ComboDDWidth(TComboBox(Sender));
+  {$ENDIF}
 end;
 
 procedure TfrmAccounts.cbxCurrencyExit(Sender: TObject);
@@ -811,7 +809,7 @@ begin
       (Sender as TFloatSpinEdit).Font.Bold := False;
       if (Pos('+', (Sender as TFloatSpinEdit).Hint) > 0) or
         (Pos('-', (Sender as TFloatSpinEdit).Hint) > 0) then
-        (Sender as TFloatSpinEdit).Value := CalculateText(Sender);
+        (Sender as TFloatSpinEdit).Text := Eval((Sender as TFloatSpinEdit).Text);
     end
     else if Sender.ClassType = TMemo then
       (Sender as TMemo).Font.Bold := False
@@ -843,6 +841,10 @@ begin
 end;
 
 procedure TfrmAccounts.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
 begin
   try
     if pnlButton.Visible = True then
@@ -850,6 +852,29 @@ begin
       btnCancelClick(btnCancel);
       CloseAction := Forms.caNone;
       Exit;
+    end;
+
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmAccounts.Name, '') <>
+          IntToStr(frmAccounts.Left) + separ + // form left
+        IntToStr(frmAccounts.Top) + separ + // form top
+        IntToStr(frmAccounts.Width) + separ + // form width
+        IntToStr(frmAccounts.Height) + separ + // form height
+        IntToStr(frmAccounts.pnlDetail.Width) then
+          INI.WriteString('POSITION', frmAccounts.Name,
+            IntToStr(frmAccounts.Left) + separ + // form left
+            IntToStr(frmAccounts.Top) + separ + // form top
+            IntToStr(frmAccounts.Width) + separ + // form width
+            IntToStr(frmAccounts.Height) + separ + // form height
+            IntToStr(frmAccounts.pnlDetail.Width));
+      finally
+        INI.Free;
+      end;
     end;
   except
     on E: Exception do
@@ -876,7 +901,65 @@ begin
 end;
 
 procedure TfrmAccounts.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmAccounts.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmAccounts.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmAccounts.Width := Screen.Width - 300 - (200 - ScreenRatio)
+      else
+        frmAccounts.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmAccounts.Height := Screen.Height - 400 - (200 - ScreenRatio)
+      else
+        frmAccounts.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmAccounts.left := (Screen.Width - frmAccounts.Width) div 2
+      else
+        frmAccounts.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmAccounts.Top := ((Screen.Height - frmAccounts.Height) div 2) - 75
+      else
+        frmAccounts.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 100) or (I > 300) then
+        frmAccounts.pnlDetail.Width := 220
+      else
+        frmAccounts.pnlDetail.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   try
     // btnAdd
     btnAdd.Enabled := frmMain.Conn.Connected = True;
@@ -908,6 +991,7 @@ begin
     popPrint.Enabled := VST.RootNodeCount > 0;
     actPrint.Enabled := VST.RootNodeCount > 0;
 
+    SetNodeHeight(VST);
     VST.SetFocus;
     VST.ClearSelection;
   except
@@ -986,15 +1070,15 @@ begin
     // Add new category
     if btnSave.Tag = 0 then
       frmMain.QRY.SQL.Text :=
-        'INSERT INTO accounts (acc_name, acc_name_lower, acc_currency, acc_date, ' +
-        'acc_amount, acc_status, acc_comment) ' +
+        'INSERT OR IGNORE INTO accounts (acc_name, acc_name_lower, acc_currency, acc_date, '
+        + 'acc_amount, acc_status, acc_comment) ' +
         'VALUES (:NAME, :NAMELOWER, :CURRENCY, :DATE, :AMOUNT, :STATUS, :COMMENT);'
     else
     begin
       // Edit selected category
       VST.Tag := StrToInt(VST.Text[VST.GetFirstSelected(False), 7]);
       frmMain.QRY.SQL.Text :=
-        'UPDATE accounts SET ' +  // update
+        'UPDATE OR IGNORE accounts SET ' +  // update
         'acc_name = :NAME, ' +            // name
         'acc_name_lower = :NAMELOWER, ' + // name lower case
         'acc_currency = :CURRENCY, ' +    // currency
@@ -1009,7 +1093,7 @@ begin
     frmMain.QRY.Params.ParamByName('NAME').AsString := ediName.Text;
     frmMain.QRY.Params.ParamByName('NAMELOWER').AsString := AnsiLowerCase(ediName.Text);
     frmMain.QRY.Params.ParamByName('CURRENCY').AsString :=
-      Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
+      Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
     frmMain.QRY.Params.ParamByName('DATE').AsString :=
       FormatDateTime('YYYY-MM-DD', datDate.Date);
     frmMain.QRY.Params.ParamByName('STATUS').AsInteger := cbxStatus.ItemIndex;
@@ -1099,32 +1183,28 @@ begin
     // update list of accounts in other forms
     frmDetail.cbxAccountFrom.Clear;
     frmDetail.cbxAccountTo.Clear;
+    frmDetail.cbxAccountX.Clear;
 
     for P in frmAccounts.VST.Nodes() do
-    begin
       // list of accounts in frmDETAIL [only active status !!!]
       if (frmAccounts.VST.Text[P, 6] = frmAccounts.cbxStatus.Items[0]) then
         frmDetail.cbxAccountFrom.Items.Add(frmAccounts.VST.Text[P, 1] +
-          ' | ' + frmAccounts.VST.Text[P, 2]);
-    end;
+          separ_1 + frmAccounts.VST.Text[P, 2]);
 
     if frmDetail.cbxAccountFrom.Items.Count > 0 then
+    begin
       frmDetail.cbxAccountTo.Items := frmDetail.cbxAccountFrom.Items;
-
-    // Accounts in form Multiple addition
-    frmMultiple.cbxAccount.Clear;
-    if frmDetail.cbxAccountFrom.Items.Count > 0 then
-      frmMultiple.cbxAccount.Items := frmDetail.cbxAccountFrom.Items;
+      frmDetail.cbxAccountX.Items := frmDetail.cbxAccountFrom.Items;
+    end;
 
     // Accounts in Scheduler (panel Detail)
     frmScheduler.cbxAccountFrom.Clear;
-    if frmDetail.cbxAccountFrom.Items.Count > 0 then
-      frmScheduler.cbxAccountFrom.Items := frmDetail.cbxAccountFrom.Items;
-
     frmScheduler.cbxAccountTo.Clear;
-
     if frmDetail.cbxAccountFrom.Items.Count > 0 then
+    begin
+      frmScheduler.cbxAccountFrom.Items := frmDetail.cbxAccountFrom.Items;
       frmScheduler.cbxAccountTo.Items := frmDetail.cbxAccountFrom.Items;
+    end;
 
     // Accounts in form Edit
     frmEdit.cbxAccount.Clear;

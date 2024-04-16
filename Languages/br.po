@@ -1,0 +1,2524 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: uniresources.caption_00
+msgid "Add"
+msgstr "Adicionar"
+
+#: uniresources.caption_01
+msgid "Add +"
+msgstr "Adicionar +"
+
+#: uniresources.caption_02
+msgid "Edit"
+msgstr "Editar"
+
+#: uniresources.caption_03
+msgid "Delete"
+msgstr "Apagar"
+
+#: uniresources.caption_04
+msgid "Save"
+msgstr "Salvar"
+
+#: uniresources.caption_05
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: uniresources.caption_06
+msgid "Values"
+msgstr "Valores"
+
+#: uniresources.caption_07
+msgid "Copy all"
+msgstr "Copiar tudo"
+
+#: uniresources.caption_08
+msgid "Photo"
+msgstr "Foto"
+
+#: uniresources.caption_09
+msgid "Print all"
+msgstr "Imprimir Tudo"
+
+#: uniresources.caption_10
+msgid "Duplicate"
+msgstr "Duplicar"
+
+#: uniresources.caption_100
+msgid "RECORDS IN THE TABLES"
+msgstr "REGISTROS NAS TABELAS"
+
+#: uniresources.caption_101
+msgid "CHOOSE CURRENCY"
+msgstr "ESCOLHA A MOEDA"
+
+#: uniresources.caption_102
+msgid "Select a nominal value and type its count"
+msgstr "Selecione um valor nominal e digite sua contagem"
+
+#: uniresources.caption_103
+msgid "MANY CURRENCIES"
+msgstr "MUITAS MOEDAS"
+
+#: uniresources.caption_104
+msgid "SELECT MAIN CURRENCY"
+msgstr "SELECIONE A MOEDA PRINCIPAL"
+
+#: uniresources.caption_105
+#, object-pascal-format
+msgid ""
+"Only one currency can be designated as the main one!%0:sPlease, select one "
+"currency as main one."
+msgstr ""
+"Apenas uma moeda pode ser designada como principal!%0:sPor favor, selecione "
+"uma moeda como principal."
+
+#: uniresources.caption_106
+msgid "Execute !"
+msgstr "Executar !"
+
+#: uniresources.caption_107
+msgid "UNLOCK !"
+msgstr "DESBLOQUEAR !"
+
+#: uniresources.caption_108
+msgid "Yes"
+msgstr "Sim"
+
+#: uniresources.caption_109
+msgid "No"
+msgstr "Não"
+
+#: uniresources.caption_11
+msgid "Payments"
+msgstr "Pagamentos"
+
+#: uniresources.caption_110
+msgid "CHOOSE FIELDS YOU WANT TO EDIT"
+msgstr "ESCOLHA OS CAMPOS QUE DESEJA EDITAR"
+
+#: uniresources.caption_111
+msgid "Monthly preview"
+msgstr "Visualizar mês"
+
+#: uniresources.caption_112
+msgid "Daily preview"
+msgstr "Visualizar dia"
+
+#: uniresources.caption_113
+msgid "PROTECTED DATABASE !"
+msgstr "BANCO DE DADOS PROTEGIDO !"
+
+#: uniresources.caption_114
+msgid "Database name:"
+msgstr "Nome do banco de dados:"
+
+#: uniresources.caption_115
+#, object-pascal-format
+msgid ""
+"This database is protected by password.%0:sType correct password and then "
+"press the key ENTER to unlock the database."
+msgstr ""
+"Este banco de dados é protegido por senha.%0:sDigite a senha correta e "
+"pressione a tecla ENTER para desbloquear o banco de dados."
+
+#: uniresources.caption_116
+msgid "Backspace"
+msgstr "Apagar"
+
+#: uniresources.caption_117
+msgid "TRANSACTIONS TO DELETING"
+msgstr "TRANSAÇÕES PARA EXCLUSÃO"
+
+#: uniresources.caption_118
+msgid "Backup"
+msgstr "Backup"
+
+#: uniresources.caption_119
+msgid "Global"
+msgstr "Global"
+
+#: uniresources.caption_12
+msgid "Select"
+msgstr "Selecionar"
+
+#: uniresources.caption_120
+msgid "Visual"
+msgstr "Visual"
+
+#: uniresources.caption_121
+msgid "On open"
+msgstr "Em aberto"
+
+#: uniresources.caption_122
+msgid "ShortCuts"
+msgstr "Atalhos"
+
+#: uniresources.caption_123
+msgid "HELPFUL INFO"
+msgstr "INFORMAÇÕES ÚTEIS"
+
+#: uniresources.caption_124
+msgid "Operating system"
+msgstr "Sistema operacional"
+
+#: uniresources.caption_125
+msgid "Program version"
+msgstr "Versão do programa"
+
+#: uniresources.caption_126
+msgid "SQLite library name"
+msgstr "SQLite Nome da biblioteca"
+
+#: uniresources.caption_127
+msgid "SQLite library version"
+msgstr "SQLite Versão da biblioteca"
+
+#: uniresources.caption_128
+msgid "Program folder"
+msgstr "Pasta do programa"
+
+#: uniresources.caption_129
+msgid "GLOBAL SETTINGS"
+msgstr "CONFIGURAÇÕES GLOBAIS"
+
+#: uniresources.caption_13
+msgid "Nominal value"
+msgstr "Valor nominal"
+
+#: uniresources.caption_130
+msgid "Language"
+msgstr "Idioma"
+
+#: uniresources.caption_131
+msgctxt "uniresources.caption_131"
+msgid "Date and numeric format"
+msgstr "Data e formato numérico"
+
+#: uniresources.caption_132
+msgid "automatic (from OS)"
+msgstr "automático (do sistema operacional)"
+
+#: uniresources.caption_133
+msgid "own settings"
+msgstr "configurações próprias"
+
+#: uniresources.caption_134
+msgid "Numeric format"
+msgstr "Formato numérico"
+
+#: uniresources.caption_135
+msgid "Thousand separator"
+msgstr "Separador de mil"
+
+#: uniresources.caption_136
+msgid "Decimal separator"
+msgstr "Separador decimal"
+
+#: uniresources.caption_137
+msgid "Example"
+msgstr "Exemplo"
+
+#: uniresources.caption_138
+msgid "Date format"
+msgstr "Formato da data"
+
+#: uniresources.caption_139
+msgid "1. week day"
+msgstr "1.dia da semana"
+
+#: uniresources.caption_14
+msgid "Count"
+msgstr "Contagem"
+
+#: uniresources.caption_140
+msgid "Short date"
+msgstr "Data curta"
+
+#: uniresources.caption_141
+msgid "Long date"
+msgstr "Data longa"
+
+#: uniresources.caption_142
+msgid "VISUAL SETTINGS"
+msgstr "CONFIGURAÇÕES VISUAIS"
+
+#: uniresources.caption_143
+msgid "Panels and buttons captions"
+msgstr "Painéis e botões de subtítulos"
+
+#: uniresources.caption_144
+msgid "Shadowed font"
+msgstr "Fonte sombreada"
+
+#: uniresources.caption_145
+msgid "Bold font"
+msgstr "Negrito"
+
+#: uniresources.caption_146
+msgid "Gradient effect"
+msgstr "Efeito gradiente"
+
+#: uniresources.caption_147
+msgid "Background color"
+msgstr "Cor de fundo"
+
+#: uniresources.caption_148
+msgid "Font color"
+msgstr "Cor da fonte"
+
+#: uniresources.caption_149
+msgid "Tables"
+msgstr "Tabelas"
+
+#: uniresources.caption_15
+msgid "Summary"
+msgstr "Resumo"
+
+#: uniresources.caption_150
+msgid "Odd row color"
+msgstr "Cor de linha casual"
+
+#: uniresources.caption_151
+msgid "Transactions color scheme"
+msgstr "Esquema de cores das transações"
+
+#: uniresources.caption_152
+msgctxt "uniresources.caption_152"
+msgid "black for all fields in the row"
+msgstr "preto para todos os campos da linha"
+
+#: uniresources.caption_153
+msgctxt "uniresources.caption_153"
+msgid "colored the field Amount only"
+msgstr "colorir somente o campo com valor"
+
+#: uniresources.caption_154
+msgctxt "uniresources.caption_154"
+msgid "colored all fields in the row"
+msgstr "colorido para todos os campos da linha"
+
+#: uniresources.caption_155
+msgid "General font"
+msgstr "Fonte geral"
+
+#: uniresources.caption_156
+msgid "The quick brown fox jumps over the lazy dog."
+msgstr "A rápida raposa marrom salta sobre o cachorro preguiçoso."
+
+#: uniresources.caption_157
+msgid "On run"
+msgstr "Em fuga"
+
+#: uniresources.caption_158
+msgid "open last used forms size"
+msgstr "abrir o último tamanho de formulário usado"
+
+#: uniresources.caption_159
+msgid ""
+"when new transaction is added, open the window \"New transaction\" again to "
+"add another transaction"
+msgstr ""
+"quando uma nova transação for adicionada, abra novamente a janela \"Nova "
+"transação\" para adicionar outra transação"
+
+#: uniresources.caption_16
+msgid "Total"
+msgstr "Total"
+
+#: uniresources.caption_160
+msgid "open last used database"
+msgstr "abrir o último banco de dados usado"
+
+#: uniresources.caption_161
+msgid "open last used filter"
+msgstr "abrir o último filtro usado"
+
+#: uniresources.caption_162
+msgid "automatic columns width for all tables"
+msgstr "largura automática das colunas para todas as tabelas"
+
+#: uniresources.caption_163
+msgid "Miscellaneous"
+msgstr "Miscelânea"
+
+#: uniresources.caption_164
+msgid "KEYBOARD SHORTCUTS"
+msgstr "ATALHOS DO TECLADO"
+
+#: uniresources.caption_165
+msgid "WRITE SCHEDULED PAYMENTS"
+msgstr "LANÇAR PAGAMENTOS AGENDADOS"
+
+#: uniresources.caption_166
+#, object-pascal-format
+msgid "Write all %0:s selected scheduled payments"
+msgstr "Lançar todos os %0:s pagamentos programados selecionados"
+
+#: uniresources.caption_167
+msgid "at once"
+msgstr "de uma vez só"
+
+#: uniresources.caption_168
+msgid "gradually (in parts)"
+msgstr "gradualmente (em partes)"
+
+#: uniresources.caption_169
+msgid "Show transactions"
+msgstr "Mostrar transações"
+
+#: uniresources.caption_17
+msgid "Date and time"
+msgstr "Data e hora"
+
+#: uniresources.caption_170
+msgid "All"
+msgstr "Todos"
+
+#: uniresources.caption_171
+msgid "Renewable only"
+msgstr "Somente renovável"
+
+#: uniresources.caption_172
+msgid "Non-renewable only (damaged)"
+msgstr "Somente não renovável (danificado)"
+
+#: uniresources.caption_173
+msgid "SQL COMMAND RESULTS"
+msgstr "RESULTADOS DO COMANDO SQL"
+
+#: uniresources.caption_174
+msgid "MAKE A DATABASE BACKUP BEFORE USE !"
+msgstr "FAÇA UM BACKUP DO BANCO DE DADOS ANTES DE USAR!"
+
+#: uniresources.caption_175
+msgid "WRONG SQL COMMAND CAN CORRUPT YOUR DATABASE !"
+msgstr "QUALQUER COMANDO SQL ERRADO PODE corromper seu banco de dados!"
+
+#: uniresources.caption_176
+msgid "Select SQL command:"
+msgstr "Selecione o comando SQL:"
+
+#: uniresources.caption_177
+msgid "Show database structure (\"master table\")"
+msgstr "Mostrar estrutura do banco de dados (\"tabela mestre\")"
+
+#: uniresources.caption_178
+msgid "Show all transactions"
+msgstr "Mostrar todas as transações"
+
+#: uniresources.caption_179
+msgid "VACUUM (this command reduces database size by erasing deleted records)"
+msgstr ""
+"VACUUM (este comando reduz o tamanho do banco de dados apagando registros "
+"excluídos)"
+
+#: uniresources.caption_18
+msgid "FILTER"
+msgstr "FILTRO"
+
+#: uniresources.caption_180
+msgid "Own SQL command:"
+msgstr "Comando SQL próprio:"
+
+#: uniresources.caption_181
+msgid "Transfer"
+msgstr "Transferir"
+
+#: uniresources.caption_182
+msgid "IMPORT FILE"
+msgstr "IMPORTAR ARQUIVO"
+
+#: uniresources.caption_183
+msgid "SELECT FILE TO IMPORT"
+msgstr "SELECIONE O ARQUIVO PARA IMPORTAR"
+
+#: uniresources.caption_184
+msgid ""
+"To be strong, your password should contain:%- at least one lower case "
+"letter%- at least one upper case letter%- at least one digit"
+msgstr ""
+"Para ser forte, sua senha precisa ter:%- pelo menos uma letra minúscula%- "
+"pelo menos uma letra maiúscula%- pelo menos um dígito"
+
+#: uniresources.caption_185
+msgid "USE STRONG PASSWORD !"
+msgstr "USE UMA SENHA FORTE!"
+
+#: uniresources.caption_186
+msgid "Old password"
+msgstr "Senha Antiga"
+
+#: uniresources.caption_187
+msgid "New password"
+msgstr "Nova Senha"
+
+#: uniresources.caption_188
+msgid "Confirm password"
+msgstr "Confirme sua senha"
+
+#: uniresources.caption_189
+msgid "CONGRATULATION !!!"
+msgstr "PARABÉNS !!!"
+
+#: uniresources.caption_19
+msgid "Month"
+msgstr "Mês"
+
+#: uniresources.caption_190
+msgid "YOUR NEW DATABASE WAS SUCCESSFULY CREATED !"
+msgstr "SEU NOVO BANCO DE DADOS FOI CRIADO COM SUCESSO!"
+
+#: uniresources.caption_191
+msgid "Choose your next step now:"
+msgstr "Escolha seu próximo passo agora:"
+
+#: uniresources.caption_192
+msgid "Strongly reccomanded"
+msgstr "Fortemente recomendado"
+
+#: uniresources.caption_193
+msgid "PROTECT THE DATABASE WITH THE PASSWORD"
+msgstr "PROTEGER O BANCO DE DADOS COM A SENHA"
+
+#: uniresources.caption_194
+msgid "For new users"
+msgstr "Para novos usuários"
+
+#: uniresources.caption_195
+msgid "RUN THE BEGINNER'S GUIDE"
+msgstr "EXECUTE O GUIA PARA INICIANTES"
+
+#: uniresources.caption_196
+msgid "For old users"
+msgstr "Para usuários antigos"
+
+#: uniresources.caption_197
+msgid "IMPORT VERSION 2.x"
+msgstr "VERSÃO DE IMPORTAÇÃO 2.x"
+
+#: uniresources.caption_198
+msgid "I am ready"
+msgstr "Estou pronto"
+
+#: uniresources.caption_199
+msgid "LET'S GO WORK"
+msgstr "VAMOS TRABALHAR"
+
+#: uniresources.caption_20
+msgid "Year"
+msgstr "Ano"
+
+#: uniresources.caption_200
+msgid "ORIGINAL TRANSACTION"
+msgstr "TRANSAÇÃO ORIGINAL"
+
+#: uniresources.caption_201
+msgid "CHANGED FIELDS"
+msgstr "CAMPOS ALTERADOS"
+
+#: uniresources.caption_202
+msgid "SHORTCUT KEY"
+msgstr "TECLA DE ATALHO"
+
+#: uniresources.caption_203
+msgid "New shortcut"
+msgstr "Novo atalho"
+
+#: uniresources.caption_204
+msgid "Action"
+msgstr "Ação"
+
+#: uniresources.caption_205
+msgid "Current shortcut"
+msgstr "Atalho atual"
+
+#: uniresources.caption_206
+msgid "Shortcut"
+msgstr "Atalho"
+
+#: uniresources.caption_207
+msgid "Once"
+msgstr "Uma vez"
+
+#: uniresources.caption_208
+msgid "Every X days"
+msgstr "A cada X dias"
+
+#: uniresources.caption_209
+msgid "Daily"
+msgstr "Diário"
+
+#: uniresources.caption_21
+msgid "Reset"
+msgstr "Reiniciar"
+
+#: uniresources.caption_210
+msgid "Weekly"
+msgstr "Semanal"
+
+#: uniresources.caption_211
+msgid "Fortnightly"
+msgstr "Quinzenal"
+
+#: uniresources.caption_212
+msgid "Monthly"
+msgstr "Mensal"
+
+#: uniresources.caption_213
+msgid "Quarterly"
+msgstr "Trimestral"
+
+#: uniresources.caption_214
+msgid "Biannually"
+msgstr "Semestral"
+
+#: uniresources.caption_215
+msgid "Yearly"
+msgstr "Anual"
+
+#: uniresources.caption_216
+msgid "If a scheduled payment falls on a"
+msgstr "Se um pagamento programado recair sobre um"
+
+#: uniresources.caption_217
+msgid "move the payment to one day"
+msgstr "mover o pagamento para um dia"
+
+#: uniresources.caption_218
+msgid "before"
+msgstr "antes"
+
+#: uniresources.caption_219
+msgid "after"
+msgstr "depois"
+
+#: uniresources.caption_22
+msgid "Show INI file"
+msgstr "Mostrar arquivo INI"
+
+#: uniresources.caption_220
+msgid "Note"
+msgstr "Observação"
+
+#: uniresources.caption_221
+msgid ""
+"These options work only for monthly, quarterly, biannually and yearly "
+"repeating transactions!"
+msgstr ""
+"Essas opções funcionam apenas para transações repetidas mensalmente, "
+"trimestralmente, semestralmente e anualmente!"
+
+#: uniresources.caption_222
+msgctxt "uniresources.caption_222"
+msgid "public holiday"
+msgstr "feriado"
+
+#: uniresources.caption_223
+msgid "to make backup of database"
+msgstr "fazer backup do banco de dados"
+
+#: uniresources.caption_224
+#, object-pascal-format
+msgctxt "uniresources.caption_224"
+msgid ""
+"Your backup folder doesn't exists.%Please, set the folder first or turn off "
+"the back up."
+msgstr ""
+"Sua pasta de backup não existe.%Por favor, defina a pasta primeiro ou "
+"desative o backup."
+
+#: uniresources.caption_225
+msgid "Maximal count of backup files"
+msgstr "Contagem máxima de arquivos de backup"
+
+#: uniresources.caption_226
+msgid "Show message about successful backup of the database"
+msgstr "Mostrar mensagem sobre backup bem-sucedido do banco de dados"
+
+#: uniresources.caption_227
+msgid "Your database has been backed up successful to the folder"
+msgstr "O backup do seu banco de dados foi feito com sucesso na pasta"
+
+#: uniresources.caption_228
+msgid "Plan"
+msgstr "Plano"
+
+#: uniresources.caption_229
+msgid "Reality"
+msgstr "Realidade"
+
+#: uniresources.caption_23
+msgid "Back"
+msgstr "Voltar"
+
+#: uniresources.caption_230
+msgid "Index"
+msgstr "Índice"
+
+#: uniresources.caption_231
+msgid "Difference"
+msgstr "Diferença"
+
+#: uniresources.caption_232
+msgid "Planned amount"
+msgstr "Valor planejado"
+
+#: uniresources.caption_233
+msgid "Budgets"
+msgstr "Orçamentos"
+
+#: uniresources.caption_234
+msgid "Periods"
+msgstr "Períodos"
+
+#: uniresources.caption_235
+msgid "Budget type"
+msgstr "Tipo de orçamento"
+
+#: uniresources.caption_236
+msgid "Hide column DIFFERENCE"
+msgstr "Ocultar coluna DIFERENÇA"
+
+#: uniresources.caption_237
+msgid "Hide column INDEX"
+msgstr "Ocultar coluna ÍNDICE"
+
+#: uniresources.caption_238
+msgid "Main window"
+msgstr "Janela principal"
+
+#: uniresources.caption_239
+msgid "Show marks"
+msgstr "Mostrar marcas"
+
+#: uniresources.caption_24
+msgid "Next"
+msgstr "Próximo"
+
+#: uniresources.caption_240
+msgid "Credit transactions color"
+msgstr "Cor das transações de crédito"
+
+#: uniresources.caption_241
+msgctxt "uniresources.caption_241"
+msgid "Transfers(+) transactions color"
+msgstr "Transferências (+) cor das transações"
+
+#: uniresources.caption_242
+msgctxt "uniresources.caption_242"
+msgid "Transfers(-) transactions color"
+msgstr "Transferências (-) cor das transações"
+
+#: uniresources.caption_243
+msgid "On close"
+msgstr "De perto"
+
+#: uniresources.caption_244
+msgid "to show a confirmation dialog about closing the database"
+msgstr ""
+"para mostrar uma caixa de diálogo de confirmação sobre o fechamento do banco "
+"de dados"
+
+#: uniresources.caption_245
+msgid "List of reports"
+msgstr "Lista de relatórios"
+
+#: uniresources.caption_246
+msgid "Font of all lists"
+msgstr "Fonte de todas as listas"
+
+#: uniresources.caption_247
+msgid "Time"
+msgstr "Tempo"
+
+#: uniresources.caption_248
+msgid "Order"
+msgstr "Ordem"
+
+#: uniresources.caption_249
+msgid "File"
+msgstr "Arquivo"
+
+#: uniresources.caption_25
+msgid "Transactions"
+msgstr "Transações"
+
+#: uniresources.caption_250
+msgid "All files"
+msgstr "Todos os arquivos"
+
+#: uniresources.caption_251
+msgid "Template"
+msgstr "Modelo"
+
+#: uniresources.caption_252
+msgctxt "uniresources.caption_252"
+msgid "Template name"
+msgstr "Nome do modelo"
+
+#: uniresources.caption_253
+msgid "TEMPLATE FOR IMPORT"
+msgstr "MODELO PARA IMPORTAÇÃO"
+
+#: uniresources.caption_254
+msgid "Do not import"
+msgstr "Não importe"
+
+#: uniresources.caption_255
+msgid "lines from the begining"
+msgstr "linhas do início"
+
+#: uniresources.caption_256
+msgid "lines from the end"
+msgstr "linhas do final"
+
+#: uniresources.caption_257
+msgid "Fields separator"
+msgstr "Separador de campos"
+
+#: uniresources.caption_258
+msgid "Cut quotes"
+msgstr "Cortar citações"
+
+#: uniresources.caption_259
+msgid "Origin text"
+msgstr "Texto de origem"
+
+#: uniresources.caption_26
+msgid "Date"
+msgstr "Data"
+
+#: uniresources.caption_260
+msgid "PREPARED DATA FOR IMPORT"
+msgstr "DADOS PREPARADOS PARA IMPORTAÇÃO"
+
+#: uniresources.caption_261
+msgctxt "uniresources.caption_261"
+msgid "Imported file"
+msgstr "Arquivo importado"
+
+#: uniresources.caption_262
+msgid "Column"
+msgstr "Coluna"
+
+#: uniresources.caption_263
+msgid "First value test"
+msgstr "Teste de primeiro valor"
+
+#: uniresources.caption_264
+msgid "Use amount sign (+/-)"
+msgstr "Use o sinal de valor (+/-)"
+
+#: uniresources.caption_265
+msgid "Credit symbol"
+msgstr "Símbolo de crédito"
+
+#: uniresources.caption_266
+msgid "Debit symbol"
+msgstr "Símbolo de débito"
+
+#: uniresources.caption_267
+msgid "Set manually"
+msgstr "Definir manualmente"
+
+#: uniresources.caption_268
+msgid "Set automatically"
+msgstr "Definir automaticamente"
+
+#: uniresources.caption_269
+msgid "Imported row"
+msgstr "Linha importada"
+
+#: uniresources.caption_27
+msgid "Day"
+msgstr "Dia"
+
+#: uniresources.caption_270
+msgid "Icons size"
+msgstr "Tamanho dos ícones"
+
+#: uniresources.caption_271
+msgid "Record"
+msgstr "Registro"
+
+#: uniresources.caption_272
+msgid "Copy"
+msgstr "Copiar"
+
+#: uniresources.caption_273
+msgid "Select all"
+msgstr "Selecionar tudo"
+
+#: uniresources.caption_274
+msgid "Form"
+msgstr "Forma"
+
+#: uniresources.caption_275
+msgid "Edit template"
+msgstr "Editar modelo"
+
+#: uniresources.caption_276
+msgid "Press a key (or keys) to set new shortcut for this action"
+msgstr ""
+"Pressione uma tecla (ou teclas) para definir um novo atalho para esta ação"
+
+#: uniresources.caption_277
+msgid "Old shortcut"
+msgstr "Atalho antigo"
+
+#: uniresources.caption_278
+msgid "Default"
+msgstr "Padrão"
+
+#: uniresources.caption_279
+msgid "Check new version"
+msgstr "Verifique a nova versão"
+
+#: uniresources.caption_28
+msgid "Period"
+msgstr "Período"
+
+#: uniresources.caption_280
+msgid "Confirm each payment separately"
+msgstr "Confirme cada pagamento separadamente"
+
+#: uniresources.caption_281
+msgid "Show scheduled payments for"
+msgstr "Mostrar pagamentos programados para"
+
+#: uniresources.caption_282
+msgid "weeks too"
+msgstr "semanas também"
+
+#: uniresources.caption_283
+#, object-pascal-format
+msgid "Wrong SQL command.%Please, check the name of the tables or fields."
+msgstr "Comando SQL errado.%Por favor, verifique o nome das tabelas ou campos."
+
+#: uniresources.caption_284
+msgid "Backup folder"
+msgstr "Pasta de backup"
+
+#: uniresources.caption_285
+msgid "External link"
+msgstr "Link externo"
+
+#: uniresources.caption_286
+msgid "NOTE% Don't forget to use negative numbers for debits."
+msgstr "NOTA% Não esqueça de usar números negativos para débitos."
+
+#: uniresources.caption_287
+msgid "Balance detail"
+msgstr "Detalhes do saldo"
+
+#: uniresources.caption_288
+msgctxt "uniresources.caption_288"
+msgid "Print the transactions summary table on a separately page"
+msgstr "Imprimir a tabela de resumo de transações em uma página separada"
+
+#: uniresources.caption_29
+msgid "Copy selected"
+msgstr "Cópia selecionada"
+
+#: uniresources.caption_299
+msgid "display the amount in bold"
+msgstr "exibir o valor em negrito"
+
+#: uniresources.caption_30
+msgid "Print selected"
+msgstr "Imprimir selecionado"
+
+#: uniresources.caption_300
+msgid "display subcategories in capital letters"
+msgstr "exibir subcategorias em letras maiúsculas"
+
+#: uniresources.caption_301
+msgctxt "uniresources.caption_301"
+msgid "enable transfer to the same account"
+msgstr "permitir a transferência para a mesma conta"
+
+#: uniresources.caption_302
+msgid "Weeks"
+msgstr "Semanas"
+
+#: uniresources.caption_303
+msgid "Months"
+msgstr "Meses"
+
+#: uniresources.caption_304
+msgid "Quarters"
+msgstr "Trimestres"
+
+#: uniresources.caption_305
+msgid "Restrictions"
+msgstr "Restrições"
+
+#: uniresources.caption_306
+msgid "no restrictions"
+msgstr "sem restrições"
+
+#: uniresources.caption_307
+msgid "not older than"
+msgstr "não mais velho que"
+
+#: uniresources.caption_308
+msgid "Days"
+msgstr "Dias"
+
+#: uniresources.caption_309
+msgid "Years"
+msgstr "Anos"
+
+#: uniresources.caption_31
+msgid "Print transaction"
+msgstr "Imprimir transação"
+
+#: uniresources.caption_310
+msgid "Chronology"
+msgstr "Cronologia"
+
+#: uniresources.caption_311
+msgid "Intervals"
+msgstr "Intervalos"
+
+#: uniresources.caption_312
+msgid "Show pie chart of summary"
+msgstr "Mostrar gráfico de pizza do resumo"
+
+#: uniresources.caption_313
+msgid "Icons by"
+msgstr "Ícones de"
+
+#: uniresources.caption_314
+msgid "Show series"
+msgstr "Mostrar série"
+
+#: uniresources.caption_315
+msgid "Show points"
+msgstr "Mostrar pontos"
+
+#: uniresources.caption_316
+msgid "if a day is set in the filter, use the current date"
+msgstr "se um dia estiver definido no filtro, use a data atual"
+
+#: uniresources.caption_317
+msgid "use the date shift according to the settings in the program"
+msgstr "use a mudança de data de acordo com as configurações do programa"
+
+#: uniresources.caption_318
+msgid "Cross tables"
+msgstr "Tabelas cruzadas"
+
+#: uniresources.caption_319
+msgid "Simple transaction"
+msgstr "Transação simples"
+
+#: uniresources.caption_32
+msgid "Scheduled date"
+msgstr "Data marcada"
+
+#: uniresources.caption_320
+msgid "Multiple transaction"
+msgstr "Transação múltipla"
+
+#: uniresources.caption_321
+msgid "Kind"
+msgstr "Tipo"
+
+#: uniresources.caption_322
+msgid "DB structure"
+msgstr "Estrutura do BD"
+
+#: uniresources.caption_323
+msgid "Created in Apricot software"
+msgstr "Criado no software Apricot"
+
+#: uniresources.caption_324
+msgid "to show a confirmation dialog about backup of the database"
+msgstr ""
+"para mostrar uma caixa de diálogo de confirmação sobre o backup do banco de "
+"dados"
+
+#: uniresources.caption_325
+msgid "to encrypt the database (required database password protection!)"
+msgstr ""
+"para criptografar o banco de dados (é necessário proteger o banco de dados "
+"com senha!)"
+
+#: uniresources.caption_326
+msgctxt "uniresources.caption_326"
+msgid "Your database was not encrypt now."
+msgstr "Seu banco de dados não foi criptografado agora."
+
+#: uniresources.caption_327
+msgid "Red color for buttons DELETE"
+msgstr "Cor vermelha para os botões DELETE"
+
+#: uniresources.caption_328
+msgid "Buttons bar"
+msgstr "Barra de botões"
+
+#: uniresources.caption_329
+msgid "Buttons size"
+msgstr "Tamanho de botões"
+
+#: uniresources.caption_33
+msgid "Swap order"
+msgstr "Trocar pedido"
+
+#: uniresources.caption_330
+msgid "Buttons visibility"
+msgstr "Visibilidade dos botões"
+
+#: uniresources.caption_34
+msgid "Account book"
+msgstr "Livro de contabilidade"
+
+#: uniresources.caption_35
+msgid "Current balance"
+msgstr "Saldo atual"
+
+#: uniresources.caption_36
+msgid "Final balance"
+msgstr "Saldo final"
+
+#: uniresources.caption_37
+msgid "Starting balance"
+msgstr "Saldo inicial"
+
+#: uniresources.caption_38
+msgid "Credits"
+msgstr "Créditos"
+
+#: uniresources.caption_39
+msgid "Debits"
+msgstr "Débitos"
+
+#: uniresources.caption_40
+msgid "Transfers"
+msgstr "Transferências"
+
+#: uniresources.caption_41
+msgid "Average"
+msgstr "Média"
+
+#: uniresources.caption_42
+msgid "Amount"
+msgstr "Montante"
+
+#: uniresources.caption_43
+msgid "Detail"
+msgstr "Detalhe"
+
+#: uniresources.caption_44
+msgid "List"
+msgstr "Lista"
+
+#: uniresources.caption_45
+msgid "New record"
+msgstr "Novo registro"
+
+#: uniresources.caption_46
+msgid "Edit record"
+msgstr "Editar registro"
+
+#: uniresources.caption_47
+msgid "Count of selected transactions:"
+msgstr "Contagem de transações selecionadas:"
+
+#: uniresources.caption_48
+msgid "Restore"
+msgstr "Restaurar"
+
+#: uniresources.caption_49
+msgid "Name"
+msgstr "Nome"
+
+#: uniresources.caption_50
+msgid "Account"
+msgstr "Conta"
+
+#: uniresources.caption_51
+msgid "Status"
+msgstr "Status"
+
+#: uniresources.caption_52
+msgid "Currency"
+msgstr "Moeda"
+
+#: uniresources.caption_53
+msgid "ID"
+msgstr "ID"
+
+#: uniresources.caption_54
+msgid "Category"
+msgstr "Categoria"
+
+#: uniresources.caption_55
+msgid "Active"
+msgstr "Ativo"
+
+#: uniresources.caption_56
+msgid "Comment"
+msgstr "Descrição"
+
+#: uniresources.caption_57
+msgid "Passive"
+msgstr "Passivo"
+
+#: uniresources.caption_58
+msgid "Person"
+msgstr "Pessoa"
+
+#: uniresources.caption_59
+msgid "Archive"
+msgstr "Arquivo"
+
+#: uniresources.caption_60
+msgid "Payee"
+msgstr "Beneficiário"
+
+#: uniresources.caption_61
+msgid "in the category"
+msgstr "na categoria"
+
+#: uniresources.caption_62
+msgid "Tag"
+msgstr "Marcação"
+
+#: uniresources.caption_63
+msgid "Type"
+msgstr "Tipo"
+
+#: uniresources.caption_64
+msgid "Records"
+msgstr "Registros"
+
+#: uniresources.caption_65
+msgid "Database properties"
+msgstr "Propriedades do banco de dados"
+
+#: uniresources.caption_66
+msgid "Scheduled payments"
+msgstr "Pagamentos agendados"
+
+#: uniresources.caption_67
+msgid "History"
+msgstr "Histórico"
+
+#: uniresources.caption_68
+msgid "Print"
+msgstr "Imprimir"
+
+#: uniresources.caption_69
+msgid "From the date"
+msgstr "A partir da data"
+
+#: uniresources.caption_70
+msgid "To the date"
+msgstr "Até a data"
+
+#: uniresources.caption_71
+msgid "Code"
+msgstr "Código"
+
+#: uniresources.caption_72
+msgid "Write"
+msgstr "Lançar"
+
+#: uniresources.caption_73
+msgid "Common data"
+msgstr "Dados comuns"
+
+#: uniresources.caption_74
+msgid "Multiple additions"
+msgstr "Múltiplas adições"
+
+#: uniresources.caption_75
+msgid "Debit"
+msgstr "Débito"
+
+#: uniresources.caption_76
+msgid "Credit"
+msgstr "Crédito"
+
+#: uniresources.caption_77
+msgid "From account"
+msgstr "Da conta"
+
+#: uniresources.caption_78
+msgid "To account"
+msgstr "Para contabilizar"
+
+#: uniresources.caption_79
+msgid "Balance"
+msgstr "Balanço"
+
+#: uniresources.caption_80
+msgid "Subcategory"
+msgstr "Subcategoria"
+
+#: uniresources.caption_81
+msgid "Edited"
+msgstr "Editado"
+
+#: uniresources.caption_82
+msgid "Statistics"
+msgstr "Estatisticas"
+
+#: uniresources.caption_83
+msgid "Paid"
+msgstr "Pago"
+
+#: uniresources.caption_84
+msgid "Main currency"
+msgstr "Moeda principal"
+
+#: uniresources.caption_85
+msgid "Planning calendar"
+msgstr "Calendário de planejamento"
+
+#: uniresources.caption_86
+msgid "EDIT TRANSACTION"
+msgstr "EDITAR TRANSAÇÃO"
+
+#: uniresources.caption_87
+msgid "EDIT TRANSACTIONS"
+msgstr "EDITAR TRANSAÇÕES"
+
+#: uniresources.caption_88
+msgid "Exchange rate"
+msgstr "Taxa de câmbio"
+
+#: uniresources.caption_89
+msgid "Value"
+msgstr "Valor"
+
+#: uniresources.caption_90
+msgid "Added"
+msgstr "Adicionado"
+
+#: uniresources.caption_91
+msgid "Starting date"
+msgstr "Data de início"
+
+#: uniresources.caption_92
+msgid "Holiday name"
+msgstr "Nome do feriado"
+
+#: uniresources.caption_93
+msgid "Deduct from the amount"
+msgstr "Deduzir do valor"
+
+#: uniresources.caption_94
+msgid "Summary of the list"
+msgstr "Resumo da lista"
+
+#: uniresources.caption_95
+msgid "Periodicity"
+msgstr "Periodicidade"
+
+#: uniresources.caption_96
+msgid "File name"
+msgstr "Nome do arquivo"
+
+#: uniresources.caption_97
+msgid "Location"
+msgstr "Localização"
+
+#: uniresources.caption_98
+msgid "File size"
+msgstr "Tamanho do arquivo"
+
+#: uniresources.caption_99
+msgid "Protection by password"
+msgstr "Proteção por senha"
+
+#: uniresources.chart_01
+msgid "Graphs"
+msgstr "Gráficos"
+
+#: uniresources.chart_02
+msgctxt "uniresources.chart_02"
+msgid "left mouse click to switch between marks"
+msgstr "clique com o botão esquerdo do mouse para alternar entre as marcas"
+
+#: uniresources.chart_03
+msgctxt "uniresources.chart_03"
+msgid "Show legend"
+msgstr "Mostrar legendas"
+
+#: uniresources.chart_04
+msgctxt "uniresources.chart_04"
+msgid "Labels on bottom axis"
+msgstr "Rótulos no eixo inferior"
+
+#: uniresources.chart_05
+msgctxt "uniresources.chart_05"
+msgid "Angle of rotation"
+msgstr "Ângulo de rotação"
+
+#: uniresources.chart_06
+msgctxt "uniresources.chart_06"
+msgid "degree"
+msgstr "grau"
+
+#: uniresources.chart_07
+msgctxt "uniresources.chart_07"
+msgid "Show empty rows (with zero values)"
+msgstr "Mostrar linhas vazias (com valores zero)"
+
+#: uniresources.chart_08
+msgctxt "uniresources.chart_08"
+msgid "rows in the table"
+msgstr "linhas na tabela"
+
+#: uniresources.chart_09
+msgid "The Chart has been copied to the clipboard"
+msgstr "O gráfico foi copiado para a área de transferência"
+
+#: uniresources.chart_10
+msgid "Wrap the text string"
+msgstr "Quebrar a cadeia de texto"
+
+#: uniresources.chart_11
+msgid "Graph"
+msgstr "Gráfico"
+
+#: uniresources.chart_12
+msgid "Data"
+msgstr "Dados"
+
+#: uniresources.error_00
+#, object-pascal-format
+msgid "Missing SQLITE3.DLL library.%Database can not be created or opened."
+msgstr ""
+"Biblioteca SQLITE3.DLL ausente.%DBanco de dados não pode ser criado ou "
+"aberto."
+
+#: uniresources.error_01
+msgid "There is a problem with deleting existing file."
+msgstr "Há um problema ao excluir o arquivo existente."
+
+#: uniresources.error_02
+#, object-pascal-format
+msgid ""
+"The connectivity with database failed.%Program can not open the database."
+msgstr ""
+"A conectividade com o banco de dados falhou.%Programa não consegue abrir o "
+"banco de dados."
+
+#: uniresources.error_03
+msgid "You can not add or edit this item due the duplicity."
+msgstr "Você não pode adicionar ou editar este item devido à duplicidade."
+
+#: uniresources.error_04
+msgid "The field % is required. You have to fill it before saving ..."
+msgstr "O campo % é obrigatório. Você tem que preenchê-lo antes de salvar ..."
+
+#: uniresources.error_05
+msgid "Wrong value of the number!"
+msgstr "Valor errado do número!"
+
+#: uniresources.error_06
+msgid "Forbidden character % in the text! Please, correct it first ..."
+msgstr "Caractere proibido % no texto! Por favor, corrija primeiro..."
+
+#: uniresources.error_07
+msgid "Wrong day in selected month! Please, check it now ..."
+msgstr "Dia errado no mês selecionado! Por favor, verifique agora..."
+
+#: uniresources.error_08
+msgid "The minimum length of the password is 5 letters, digits or signs."
+msgstr "O comprimento mínimo da senha é de 5 letras, dígitos ou sinais."
+
+#: uniresources.error_09
+msgid "New and confirmed password are different!"
+msgstr "A senha nova e a confirmada são diferentes!"
+
+#: uniresources.error_10
+msgid ""
+"You can't delete selected currency %2 [%1]%4because it is used in the "
+"account %3.%4Please, delete this account first ..."
+msgstr ""
+"Você não pode excluir a moeda selecionada %2 [%1]%4porque ela é usada na "
+"conta %3.%4Por favor, exclua esta conta primeiro..."
+
+#: uniresources.error_11
+#, object-pascal-format
+msgid "The database seems to be malformed.%Program can not open it."
+msgstr ""
+"O banco de dados parece estar com probemas.%Programa não consegue abri-lo."
+
+#: uniresources.error_12
+msgid ""
+"You can not use the same account %1 for transfer (credit and debit) at the "
+"same time. %2 Use two different accounts."
+msgstr ""
+"Você não pode usar a mesma conta %1 para transferência (crédito e débito) ao "
+"mesmo tempo. %2 Use duas contas diferentes."
+
+#: uniresources.error_13
+msgid ""
+"You can not use in the transaction older date than the date, when the "
+"account % was created!"
+msgstr ""
+"Você não pode usar na transação uma data anterior à data em que a conta % "
+"foi criada!"
+
+#: uniresources.error_14
+msgid "Program can not find a printing template assigned to this list:"
+msgstr ""
+"O programa não consegue encontrar um modelo de impressão atribuído a esta "
+"lista:"
+
+#: uniresources.error_15
+msgid "Wrong date !"
+msgstr "Data errada !"
+
+#: uniresources.error_16
+msgid ""
+"Choose one account in the filter only and then try print \"The account "
+"book\" again."
+msgstr ""
+"Selecione apenas uma conta no filtro e, em seguida, tente imprimir novamente "
+"\"O livro de contas\"."
+
+#: uniresources.error_17
+#, object-pascal-format
+msgid ""
+"This function is not working yet.%Maybe in the next version it will be "
+"implemented.%Please be patient."
+msgstr ""
+"Essa função ainda não está funcionando.%MTalvez na próxima versão seja "
+"implementado.%Por favor, seja paciente."
+
+#: uniresources.error_18
+msgid ""
+"Program can not open this type of database (perhaps created in different "
+"program)."
+msgstr ""
+"O programa não pode abrir este tipo de banco de dados (talvez criado em um "
+"programa diferente)."
+
+#: uniresources.error_19
+msgid "Sorry, there are no data to show you ..."
+msgstr "Desculpe, não há dados para mostrar a você ..."
+
+#: uniresources.error_20
+#, object-pascal-format
+msgid ""
+"The import failed due the problem with the file.%Please, be sure that the "
+"imported file is not encrypted!"
+msgstr ""
+"A importação falhou devido a um problema com o arquivo.%Por favor, "
+"certifique-se de que o arquivo importado não esteja criptografado!"
+
+#: uniresources.error_21
+msgid "Wrong password!"
+msgstr "Senha incorreta!"
+
+#: uniresources.error_22
+#, object-pascal-format
+msgid ""
+"Program requires SQLite3 library (libsqlite3-dev).%Program will be "
+"terminated now."
+msgstr ""
+"O programa requer a biblioteca SQLite3 (libsqlite3-dev).%Programa será "
+"encerrado agora."
+
+#: uniresources.error_23
+msgid "The table has more than 255 columns. The query will be closed."
+msgstr "A tabela possui mais de 255 colunas. A consulta será encerrada."
+
+#: uniresources.error_24
+msgid "Unrecognized character %1 in the formula."
+msgstr "Caractere não reconhecido %1 na fórmula."
+
+#: uniresources.error_25
+msgid "There is 1 corrupted record in your database."
+msgstr "Há 1 registro corrompido em seu banco de dados."
+
+#: uniresources.error_26
+msgid "There are % corrupted records in your database."
+msgstr "Há % de registros corrompidos no seu banco de dados."
+
+#: uniresources.error_27
+msgid "Corrupted records will not be imported into your new database!"
+msgstr ""
+"Registros corrompidos não serão importados para seu novo banco de dados!"
+
+#: uniresources.error_28
+msgid "You can change this restriction in the program settings."
+msgstr "Você pode alterar essa restrição nas configurações do programa."
+
+#: uniresources.error_29
+msgid "You can not add transactions older then"
+msgstr "Não é possível adicionar transações anteriores a"
+
+#: uniresources.error_30
+msgid "You can not edit transactions older then"
+msgstr "Você não pode editar transações anteriores a"
+
+#: uniresources.error_31
+msgid "You can not delete transactions older then"
+msgstr "Você não pode excluir transações anteriores a"
+
+#: uniresources.error_32
+msgid ""
+"The program cannot open your database % because another program is already "
+"using it."
+msgstr ""
+"O programa não pode abrir seu banco de dados % porque outro programa já o "
+"está utilizando."
+
+#: uniresources.guide_01
+msgid "A BEGINNER'S GUIDE"
+msgstr "GUIA PARA INICIANTES"
+
+#: uniresources.guide_02
+msgid "WELCOME TO THE GUIDE !"
+msgstr "BEM-VINDO AO GUIA!"
+
+#: uniresources.guide_03
+msgid ""
+"WELCOME TO THIS SIMPLE GUIDE!%You can find here a simple and short "
+"instructioms of how to add one daily record (transaction) to the database."
+"%It is important to know, that each transaction is bounded with some:%a) "
+"person,%b) account,%c) category (or subcategory) and%d) payee.%Therefore you "
+"have to add at least one person, one account (include the currency), one "
+"category (or subcategory) and one payee to the database first.%Let's go work!"
+msgstr ""
+"BEM-VINDO A ESTE GUIA SIMPLES!%Você pode encontrar aqui instruções simples e "
+"curtas sobre como adicionar um registro diário (transação) ao banco de dados."
+"%É importante saber que cada transação está vinculada a algumas informações:"
+"%a) pessoa,%b) conta,%c) categoria (ou subcategoria) e%d) beneficiário."
+"%Portanto, você deve adicionar pelo menos uma pessoa, uma conta (incluindo a "
+"moeda), uma categoria (ou subcategoria) e um beneficiário ao banco de dados "
+"primeiro.%Vamos ao trabalho!"
+
+#: uniresources.guide_04
+msgid ""
+"ADD SOME PERSON TO THE LIST!%Click on following button (with persons image), "
+"to show the form for the LIST OF PERSONS. You can add, edit or delete "
+"people, who will used in the program.%You can NOW add the person's name "
+"(like JOHN, JOAN, SUGAR, ...) or you can simply use other descriptions (like "
+"MOTHER, SON, ALL, etc.).%Remember 4 basic commands (shortcuts), you can use "
+"for faster work with the lists:%1) press key INSERT to input new record to "
+"the list%2) press key SPACE to edit selected record in the list%3) press key "
+"DELETE to delete selected record(s) from the list%4) press key ESC to close "
+"any form (without any changes)."
+msgstr ""
+"ADICIONE ALGUMA PESSOA À LISTA!%Clique no botão seguinte (com imagem de "
+"pessoas), para mostrar o formulário da LISTA DE PESSOAS. Você pode "
+"adicionar, editar ou excluir pessoas que serão utilizadas no programa.% "
+"AGORA você pode adicionar o nome da pessoa (como JOHN, JOAN, SUGAR, ...) ou "
+"pode simplesmente usar outras descrições (como MÃE, FILHO, TODOS , etc.)."
+"%Lembre-se de 4 comandos básicos (atalhos), que você pode usar para "
+"trabalhar mais rápido com as listas:%1) pressione a tecla INSERT para "
+"inserir um novo registro na lista%2) pressione a tecla ESPAÇO para editar o "
+"registro selecionado na lista %3) pressione a tecla DELETE para excluir os "
+"registros selecionados da lista%4) pressione a tecla ESC para fechar "
+"qualquer formulário (sem nenhuma alteração)."
+
+#: uniresources.guide_05
+msgid ""
+"NOW YOU CAN ADD YOUR ACCOUNT.%It can be cash, wallet, bank account, etc."
+"%Call them whatever you want (like My Cash, BANK1, BANK2, etc.)%You also "
+"have to fill at least 3 fields:%a) define starting amount of this account%b) "
+"starting day (of evidence) and%c) currency of this account."
+msgstr ""
+"AGORA VOCÊ PODE ADICIONAR SUA CONTA.%Pode ser dinheiro, carteira, conta "
+"bancária e etc.%Chame como quiser (como Meu Dinheiro, BANCO1, BANCO2, "
+"etc.)%Você também precisa preencher pelo menos 3 campos:% a) definir o valor "
+"inicial desta conta%b) dia de início (de comprovação) e%c) moeda dessa conta."
+
+#: uniresources.guide_06
+msgid ""
+"ADD CATEGORY TO THE LIST!%For viewing easy it is better to split your credit "
+"and debit records into categories and subcategories.%If you have a CAR "
+"(category), perhaps you would like to see all car expenses arranged by "
+"various  subcategories (eg. FUEL, SERVICE, TUNING, ...)%To do so, Open List "
+"of categories (push button) and add category CAR.%Then create subcategory "
+"FUEL.%After saving this CATEGORY and SUBCATEGORY repeat all this activities "
+"with subcategory SERVICE and TUNING.%Just select the category CAR from "
+"dropdown list."
+msgstr ""
+"ADICIONE CATEGORIA À LISTA!%Para facilitar a visualização, é melhor dividir "
+"seus registros de crédito e débito em categorias e subcategorias.%Se você "
+"tem um CARRO (categoria), talvez queira ver todas as despesas do carro "
+"organizadas por várias subcategorias (por exemplo. COMBUSTÍVEL, SERVIÇO, "
+"PERSONALIZAÇÃO, ...)%Para isso, abra a Lista de categorias (botão) e "
+"adicione a categoria CARRO.%Depois crie a subcategoria COMBUSTÍVEL.%Logo "
+"após salvar essa CATEGORIA e SUBCATEGORIA, repita todas essas atividades com "
+"a subcategoria SERVIÇO e PERSONALIZAÇÃO.% Basta selecionar a categoria CARRO "
+"na lista suspensa."
+
+#: uniresources.guide_07
+msgid ""
+"... AND AT THE END ADD SOME PAYEE TO THE LIST!%Click on following button "
+"(with basket image), to show the form for the LIST OF PAYEES.%You can add, "
+"edit or delete your business partner (where you get used to spending your "
+"money or from whom you receive the money).%You can NOW add the partner's "
+"name (like WALLMART, TESCO, AMAZON, LIDL, ...) or you can simply use other "
+"descriptions (like PARTNER 1, PARTNER 2, EMPLOYER, etc.)."
+msgstr ""
+"... E NO FINAL ADICIONE ALGUM BENEFICIÁRIO À LISTA!%Clique no botão seguinte "
+"(com a imagem do carrinho), para mostrar o formulário da LISTA DE "
+"BENEFICIÁRIOS.%Você pode adicionar, editar ou excluir seu parceiro de "
+"negócios (onde você está acostumado a gastar seu dinheiro ou de quem você "
+"recebe o dinheiro).% AGORA você pode adicionar o nome do parceiro (como "
+"MAGALU, AMERICANAS, AMAZON, MERCADOLIVRE, ...) ou pode simplesmente usar "
+"outras descrições (como PARCEIRO 1, PARCEIRO 2 , EMPREGADOR, etc.)."
+
+#: uniresources.guide_08
+msgid ""
+"ADD YOUR FIRST TRANSACTION!%If you have added some persons, some accounts, "
+"some categories (with subcategories) and some payee, you can easily add new "
+"daily records (transactions) to the database.%To add a new debit record into "
+"the daily records, use button to open transaction form and fill all "
+"necessary fields.%Field AMOUNT and COMMENT are optional. If you did not "
+"previously add a required person, account, category (subcategory) or payee, "
+"just open the appropriate list again and add it to the list.%If you are "
+"finished, save this record and take a look at the main window.%Your new "
+"record should be visible there!!!%There are a few other lists, but these "
+"four are the most important."
+msgstr ""
+"ADICIONE SUA PRIMEIRA TRANSAÇÃO!%Se você adicionou algumas pessoas, contas, "
+"categorias (com subcategorias) e algum beneficiário, você pode facilmente "
+"adicionar novos registros diários (transações) ao banco de dados.%Para "
+"adicionar um novo registro de débito ao diário de registros, use o botão "
+"para abrir o formulário de transação e preencher todos os campos necessários."
+"% Os campos VALOR e DESCRIÇÃO são opcionais. Se você não adicionou "
+"anteriormente uma pessoa, conta, categoria (subcategoria) ou beneficiário "
+"obrigatório, basta abrir a lista apropriada novamente e adicioná-la à lista."
+"%Se tiver terminado, salve este registro e dê uma olhada na janela "
+"principal. %Seu novo registro deve estar visível lá!!!%Existem algumas "
+"outras listas, mas essas quatro são as mais importantes."
+
+#: uniresources.guide_09
+msgid ""
+"FINISH! %We have reached the end of the guide!%If you have added some "
+"transactions to the main window, congratulations!%If not, go back and try "
+"again step by step.%I wish you success with this program! Good luck!%Author "
+"of the program%%If you won't be satisfied with my program, e-mail me.%But - "
+"if you are satisfied with it, tell your friends about it."
+msgstr ""
+"FINALIZAÇÃO! %Chegamos ao final do guia!%Se você adicionou algumas "
+"transações à janela principal, parabéns!%Se não, volte e tente novamente "
+"passo a passo.%Desejo-lhe sucesso com este programa! Boa sorte!%Autor do "
+"programa%%Se você não estiver satisfeito com meu programa, envie-me um e-"
+"mail.%Mas - se você estiver satisfeito, conte a seus amigos sobre ele."
+
+#: uniresources.hint_01
+msgid "Add new item"
+msgstr "Adicionar novo item"
+
+#: uniresources.hint_02
+msgid "Edit selected item(s)"
+msgstr "Editar os itens selecionados"
+
+#: uniresources.hint_03
+msgid "Delete selected item(s)"
+msgstr "Apagar os itens selecionados"
+
+#: uniresources.hint_04
+msgid "Save item to the list"
+msgstr "Salvar item na lista"
+
+#: uniresources.hint_05
+msgid "Cancel this activity"
+msgstr "Cancelar esta atividade"
+
+#: uniresources.hint_06
+msgid "Exit this window"
+msgstr "Sair dessa janela"
+
+#: uniresources.hint_09
+msgid "Copy all item(s) to the clipboard"
+msgstr "Copiar todos os itens para a área de transferência"
+
+#: uniresources.hint_10
+msgid "Show all nominal values of selected currency"
+msgstr "Mostrar todos os valores nominais da moeda selecionada"
+
+#: uniresources.hint_100
+msgid "Swap the order of both transactions within one day."
+msgstr "Troque a ordem de ambas as transações em um dia."
+
+#: uniresources.hint_101
+msgid "Write all checked scheduled payments to the transactions"
+msgstr "Registre todos os pagamentos programados verificados nas transações"
+
+#: uniresources.hint_102
+msgid "Save your password to the database"
+msgstr "Salve sua senha no banco de dados"
+
+#: uniresources.hint_12
+msgid "Take a photo of current form"
+msgstr "Tire uma foto do formulário atual"
+
+#: uniresources.hint_13
+msgid "Print the list"
+msgstr "Imprima a lista"
+
+#: uniresources.hint_14
+msgid "Active = visible in all modules"
+msgstr "Ativo = visível em todos os módulos"
+
+#: uniresources.hint_15
+msgid "Passive = visible in module Statistics only"
+msgstr "Passivo = visível apenas no módulo Estatísticas"
+
+#: uniresources.hint_16
+msgid "Archive = hidden in all modules"
+msgstr "Arquivo = oculto em todos os módulos"
+
+#: uniresources.hint_17
+msgid "Show all scheduled payments in the selected schedule"
+msgstr "Mostrar todos os pagamentos agendados na programação selecionada"
+
+#: uniresources.hint_18
+msgid "Duplicate selected item"
+msgstr "Duplicar item selecionado"
+
+#: uniresources.hint_19
+msgid "Add new multiple items"
+msgstr "Adicionar novos itens múltiplos"
+
+#: uniresources.hint_21
+#, object-pascal-format
+msgid "Execute SQL command.%0:sThe results wil be shown in the second panel."
+msgstr ""
+"Execute o comando SQL.%0:sOs resultados serão mostrados no segundo painel."
+
+#: uniresources.hint_22
+msgid "Select all items in the list"
+msgstr "Selecione todos os itens da lista"
+
+#: uniresources.hint_23
+msgid "Save all items to the list at once"
+msgstr "Salve todos os itens da lista de uma vez"
+
+#: uniresources.hint_24
+msgid "Print the selected item detail"
+msgstr "Imprimir o detalhe do item selecionado"
+
+#: uniresources.hint_25
+msgid "Show history of changes of the transaction"
+msgstr "Mostrar histórico de alterações da transação"
+
+#: uniresources.hint_26
+msgid "Filter for multiple selection of items"
+msgstr "Filtro para seleção múltipla de itens"
+
+#: uniresources.hint_30
+msgid "Create a new database"
+msgstr "Criar um novo banco de dados"
+
+#: uniresources.hint_31
+msgid "Open an existing database"
+msgstr "Abrir um banco de dados existente"
+
+#: uniresources.hint_32
+msgid "Close open database"
+msgstr "Fechar banco de dados aberto"
+
+#: uniresources.hint_33
+msgid "Import transactions to the database"
+msgstr "Importar transações para o banco de dados"
+
+#: uniresources.hint_34
+msgid "Export transactions from the database"
+msgstr "Exportar transações do banco de dados"
+
+#: uniresources.hint_35
+msgid "Change the database password"
+msgstr "Alterar senha do banco de dados"
+
+#: uniresources.hint_36
+msgid "Run SQL manager"
+msgstr "Executar o gerenciador SQL"
+
+#: uniresources.hint_37
+msgid "Run beginner's guide"
+msgstr "Executar o guia para iniciantes"
+
+#: uniresources.hint_38
+msgid "Show database properties"
+msgstr "Mostrar propriedades do banco de dados"
+
+#: uniresources.hint_39
+msgid "Show recycle bin"
+msgstr "Mostrar lixeira"
+
+#: uniresources.hint_40
+msgid "Show list of holidays"
+msgstr "Mostrar lista de feriados"
+
+#: uniresources.hint_41
+msgid "Show list of tags"
+msgstr "Mostrar lista de etiquetas"
+
+#: uniresources.hint_42
+msgid "Show list of currencies"
+msgstr "Mostrar lista de moedas"
+
+#: uniresources.hint_43
+msgid "Show list of payees"
+msgstr "Mostrar lista de beneficiários"
+
+#: uniresources.hint_44
+msgid "Show list of comments"
+msgstr "Mostrar lista de descrições"
+
+#: uniresources.hint_45
+msgid "Show list of accounts"
+msgstr "Mostrar lista de contas"
+
+#: uniresources.hint_46
+msgid "Show list of categories"
+msgstr "Mostrar lista de categorias"
+
+#: uniresources.hint_47
+msgid "Show list of persons"
+msgstr "Mostrar lista de pessoas"
+
+#: uniresources.hint_48
+msgid "Show list of values"
+msgstr "Mostrar lista de valores"
+
+#: uniresources.hint_49
+msgid "Show list of types"
+msgstr "Mostrar lista de tipos"
+
+#: uniresources.hint_50
+msgid "Show scheduler"
+msgstr "Mostrar agendador"
+
+#: uniresources.hint_51
+msgid "Write scheduled payments to the main table"
+msgstr "Gravar pagamentos programados na tabela principal"
+
+#: uniresources.hint_52
+msgid "Show calendar"
+msgstr "Mostrar calendário"
+
+#: uniresources.hint_53
+msgid "Show budget"
+msgstr "Mostrar orçamento"
+
+#: uniresources.hint_54
+msgid "Show reports"
+msgstr "Mostrar relatórios"
+
+#: uniresources.hint_55
+msgid "Show cash counter"
+msgstr "Mostrar contador de dinheiro"
+
+#: uniresources.hint_56
+msgid "Show calculator"
+msgstr "Mostrar calculadora"
+
+#: uniresources.hint_57
+msgid "Show program settings"
+msgstr "Mostrar configurações do programa"
+
+#: uniresources.hint_58
+msgid "Show About program"
+msgstr "Mostrar sobre o programa"
+
+#: uniresources.hint_59
+msgid "Exit program"
+msgstr "Sair do programa"
+
+#: uniresources.hint_60
+msgid "Hint"
+msgstr "Dica"
+
+#: uniresources.hint_61
+msgid ""
+"Name your budget and check some categories / subcategories, you want to "
+"watch (compare plan and real amounts). Then SAVE this new budget."
+msgstr ""
+"Dê um nome ao seu orçamento e verifique algumas categorias/subcategorias que "
+"deseja acompanhar (compare o plano e os valores reais). Então SALVE este "
+"novo orçamento."
+
+#: uniresources.hint_62
+msgid "Now you can add the first period with the budgeted (planned) amounts."
+msgstr ""
+"Agora você pode adicionar o primeiro período com os valores orçados "
+"(planejados)."
+
+#: uniresources.hint_70
+msgid "Restore selected item(s)"
+msgstr "Restaurar itens selecionados"
+
+#: uniresources.hint_80
+msgid "Reset all fields (to be unchecked)"
+msgstr "Redefinir todos os campos (a serem desmarcados)"
+
+#: uniresources.hint_81
+msgid "Check / uncheck all items"
+msgstr "Marcar / desmarcar todos os itens"
+
+#: uniresources.license_01
+msgid ""
+"RQ MONEY is free software: you can redistribute it and/or modify it under "
+"the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 3 of the License, or (at your option) "
+"any later version.% %RQ MONEY is distributed in the hope that it will be "
+"useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General "
+"Public License for more details.% %You should have received a copy of the "
+"GNU General Public License along with RQ MONEY. If not, see:"
+msgstr ""
+"RQ MONEY é um software livre: você pode redistribuí-lo e/ou modificá-lo sob "
+"os termos da Licença Pública Geral GNU conforme publicada pela Free Software "
+"Foundation; a versão 3 da Licença ou (a seu critério) qualquer versão "
+"posterior.% %RQ MONEY é distribuído na esperança de que seja útil, mas SEM "
+"NENHUMA GARANTIA; mesmo sem a garantia implícita de COMERCIALIZAÇÃO ou "
+"ADEQUAÇÃO A UM DETERMINADO FIM. Veja a Licença Pública Geral GNU para mais "
+"detalhes.% %Você deveria ter recebido uma cópia da Licença Pública Geral GNU "
+"junto com RQ MONEY. Se não, veja:"
+
+#: uniresources.menu_00
+msgid "&Database"
+msgstr "&Banco de dados"
+
+#: uniresources.menu_01
+msgid "&New"
+msgstr "&Novo"
+
+#: uniresources.menu_02
+msgid "&Open"
+msgstr "&Abrir"
+
+#: uniresources.menu_03
+msgid "&Close"
+msgstr "&Fechar"
+
+#: uniresources.menu_04
+msgid "&Import"
+msgstr "&Importar"
+
+#: uniresources.menu_05
+msgid "&Export"
+msgstr "&Exportar"
+
+#: uniresources.menu_06
+msgid "&Password"
+msgstr "&Senha"
+
+#: uniresources.menu_07
+msgid "&Tutorial"
+msgstr "&Tutorial"
+
+#: uniresources.menu_08
+msgid "S&QL manager"
+msgstr "Gerenciador S&QL"
+
+#: uniresources.menu_09
+msgid "&Recycle bin"
+msgstr "&Lixeira"
+
+#: uniresources.menu_10
+msgid "Propertie&s"
+msgstr "Propriedade&s"
+
+#: uniresources.menu_20
+msgid "&Lists"
+msgstr "&Listas"
+
+#: uniresources.menu_21
+msgid "&Holidays"
+msgstr "&Feriados"
+
+#: uniresources.menu_22
+msgid "&Tags"
+msgstr "&Marcações"
+
+#: uniresources.menu_23
+msgid "&Currencies"
+msgstr "&Moedas"
+
+#: uniresources.menu_24
+msgid "&Payees"
+msgstr "&Beneficiários"
+
+#: uniresources.menu_25
+msgid "C&omments"
+msgstr "D&escrições"
+
+#: uniresources.menu_26
+msgid "&Accounts"
+msgstr "&Contas"
+
+#: uniresources.menu_27
+msgid "Cate&gories"
+msgstr "Cate&gorias"
+
+#: uniresources.menu_28
+msgid "Per&sons"
+msgstr "Pes&soas"
+
+#: uniresources.menu_29
+msgid "Subcategories"
+msgstr "Subcategorias"
+
+#: uniresources.menu_30
+msgid "&External links"
+msgstr "&Links externos"
+
+#: uniresources.menu_40
+msgid "&Financial tools"
+msgstr "&Ferramentas financeiras"
+
+#: uniresources.menu_41
+msgid "&Scheduler"
+msgstr "&Agendador"
+
+#: uniresources.menu_42
+msgid "&Write scheduled"
+msgstr "&Gravação agendada"
+
+#: uniresources.menu_43
+msgid "Calen&dar"
+msgstr "Calen&dário"
+
+#: uniresources.menu_44
+msgid "&Budget"
+msgstr "&Orçamento"
+
+#: uniresources.menu_45
+msgid "&Reports"
+msgstr "&Relatórios"
+
+#: uniresources.menu_46
+msgid "&Cash counter"
+msgstr "&Contador de dinheiro"
+
+#: uniresources.menu_47
+msgid "Ca&lc"
+msgstr "Ca&lculadora"
+
+#: uniresources.menu_60
+msgid "&Program"
+msgstr "&Programa"
+
+#: uniresources.menu_61
+msgid "&Settings"
+msgstr "&Configurações"
+
+#: uniresources.menu_62
+msgid "&About"
+msgstr "&Sobre"
+
+#: uniresources.menu_63
+msgid "&Exit"
+msgstr "&Sair"
+
+#: uniresources.menu_64
+msgid "Check update"
+msgstr "Checar atualização"
+
+#: uniresources.menu_a01
+msgid "Author"
+msgstr "Autor"
+
+#: uniresources.menu_a02
+msgid "E-mail"
+msgstr "E-mail"
+
+#: uniresources.menu_a03
+msgid "Version"
+msgstr "Versão"
+
+#: uniresources.menu_a04
+msgid "License"
+msgstr "Licença"
+
+#: uniresources.menu_a05
+msgid "Translator"
+msgstr "Tradutor"
+
+#: uniresources.menu_a06
+msgid "Released"
+msgstr "Lançado"
+
+#: uniresources.menu_a07
+msgid "Official website"
+msgstr "Website oficial"
+
+#: uniresources.menu_a08
+msgid "Developed in"
+msgstr "Desenvolvido em"
+
+#: uniresources.menu_a09
+msgid "Thanks"
+msgstr "Obrigado"
+
+#: uniresources.menu_a10
+msgid ""
+"Thanks to all the users who helped me a lot in developing this program with "
+"their advices, ideas, bug fixes or financial support for this project."
+"%Without their help, this program would not have been so successful in all "
+"those years.%Author"
+msgstr ""
+"Obrigado a todos os usuários que me ajudaram muito no desenvolvimento deste "
+"programa com seus conselhos, ideias, correções de bugs ou apoio financeiro "
+"para este projeto.% Sem a ajuda deles, este programa não teria tido tanto "
+"sucesso em todos esses anos.%Autor"
+
+#: uniresources.menu_a11
+msgid "Donation"
+msgstr "Doação"
+
+#: uniresources.menu_a12
+msgid ""
+"RQ Money is free software, which means you can use it without any fees.%The "
+"author has already paid for this program with his free time (several "
+"thousand hours of development since 2005!), his energy and also paid several "
+"fees (buying software, renting a domain, buying an SSL certificate, etc.)."
+"%So, if you like RQ Money and find it useful, the author will be grateful if "
+"you consider a small reward. Using the Paypal button below, you can send "
+"support to the author from your own debit / credit card or from your PayPal "
+"account."
+msgstr ""
+"O RQ Money é um software gratuito, o que significa que você pode usá-lo sem "
+"pagar nada.% O autor já pagou por esse programa com seu tempo livre (vários "
+"milhares de horas de desenvolvimento desde 2005!), sua energia e também "
+"pagou várias taxas (compra de software, aluguel de um domínio, compra de um "
+"certificado SSL etc.).% Portanto, se você gostar do RQ Money e achá-lo útil, "
+"o autor ficará grato se você considerar uma pequena recompensa. Usando o "
+"botão do Paypal abaixo, você pode enviar apoio ao autor com seu próprio "
+"cartão de débito/crédito ou com sua conta do PayPal."
+
+#: uniresources.menu_a13
+msgid ""
+"Click to open web page for donation%(via PayPal or other way - debit or "
+"credit card)"
+msgstr ""
+"Clique para abrir a página da internet para doação%(via PayPal ou outra "
+"forma - cartão de débito ou crédito)"
+
+#: uniresources.menu_a14
+msgid "Use the left mouse button to display popup menu"
+msgstr "Use o botão esquerdo do mouse para exibir o menu pop-up"
+
+#: uniresources.menu_b01
+msgid "Legend"
+msgstr "Legenda"
+
+#: uniresources.menu_c1
+msgid "Expand selected category"
+msgstr "Expandir a categoria selecionada"
+
+#: uniresources.menu_c2
+msgid "Expand all categories"
+msgstr "Expandir todas as categorias"
+
+#: uniresources.menu_c3
+msgid "Collapse selected category"
+msgstr "Recolher categoria selecionada"
+
+#: uniresources.menu_c4
+msgid "Collapse all categories"
+msgstr "Recolher todas as categorias"
+
+#: uniresources.menu_d1
+msgid "Delete date of payment"
+msgstr "Excluir data do pagamento"
+
+#: uniresources.menu_d2
+msgid "Edit date of payment"
+msgstr "Editar data de pagamento"
+
+#: uniresources.menu_d3
+msgid "Select a date"
+msgstr "Selecione uma data"
+
+#: uniresources.menu_f1
+msgid "Reset filter"
+msgstr "Redefinir filtro"
+
+#: uniresources.menu_f2
+msgid "Expand all filters"
+msgstr "Expandir todos os filtros"
+
+#: uniresources.menu_f3
+msgid "Collapse all filters"
+msgstr "Recolher todos os filtros"
+
+#: uniresources.menu_f5
+msgid "whenewer in the text"
+msgstr "quando estiver no texto"
+
+#: uniresources.menu_f6
+msgid "starting with the text"
+msgstr "começando pelo texto"
+
+#: uniresources.menu_f7
+msgid "ending with the text"
+msgstr "terminando com o texto"
+
+#: uniresources.menu_f8
+msgid "Apply filter"
+msgstr "Aplicar filtro"
+
+#: uniresources.menu_t1
+msgid "Expand all panels"
+msgstr "Expandir todos os painéis"
+
+#: uniresources.menu_t2
+msgid "Collapse all panels"
+msgstr "Recolher todos os painéis"
+
+#: uniresources.menu_v1
+msgid "banknote"
+msgstr "nota"
+
+#: uniresources.menu_v2
+msgid "coin"
+msgstr "moeda"
+
+#: uniresources.menu_xx
+msgid "Menu"
+msgstr "Menu"
+
+#: uniresources.message_00
+msgid "WARNING"
+msgstr "AVISO"
+
+#: uniresources.message_01
+#, object-pascal-format
+msgid "%0:s item(s) was copied to the clipboard."
+msgstr "%0:s itens foram copiados para a área de transferência."
+
+#: uniresources.message_02
+msgid "E-mail address was copied to the clipboard."
+msgstr "O endereço de e-mail foi copiado para a área de transferência."
+
+#: uniresources.message_03
+msgid "Database password was successfully created."
+msgstr "A senha do banco de dados foi criada com sucesso."
+
+#: uniresources.message_04
+msgid "Database password was successfully changed."
+msgstr "A senha do banco de dados foi alterada com sucesso."
+
+#: uniresources.message_05
+msgid "SQL command was executed successful."
+msgstr "O comando SQL foi executado com sucesso."
+
+#: uniresources.message_06
+msgid "Import finished successful."
+msgstr "A importação foi concluída com sucesso."
+
+#: uniresources.message_07
+#, object-pascal-format
+msgid ""
+"Selected picture was copied to the clipboard.%0:sSize: %1:s px x %2:s px."
+msgstr ""
+"A imagem selecionada foi copiada para a área de transferência.%0:sTamanho: "
+"%1:s px x %2:s px."
+
+#: uniresources.message_09
+msgid "You are using the current version of the program."
+msgstr "Você está usando a versão atual do programa."
+
+#: uniresources.message_10
+msgctxt "uniresources.message_10"
+msgid "This feature is not available in this operating system"
+msgstr "Este recurso não está disponível neste sistema operacional"
+
+#: uniresources.question_00
+msgid "Do you want to close opened database?"
+msgstr "Deseja fechar o banco de dados aberto?"
+
+#: uniresources.question_01
+msgid "Do you want to delete selected item?"
+msgstr "Deseja excluir o item selecionado?"
+
+#: uniresources.question_02
+msgid "Do you want to delete % selected items?"
+msgstr "Deseja excluir % itens selecionados?"
+
+#: uniresources.question_03
+msgid "Do you want to reset all filter items?"
+msgstr "Deseja redefinir todos os itens do filtro?"
+
+#: uniresources.question_04
+msgid "Do you want to save all program settings?"
+msgstr "Deseja salvar todas as configurações do programa?"
+
+#: uniresources.question_05
+msgid "IF YOU DELETE THIS ACCOUNT, FOLLOWING ITEMS WILL BE DELETED TOO"
+msgstr "SE VOCÊ EXCLUIR ESTA CONTA, OS SEGUINTES ITENS TAMBÉM SERÃO EXCLUÍDOS"
+
+#: uniresources.question_06
+msgid "IF YOU DELETE THIS CATEGORY, FOLLOWING ITEMS WILL BE DELETED TOO"
+msgstr ""
+"SE VOCÊ EXCLUIR ESTA CATEGORIA, OS SEGUINTES ITENS TAMBÉM SERÃO EXCLUÍDOS"
+
+#: uniresources.question_07
+msgid "IF YOU DELETE THIS PERSON, FOLLOWING ITEMS WILL BE DELETED TOO"
+msgstr ""
+"SE VOCÊ EXCLUIR ESTA CATEGORIA, OS SEGUINTES ITENS SERÃO EXCLUÍDOS TAMBÉM SE "
+"VOCÊ EXCLUIR ESTA PESSOA, OS SEGUINTES ITENS SERÃO EXCLUÍDOS"
+
+#: uniresources.question_08
+msgid "IF YOU DELETE THIS PAYEE, FOLLOWING ITEMS WILL BE DELETED TOO"
+msgstr ""
+"SE VOCÊ EXCLUIR ESTE BENEFICIÁRIO, OS SEGUINTES ITENS TAMBÉM SERÃO EXCLUÍDOS"
+
+#: uniresources.question_09
+msgid ""
+"Do you want to change the currency to %1 ?%2WARNING! All values in the cash "
+"counter will be reset to zero."
+msgstr ""
+"Deseja alterar a moeda para %1 ?%2ATENÇÃO! Todos os valores no contador de "
+"dinheiro serão zerados."
+
+#: uniresources.question_10
+msgid "Do you want to reset all fields (to be unchecked) ?"
+msgstr "Deseja redefinir todos os campos (para serem desmarcados)?"
+
+#: uniresources.question_11
+msgid ""
+"Do you want to run this command ?%%BE CAREFUL !%All selected transactions "
+"will be affected ..."
+msgstr ""
+"Deseja executar este comando?%%TENHA CUIDADO !%Todas as transações "
+"selecionadas serão afetadas..."
+
+#: uniresources.question_12
+msgid "Do you want to restore selected transactions to the main table ?"
+msgstr "Você deseja restaurar as transações selecionadas na tabela principal?"
+
+#: uniresources.question_13
+msgid ""
+"Do you really want to close this window without writing created "
+"transaction(s)?%All created transactions in this window will be lost."
+msgstr ""
+"Você realmente deseja fechar essa janela sem lançar as transações criadas?"
+"%Todas as transações criadas nessa janela serão perdidas."
+
+#: uniresources.question_14
+msgid "Do you want to write mass created transactions to the main table ?"
+msgstr "Deseja gravar transações criadas em massa na tabela principal?"
+
+#: uniresources.question_15
+msgid "Do you want to write scheduled transactions to the main table ?"
+msgstr "Deseja gravar transações agendadas na tabela principal?"
+
+#: uniresources.question_16
+msgid "Do you want to import following file ?"
+msgstr "Deseja importar o seguinte arquivo?"
+
+#: uniresources.question_17
+msgid "All selected payments will be deleted from the scheduler !"
+msgstr "Todos os pagamentos selecionados serão excluídos do agendador!"
+
+#: uniresources.question_18
+msgid "Do you want to delete the date of payment from selected items?"
+msgstr "Deseja excluir a data de pagamento dos itens selecionados?"
+
+#: uniresources.question_19
+msgid "Do you want to close this window without saving data?"
+msgstr "Deseja fechar esta janela sem salvar os dados?"
+
+#: uniresources.question_20
+msgctxt "uniresources.question_20"
+msgid ""
+"Do you want to create new budget and write all checked categories / "
+"subcategories to this budget?"
+msgstr ""
+"Deseja criar um novo orçamento e gravar todas as categorias/subcategorias "
+"marcadas neste orçamento?"
+
+#: uniresources.question_21
+msgctxt "uniresources.question_21"
+msgid "Do you want to save changes to the selected budget?"
+msgstr "Deseja salvar as alterações no orçamento selecionado?"
+
+#: uniresources.question_22
+msgctxt "uniresources.question_22"
+msgid ""
+"Do you want to write checked categories / subcategories with planned amounts "
+"to the budget?"
+msgstr ""
+"Deseja inserir categorias/subcategorias marcadas com valores planejados no "
+"orçamento?"
+
+#: uniresources.question_23
+msgid "Are you sure you want to delete entire budget with all periods?"
+msgstr ""
+"Tem certeza de que deseja excluir todo o orçamento com todos os períodos?"
+
+#: uniresources.question_24
+msgid "Do you want to set default shortcuts for all actions?"
+msgstr "Deseja definir atalhos padrão para todas as ações?"
+
+#: uniresources.question_25
+msgid ""
+"There exists brand new stable version %1 of this program.%2Release date: %3 "
+"%2Do you want do visit official website to download it?"
+msgstr ""
+"Existe uma nova versão %1 deste programa.%2Data de lançamento: %3 %2Deseja "
+"visitar o site oficial para baixá-lo?"
+
+#: uniresources.question_26
+msgid ""
+"Do you want to delete corrupted records now? You can view them later in the "
+"recycle bin."
+msgstr ""
+"Você deseja excluir registros corrompidos agora? Você pode visualizá-los "
+"mais tarde na lixeira."
+
+#: uniresources.question_27
+msgid "Do you want to back up your database to the selected folder now?"
+msgstr ""
+"Deseja fazer o backup do seu banco de dados na pasta selecionada agora?"
+
+#: uniresources.question_28
+msgid ""
+"The encryption of your database requires password protection.% Do you want "
+"to set this password now?"
+msgstr ""
+"A criptografia do seu banco de dados requer proteção por senha.%Deseja "
+"definir essa senha agora?"
+
+#: uniresources.version_01
+msgid "stable"
+msgstr "estável"
+
+#: uniresources.version_02
+msgid "testing"
+msgstr "teste"
+
+#~ msgid "ENCRYPT THE DATABASE"
+#~ msgstr "CRIPTOGRAFAR O BANCO DE DADOS"
+
+#~ msgid ""
+#~ "After editing this budget all previous periods with categories and "
+#~ "planned amounts will be deleted!Do you want to save this changes?"
+#~ msgstr ""
+#~ "Após editar este orçamento todos os períodos anteriores com categorias e "
+#~ "valores planejados serão excluídos!Deseja salvar essas alterações?"
+
+#~ msgid "Show clock"
+#~ msgstr "Mostrar relógio"

@@ -1,58 +1,20 @@
 object frmPersons: TfrmPersons
-  Left = 347
+  Left = 365
   Height = 482
-  Top = 103
+  Top = 168
   Width = 800
   ClientHeight = 482
   ClientWidth = 800
   Constraints.MinHeight = 400
   Constraints.MinWidth = 600
   Font.Style = [fsBold]
-  Icon.Data = {
-    7E04000000000100010010100000010020006804000016000000280000001000
-    0000200000000100200000000000000400006400000064000000000000000000
-    0000461313014F09060160000001720000007C000000401B00005D2B1A0D662E
-    1117682F0F1C692F0F20682E0E22662D1020642B111C5F281316512B240B3C1B
-    08009326268F9F1913CCA71913D8AC1B15DCA91915DED36925E3EF912BF9F49B
-    32FFF6A035FFF6A037FEF49D35FEF39530FEEF8A2AFFE87E27FEDC6C25F7D577
-    4D73D44738D5DD4A38FBDD402DFDDA3624FDD62F21FDEE924DFDFFD77DFEFFCC
-    55FFFFBF39FFFEB532FFF2AB3BFFF9A42AFFF69F27FFF49B29FFF19A37FEAE66
-    2C69B784786DED927BFDE56245FEDD452CFFD22A15FFCB351CFFF9D678FFFDC7
-    3EFFF4AD28FF93A2BBFF5E91F4FF82728CFFDA7115FFE68822FDF3B054D87C5F
-    390B3F373400B98F7F76EA8B6AF0C95843FE605899FF30418CFF4D3E53FFBD76
-    25FF975926FF4176E8FF386ADFFF3D67CDFF9F4913FDA0692E947C6034123C27
-    0A00000000007B5A4E016D33310E776D8B732F5FCDFE224DA9FF1A3B91FF1011
-    4EFF08104EFF3567CDFF3F74DAFF305FC3FF050766FE0E1569D00A0E3C10080C
-    1E000000000019273E00344E7A13629AF4D86CAAFBFF629FF4FF2D50B0FF0104
-    45FF4773C2FF67A2F8FF619BF3FF5992ECFF3055B0FF04095BFD0E1A445B0408
-    1C00000000001D324000628DBC6D7DBDFFFE7BBAFFFF73B1FEFF2F5DC8FF030E
-    57FF77B7FDFF7CBAFFFF74B0FDFF67A1F5FF528AE0FF030955FE2C47997D0A10
-    2500000000003251780172ADF9BB88C7FFFE85C3FFFF7EBBFFFF3472DEFF0616
-    72FF75B4F7FF84C3FEFF7CB9FFFF6FA9F9FF497FD4FF081560FE263D8A7F131E
-    450000000000020F2900558CD4D38CCBFFFD87C6FEFF82BFFFFF4083E5FF1138
-    AFFF5A92DEFF8AC9FEFF84C2FFFF659DEDFF1D459BFF192F88FE151F465F090D
-    2300000000000C265E02295CC3BE90D0FEFD8BC8FFFF87C4FFFF5292EBFF2B65
-    D5FF3E6CD3FF7EB8F3FF345CC3FF1E3DA4FF263D9AFE394A96FE2D344F2D2A30
-    4E0100000000263C6B01436ECFA85D87D1FD5E88CDFF496DB3FF527EC4FF558A
-    E1FE2550C4FE2B5BC7FF315CC6FF294AB4FF2E42A0FD656CA6CD1F202C000000
-    0000000000000815330029303B207F9ADDC7335BC7FD2046BBFF132B9AFE899C
-    D3D885A4E5F03663D0FE284FC1FD2444B0FE5663ADF1605D68322B2A32000000
-    00000000000000000000131F360070737A05535A7256BDC6E6898D9AD5A73A48
-    855532343C27AFBBE7A1768AD2C09AA1D39C6767722655546501000000000000
-    000000000000000000000000000033353C00262C39006264720053576E011116
-    2C00595F74005E627501454D6C0154566C014C4D640100000000000000000000
-    0000000000000000000000000000000000000000000000000000000000000000
-    0000000000000000000000000000000000000000000000000000000000000000
-    0000000000000000000000000000000000000000000000000000000000000000
-    0000000000000000000000000000000000000000000000000000000000000000
-    0000
-  }
   OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.1'
+  LCLVersion = '3.0.0.3'
+  Scaled = False
   object pnlBottom: TPanel
     Left = 0
     Height = 22
@@ -68,15 +30,16 @@ object frmPersons: TfrmPersons
     ParentFont = False
     TabOrder = 1
     object pnlHeight: TPanel
-      Left = 699
+      Left = 649
       Height = 20
       Top = 1
-      Width = 100
+      Width = 150
       Align = alRight
       BorderSpacing.Around = 1
       BevelOuter = bvLowered
       ClientHeight = 20
-      ClientWidth = 100
+      ClientWidth = 150
+      Constraints.MinWidth = 150
       ParentFont = False
       TabOrder = 0
       object imgHeight: TImage
@@ -88,6 +51,7 @@ object frmPersons: TfrmPersons
         AutoSize = True
         BorderSpacing.Left = 3
         BorderSpacing.Around = 1
+        Center = True
         ImageIndex = -1
         Images = frmMain.imgSize
       end
@@ -95,24 +59,26 @@ object frmPersons: TfrmPersons
         Left = 22
         Height = 16
         Top = 2
-        Width = 76
+        Width = 126
         Align = alClient
         Alignment = taCenter
         BorderSpacing.Around = 1
+        Layout = tlCenter
         ParentColor = False
         ParentFont = False
       end
     end
     object pnlWidth: TPanel
-      Left = 598
+      Left = 498
       Height = 20
       Top = 1
-      Width = 100
+      Width = 150
       Align = alRight
       BorderSpacing.Around = 1
       BevelOuter = bvLowered
       ClientHeight = 20
-      ClientWidth = 100
+      ClientWidth = 150
+      Constraints.MinWidth = 150
       ParentFont = False
       TabOrder = 1
       object imgWidth: TImage
@@ -124,6 +90,7 @@ object frmPersons: TfrmPersons
         AutoSize = True
         BorderSpacing.Left = 3
         BorderSpacing.Around = 1
+        Center = True
         ImageIndex = -1
         Images = frmMain.imgSize
       end
@@ -131,38 +98,28 @@ object frmPersons: TfrmPersons
         Left = 22
         Height = 16
         Top = 2
-        Width = 76
+        Width = 126
         Align = alClient
         Alignment = taCenter
         BorderSpacing.Around = 1
+        Layout = tlCenter
         ParentColor = False
         ParentFont = False
       end
-    end
-    object pnlTip: TPanel
-      Left = 203
-      Height = 20
-      Top = 1
-      Width = 394
-      Align = alClient
-      BorderSpacing.Around = 1
-      BevelOuter = bvLowered
-      Font.Color = clMaroon
-      ParentFont = False
-      TabOrder = 2
     end
     object pnlItem: TPanel
       Left = 1
       Height = 20
       Top = 1
-      Width = 100
+      Width = 150
       Align = alLeft
       BorderSpacing.Around = 1
       BevelOuter = bvLowered
       ClientHeight = 20
-      ClientWidth = 100
+      ClientWidth = 150
+      Constraints.MinWidth = 150
       ParentFont = False
-      TabOrder = 3
+      TabOrder = 2
       object imgItem: TImage
         Left = 5
         Height = 16
@@ -172,6 +129,7 @@ object frmPersons: TfrmPersons
         AutoSize = True
         BorderSpacing.Left = 3
         BorderSpacing.Around = 1
+        Center = True
         ImageIndex = -1
         Images = frmMain.imgSize
       end
@@ -179,26 +137,28 @@ object frmPersons: TfrmPersons
         Left = 22
         Height = 16
         Top = 2
-        Width = 76
+        Width = 126
         Align = alClient
         Alignment = taCenter
         BorderSpacing.Around = 1
+        Layout = tlCenter
         ParentColor = False
         ParentFont = False
       end
     end
     object pnlItems: TPanel
-      Left = 102
+      Left = 152
       Height = 20
       Top = 1
-      Width = 100
+      Width = 150
       Align = alLeft
       BorderSpacing.Around = 1
       BevelOuter = bvLowered
       ClientHeight = 20
-      ClientWidth = 100
+      ClientWidth = 150
+      Constraints.MinWidth = 150
       ParentFont = False
-      TabOrder = 4
+      TabOrder = 3
       object imgItems: TImage
         Left = 5
         Height = 16
@@ -208,6 +168,7 @@ object frmPersons: TfrmPersons
         AutoSize = True
         BorderSpacing.Left = 3
         BorderSpacing.Around = 1
+        Center = True
         ImageIndex = 7
         Images = frmMain.imgSize
       end
@@ -215,10 +176,11 @@ object frmPersons: TfrmPersons
         Left = 22
         Height = 16
         Top = 2
-        Width = 76
+        Width = 126
         Align = alClient
         Alignment = taCenter
         BorderSpacing.Around = 1
+        Layout = tlCenter
         ParentColor = False
         ParentFont = False
       end
@@ -327,7 +289,7 @@ object frmPersons: TfrmPersons
         IncrementalSearchStart = ssAlwaysStartOver
         PopupMenu = popList
         TabOrder = 1
-        TreeOptions.AutoOptions = [toAutoScroll]
+        TreeOptions.AutoOptions = [toAutoScroll, toAutoChangeScale]
         TreeOptions.MiscOptions = [toReportMode, toWheelPanning]
         TreeOptions.PaintOptions = [toHideFocusRect, toShowVertGridLines, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toDisableDrawSelection, toFullRowSelect, toMultiSelect]
@@ -353,8 +315,8 @@ object frmPersons: TfrmPersons
       BevelOuter = bvLowered
       ClientHeight = 417
       ClientWidth = 220
-      Constraints.MaxWidth = 300
-      Constraints.MinWidth = 100
+      Constraints.MaxWidth = 350
+      Constraints.MinWidth = 150
       Enabled = False
       ParentFont = False
       TabOrder = 1
@@ -517,11 +479,11 @@ object frmPersons: TfrmPersons
             BorderSpacing.Left = 2
             BorderSpacing.Right = 2
             BorderSpacing.Bottom = 2
+            TabOrder = 0
             OnChange = ediNameChange
             OnEnter = ediNameEnter
             OnExit = ediNameExit
             OnKeyUp = ediNameKeyUp
-            TabOrder = 0
           end
         end
         object pnlStatus: TPanel
@@ -547,12 +509,12 @@ object frmPersons: TfrmPersons
             BorderSpacing.Right = 2
             BorderSpacing.Bottom = 2
             ItemHeight = 15
-            OnEnter = cbxStatusEnter
-            OnExit = cbxStatusExit
-            OnKeyUp = cbxStatusKeyUp
             ParentFont = False
             Style = csDropDownList
             TabOrder = 0
+            OnEnter = cbxStatusEnter
+            OnExit = cbxStatusExit
+            OnKeyUp = cbxStatusKeyUp
           end
           object pnlStatusTop: TPanel
             Left = 1
@@ -644,11 +606,11 @@ object frmPersons: TfrmPersons
             BorderSpacing.Left = 2
             BorderSpacing.Right = 2
             BorderSpacing.Bottom = 2
+            TabOrder = 0
+            WantReturns = False
             OnEnter = memCommentEnter
             OnExit = memCommentExit
             OnKeyUp = memCommentKeyUp
-            TabOrder = 0
-            WantReturns = False
           end
         end
       end

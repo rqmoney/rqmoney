@@ -6,9 +6,9 @@ unit uniBudgets;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ActnList, ComCtrls,
-  Menus, BCMDButtonFocus, BCPanel, laz.VirtualTrees, StdCtrls, Buttons, Math, sqldb,
-  StrUtils, DateUtils, LazUTF8;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ActnList,
+  ComCtrls, Menus, BCMDButtonFocus, BCPanel, ECTabCtrl, laz.VirtualTrees,
+  StdCtrls, Buttons, Math, sqldb, StrUtils, DateUtils, LazUTF8, IniFiles;
 
 type // left grid (Budgets)
   TBudgets = record
@@ -65,6 +65,9 @@ type
     btnPeriodEdit: TBCMDButtonFocus;
     btnSettings: TBCMDButtonFocus;
     btnExit: TBCMDButtonFocus;
+    imgIndex: TImage;
+    imgPlan: TImage;
+    imgHeader: TImageList;
     imgHeight: TImage;
     imgItemBudCat: TImage;
     imgItemBudgets: TImage;
@@ -72,7 +75,10 @@ type
     imgItemsBudCat: TImage;
     imgItemsBudgets: TImage;
     imgItemsPeriods: TImage;
+    imgReality: TImage;
+    imgDifference: TImage;
     imgWidth: TImage;
+    lblIndex: TStaticText;
     lblHeight: TLabel;
     lblItemBudCat: TLabel;
     lblItemBudgets: TLabel;
@@ -80,7 +86,12 @@ type
     lblItemsBudCat: TLabel;
     lblItemsBudgets: TLabel;
     lblItemsPeriods: TLabel;
+    lblReality: TStaticText;
+    lblDifference: TStaticText;
     lblWidth: TLabel;
+    Panel1: TPanel;
+    pnlIndex: TPanel;
+    pnlPlan: TPanel;
     pnlBottom: TPanel;
     pnlBottom1: TPanel;
     pnlBottom2: TPanel;
@@ -92,8 +103,11 @@ type
     pnlItemsBudCat: TPanel;
     pnlItemsBudgets: TPanel;
     pnlItemsPeriods: TPanel;
-    pnlTip: TPanel;
+    pnlReality: TPanel;
+    pnlDifference: TPanel;
     pnlWidth: TPanel;
+    lblPlan: TStaticText;
+    tabCurrency: TECTabCtrl;
     tabLeft: TPageControl;
     pnlBudgets: TPanel;
     pnlButtons: TPanel;
@@ -113,17 +127,20 @@ type
     splBudget: TSplitter;
     tabBudgets: TTabSheet;
     tabPeriods: TTabSheet;
+    tabLegend: TTabSheet;
     VSTBudCat: TLazVirtualStringTree;
     VSTBudgets: TLazVirtualStringTree;
     VSTPeriods: TLazVirtualStringTree;
     procedure actPeriodDeleteExecute(Sender: TObject);
     procedure btnCopyClick(Sender: TObject);
     procedure btnSettingsClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure pnlBottom1Resize(Sender: TObject);
     procedure pnlBottom2Resize(Sender: TObject);
     procedure pnlBudgetsResize(Sender: TObject);
+    procedure tabCurrencyChange(Sender: TObject);
     procedure tabLeftChange(Sender: TObject);
-    procedure tabLeftChanging(Sender: TObject; var AllowChange: boolean);
+    //    procedure tabLeftChanging(Sender: TObject; var AllowChange: boolean);
     procedure tabLeftResize(Sender: TObject);
     procedure popBudgetAddClick(Sender: TObject);
     procedure popBudgetDeleteClick(Sender: TObject);
@@ -137,40 +154,52 @@ type
     procedure popPeriodDeleteClick(Sender: TObject);
     procedure popPeriodDuplicateClick(Sender: TObject);
     procedure popPeriodEditClick(Sender: TObject);
-    procedure splBudgetCanResize(Sender: TObject; var NewSize: integer; var Accept: boolean);
-    procedure splPeriodCanResize(Sender: TObject; var NewSize: integer; var Accept: boolean);
+    procedure splBudgetCanResize(Sender: TObject; var NewSize: integer;
+      var Accept: boolean);
+    procedure splPeriodCanResize(Sender: TObject; var NewSize: integer;
+      var Accept: boolean);
     procedure VSTBudCatChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure VSTBudCatCompareNodes(Sender: TBaseVirtualTree;
+      Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: integer);
     procedure VSTBudCatResize(Sender: TObject);
-//    procedure VSTBudCatResize(Sender: TObject);
-    procedure VSTBudgetsBeforeCellPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas;
-      Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
-      var ContentRect: TRect);
+    //    procedure VSTBudCatResize(Sender: TObject);
+    procedure VSTBudgetsBeforeCellPaint(Sender: TBaseVirtualTree;
+      TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
     procedure VSTBudgetsChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
-    procedure VSTBudgetsCompareNodes(Sender: TBaseVirtualTree; Node1, Node2: PVirtualNode;
-      Column: TColumnIndex; var Result: integer);
+    procedure VSTBudgetsCompareNodes(Sender: TBaseVirtualTree;
+      Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: integer);
     procedure VSTBudgetsDblClick(Sender: TObject);
     procedure VSTBudgetsEnter(Sender: TObject);
-    procedure VSTBudgetsGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
-      Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean; var ImageIndex: integer);
-    procedure VSTBudgetsGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: integer);
-    procedure VSTBudgetsGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex;
-      TextType: TVSTTextType; var CellText: string);
+    procedure VSTBudgetsGetImageIndex(Sender: TBaseVirtualTree;
+      Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+      var Ghosted: boolean; var ImageIndex: integer);
+    procedure VSTBudgetsGetNodeDataSize(Sender: TBaseVirtualTree;
+      var NodeDataSize: integer);
+    procedure VSTBudgetsGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
+      Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure VSTBudgetsResize(Sender: TObject);
-    procedure VSTBudCatBeforeCellPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas;
-      Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
-      var ContentRect: TRect);
-    procedure VSTBudCatGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
-      Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean; var ImageIndex: integer);
-    procedure VSTBudCatGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: integer);
-    procedure VSTBudCatGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex;
-      TextType: TVSTTextType; var CellText: string);
-    procedure VSTBudCatPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas;
-      Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
+    procedure VSTBudCatBeforeCellPaint(Sender: TBaseVirtualTree;
+      TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+    procedure VSTBudCatGetImageIndex(Sender: TBaseVirtualTree;
+      Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+      var Ghosted: boolean; var ImageIndex: integer);
+    procedure VSTBudCatGetNodeDataSize(Sender: TBaseVirtualTree;
+      var NodeDataSize: integer);
+    procedure VSTBudCatGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
+      Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+    procedure VSTBudCatPaintText(Sender: TBaseVirtualTree;
+      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      TextType: TVSTTextType);
     procedure VSTPeriodsChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure VSTPeriodsCompareNodes(Sender: TBaseVirtualTree; Node1,
+      Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
     procedure VSTPeriodsDblClick(Sender: TObject);
-    procedure VSTPeriodsGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: integer);
-    procedure VSTPeriodsGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex;
-      TextType: TVSTTextType; var CellText: string);
+    procedure VSTPeriodsGetNodeDataSize(Sender: TBaseVirtualTree;
+      var NodeDataSize: integer);
+    procedure VSTPeriodsGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
+      Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure VSTPeriodsResize(Sender: TObject);
   private
 
@@ -196,39 +225,50 @@ uses
 
 procedure TfrmBudgets.VSTBudgetsResize(Sender: TObject);
 var
-  X: Integer;
-
+  X: integer;
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
   (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
     Round(ScreenRatio * 25 / 100);
   X := (VSTBudgets.Width - VSTBudgets.Header.Columns[0].Width) div 100;
-  VSTBudgets.Header.Columns[1].Width := VSTBudgets.Width -
-    VSTBudgets.Header.Columns[0].Width - ScrollBarWidth - (25 * X); // text
+  VSTBudgets.Header.Columns[1].Width :=
+    VSTBudgets.Width - VSTBudgets.Header.Columns[0].Width - ScrollBarWidth - (25 * X);
+  // text
   VSTBudgets.Header.Columns[3].Width := 25 * X; // ID
 end;
 
-procedure TfrmBudgets.VSTBudCatBeforeCellPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas;
-  Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+procedure TfrmBudgets.VSTBudCatBeforeCellPaint(Sender: TBaseVirtualTree;
+  TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 var
   Co: integer;
 begin
   if Column < 4 then
-    TargetCanvas.Brush.Color :=
-      IfThen(Node.Index mod 2 = 0, clWhite, RGBToColor(230, 230, 230))
+    if Node.Index = 0 then
+      TargetCanvas.Brush.Color := FullColor
+    else
+      TargetCanvas.Brush.Color :=
+        IfThen(Node.Index mod 2 = 0, clWhite, RGBToColor(230, 230, 230))
   else
   begin
     Co := Column mod 4;
-    TargetCanvas.Brush.Color :=
-      IfThen(Node.Index mod 2 = 0, RGBToColor(255, 255, 255 - (Co * 25)),
-      RGBToColor(230, 230, 230 - (Co + 1) * 15));
+    if (Node.Index = 0) or (VSTBudcat.Header.Columns[Column].Tag = 1) then
+      TargetCanvas.Brush.Color := FullColor
+    else
+      case Co of
+        0: TargetCanvas.Brush.Color := RGBToColor(255, 240, 186);
+        1: TargetCanvas.Brush.Color := RGBToColor(210, 230, 255)
+        else
+          TargetCanvas.Brush.Color := clWhite;
+      end;
   end;
   TargetCanvas.FillRect(CellRect);
 end;
 
-procedure TfrmBudgets.VSTBudCatGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
-  Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean; var ImageIndex: integer);
+procedure TfrmBudgets.VSTBudCatGetImageIndex(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+  var Ghosted: boolean; var ImageIndex: integer);
 var
   BudCat: PBudCat;
 begin
@@ -239,47 +279,98 @@ begin
   end;
 end;
 
-procedure TfrmBudgets.VSTBudCatGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: integer);
+procedure TfrmBudgets.VSTBudCatGetNodeDataSize(Sender: TBaseVirtualTree;
+  var NodeDataSize: integer);
 begin
   NodeDataSize := SizeOf(TBudCat);
 end;
 
-procedure TfrmBudgets.VSTBudCatGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
-  Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+procedure TfrmBudgets.VSTBudCatGetText(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
+  var CellText: string);
 var
   BudCat: PBudCat;
 begin
-  if Column = 0 then Exit;
+  if (Column = 0) then Exit;
   try
     BudCat := VSTBudCat.GetNodeData(Node);
-    case Column of
-      1: CellText := BudCat.Category;  // category
-      2: if BudCat.Level = 0 then // subcategory
-          CellText := ''
-        else
-          CellText := IfThen(frmSettings.chkDisplaySubCatCapital.Checked = true,
-        AnsiUpperCase(BudCat.SubCategory), BudCat.SubCategory);
-      3: CellText := IntToStr(BudCat.CategoryID); // category ID
-      else
-        case Column mod 4 of
-          0: CellText := Format('%n', [BudCat.Plan[Column div 4 - 1]], FS_own);
-          1: CellText := Format('%n', [BudCat.Reality[Column div 4 - 1]], FS_own);
-          2: CellText := Format('%n', [BudCat.Difference[Column div 4 - 1]], FS_own)
+    if Assigned(BudCat) then
+    begin
+      case Column of
+        1: CellText := BudCat.Category;  // category
+        2: if BudCat.Level = 0 then // subcategory
+            CellText := ''
           else
-            CellText := Format('%n', [BudCat.Ratio[Column div 4 - 1]], FS_own);
-        end;
+            CellText := IfThen(frmSettings.chkDisplaySubCatCapital.Checked =
+              True, AnsiUpperCase(BudCat.SubCategory), BudCat.SubCategory);
+        3: CellText := IntToStr(BudCat.CategoryID); // category ID
+        else
+          case Column mod 4 of
+            0:
+            try
+              //If (VSTBudCat.Tag = 0) then
+              CellText := Format('%n', [BudCat.Plan[Column div 4 - 1]], FS_own);
+            except
+              CellText := '';
+            end;
+            1:
+            try
+              //If (VSTBudCat.Tag = 0) then
+              CellText := Format('%n', [BudCat.Reality[Column div 4 - 1]], FS_own);
+            except
+              CellText := '';
+            end;
+            2:
+            try
+              //If (VSTBudCat.Tag = 0) then
+              CellText := Format('%n', [BudCat.Difference[Column div 4 - 1]], FS_own)
+            except
+              CellText := '';
+            end
+            else
+            try
+              //If (VSTBudCat.Tag = 0) then
+              CellText := Format('%n', [BudCat.Ratio[Column div 4 - 1]], FS_own);
+            except
+              CellText := '';
+            end;
+          end;
+      end;
     end;
   finally
   end;
 end;
 
-procedure TfrmBudgets.VSTBudCatPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas;
-  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
+procedure TfrmBudgets.VSTBudCatPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
 begin
+  if Node.Index = 0 then
+  begin
+    TargetCanvas.Font.Color := clYellow;
+    TargetCanvas.Font.Bold := True;
+    Exit;
+  end;
+
+  if (Column < 4) then
+    TargetCanvas.Font.Color := clBlack
+  else if VSTBudCat.Header.Columns[Column].Tag = 1 then
+    TargetCanvas.Font.Color := clWhite
+  else
+    case (Column mod 4) of
+      0, 1: TargetCanvas.Font.Color := clBlack;
+      2: TargetCanvas.Font.Color := clFuchsia
+      else
+        TargetCanvas.Font.Color := clBlue;
+    end;
+
   TargetCanvas.Font.Bold := (Column > 3) and ((Column mod 4) in [0..1]);
+  TargetCanvas.Font.Italic := (Column > 3) and ((Column mod 4) = 3);
 end;
 
 procedure TfrmBudgets.VSTPeriodsChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+var
+  I: byte;
 begin
   // update buttons
   btnPeriodEdit.Enabled := VSTPeriods.SelectedCount = 1;
@@ -307,7 +398,8 @@ begin
     else if VSTPeriods.SelectedCount = 1 then
     begin
       imgItemPeriods.ImageIndex := 5;
-      lblItemPeriods.Caption := IntToStr(VSTPeriods.GetFirstSelected(False).Index + 1) + '.';
+      lblItemPeriods.Caption :=
+        IntToStr(VSTPeriods.GetFirstSelected(False).Index + 1) + '.';
     end
     else
     begin
@@ -316,11 +408,60 @@ begin
     end;
   end;
 
+  // =================================================
+  // GET CURRENCIES
+  // =================================================
 
-  UpdateBudCategories;
+  // Get minimal and maximal range of dates (from Periods)
+  frmBudgets.tabCurrency.Tag := 1;
+  while frmBudgets.tabCurrency.Tabs.Count > 0 do
+    frmBudgets.tabCurrency.DeleteTab(0);
+
+  if frmBudgets.VSTPeriods.SelectedCount > 0 then
+  begin
+     frmMain.QRY.SQL.Text :=
+      'SELECT DISTINCT acc_currency FROM data ' + // select
+      'LEFT JOIN accounts ON (acc_id = d_account);'; // accounts
+     frmMain.QRY.Open;
+
+    I := 0;
+
+    try
+      while not (frmMain.QRY.EOF) do
+      begin
+        frmBudgets.tabCurrency.AddTab(etaLast, True);
+        frmBudgets.tabCurrency.Tabs[frmBudgets.tabCurrency.Tabs.Count - 1].Text :=
+          frmMain.QRY.Fields[0].AsString;
+        if (frmBudgets.tabCurrency.Tabs[frmBudgets.tabCurrency.Tabs.Count - 1].Text) =
+          GetMainCurrency then
+          I := frmMain.QRY.RecNo - 1;
+        frmMain.QRY.Next;
+      end;
+    finally
+      frmMain.QRY.Close;
+    end;
+
+    frmBudgets.tabCurrency.Tag := 0;
+    if frmBudgets.tabCurrency.Tabs.Count > 0 then
+      frmBudgets.tabCurrency.TabIndex := I;
+    frmBudgets.tabCurrencyChange(frmBudgets.tabCurrency);
+  end;
 
   lblItemBudCat.Caption := '';
   lblItemsBudCat.Caption := IntToStr(VSTBudCat.RootNodeCount);
+end;
+
+procedure TfrmBudgets.VSTPeriodsCompareNodes(Sender: TBaseVirtualTree; Node1,
+  Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
+var
+  Data1, Data2: PPeriods;
+begin
+  Data1 := Sender.GetNodeData(Node1);
+  Data2 := Sender.GetNodeData(Node2);
+  case Column of
+    1: Result := UTF8CompareText(AnsiLowerCase(Data1.DateFrom), AnsiLowerCase(Data2.DateFrom));
+    2: Result := UTF8CompareText(AnsiLowerCase(Data1.DateTo), AnsiLowerCase(Data2.DateTo));
+  end;
 end;
 
 procedure TfrmBudgets.VSTPeriodsDblClick(Sender: TObject);
@@ -331,20 +472,24 @@ begin
     popPeriodEditClick(popPeriodEdit);
 end;
 
-procedure TfrmBudgets.VSTPeriodsGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: integer);
+procedure TfrmBudgets.VSTPeriodsGetNodeDataSize(Sender: TBaseVirtualTree;
+  var NodeDataSize: integer);
 begin
   NodeDataSize := SizeOf(TPeriods);
 end;
 
-procedure TfrmBudgets.VSTPeriodsGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
-  Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+procedure TfrmBudgets.VSTPeriodsGetText(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
+  var CellText: string);
 var
   Periods: PPeriods;
 begin
   Periods := VSTPeriods.GetNodeData(Node);
 
   case Column of
-    0: CellText := IntToStr(Node.Index + 1);
+    0: If VSTPeriods.Header.SortDirection = sdAscending then
+      CellText := IntToStr(Node.Index + 1)
+      Else CellText := IntToStr(VSTPeriods.TotalCount - Node.Index);
     1: CellText := DateToStr(StrToDate(Periods.DateFrom, 'YYYY-MM-DD', '-'));
     2: CellText := DateToStr(StrToDate(Periods.DateTo, 'YYYY-MM-DD', '-'));
   end;
@@ -352,20 +497,21 @@ end;
 
 procedure TfrmBudgets.VSTPeriodsResize(Sender: TObject);
 var
-  X: Integer;
-
+  X: integer;
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
   (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
-        round(ScreenRatio * 25 / 100);
+    round(ScreenRatio * 25 / 100);
   X := (VSTPeriods.Width - VSTPeriods.Header.Columns[0].Width) div 100;
-  VSTPeriods.Header.Columns[0].Width := 12 * X; // Order number
-  VSTPeriods.Header.Columns[1].Width := (VSTPeriods.Width - ScrollBarWidth - (12 * X)) div 2; // Date from
+  VSTPeriods.Header.Columns[0].Width := 20 * X; // Order number
+  VSTPeriods.Header.Columns[1].Width :=
+    (VSTPeriods.Width - ScrollBarWidth - (20 * X)) div 2; // Date from
   VSTPeriods.Header.Columns[2].Width := VSTPeriods.Header.Columns[1].Width; // Date to
 end;
 
-procedure TfrmBudgets.splBudgetCanResize(Sender: TObject; var NewSize: integer; var Accept: boolean);
+procedure TfrmBudgets.splBudgetCanResize(Sender: TObject; var NewSize: integer;
+  var Accept: boolean);
 begin
   try
     imgWidth.ImageIndex := 3;
@@ -382,7 +528,8 @@ begin
   end;
 end;
 
-procedure TfrmBudgets.splPeriodCanResize(Sender: TObject; var NewSize: integer; var Accept: boolean);
+procedure TfrmBudgets.splPeriodCanResize(Sender: TObject; var NewSize: integer;
+  var Accept: boolean);
 begin
   tabLeftResize(tabLeft);
 end;
@@ -405,7 +552,8 @@ begin
     else if VSTBudCat.SelectedCount = 1 then
     begin
       imgItemBudCat.ImageIndex := 5;
-      lblItemBudCat.Caption := IntToStr(VSTBudCat.GetFirstSelected(False).Index + 1) + '.';
+      lblItemBudCat.Caption :=
+        IntToStr(VSTBudCat.GetFirstSelected(False).Index + 1) + '.';
     end
     else
     begin
@@ -416,16 +564,38 @@ begin
 
 end;
 
+procedure TfrmBudgets.VSTBudCatCompareNodes(Sender: TBaseVirtualTree;
+  Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: integer);
+var
+  Data1, Data2: PBudCat;
+begin
+  if ((Sender as TLazVirtualStringTree).AbsoluteIndex(Node1) = 0) or
+    ((Sender as TLazVirtualStringTree).AbsoluteIndex(Node2) = 0) then Exit;
+  try
+    Data1 := Sender.GetNodeData(Node1);
+    Data2 := Sender.GetNodeData(Node2);
+    case Column of
+      1, 2: Result := UTF8CompareText(AnsiLowerCase(Data1.Category + Data1.SubCategory),
+          AnsiLowerCase(Data2.Category + Data2.SubCategory));
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
+end;
+
 procedure TfrmBudgets.VSTBudCatResize(Sender: TObject);
 begin
   (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
     round(ScreenRatio * 25 / 100);
 end;
 
-procedure TfrmBudgets.VSTBudgetsBeforeCellPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas;
-  Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+procedure TfrmBudgets.VSTBudgetsBeforeCellPaint(Sender: TBaseVirtualTree;
+  TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clWhite,
+    frmSettings.pnlOddRowColor.Color);
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -456,32 +626,33 @@ begin
   if VSTPeriods.RootNodeCount = 0 then
     UpdateBudCategories;
 
-   // set images
-    if VSTBudgets.SelectedCount = 0 then
+  // set images
+  if VSTBudgets.SelectedCount = 0 then
+  begin
+    imgItemBudgets.ImageIndex := -1;
+    lblItemsBudgets.Caption := '';
+    lblItemBudCat.Caption := '';
+    lblItemsBudCat.Caption := IntToStr(VSTBudCat.RootNodeCount);
+  end
+  else
+  begin
+    if VSTBudgets.SelectedCount = VSTBudgets.TotalCount then
     begin
-      imgItemBudgets.ImageIndex := -1;
-      lblItemsBudgets.Caption := '';
-      lblItemBudCat.Caption := '';
-      lblItemsBudCat.Caption := IntToStr(VSTBudCat.RootNodeCount);
+      imgItemBudgets.ImageIndex := 7;
+      lblItemsBudgets.Caption := '# ' + IntToStr(VSTBudgets.SelectedCount);
+    end
+    else if VSTBudgets.SelectedCount = 1 then
+    begin
+      imgItemBudgets.ImageIndex := 5;
+      lblItemsBudgets.Caption :=
+        IntToStr(VSTBudgets.GetFirstSelected(False).Index + 1) + '.';
     end
     else
     begin
-      if VSTBudgets.SelectedCount = VSTBudgets.TotalCount then
-      begin
-        imgItemBudgets.ImageIndex := 7;
-        lblItemsBudgets.Caption := '# ' + IntToStr(VSTBudgets.SelectedCount);
-      end
-      else if VSTBudgets.SelectedCount = 1 then
-      begin
-        imgItemBudgets.ImageIndex := 5;
-        lblItemsBudgets.Caption := IntToStr(VSTBudgets.GetFirstSelected(False).Index + 1) + '.';
-      end
-      else
-      begin
-        imgItemBudgets.ImageIndex := 6;
-        lblItemsBudgets.Caption := '# ' + IntToStr(VSTBudgets.SelectedCount);
-      end;
+      imgItemBudgets.ImageIndex := 6;
+      lblItemsBudgets.Caption := '# ' + IntToStr(VSTBudgets.SelectedCount);
     end;
+  end;
 
   if VSTBudgets.SelectedCount <> 1 then
     Exit;
@@ -501,8 +672,8 @@ begin
       VSTBudCat.Header.Columns[2].Options + [coVisible];
 end;
 
-procedure TfrmBudgets.VSTBudgetsCompareNodes(Sender: TBaseVirtualTree; Node1, Node2: PVirtualNode;
-  Column: TColumnIndex; var Result: integer);
+procedure TfrmBudgets.VSTBudgetsCompareNodes(Sender: TBaseVirtualTree;
+  Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: integer);
 var
   Data1, Data2: PBudgets;
 begin
@@ -530,8 +701,9 @@ begin
   end;
 end;
 
-procedure TfrmBudgets.VSTBudgetsGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
-  Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean; var ImageIndex: integer);
+procedure TfrmBudgets.VSTBudgetsGetImageIndex(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+  var Ghosted: boolean; var ImageIndex: integer);
 var
   Budgets: PBudgets;
 begin
@@ -542,13 +714,15 @@ begin
   end;
 end;
 
-procedure TfrmBudgets.VSTBudgetsGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: integer);
+procedure TfrmBudgets.VSTBudgetsGetNodeDataSize(Sender: TBaseVirtualTree;
+  var NodeDataSize: integer);
 begin
   NodeDataSize := SizeOf(TBudgets);
 end;
 
-procedure TfrmBudgets.VSTBudgetsGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
-  Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+procedure TfrmBudgets.VSTBudgetsGetText(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
+  var CellText: string);
 var
   Budgets: PBudgets;
 begin
@@ -574,7 +748,8 @@ begin
   if (frmMain.Conn.Connected = False) then
     Exit;
 
-  if tabLeft.TabIndex = 1 then begin
+  if tabLeft.TabIndex = 1 then
+  begin
     popPeriodAddClick(popPeriodAdd);
     Exit;
   end;
@@ -670,6 +845,35 @@ begin
   frmSettings.ShowModal;
 end;
 
+procedure TfrmBudgets.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+begin
+  // write position and window size
+  if frmSettings.chkLastFormsSize.Checked = True then
+  begin
+    try
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmBudgets.Name, '') <>
+        IntToStr(frmBudgets.Left) + separ + // form left
+      IntToStr(frmBudgets.Top) + separ + // form top
+      IntToStr(frmBudgets.Width) + separ + // form width
+      IntToStr(frmBudgets.Height) + separ + // form height
+      IntToStr(frmBudgets.tabLeft.Width) then
+        INI.WriteString('POSITION', frmBudgets.Name,
+          IntToStr(frmBudgets.Left) + separ + // form left
+          IntToStr(frmBudgets.Top) + separ + // form top
+          IntToStr(frmBudgets.Width) + separ + // form width
+          IntToStr(frmBudgets.Height) + separ + // form height
+          IntToStr(frmBudgets.tabLeft.Width)); // tabLeft width
+    finally
+      INI.Free;
+    end;
+  end;
+end;
+
 procedure TfrmBudgets.pnlBottom1Resize(Sender: TObject);
 begin
   pnlItemsBudgets.Width := pnlBottom1.Width div 2;
@@ -678,6 +882,7 @@ end;
 procedure TfrmBudgets.pnlBottom2Resize(Sender: TObject);
 begin
   pnlItemPeriods.Width := pnlBottom2.Width div 2;
+  pnlItemBudgets.Width := pnlBottom2.Width div 2;
 end;
 
 procedure TfrmBudgets.pnlBudgetsResize(Sender: TObject);
@@ -685,23 +890,42 @@ begin
   tabLeftResize(tabLeft);
 end;
 
-procedure TfrmBudgets.tabLeftChange(Sender: TObject);
+procedure TfrmBudgets.tabCurrencyChange(Sender: TObject);
 begin
-  if tabLeft.TabIndex = 0 then
-    VSTBudgets.SetFocus
-  else
-  begin
-    VSTPeriods.SetFocus;
-    if (VSTBudgets.SelectedCount = 1) and (VSTPeriods.RootNodeCount > 0) then
-      VSTPeriods.SelectAll(False);
+  VSTBudCat.Clear;
+  VSTBudCat.RootNodeCount := 0;
+
+  if tabCurrency.TabIndex = -1 then
+    exit;
+
+  if (frmBudgets.tabCurrency.Tag = 1) or (tabCurrency.Tabs.Count = 0) or
+    (tabCurrency.TabIndex = -1) or (tabCurrency.Tabs[tabCurrency.TabIndex].Text = '') or
+    (VSTBudgets.SelectedCount = 0) or (VSTPeriods.SelectedCount = 0) then
+    Exit;
+
+  try
+    UpdateBudCategories;
+  except
   end;
 end;
 
-procedure TfrmBudgets.tabLeftChanging(Sender: TObject; var AllowChange: boolean);
+procedure TfrmBudgets.tabLeftChange(Sender: TObject);
+begin
+  case tabLeft.TabIndex of
+    0: VSTBudgets.SetFocus;
+    1: begin
+      VSTPeriods.SetFocus;
+      if (VSTBudgets.SelectedCount = 1) and (VSTPeriods.RootNodeCount > 0) then
+        VSTPeriods.SelectAll(False);
+    end
+  end;
+end;
+
+{procedure TfrmBudgets.tabLeftChanging(Sender: TObject; var AllowChange: boolean);
 begin
   if (VSTBudgets.SelectedCount <> 1) then
     AllowChange := False;
-end;
+end;}
 
 procedure TfrmBudgets.tabLeftResize(Sender: TObject);
 begin
@@ -721,6 +945,7 @@ end;
 procedure TfrmBudgets.popBudgetEditClick(Sender: TObject);
 var
   Budgets: PBudgets;
+  Budget: PBudget;
   Node: PVirtualNode;
 begin
   if VSTBudgets.SelectedCount <> 1 then
@@ -767,19 +992,25 @@ begin
   // ==================================================================================
   // SAVE CATEGORIES
   // ==================================================================================
-  // delete all previous categories
-  frmMain.QRY.SQL.Text := 'DELETE FROM budget_categories WHERE budcat_bud_id = :ID';
-  frmMain.QRY.Params.ParamByName('ID').AsInteger := Budgets.ID;
-  frmMain.QRY.Prepare;
-  frmMain.QRY.ExecSQL;
-  frmMain.Tran.Commit;
-
-  // write all checked categories
-  Node := frmBudget.VST.GetFirstChecked(csCheckedNormal, False);
-  frmMain.Tran.Commit;
+  // delete all previous checked categories (now unchecked)
   frmMain.Tran.StartTransaction;
+  Node := frmBudget.VST.GetFirst();
   while Assigned(Node) do
-    if Node.CheckState = csCheckedNormal then
+  begin
+    Budget := frmBudget.VST.GetNodeData(Node);
+
+    if (Node.CheckState = csUncheckedNormal) and (Budget.Checked = True) then
+    begin
+      frmMain.QRY.SQL.Text :=
+        'DELETE FROM budget_categories ' + // delete
+        'WHERE budcat_category = :ID1 AND budcat_bud_id = :ID2;';
+      frmMain.QRY.Params.ParamByName('ID1').AsInteger := Budget.ID;
+      frmMain.QRY.Params.ParamByName('ID2').AsInteger := Budgets.ID;
+      frmMain.QRY.Prepare;
+      frmMain.QRY.ExecSQL;
+    end;
+
+    if (Node.CheckState = csCheckedNormal) and (Budget.Checked = False) then
     begin
       frmMain.QRY.SQL.Text :=
         'INSERT OR IGNORE INTO budget_categories (budcat_category, budcat_bud_id) VALUES (:CAT, :ID);';
@@ -789,10 +1020,11 @@ begin
       frmMain.QRY.Params.ParamByName('ID').AsInteger := Budgets.ID;
       frmMain.QRY.Prepare;
       frmMain.QRY.ExecSQL;
-      Node := frmBudget.VST.GetNextChecked(Node);
     end;
-  frmMain.Tran.Commit;
+    Node := frmBudget.VST.GetNext(Node);
+  end;
 
+  frmMain.Tran.Commit;
   UpdateBudgets;
   FindEditedRecord(VSTBudgets, 3, VSTBudgets.Tag);
 end;
@@ -804,20 +1036,22 @@ var
   Budgets: PBudgets;
 begin
   try
-    if (frmMain.Conn.Connected = False) or (vSTBudgets.RootNodeCount = 0) or (VSTBudgets.SelectedCount = 0) then
+    if (frmMain.Conn.Connected = False) or (vSTBudgets.RootNodeCount = 0) or
+      (VSTBudgets.SelectedCount = 0) then
       exit;
     case VSTBudgets.SelectedCount of
-      1: if MessageDlg(Message_00, Question_01 + sLineBreak + sLineBreak +
-          VSTBudgets.Header.Columns[1].Text + ': ' + VSTBudgets.Text[VSTBudgets.FocusedNode, 1],
-          mtConfirmation, mbYesNo, 0) <> 6 then
+      1: if MessageDlg(Message_00, Question_01 + sLineBreak +
+          sLineBreak + VSTBudgets.Header.Columns[1].Text + ': ' +
+          VSTBudgets.Text[VSTBudgets.FocusedNode, 1], mtConfirmation,
+          mbYesNo, 0) <> 6 then
           Exit;
       else
-        if MessageDlg(Message_00, AnsiReplaceStr(Question_02, '%', IntToStr(VSTBudgets.SelectedCount)),
-          mtConfirmation, mbYesNo, 0) <> 6 then
+        if MessageDlg(Message_00, AnsiReplaceStr(Question_02, '%',
+          IntToStr(VSTBudgets.SelectedCount)), mtConfirmation, mbYesNo, 0) <> 6 then
           Exit;
     end;
-    if MessageDlg(Message_00, AnsiReplaceStr(Question_23, '%', IntToStr(VSTBudgets.SelectedCount)),
-      mtConfirmation, mbYesNo, 0) <> 6 then
+    if MessageDlg(Message_00, AnsiReplaceStr(Question_23, '%',
+      IntToStr(VSTBudgets.SelectedCount)), mtConfirmation, mbYesNo, 0) <> 6 then
       Exit;
 
     // get IDs of all selected nodes
@@ -856,19 +1090,6 @@ end;
 procedure TfrmBudgets.FormCreate(Sender: TObject);
 begin
   try
-    // form size
-    (Sender as TForm).Width :=
-      Round((Screen.Width / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-      (Round(420 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height :=
-      Round(Screen.Height / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-      2 * (250 - ScreenRatio);
-
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := (Screen.Height - 100 - (Sender as TForm).Height) div 2;
-
-    {$IFDEF WINDOWS}
     // set components height
     VSTBudgets.Header.Height := PanelHeight;
     VSTPeriods.Header.Height := PanelHeight;
@@ -878,7 +1099,11 @@ begin
 
     pnlButtons.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
-    {$ENDIF}
+    pnlBottom1.Height := ButtonHeight;
+    pnlBottom2.Height := ButtonHeight;
+
+    // get form icon
+    frmMain.img16.GetIcon(21, (Sender as TForm).Icon);
   except
   end;
 end;
@@ -895,10 +1120,69 @@ begin
 end;
 
 procedure TfrmBudgets.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmBudgets.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmBudgets.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmBudgets.Width := Screen.Width - 300 - (200 - ScreenRatio)
+      else
+        frmBudgets.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmBudgets.Height := Screen.Height - 400 - (200 - ScreenRatio)
+      else
+        frmBudgets.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmBudgets.left := (Screen.Width - frmBudgets.Width) div 2
+      else
+        frmBudgets.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmBudgets.Top := ((Screen.Height - frmBudgets.Height) div 2) - 75
+      else
+        frmBudgets.Top := I;
+
+      // left panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 250) or (I > 400) then
+        frmBudgets.tabLeft.Width := 300
+      else
+        frmBudgets.tabLeft.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   btnBudgetAdd.Enabled := frmMain.Conn.Connected = True;
   popBudgetAdd.Enabled := frmMain.Conn.Connected = True;
-  popPeriodAdd.Enabled := (frmMain.Conn.Connected = True) and (VSTBudgets.SelectedCount = 1);
+  popPeriodAdd.Enabled := (frmMain.Conn.Connected = True) and
+    (VSTBudgets.SelectedCount = 1);
 
   tabLeft.tabIndex := 0;
 
@@ -915,17 +1199,20 @@ var
   Budgets: PBudgets;
 begin
   try
-    if (frmMain.Conn.Connected = False) or (VSTPeriods.RootNodeCount = 0) or (VSTPeriods.SelectedCount = 0) then
+    if (frmMain.Conn.Connected = False) or (VSTPeriods.RootNodeCount = 0) or
+      (VSTPeriods.SelectedCount = 0) then
       exit;
     case VSTPeriods.SelectedCount of
-      1: if MessageDlg(Message_00, Question_01 + sLineBreak + sLineBreak +
-          VSTPeriods.Header.Columns[1].Text + ': ' + VSTPeriods.Text[VSTPeriods.GetFirstSelected(), 1] +
+      1: if MessageDlg(Message_00, Question_01 + sLineBreak +
+          sLineBreak + VSTPeriods.Header.Columns[1].Text + ': ' +
+          VSTPeriods.Text[VSTPeriods.GetFirstSelected(), 1] +
           sLineBreak + VSTPeriods.Header.Columns[2].Text + ': ' +
-          VSTPeriods.Text[VSTPeriods.GetFirstSelected(), 2], mtConfirmation, mbYesNo, 0) <> 6 then
+          VSTPeriods.Text[VSTPeriods.GetFirstSelected(), 2], mtConfirmation,
+          mbYesNo, 0) <> 6 then
           Exit;
       else
-        if MessageDlg(Message_00, AnsiReplaceStr(Question_02, '%', IntToStr(VSTPeriods.SelectedCount)),
-          mtConfirmation, mbYesNo, 0) <> 6 then
+        if MessageDlg(Message_00, AnsiReplaceStr(Question_02, '%',
+          IntToStr(VSTPeriods.SelectedCount)), mtConfirmation, mbYesNo, 0) <> 6 then
           Exit;
     end;
 
@@ -938,11 +1225,12 @@ begin
       begin
         Periods := VSTPeriods.GetNodeData(N);
         frmMain.QRY.SQL.Text := 'DELETE FROM budget_periods ' + // delete
-          'WHERE budper_date1 = :DATE1 AND budper_date2 = :DATE2 ' + 'AND budper_bud_id = :ID;';
+          'WHERE budper_date1 = :DATE1 AND budper_date2 = :DATE2 ' +
+          'AND budper_bud_id = :ID;';
         frmMain.QRY.Params.ParamByName('DATE1').AsString := Periods.DateFrom;
         frmMain.QRY.Params.ParamByName('DATE2').AsString := Periods.DateTo;
         frmMain.QRY.Params.ParamByName('ID').AsInteger := Budgets.ID;
-
+        frmMain.QRY.Prepare;
         frmMain.QRY.ExecSQL;
         N := VSTPeriods.GetNextSelected(N);
       end;
@@ -970,7 +1258,8 @@ begin
     frmPeriod.Caption := AnsiUpperCase(Caption_45);
     frmPeriod.Tag := 0;
     frmPeriod.datDateFrom.Date := EncodeDate(YearOf(now), MonthOf(now), 1);
-    frmPeriod.datDateTo.Date := EncodeDate(YearOf(now), MonthOf(now), DaysInAMonth(YearOf(now), MonthOf(now)));
+    frmPeriod.datDateTo.Date :=
+      EncodeDate(YearOf(now), MonthOf(now), DaysInAMonth(YearOf(now), MonthOf(now)));
 
     if frmPeriod.ShowModal <> mrOk then
       Exit;
@@ -985,8 +1274,8 @@ begin
       begin
         Budgets := VSTBudgets.GetNodeData(VSTBudgets.GetFirstSelected());
         frmMain.QRY.SQL.Text :=
-          'INSERT OR IGNORE INTO budget_periods (budper_date1, budper_date2, budper_sum, ' +
-          'budper_bud_id, budper_cat_id) VALUES (:DATE1, :DATE2, :SUM, :ID, :CAT);';
+          'INSERT OR IGNORE INTO budget_periods (budper_date1, budper_date2, budper_sum, '
+          + 'budper_bud_id, budper_cat_id) VALUES (:DATE1, :DATE2, :SUM, :ID, :CAT);';
 
         // date1
         frmMain.QRY.Params.ParamByName('DATE1').AsString :=
@@ -1017,6 +1306,7 @@ var
   Periods: PPeriods;
   BudPer: PBudPer;
   N: PVirtualNode;
+  CategoryExists: boolean;
 begin
   if (VSTBudgets.SelectedCount <> 1) then Exit;
 
@@ -1028,7 +1318,8 @@ begin
   frmPeriod.datDateTo.Date := StrToDate(Periods.DateTo, 'YYYY-MM-DD', '-');
   frmPeriod.Caption := AnsiUpperCase(Caption_46);
 
-  if frmPeriod.ShowModal <> mrOk then begin
+  if frmPeriod.ShowModal <> mrOk then
+  begin
     VSTPeriods.SetFocus;
     Exit;
   end;
@@ -1037,18 +1328,62 @@ begin
   while Assigned(N) do
   begin
     BudPer := frmPeriod.VST.GetNodeData(N);
-    frmMain.QRY.SQL.Text :=
-      'UPDATE OR IGNORE budget_periods SET ' + // update
-      'budper_date1 = :DATE1, ' + // date1
-      'budper_date2 = :DATE2, ' + // date2
-      'budper_sum = :SUM, ' + // amount
-      'budper_bud_id = :ID, ' + // budget id
-      'budper_cat_id = :CAT ' + // cat_id
-      'WHERE ' + // where
-      'budper_date1 = :DATE3 AND ' + // date1
+    // ===============================
+    // FIND OUT IF CATEGORY EXISTS
+    // ===============================
+    frmMain.QRY.SQL.Text := 'SELECT COUNT(*) FROM budget_periods ' + // select
+      'WHERE budper_date1 = :DATE3 AND ' + // date1
       'budper_date2 = :DATE4 AND ' + // date2
       'budper_bud_id = :ID AND ' + // budget id
-      'budper_cat_id = :CAT;';
+      'budper_cat_id = :CAT;';  // cat_id
+
+    // date3
+    frmMain.QRY.Params.ParamByName('DATE3').AsString := Periods.DateFrom;
+    // date4
+    frmMain.QRY.Params.ParamByName('DATE4').AsString := Periods.DateTo;
+    // ID
+    frmMain.QRY.Params.ParamByName('ID').AsString :=
+      VSTBudgets.Text[VSTBudgets.GetFirstSelected(), 3];
+    // category ID
+    frmMain.QRY.Params.ParamByName('CAT').AsInteger := BudPer.CategoryID;
+    frmMain.QRY.Prepare;
+    frmMain.QRY.Open;
+    CategoryExists := frmMain.QRY.Fields[0].AsInteger > 0;
+    frmMain.QRY.Close;
+
+
+    // ===============================
+    // CREATE PLAN (if does not exists
+    // ===============================
+    if CategoryExists = False then
+      frmMain.QRY.SQL.Text :=
+        'INSERT INTO budget_periods (budper_date1, budper_date2, budper_sum, budper_bud_id, budper_cat_id) VALUES ('
+        + ':DATE1, :DATE2, :SUM, :ID, :CAT);'
+
+    // ===============================
+    // UPDATE PLAN (if exists)
+    // ===============================
+    else
+    begin
+      frmMain.QRY.SQL.Text :=
+        'UPDATE OR IGNORE budget_periods SET ' + // update
+        'budper_date1 = :DATE1, ' + // date1
+        'budper_date2 = :DATE2, ' + // date2
+        'budper_sum = :SUM, ' + // amount
+        'budper_bud_id = :ID, ' + // budget id
+        'budper_cat_id = :CAT ' + // cat_id
+        'WHERE ' + // where
+        'budper_date1 = :DATE3 AND ' + // date1
+        'budper_date2 = :DATE4 AND ' + // date2
+        'budper_bud_id = :ID AND ' + // budget id
+        'budper_cat_id = :CAT;';
+
+      // date3
+      frmMain.QRY.Params.ParamByName('DATE3').AsString := Periods.DateFrom;
+      // date4
+      frmMain.QRY.Params.ParamByName('DATE4').AsString := Periods.DateTo;
+
+    end;
 
     // date1
     frmMain.QRY.Params.ParamByName('DATE1').AsString :=
@@ -1056,19 +1391,15 @@ begin
     // date2
     frmMain.QRY.Params.ParamByName('DATE2').AsString :=
       FormatDateTime('YYYY-MM-DD', frmPeriod.datDateTo.Date);
-    // date3
-    frmMain.QRY.Params.ParamByName('DATE3').AsString := Periods.DateFrom;
-    // date4
-    frmMain.QRY.Params.ParamByName('DATE4').AsString := Periods.DateTo;
-
     // amount
     frmMain.QRY.Params.ParamByName('SUM').AsString :=
       AnsiReplaceStr(FloatToStr(BudPer.Plan), FS_own.DecimalSeparator, '.');
-    // category
-    frmMain.QRY.Params.ParamByName('CAT').AsInteger := BudPer.CategoryID;
     // ID
     frmMain.QRY.Params.ParamByName('ID').AsString :=
       VSTBudgets.Text[VSTBudgets.GetFirstSelected(), 3];
+    // category ID
+    frmMain.QRY.Params.ParamByName('CAT').AsInteger := BudPer.CategoryID;
+
     frmMain.QRY.Prepare;
     frmMain.QRY.ExecSQL;
     N := frmPeriod.VST.GetNext(N);
@@ -1164,54 +1495,55 @@ begin
 
   // =============================================================================================
   // update list of periods in frmPeriods
-  if frmMain.Conn.Connected = True then
+  if frmMain.Conn.Connected = False then
+    Exit;
+
+  frmMain.QRY.SQL.Text :=
+    'SELECT DISTINCT budper_date1, budper_date2 ' + // select
+    'FROM budget_periods ' + // from
+    'WHERE budper_bud_id = :ID ' + // where
+    'ORDER BY budper_date1 ASC;'; // order
+  frmMain.QRY.Params.ParamByName('ID').AsInteger := Budgets.ID;
+  frmMain.QRY.Prepare;
+  frmMain.QRY.Open;
+
+  while not (frmMain.QRY.EOF) do
   begin
-    frmMain.QRY.SQL.Text :=
-      'SELECT DISTINCT budper_date1, budper_date2 ' + // select
-      'FROM budget_periods ' + // from
-      'WHERE budper_bud_id = :ID ' + // where
-      'ORDER BY budper_date1 DESC;'; // order
-    frmMain.QRY.Params.ParamByName('ID').AsInteger := Budgets.ID;
-    frmMain.QRY.Open;
-
-    while not (frmMain.QRY.EOF) do
-    begin
-      frmBudgets.VSTPeriods.RootNodeCount := frmBudgets.VSTPeriods.RootNodeCount + 1;
-      P := frmBudgets.VSTPeriods.GetLast();
-      Periods := frmBudgets.VSTPeriods.GetNodeData(P);
-      Periods.DateFrom := frmMain.QRY.Fields[0].AsString;
-      Periods.DateTo := frmMain.QRY.Fields[1].AsString;
-      frmMain.QRY.Next;
-    end;
-    frmMain.QRY.Close;
-
-    SetNodeHeight(frmBudgets.VSTPeriods);
-    frmBudgets.VSTPeriods.EndUpdate;
-
-    // update period buttons
-    frmBudgets.btnPeriodEdit.Enabled := False;
-    frmBudgets.btnPeriodDuplicate.Enabled := False;
-    frmBudgets.btnPeriodDelete.Enabled := False;
-
-    // update period buttons
-    frmBudgets.popPeriodEdit.Enabled := False;
-    frmBudgets.popPeriodDuplicate.Enabled := False;
-    frmBudgets.popPeriodDelete.Enabled := False;
-
-    frmBudgets.lblItemsPeriods.Caption := IntToStr(frmBudgets.VSTPeriods.RootNodeCount);
-    frmBudgets.lblItemPeriods.Caption := '';
-
-    frmBudgets.VSTPeriods.SelectAll(False);
+    frmBudgets.VSTPeriods.RootNodeCount := frmBudgets.VSTPeriods.RootNodeCount + 1;
+    P := frmBudgets.VSTPeriods.GetLast();
+    Periods := frmBudgets.VSTPeriods.GetNodeData(P);
+    Periods.DateFrom := frmMain.QRY.Fields[0].AsString;
+    Periods.DateTo := frmMain.QRY.Fields[1].AsString;
+    frmMain.QRY.Next;
   end;
+  frmMain.QRY.Close;
+
+  SetNodeHeight(frmBudgets.VSTPeriods);
+  frmBudgets.VSTPeriods.EndUpdate;
+
+  // update period buttons
+  frmBudgets.btnPeriodEdit.Enabled := False;
+  frmBudgets.btnPeriodDuplicate.Enabled := False;
+  frmBudgets.btnPeriodDelete.Enabled := False;
+
+  // update period buttons
+  frmBudgets.popPeriodEdit.Enabled := False;
+  frmBudgets.popPeriodDuplicate.Enabled := False;
+  frmBudgets.popPeriodDelete.Enabled := False;
+
+  frmBudgets.lblItemsPeriods.Caption := IntToStr(frmBudgets.VSTPeriods.RootNodeCount);
+  frmBudgets.lblItemPeriods.Caption := '';
+
+  frmBudgets.VSTPeriods.SelectAll(False);
 end;
 
 procedure UpdateBudCategories;
 var
-  J: integer;
+  I, J: integer;
   Plan, Reality: double;
   B, P: PVirtualNode;
   Periods: PPeriods;
-  BudCat: PBudCat;
+  BudCat, SumRow: PBudCat;
   Budgets: PBudgets;
   Q: TSQLQuery;
 begin
@@ -1247,7 +1579,8 @@ begin
       frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 1].Alignment :=
         taRightJustify;
       frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 1].Text :=
-        '[' + IntToStr(P.Index + 1) + '] ' + Caption_228;
+        '[' + IntToStr(P.Index + 1) + '] ';
+      frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 1].ImageIndex := 0;
 
       // add reality column
       frmBudgets.VSTBudCat.Header.Columns.Add;
@@ -1255,7 +1588,8 @@ begin
       frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 2].Alignment :=
         taRightJustify;
       frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 2].Text :=
-        '[' + IntToStr(P.Index + 1) + '] ' + Caption_229;
+        '[' + IntToStr(P.Index + 1) + '] ';
+      frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 2].ImageIndex := 1;
 
       // add difference column
       frmBudgets.VSTBudCat.Header.Columns.Add;
@@ -1263,10 +1597,11 @@ begin
       frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 3].Alignment :=
         taRightJustify;
       frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 3].Text :=
-        '[' + IntToStr(P.Index + 1) + '] ' + Caption_231;
+        '[' + IntToStr(P.Index + 1) + '] ';
       if frmSettings.chkShowDifference.Checked = True then
         frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 3].Options :=
           frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 3].Options - [covisible];
+      frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 3].ImageIndex := 2;
 
       // add ratio column
       frmBudgets.VSTBudCat.Header.Columns.Add;
@@ -1274,10 +1609,11 @@ begin
       frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 4].Alignment :=
         taRightJustify;
       frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 4].Text :=
-        '[' + IntToStr(P.Index + 1) + '] ' + Caption_230;
+        '[' + IntToStr(P.Index + 1) + '] ';
       if frmSettings.chkShowIndex.Checked = True then
         frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 4].Options :=
           frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 4].Options - [covisible];
+      frmBudgets.VSTBudCat.Header.Columns[3 + (J * 4) + 4].ImageIndex := 3;
       P := frmBudgets.VSTPeriods.GetNextSelected(P);
       Inc(J);
     end;
@@ -1286,36 +1622,36 @@ begin
   // ============================================================================
   // HANDLE DATA HEADER
   // ============================================================================
-  Budgets := frmBudgets.VSTBudgets.GetNodeData(frmBudgets.VSTBudgets.GetFirstSelected());
-
+  Budgets := frmBudgets.VSTBudgets.GetNodeData(
+    frmBudgets.VSTBudgets.GetFirstSelected());
   frmMain.QRY.SQL.Text := 'SELECT ' +
-    '(SELECT cat_parent_name FROM categories WHERE cat_id = budcat_category) as category, ' +
-    '(SELECT cat_name FROM categories WHERE cat_id = budcat_category) as subcategory, ' +
-    '(SELECT bud_type FROM budgets WHERE bud_id = :ID) as level, ' + // level
+    '(SELECT cat_parent_name FROM categories WHERE cat_id = budcat_category) as category, '
+    + '(SELECT cat_name FROM categories WHERE cat_id = budcat_category) as subcategory, '
+    + '(SELECT bud_type FROM budgets WHERE bud_id = :ID) as level, ' + // level
     'budcat_category, ' + // category ID
     'budcat_bud_id ' + // budget ID
     'FROM budget_categories ' + // from
     'WHERE budcat_bud_id = :ID';
   frmMain.QRY.Params.ParamByName('ID').AsInteger := Budgets.ID;
+  frmMain.QRY.Prepare;
   frmMain.QRY.Open;
-
   try
     while not (frmMain.QRY.EOF) do
     begin
       frmBudgets.VSTBudCat.RootNodeCount := frmBudgets.VSTBudCat.RootNodeCount + 1;
       B := frmBudgets.VSTBudCat.GetLast();
       BudCat := frmBudgets.VSTBudCat.GetNodeData(B);
+
+      setLength(BudCat.Plan, frmBudgets.VSTPeriods.SelectedCount + 1);
+      setLength(BudCat.Reality, frmBudgets.VSTPeriods.SelectedCount + 1);
+      setLength(BudCat.Difference, frmBudgets.VSTPeriods.SelectedCount + 1);
+      setLength(BudCat.Ratio, frmBudgets.VSTPeriods.SelectedCount + 1);
+
       BudCat.Category := AnsiUpperCase(frmMain.QRY.Fields[0].AsString); // category
       BudCat.SubCategory := frmMain.QRY.Fields[1].AsString; // subcategory
       BudCat.Level := frmMain.QRY.Fields[2].AsInteger; // level
       BudCat.CategoryID := frmMain.QRY.Fields[3].AsInteger; // category ID
       BudCat.BudgetID := frmMain.QRY.Fields[4].AsInteger; // budget ID
-
-      // set length of arrays
-      setLength(BudCat.Plan, frmBudgets.VSTPeriods.SelectedCount);
-      setLength(BudCat.Reality, frmBudgets.VSTPeriods.SelectedCount);
-      setLength(BudCat.Difference, frmBudgets.VSTPeriods.SelectedCount);
-      setLength(BudCat.Ratio, frmBudgets.VSTPeriods.SelectedCount);
 
       // ============================================================================
       // HANDLE SUBDATA
@@ -1327,9 +1663,12 @@ begin
         Q.Database := frmMain.Tran.DataBase;
 
         P := frmBudgets.VSTPeriods.GetFirstSelected();
-        J := 0;
+        J := 1;
         while Assigned(P) do
         begin
+          Plan := 0.0;
+          Reality := 0.0;
+
           Periods := frmBudgets.VSTPeriods.GetNodeData(P);
 
           Q.SQL.Text :=
@@ -1343,6 +1682,7 @@ begin
           Q.Params.ParamByName('DATE2').AsString := Periods.DateTo;
           Q.Params.ParamByName('CAT').AsInteger := BudCat.CategoryID;
           Q.Params.ParamByName('BUDGET').AsInteger := BudCat.BudgetID;
+          Q.Prepare;
           Q.Open;
 
           try
@@ -1361,13 +1701,20 @@ begin
           // ============================================================================
           Q.SQL.Text :=
             'SELECT ROUND(TOTAL(d_sum), 2) as d_sum FROM data ' + // select
-            'WHERE d_date BETWEEN :DATE1 AND :DATE2 AND ' + // where
+            'LEFT JOIN accounts ON (acc_id = d_account) ' + sLineBreak +// accounts
+            'WHERE d_account IN (SELECT acc_id FROM accounts WHERE acc_currency = :CURRENCY) AND '
+            +
+            // currency
+            'd_date BETWEEN :DATE1 AND :DATE2 AND ' + // where
             IfThen(BudCat.Level = 0, 'd_category IN (SELECT cat_id FROM categories ' +
             'WHERE (cat_id = :CAT OR cat_parent_id = :CAT))', 'd_category = :CAT;');
 
           Q.Params.ParamByName('DATE1').AsString := Periods.DateFrom;
           Q.Params.ParamByName('DATE2').AsString := Periods.DateTo;
           Q.Params.ParamByName('CAT').AsInteger := BudCat.CategoryID;
+          Q.Params.ParamByName('CURRENCY').AsString :=
+            frmBudgets.tabCurrency.Tabs[frmBudgets.tabCurrency.TabIndex].Text;
+          Q.Prepare;
           Q.Open;
 
           try
@@ -1396,6 +1743,92 @@ begin
     end;
   finally
     frmMain.QRY.Close;
+  end;
+
+  // ---------------------------------------
+  // INSERT SUMMARY
+  // ---------------------------------------
+  if (frmBudgets.VSTBudCat.TotalCount > 0) and
+    (frmBudgets.VSTBudCat.Header.Columns.Count > 4) then
+  begin
+
+    // ---------------------------------------
+    // INSERT SUMMARY COLUMNS
+    // ---------------------------------------
+
+    for J := 0 to 3 do
+    begin
+      frmBudgets.VSTBudCat.Header.Columns.Insert(4 + J);
+      I := 4 + J;
+      frmBudgets.VSTBudCat.Header.Columns[I].Width := 90;
+      frmBudgets.VSTBudCat.Header.Columns[I].Alignment := taRightJustify;
+      frmBudgets.VSTBudCat.Header.Columns[I].ImageIndex := J;
+      frmBudgets.VSTBudCat.Header.Columns[I].Text := Caption_16;
+      frmBudgets.VSTBudCat.Header.Columns[I].Tag := 1;
+      if (J = 2) and (frmSettings.chkShowDifference.Checked = True) then
+        frmBudgets.VSTBudCat.Header.Columns[I].Options :=
+          frmBudgets.VSTBudCat.Header.Columns[I].Options - [covisible];
+      if (J = 3) and (frmSettings.chkShowIndex.Checked = True) then
+        frmBudgets.VSTBudCat.Header.Columns[I].Options :=
+          frmBudgets.VSTBudCat.Header.Columns[I].Options - [covisible];
+    end;
+
+    J := 0;
+    B := frmBudgets.VSTBudCat.GetFirst();
+    while Assigned(B) do
+    begin
+      BudCat := frmBudgets.VSTBudCat.GetNodeData(B);
+      BudCat.Plan[J] := 0.0;
+      BudCat.Reality[J] := 0.0;
+
+      for I := 1 to frmBudgets.VSTPeriods.SelectedCount do
+      begin
+        BudCat.Plan[J] := BudCat.Plan[J] + BudCat.Plan[I];
+        BudCat.Reality[J] := BudCat.Reality[J] + BudCat.Reality[I];
+        BudCat.Difference[J] := RoundTo(BudCat.Reality[J] - BudCat.Plan[J], -2);
+        if BudCat.Plan[J] = 0.0 then
+          BudCat.Ratio[J] := 0.0
+        else
+          BudCat.Ratio[J] := RoundTo(BudCat.Reality[J] / BudCat.Plan[J], -2);
+      end;
+      B := frmBudgets.VSTBudCat.GetNext(B);
+    end;
+
+    // ---------------------------------------
+    //  INSERT SUMMARY ROW
+    // ---------------------------------------
+    frmBudgets.VSTBudCat.InsertNode(frmBudgets.VSTBudCat.GetFirst(), amInsertBefore);
+    B := frmBudgets.VSTBudCat.GetFirst();
+    SumRow := frmBudgets.VSTBudCat.GetNodeData(B);
+    SumRow.Category := AnsiUpperCase(Caption_16);
+    SumRow.Level := 2;
+    // set length of arrays
+    setLength(SumRow.Plan, frmBudgets.VSTPeriods.SelectedCount + 1);
+    setLength(SumRow.Reality, frmBudgets.VSTPeriods.SelectedCount + 1);
+    setLength(SumRow.Difference, frmBudgets.VSTPeriods.SelectedCount + 1);
+    setLength(SumRow.Ratio, frmBudgets.VSTPeriods.SelectedCount + 1);
+
+    for J := 0 to frmBudgets.VSTPeriods.SelectedCount do
+    begin
+      SumRow.Plan[J] := 0.0;
+      SumRow.Reality[J] := 0.0;
+
+      // summary columns
+      B := frmBudgets.VSTBudCat.GetNext(frmBudgets.VSTBudCat.GetFirst());
+      while Assigned(B) do
+      begin
+        BudCat := frmBudgets.VSTBudCat.GetNodeData(B);
+        SumRow.Plan[J] := SumRow.Plan[J] + BudCat.Plan[J];
+        SumRow.Reality[J] := SumRow.Reality[J] + BudCat.Reality[J];
+        B := frmBudgets.VSTBudCat.GetNext(B);
+      end;
+
+      SumRow.Difference[J] := RoundTo(SumRow.Reality[J] - SumRow.Plan[J], -2);
+      if SumRow.Plan[J] = 0.0 then
+        SumRow.Ratio[J] := 0.0
+      else
+        SumRow.Ratio[J] := RoundTo(SumRow.Reality[J] / SumRow.Plan[J], -2);
+    end;
   end;
 
   SetNodeHeight(frmBudgets.VSTBudCat);

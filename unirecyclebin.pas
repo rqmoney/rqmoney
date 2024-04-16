@@ -7,7 +7,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  ComCtrls, SQLDB, LazUTF8,
+  ComCtrls, SQLDB, LazUTF8, DateUtils, IniFiles,
   ActnList, StdCtrls, laz.VirtualTrees, BCPanel, BCMDButtonFocus, StrUtils, Math;
 
 type // main grid (Trash)
@@ -60,7 +60,6 @@ type
     pnlList: TPanel;
     pnlListCaption: TBCPanel;
     pnlBottom: TPanel;
-    pnlTip: TPanel;
     pnlWidth: TPanel;
     VST: TLazVirtualStringTree;
     procedure btnDeleteClick(Sender: TObject);
@@ -69,6 +68,7 @@ type
     procedure btnRestoreClick(Sender: TObject);
     procedure btnSelectClick(Sender: TObject);
     procedure cbxViewChange(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -128,7 +128,58 @@ begin
 end;
 
 procedure TfrmRecycleBin.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmRecycleBin.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmRecycleBin.Name, '-1•-1•0•0');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmRecycleBin.Width := Screen.Width - 300 - (200 - ScreenRatio)
+      else
+        frmRecycleBin.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmRecycleBin.Height := Screen.Height - 400 - (200 - ScreenRatio)
+      else
+        frmRecycleBin.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmRecycleBin.left := (Screen.Width - frmRecycleBin.Width) div 2
+      else
+        frmRecycleBin.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmRecycleBin.Top := ((Screen.Height - frmRecycleBin.Height) div 2) - 75
+      else
+        frmRecycleBin.Top := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   UpdateRecycles;
 end;
 
@@ -151,7 +202,7 @@ procedure TfrmRecycleBin.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  if (Column in [5..6, 8..9]) and (VST.Text[Node, Column] = '') then
+  if (Column in [4..6, 8..9]) and (VST.Text[Node, Column] = '') then
     TargetCanvas.Brush.Color := clYellow
   else
     TargetCanvas.Brush.Color :=
@@ -257,20 +308,30 @@ procedure TfrmRecycleBin.VSTGetText(Sender: TBaseVirtualTree;
   var CellText: string);
 var
   Trash: PTrash;
+  B: byte;
 begin
   Trash := Sender.GetNodeData(Node);
-  case Column of
-    1: CellText := DateToStr(StrToDate(Trash.Date, 'YYYY-MM-DD', '-'));
-    2: CellText := Trash.Comment;
-    3: CellText := Format('%n', [Trash.Amount], FS_own);
-    4: CellText := Trash.currency;
-    5: CellText := Trash.Account;
-    6: CellText := AnsiUpperCase(Trash.Category);
-    7: CellText := IfThen(frmSettings.chkDisplaySubCatCapital.Checked =
-        True, AnsiUpperCase(Trash.SubCategory), Trash.SubCategory);
-    8: CellText := Trash.Person;
-    9: CellText := Trash.Payee;
-    10: CellText := IntToStr(Trash.ID);
+  try
+    case Column of
+      1: begin
+        B := DayOfTheWeek(StrToDate(Trash.Date, 'YYYY-MM-DD', '-')) + 1;
+        if B = 8 then
+          B := 1;
+        CellText := FS_own.ShortDayNames[B] + ' ' +
+          DateToStr(StrToDate(Trash.Date, 'YYYY-MM-DD', '-'), FS_own);
+      end;
+      2: CellText := Trash.Comment;
+      3: CellText := Format('%n', [Trash.Amount], FS_own);
+      4: CellText := Trash.currency;
+      5: CellText := Trash.Account;
+      6: CellText := AnsiUpperCase(Trash.Category);
+      7: CellText := IfThen(frmSettings.chkDisplaySubCatCapital.Checked =
+          True, AnsiUpperCase(Trash.SubCategory), Trash.SubCategory);
+      8: CellText := Trash.Person;
+      9: CellText := Trash.Payee;
+      10: CellText := IntToStr(Trash.ID);
+    end;
+  except
   end;
 end;
 
@@ -280,16 +341,19 @@ procedure TfrmRecycleBin.VSTPaintText(Sender: TBaseVirtualTree;
 var
   D: double;
 begin
-  if (Column > 4) and (VST.Text[Node, Column] = '') then
-  begin
-    TargetCanvas.Font.Color := clYellow;
-    TargetCanvas.Font.Bold := True;
-  end
-  else
-  begin
-    TryStrToFloat(VST.Text[Node, 3], D);
-    if D >= 0 then
-      TargetCanvas.Font.Color := clWhite;
+  try
+    if (Column > 4) and (VST.Text[Node, Column] = '') then
+    begin
+      TargetCanvas.Font.Color := clYellow;
+      TargetCanvas.Font.Bold := True;
+    end
+    else
+    begin
+      TryStrToFloat(VST.Text[Node, 3], D);
+      if D >= 0 then
+        TargetCanvas.Font.Color := clWhite;
+    end;
+  except
   end;
 end;
 
@@ -299,21 +363,24 @@ var
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
-  VST.Header.Columns[0].Width := Round(ScreenRatio * 25 / 100);
-  X := (VST.Width - VST.Header.Columns[0].Width) div 100;
+  try
+    VST.Header.Columns[0].Width := Round(ScreenRatio * 25 / 100);
+    X := (VST.Width - VST.Header.Columns[0].Width) div 100;
 
-  VST.Header.Columns[1].Width := 10 * X; // date
-  VST.Header.Columns[2].Width :=
-    VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (81 * X); // comment
-  VST.Header.Columns[3].Width := 10 * X; // amount
-  VST.Header.Columns[4].Width := 5 * X; // currency
-  VST.Header.Columns[5].Width := 12 * X; // account
-  VST.Header.Columns[6].Width := 11 * X; // category
-  VST.Header.Columns[7].Width := 12 * X; // subcategory
-  VST.Header.Columns[8].Width := 7 * X; // person
-  VST.Header.Columns[9].Width := 8 * X; // payee
-  VST.Header.Columns[10].Width := 6 * X; // ID
-  pnlListCaption.Repaint;
+    VST.Header.Columns[1].Width := 10 * X; // date
+    VST.Header.Columns[2].Width :=
+      VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (81 * X); // comment
+    VST.Header.Columns[3].Width := 10 * X; // amount
+    VST.Header.Columns[4].Width := 5 * X; // currency
+    VST.Header.Columns[5].Width := 12 * X; // account
+    VST.Header.Columns[6].Width := 11 * X; // category
+    VST.Header.Columns[7].Width := 12 * X; // subcategory
+    VST.Header.Columns[8].Width := 7 * X; // person
+    VST.Header.Columns[9].Width := 8 * X; // payee
+    VST.Header.Columns[10].Width := 6 * X; // ID
+    pnlListCaption.Repaint;
+  except
+  end;
 end;
 
 procedure TfrmRecycleBin.btnExitClick(Sender: TObject);
@@ -395,28 +462,54 @@ begin
   UpdateRecycles;
 end;
 
+procedure TfrmRecycleBin.FormClose(Sender: TObject;
+  var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
+begin
+  try
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmRecycleBin.Name, '') <>
+          IntToStr(frmRecycleBin.Left) + separ + // form left
+        IntToStr(frmRecycleBin.Top) + separ + // form top
+        IntToStr(frmRecycleBin.Width) + separ + // form width
+        IntToStr(frmRecycleBin.Height) then
+          INI.WriteString('POSITION', frmRecycleBin.Name,
+            IntToStr(frmRecycleBin.Left) + separ + // form left
+            IntToStr(frmRecycleBin.Top) + separ + // form top
+            IntToStr(frmRecycleBin.Width) + separ + // form width
+            IntToStr(frmRecycleBin.Height));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
+
+end;
+
 procedure TfrmRecycleBin.FormCreate(Sender: TObject);
 begin
-  // form size
-  (Sender as TForm).Width :=
-    Round((Screen.Width / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-    (Round(420 / (ScreenRatio / 100)) - ScreenRatio));
-  (Sender as TForm).Height :=
-    Round(Screen.Height / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-    3 * (250 - ScreenRatio);
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 100 - (Sender as TForm).Height) div 2;
-
-  {$IFDEF WINDOWS}
-
+  try
     // set components height
     VST.Header.Height := PanelHeight;
     pnlListCaption.Height := PanelHeight;
     pnlButtons.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
-  {$ENDIF}
+
+    // get form icon
+    frmMain.img16.GetIcon(8, (Sender as TForm).Icon);
+  except
+  end;
 end;
 
 procedure TfrmRecycleBin.btnDeleteClick(Sender: TObject);
@@ -465,7 +558,7 @@ begin
     end;
 
   finally
-    frmMain.QRY.SQL.Text := 'DELETE FROM recycles WHERE rec_id IN (' + IDs + ')';
+    frmMain.QRY.SQL.Text := 'DELETE FROM recycles WHERE rec_id IN (' + IDs + ');';
     frmMain.QRY.ExecSQL;
     frmMain.Tran.Commit;
 
@@ -546,7 +639,10 @@ begin
       'FROM recycles ' + sLineBreak + // FROM tables
       // order by
       'ORDER BY rec_date DESC;'; // order by date and the sorting order
+  except
+  end;
 
+  try
     frmRecycleBin.VST.BeginUpdate;
     frmMain.QRY.Open;
     while not frmMain.QRY.EOF do
@@ -582,6 +678,8 @@ begin
       end;
       frmMain.QRY.Next;
     end;
+
+  finally
     frmMain.QRY.Close;
     SetNodeHeight(frmRecycleBin.VST);
     frmRecycleBin.VST.EndUpdate;
@@ -593,9 +691,7 @@ begin
 
     // items icon
     frmRecycleBin.lblItems.Caption := IntToStr(frmRecycleBin.VST.RootNodeCount);
-
     screen.Cursor := crDefault;
-  except
   end;
 end;
 

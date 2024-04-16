@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ActnList, BCPanel, BCMDButtonFocus, StrUtils, Math;
+  ActnList, BCPanel, BCMDButtonFocus, StrUtils, IniFiles;
 
 type
 
@@ -22,7 +22,6 @@ type
     imgWidth: TImage;
     lblHeight: TLabel;
     lblManyCurrencies: TLabel;
-    lblProgress: TLabel;
     lblWidth: TLabel;
     pnlBottom: TPanel;
     pnlButtons: TPanel;
@@ -36,8 +35,10 @@ type
     procedure cbxCurrencyExit(Sender: TObject);
     procedure cbxCurrencyKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
 
   public
@@ -52,7 +53,7 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniCurrencies;
+  uniMain, uniCurrencies, uniSettings;
 
 { TfrmManyCurrencies }
 
@@ -81,25 +82,53 @@ begin
   end;
 end;
 
+procedure TfrmManyCurrencies.FormClose(Sender: TObject;
+  var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
+begin
+  try
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmManyCurrencies.Name, '') <>
+          IntToStr(frmManyCurrencies.Left) + separ + // form left
+        IntToStr(frmManyCurrencies.Top) + separ + // form top
+        IntToStr(frmManyCurrencies.Width) + separ + // form width
+        IntToStr(frmManyCurrencies.Height) then
+          INI.WriteString('POSITION', frmManyCurrencies.Name,
+            IntToStr(frmManyCurrencies.Left) + separ + // form left
+            IntToStr(frmManyCurrencies.Top) + separ + // form top
+            IntToStr(frmManyCurrencies.Width) + separ + // form width
+            IntToStr(frmManyCurrencies.Height));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
+end;
+
 procedure TfrmManyCurrencies.FormCreate(Sender: TObject);
 begin
-  {// form size
-  (Sender as TForm).Width := Round((Screen.Width /
-    IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - (Round(1020 / (ScreenRatio / 100)) - ScreenRatio));
-  (Sender as TForm).Height := Round(Screen.Height /
-    IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - 4 * (250 - ScreenRatio);
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 100 - (Sender as TForm).Height) div 2;)}
-
-
-  // set components height
-  {$IFDEF WINDOWS}
+  try
+  // set component height
   pnlManyCurrenciesCaption.Height := PanelHeight;
   pnlButtons.Height := ButtonHeight;
   pnlBottom.Height := ButtonHeight;
-  {$ENDIF}
+
+  // get form icon
+  frmMain.img16.GetIcon(12, (Sender as TForm).Icon);
+
+  except
+  end;
 end;
 
 procedure TfrmManyCurrencies.FormResize(Sender: TObject);
@@ -114,6 +143,60 @@ begin
     on E: Exception do
       ShowErrorMessage(E);
   end;
+end;
+
+procedure TfrmManyCurrencies.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
+begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmManyCurrencies.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmManyCurrencies.Name, '-1•-1•0•0');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmManyCurrencies.Width := Round(350 * (ScreenRatio / 100))
+      else
+        frmManyCurrencies.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmManyCurrencies.Height := Round(170 * (ScreenRatio / 100))
+      else
+        frmManyCurrencies.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmManyCurrencies.left := (Screen.Width - frmManyCurrencies.Width) div 2
+      else
+        frmManyCurrencies.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmManyCurrencies.Top := ((Screen.Height - frmManyCurrencies.Height) div 2) - 75
+      else
+        frmManyCurrencies.Top := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
 end;
 
 procedure TfrmManyCurrencies.btnCancelClick(Sender: TObject);
@@ -132,7 +215,7 @@ begin
   frmMain.QRY.SQL.Text :=
     'UPDATE currencies SET ' + // update
     'cur_default = 1 ' + // one main currency
-    'WHERE cur_code = "' + AnsiReplaceStr(Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex], 1), '"', '""') + '"';
+    'WHERE cur_code = "' + AnsiReplaceStr(Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1), '"', '""') + '"';
   frmMain.QRY.ExecSQL;
   frmMain.Tran.Commit;
   frmManyCurrencies.Close;

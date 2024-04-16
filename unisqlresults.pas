@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls, LazUTF8,
   Clipbrd, Buttons, ActnList, StdCtrls, BCPanel, BCMDButtonFocus, Math, laz.VirtualTrees,
-  StrUtils;
+  StrUtils, IniFiles;
 
 type // bottom grid (SQL)
   TSQL = record
@@ -47,6 +47,7 @@ type
     procedure btnCopyClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
     procedure btnSelectClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -86,25 +87,15 @@ uses
 procedure TfrmSQLResult.FormCreate(Sender: TObject);
 begin
   slSQLresult := TStringList.Create;
-  // form size
-  (Sender as TForm).Width :=
-    Round((Screen.Width / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-    (Round(420 / (ScreenRatio / 100)) - ScreenRatio));
-  (Sender as TForm).Height :=
-    Round(Screen.Height / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-    2 * (250 - ScreenRatio);
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 100 - (Sender as TForm).Height) div 2;
 
   // set components height
-  {$IFDEF WINDOWS}
   pnlCaption.Height := PanelHeight;
   VST.Header.Height := PanelHeight;
   pnlButtons.Height := ButtonHeight;
   pnlBottom.Height := ButtonHeight;
-  {$ENDIF}
+
+  // get form icon
+  frmMain.img16.GetIcon(7, (Sender as TForm).Icon);
 end;
 
 procedure TfrmSQLResult.btnExitClick(Sender: TObject);
@@ -116,6 +107,40 @@ procedure TfrmSQLResult.btnSelectClick(Sender: TObject);
 begin
   VST.SelectAll(False);
   VST.SetFocus;
+end;
+
+procedure TfrmSQLResult.FormClose(Sender: TObject; var CloseAction: TCloseAction
+  );
+var
+  INI: TINIFile;
+  INIFile: string;
+
+begin
+  try
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmSQLResult.Name, '') <>
+          IntToStr(frmSQLResult.Left) + separ + // form left
+        IntToStr(frmSQLResult.Top) + separ + // form top
+        IntToStr(frmSQLResult.Width) + separ + // form width
+        IntToStr(frmSQLResult.Height) then
+          INI.WriteString('POSITION', frmSQLResult.Name,
+            IntToStr(frmSQLResult.Left) + separ + // form left
+            IntToStr(frmSQLResult.Top) + separ + // form top
+            IntToStr(frmSQLResult.Width) + separ + // form width
+            IntToStr(frmSQLResult.Height));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
 end;
 
 procedure TfrmSQLResult.btnCopyClick(Sender: TObject);
@@ -140,9 +165,58 @@ procedure TfrmSQLResult.FormShow(Sender: TObject);
 var
   SQL: PSQL;
   P: PVirtualNode;
-  I: byte;
   W: word;
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmSQLResult.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmSQLResult.Name, '-1•-1•0•0');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmSQLResult.Width := Screen.Width - 100 - (200 - ScreenRatio)
+      else
+        frmSQLResult.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmSQLResult.Height := Screen.Height - 200 - (200 - ScreenRatio)
+      else
+        frmSQLResult.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmSQLResult.left := (Screen.Width - frmSQLResult.Width) div 2
+      else
+        frmSQLResult.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmSQLResult.Top := ((Screen.Height - frmSQLResult.Height) div 2) - 75
+      else
+        frmSQLResult.Top := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   try
     // clear previous data
     VST.BeginUpdate;
@@ -208,7 +282,7 @@ begin
         VST.Header.Columns[I].Width :=
           W div (VST.Header.Columns.Count - 1);
 
-    SetNodeHeight(frmSQLResult.VST);
+    SetNodeHeight(VST);
     VST.EndUpdate;
 
     // items icon

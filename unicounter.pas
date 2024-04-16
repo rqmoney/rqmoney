@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
   Buttons, ComCtrls, ActnList, BCPanel, BCMDButtonFocus, StrUtils, Clipbrd,
-  LazUTF8, Math;
+  LazUTF8, IniFiles;
 
 type
 
@@ -16,6 +16,8 @@ type
   TfrmCounter = class(TForm)
     actExit: TAction;
     actCopy: TAction;
+    actValues: TAction;
+    actCurrencies: TAction;
     actPrint: TAction;
     ActionList1: TActionList;
     btnCopy: TBCMDButtonFocus;
@@ -46,11 +48,14 @@ type
     procedure btnCurrenciesClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
     procedure btnPrintClick(Sender: TObject);
-    procedure btnPrintMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure btnPrintMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
     procedure btnResetClick(Sender: TObject);
     procedure btnCopyClick(Sender: TObject);
     procedure btnValuesClick(Sender: TObject);
     procedure cbxCurrencyChange(Sender: TObject);
+    procedure cbxCurrencyDropDown(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -80,26 +85,21 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniValues, uniCurrencies, uniResources;
+  uniMain, uniValues, uniCurrencies, uniResources, uniSettings;
 
-{ TfrmCounter }
+  { TfrmCounter }
 
 procedure TfrmCounter.FormCreate(Sender: TObject);
 begin
-   // form size
-  (Sender as TForm).Width := Round(800 div (ScreenIndex + 1) * (200 / ScreenRatio));
-  (Sender as TForm).Height := Round(Screen.Height /
-    IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - 2 * (250 - ScreenRatio);
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 100 - (Sender as TForm).Height) div 2;
-
   slCounter := TStringList.Create;
 
   // set components height
   pnlCurrencyCaption.Height := PanelHeight;
   pnlButtons.Height := ButtonHeight;
+  pnlBottom.Height := ButtonHeight;
+
+  // get form icon
+  frmMain.img16.GetIcon(23, (Sender as TForm).Icon);
 end;
 
 procedure TfrmCounter.FormDestroy(Sender: TObject);
@@ -116,7 +116,61 @@ begin
 end;
 
 procedure TfrmCounter.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmCounter.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmCounter.Name, '-1•-1•0•0');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmCounter.Width := 500
+      else
+        frmCounter.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmCounter.Height := 650
+      else
+        frmCounter.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmCounter.left := (Screen.Width - frmCounter.Width) div 2
+      else
+        frmCounter.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmCounter.Top := ((Screen.Height - frmCounter.Height) div 2) - 75
+      else
+        frmCounter.Top := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
+  if cbxCurrency.ItemIndex > -1 then
+    frmCounter.cbxCurrencyChange(frmCounter.cbxCurrency);
+
   if (cbxCurrency.ItemIndex > -1) and (BackGround.Tag > 0) then
   begin
     edi[BackGround.Tag].SetFocus;
@@ -124,27 +178,28 @@ begin
   end;
 
   btnCurrencies.Enabled := frmMain.Conn.Connected = True;
-  cbxCurrency.Enabled := (frmMain.Conn.Connected = True) and (cbxCurrency.Items.Count > 0);
+  cbxCurrency.Enabled := (frmMain.Conn.Connected = True) and
+    (cbxCurrency.Items.Count > 0);
   btnValues.Enabled := (frmMain.Conn.Connected = True) and (cbxCurrency.ItemIndex > -1);
 end;
 
 procedure TfrmCounter.lviListData(Sender: TObject; Item: TListItem);
 begin
   if slCounter.Count > 0 then
-    try
-      Item.Caption := '';
+  try
+    Item.Caption := '';
 
-      // nominal
-      Item.SubItems.Add(Field(separ, slCounter.Strings[Item.Index], 1));
+    // nominal
+    Item.SubItems.Add(Field(separ, slCounter.Strings[Item.Index], 1));
 
-      // count
-      Item.SubItems.Add(Field(separ, slCounter.Strings[Item.Index], 2));
+    // count
+    Item.SubItems.Add(Field(separ, slCounter.Strings[Item.Index], 2));
 
-      // summary
-      Item.SubItems.Add(Field(separ, slCounter.Strings[Item.Index], 3));
+    // summary
+    Item.SubItems.Add(Field(separ, slCounter.Strings[Item.Index], 3));
 
-    finally;
-    end;
+  finally;
+  end;
 end;
 
 procedure TfrmCounter.pnlButtonsResize(Sender: TObject);
@@ -156,12 +211,15 @@ end;
 
 procedure TfrmCounter.btnValuesClick(Sender: TObject);
 begin
+  If btnValues.Enabled = False then
+    Exit;
+
   frmValues.Caption := AnsiUpperCase(ReplaceStr(frmCurrencies.btnValues.Caption,
     '&', '')) + ' [' + cbxCurrency.Items[cbxCurrency.ItemIndex] + ']';
 
   frmMain.QRY.SQL.Text := 'SELECT cur_id FROM currencies WHERE cur_code = :CURRENCY;';
   frmMain.QRY.Params.ParamByName('CURRENCY').AsString :=
-    Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
+    Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
 
   frmMain.QRY.Open;
   frmValues.Tag := frmMain.QRY.Fields[0].AsInteger;
@@ -173,14 +231,13 @@ end;
 procedure TfrmCounter.btnCopyClick(Sender: TObject);
 var
   cb: TClipboard;
-
 begin
-  if btnCopy.Enabled = False Then
+  if btnCopy.Enabled = False then
     Exit;
 
   cb := TClipboard.Create;
-  cb.AsText := Caption_13 + chr(9) + Caption_14 + chr(9) + Caption_15 + sLineBreak +
-    AnsiReplaceStr(slCounter.Text, separ, chr(9)) +
+  cb.AsText := Caption_13 + chr(9) + Caption_14 + chr(9) + Caption_15 +
+    sLineBreak + AnsiReplaceStr(slCounter.Text, separ, chr(9)) +
     lblTotalCaption.Caption + chr(9) + chr(9) + lblTotal.Hint;
   ShowMessage(Format(Message_01, [IntToStr(slCounter.Count - 1)]));
 end;
@@ -189,11 +246,10 @@ procedure TfrmCounter.btnResetClick(Sender: TObject);
 var
   I: byte;
   S: string;
-
 begin
   S := Field('%2', Question_09, 2);
-  S := AnsiReplaceStr(S, '%1',
-    Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex], 1));
+  S := AnsiReplaceStr(S, '%1', Field(separ_1,
+    cbxCurrency.Items[cbxCurrency.ItemIndex], 1));
   if (MessageDlg(Application.Title, S, mtConfirmation, [mbYes, mbNo], 0) <> mrYes) then
     Exit;
 
@@ -203,7 +259,8 @@ end;
 
 procedure TfrmCounter.btnCurrenciesClick(Sender: TObject);
 begin
-  frmCurrencies.ShowModal;
+  if btnCurrencies.Enabled = True then
+    frmCurrencies.ShowModal;
 end;
 
 procedure TfrmCounter.btnExitClick(Sender: TObject);
@@ -213,22 +270,21 @@ end;
 
 procedure TfrmCounter.btnPrintClick(Sender: TObject);
 var
-  FileName: String;
-
+  FileName: string;
 begin
   if btnPrint.Enabled = False then Exit;
 
-  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Templates' +
-     DirectorySeparator + 'cashcounter.lrf';
+  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
+    'Templates' + DirectorySeparator + 'cashcounter.lrf';
 
- if FileExists(FileName) = False then
- begin
-   ShowMessage(Error_14 + sLineBreak + FileName);
-   Exit;
- end;
+  if FileExists(FileName) = False then
+  begin
+    ShowMessage(Error_14 + sLineBreak + FileName);
+    Exit;
+  end;
 
- // left mouse button = show report
- try
+  // left mouse button = show report
+  try
     frmMain.Report.Tag := 20;
     frmMain.Report.LoadFromFile(FileName);
     frmMain.Report.FindObject('lblNominal').Memo.Text :=
@@ -249,34 +305,34 @@ begin
     if BackGround.Tag > 0 then
       edi[BackGround.Tag].SetFocus;
 
- except
+  except
     on E: Exception do
       ShowErrorMessage(E);
   end;
 end;
 
-procedure TfrmCounter.btnPrintMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TfrmCounter.btnPrintMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: integer);
 var
-  FileName: String;
-
+  FileName: string;
 begin
-  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Templates' +
-     DirectorySeparator + 'cashcounter.lrf';
+  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
+    'Templates' + DirectorySeparator + 'cashcounter.lrf';
 
- if FileExists(FileName) = False then
- begin
-   ShowMessage(Error_14 + sLineBreak + FileName);
-   Exit;
- end;
+  if FileExists(FileName) = False then
+  begin
+    ShowMessage(Error_14 + sLineBreak + FileName);
+    Exit;
+  end;
 
- // right mouse button = show design report
- if Button = mbRight then
-   begin
-     frmMain.Report.LoadFromFile(FileName);
-     frmMain.Report.DesignReport;
-   end
-   else if Button = mbLeft then
-     btnPrintClick(btnPrint);
+  // right mouse button = show design report
+  if Button = mbRight then
+  begin
+    frmMain.Report.LoadFromFile(FileName);
+    frmMain.Report.DesignReport;
+  end
+  else if Button = mbLeft then
+    btnPrintClick(btnPrint);
 end;
 
 procedure TfrmCounter.ediEnter(Sender: TObject);
@@ -313,9 +369,8 @@ end;
 procedure TfrmCounter.ediChange(Sender: TObject);
 var
   Nominal, Total: double;
-  Count: Integer;
+  Count: integer;
   I: byte;
-
 begin
   Total := 0.00; // Total
   for I := 1 to BackGround.Tag do
@@ -343,13 +398,13 @@ end;
 procedure TfrmCounter.cbxCurrencyChange(Sender: TObject);
 var
   I: byte;
-  S: String;
-
+  S: string;
 begin
-  if (frmCounter.Visible = True) and (BackGround.Tag > 0) and (cbxCurrency.Tag <> cbxCurrency.ItemIndex) then
+  if (frmCounter.Visible = True) and (BackGround.Tag > 0) and
+    (cbxCurrency.Tag <> cbxCurrency.ItemIndex) then
   begin
-    S := AnsiReplaceStr(Question_09, '%1',
-      Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex], 1));
+    S := AnsiReplaceStr(Question_09, '%1', Field(separ_1,
+      cbxCurrency.Items[cbxCurrency.ItemIndex], 1));
     S := AnsiReplaceStr(S, '%2', sLineBreak);
     if (MessageDlg(Application.Title, S, mtConfirmation, [mbYes, mbNo], 0) <> mrYes) then
     begin
@@ -369,19 +424,21 @@ begin
   while BackGround.ControlCount > 0 do
     BackGround.Controls[0].Free;
 
-  If (cbxCurrency.ItemIndex = -1) or (frmMain.Conn.Connected = False) then begin
-     lblTotalCaption.Caption := lblTotalCaption.Hint;
-     BackGround.Visible := False;
-     Exit;
-   end;
-
-  lblTotalCaption.Caption := Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex],
+  if (cbxCurrency.ItemIndex = -1) or (frmMain.Conn.Connected = False) then
+  begin
+    lblTotalCaption.Caption := lblTotalCaption.Hint;
+    BackGround.Visible := False;
+    Exit;
+  end;
+  lblTotalCaption.Caption := Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex],
     1) + ' ' + lblTotalCaption.Hint;
-  frmMain.QRY.SQL.Text := 'SELECT nom_value, nom_coin FROM nominal WHERE nom_currency_id = ' +
+
+  frmMain.QRY.SQL.Text :=
+    'SELECT nom_value, nom_coin FROM nominal WHERE nom_currency_id = ' +
     '(SELECT cur_id FROM currencies WHERE cur_code = :CURRENCY) ' +
     ' ORDER BY nom_value;';
   frmMain.QRY.Params.ParamByName('CURRENCY').AsString :=
-    Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
+    Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
 
   frmMain.QRY.Open;
 
@@ -426,7 +483,7 @@ begin
     lbl[I].BorderSpacing.left := 5;
     lbl[I].Layout := tlCenter;
     lbl[I].Caption := Format('%n', [frmMain.QRY.Fields[0].AsFloat], FS_own) +
-      ' ' + Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
+      ' ' + Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
     lbl[I].Hint := FloatToStr(frmMain.QRY.Fields[0].AsFloat);
     // lbl[I].ShowHint := True;
 
@@ -462,21 +519,55 @@ begin
   btnCopy.Enabled := BackGround.Tag > 0;
   btnReset.Enabled := BackGround.Tag > 0;
 
-  if frmCounter.Visible = True then edi[I - 1].SetFocus;
+  if (frmCounter.Visible = True) and (I > 1) then edi[I - 1].SetFocus;
 
   frmMain.QRY.Close;
   cbxCurrency.Tag := cbxCurrency.ItemIndex;
 
   // enumerate
   slCounter.Clear;
-  for I := BackGround.Tag downto 1 do
-    slCounter.Add(lbl[I].Hint + separ + edi[I].Text + separ + sum[I].Hint);
+  if I > 1 then
+    for I := BackGround.Tag downto 1 do
+      slCounter.Add(lbl[I].Hint + separ + edi[I].Text + separ + sum[I].Hint);
+end;
+
+procedure TfrmCounter.cbxCurrencyDropDown(Sender: TObject);
+begin
+  {$IFDEF WINDOWS}
+    ComboDDWidth(TComboBox(Sender));
+  {$ENDIF}
+end;
+
+procedure TfrmCounter.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+begin
+  // write position and window size
+  if frmSettings.chkLastFormsSize.Checked = True then
+  begin
+    try
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmCounter.Name, '') <>
+        IntToStr(frmCounter.Left) + separ + // form left
+      IntToStr(frmCounter.Top) + separ + // form top
+      IntToStr(frmCounter.Width) + separ + // form width
+      IntToStr(frmCounter.Height) then
+        INI.WriteString('POSITION', frmCounter.Name,
+          IntToStr(frmCounter.Left) + separ + // form left
+          IntToStr(frmCounter.Top) + separ + // form top
+          IntToStr(frmCounter.Width) + separ + // form width
+          IntToStr(frmCounter.Height)); // form height
+    finally
+      INI.Free;
+    end;
+  end;
 end;
 
 procedure TfrmCounter.ediExit(Sender: TObject);
 var
   I: integer;
-
 begin
   //If (Sender as TEdit).Text = '' then  (Sender as TEdit).Text := '0';
   TryStrToInt((Sender as TEdit).Text, I);

@@ -7,15 +7,15 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, uniMain, uniTags, uniValues, uniAbout, uniAccounts, uniCounter, uniCategories,
+  Forms, uniTags, uniValues, uniAbout, uniAccounts, uniCounter, uniCategories,
   uniComments, uniCurrencies, uniEdit, uniEdits, uniFilter, uniGate, uniGuide,
-  uniHolidays, uniMultiple, uniPassword, uniPayees, uniPersons,
+  uniHolidays, uniMain, uniPassword, uniPayees, uniPersons,
   uniProperties, uniRecycleBin, uniSettings, uniScheduler, uniSQL,
   uniSQLResults, uniSuccess, lazcontrols, tachartlazaruspkg, datetimectrls,
   uniImport, uniDetail, uniDelete, uniHistory, uniSchedulers, uniWrite,
   uniManyCurrencies, uniShortCut, uniCalendar, Dialogs, uniwriting,
   uniResources, uniPeriod, uniPlan, uniBudgets, uniBudget, uniTemplates,
-  uniLinks;
+  uniLinks, uniImage;
 
 {$R *.res}
 
@@ -50,7 +50,6 @@ begin
   Application.CreateForm(TfrmDetail, frmDetail);
   Application.CreateForm(TfrmEdit, frmEdit);
   Application.CreateForm(TfrmEdits, frmEdits);
-  Application.CreateForm(TfrmMultiple, frmMultiple);
   Application.CreateForm(TfrmDelete, frmDelete);
   Application.CreateForm(TfrmHistory, frmHistory);
   Application.CreateForm(TfrmWrite, frmWrite);
@@ -64,6 +63,7 @@ begin
   Application.CreateForm(TfrmBudgets, frmBudgets);
   Application.CreateForm(TfrmTemplates, frmTemplates);
   Application.CreateForm(TfrmLinks, frmLinks);
+  Application.CreateForm(TfrmImage, frmImage);
   Application.CreateForm(TfrmSettings, frmSettings);
   Application.Run;
 end.

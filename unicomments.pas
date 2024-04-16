@@ -7,7 +7,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Math, ExtCtrls, ComCtrls, Buttons, Menus, DBGrids, ActnList,
+  Math, ExtCtrls, ComCtrls, Buttons, Menus, DBGrids, ActnList, IniFiles,
   BCPanel, BCMDButtonFocus, LazUTF8, laz.VirtualTrees, StrUtils;
 
 type
@@ -51,7 +51,6 @@ type
     lblComment: TLabel;
     lblItem: TLabel;
     memComment: TMemo;
-    pnlTip: TPanel;
     popSelect: TMenuItem;
     MenuItem2: TMenuItem;
     pnlButton: TPanel;
@@ -127,7 +126,7 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniSettings, uniScheduler, uniEdit, uniProperties, uniMultiple, uniDetail,
+  uniMain, uniSettings, uniScheduler, uniEdit, uniProperties, uniDetail,
   uniResources, uniEdits, uniTemplates;
 
   { TfrmComments }
@@ -412,13 +411,13 @@ begin
     // Add new category
     if btnSave.Tag = 0 then
       frmMain.QRY.SQL.Text :=
-        'INSERT INTO comments (com_text) VALUES (:COMMENT);'
+        'INSERT OR IGNORE INTO comments (com_text) VALUES (:COMMENT);'
     else
     begin
       // Edit selected record
       VST.Tag := StrToInt(VST.Text[VST.GetFirstSelected(False), 2]);
       frmMain.QRY.SQL.Text :=
-        'UPDATE comments SET com_text = :COMMENT WHERE com_id = :ID;';
+        'UPDATE OR IGNORE comments SET com_text = :COMMENT WHERE com_id = :ID;';
       frmMain.QRY.Params.ParamByName('ID').AsInteger := VST.Tag;
     end;
 
@@ -607,6 +606,10 @@ begin
 end;
 
 procedure TfrmComments.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
 begin
   try
     if pnlButton.Visible = True then
@@ -619,21 +622,33 @@ begin
     on E: Exception do
       ShowErrorMessage(E);
   end;
+
+  // write position and window size
+  if frmSettings.chkLastFormsSize.Checked = True then
+  begin
+    try
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmComments.Name,'') <>
+          IntToStr(frmComments.Left) + separ + // form left
+          IntToStr(frmComments.Top) + separ + // form top
+          IntToStr(frmComments.Width) + separ + // form width
+          IntToStr(frmComments.Height) + separ + // form height
+          IntToStr(frmComments.pnlDetail.Width) then
+        INI.WriteString('POSITION', frmComments.Name,
+          IntToStr(frmComments.Left) + separ + // form left
+          IntToStr(frmComments.Top) + separ + // form top
+          IntToStr(frmComments.Width) + separ + // form width
+          IntToStr(frmComments.Height) + separ + // form height
+          IntToStr(frmComments.pnlDetail.Width));
+    finally
+      INI.Free;
+    end;
+  end;
 end;
 
 procedure TfrmComments.FormCreate(Sender: TObject);
 begin
-  // form size
-  (Sender as TForm).Width := Round((Screen.Width /
-    IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - (Round(1020 / (ScreenRatio / 100)) - ScreenRatio));
-  (Sender as TForm).Height := Round(Screen.Height /
-    IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - 3 * (250 - ScreenRatio);
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 100 - (Sender as TForm).Height) div 2;
-
-  {$IFDEF WINDOWS}
   // set components height
   VST.Header.Height := PanelHeight;
   pnlDetailCaption.Height := PanelHeight;
@@ -641,7 +656,9 @@ begin
   pnlBottom.Height := ButtonHeight + 2;
   pnlButtons.Height := ButtonHeight;
   pnlButton.Height := ButtonHeight;
-  {$ENDIF}
+
+  // get form icon
+  frmMain.img16.GetIcon(14, (Sender as TForm).Icon);
 end;
 
 procedure TfrmComments.FormResize(Sender: TObject);
@@ -663,7 +680,65 @@ begin
 end;
 
 procedure TfrmComments.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmComments.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmComments.Name, '-1•-1•0•0•250');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmComments.Width := Screen.Width - 500 - (200 - ScreenRatio)
+      else
+        frmComments.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmComments.Height := Screen.Height - 400 - (200 - ScreenRatio)
+      else
+        frmComments.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmComments.left := (Screen.Width - frmComments.Width) div 2
+      else
+        frmComments.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmComments.Top := ((Screen.Height - frmComments.Height) div 2) - 75
+      else
+        frmComments.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 150) or (I > 400) then
+        frmComments.pnlDetail.Width := 220
+      else
+        frmComments.pnlDetail.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;
@@ -694,7 +769,7 @@ begin
   popPrint.Enabled := VST.RootNodeCount > 0;
   actPrint.Enabled := VST.RootNodeCount > 0;
 
-  SetNodeHeight(frmComments.VST);
+  SetNodeHeight(VST);
   VST.SetFocus;
   VST.ClearSelection;
 end;
@@ -730,7 +805,6 @@ begin
 
     frmComments.VST.SortTree(1, sdAscending);
     frmComments.VST.EndUpdate;
-    SetNodeHeight(frmComments.VST);
     screen.Cursor := crDefault;
 
     // =============================================================================================
@@ -757,8 +831,8 @@ begin
 
     // =============================================================================================
     // update list of comments in form Multiple addtions
-    frmMultiple.cbxComment.Clear;
-    frmMultiple.cbxComment.Items := frmDetail.cbxComment.Items;
+    frmDetail.cbxCommentX.Clear;
+    frmDetail.cbxCommentX.Items := frmDetail.cbxComment.Items;
 
     // =============================================================================================
     // update list of comments in form Multiple addtions

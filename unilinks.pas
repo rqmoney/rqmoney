@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Math,
   Menus, ActnList, BCPanel, BCMDButtonFocus, LazUTF8, laz.VirtualTrees, StrUtils,
-  LCLProc;
+  LCLProc, IniFiles;
 
 type
   TLink = record
@@ -158,7 +158,65 @@ begin
 end;
 
 procedure TfrmLinks.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmLinks.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmLinks.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmLinks.Width := Screen.Width - 500 - (200 - ScreenRatio)
+      else
+        frmLinks.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmLinks.Height := Screen.Height - 400 - (200 - ScreenRatio)
+      else
+        frmLinks.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmLinks.left := (Screen.Width - frmLinks.Width) div 2
+      else
+        frmLinks.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmLinks.Top := ((Screen.Height - frmLinks.Height) div 2) - 75
+      else
+        frmLinks.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 100) or (I > 300) then
+        frmLinks.pnlDetail.Width := 220
+      else
+        frmLinks.pnlDetail.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;
@@ -189,7 +247,7 @@ begin
   popPrint.Enabled := VST.RootNodeCount > 0;
   actPrint.Enabled := VST.RootNodeCount > 0;
 
-  SetNodeHeight(frmLinks.VST);
+  SetNodeHeight(VST);
   VST.SetFocus;
   VST.ClearSelection;
 end;
@@ -283,15 +341,14 @@ begin
     if btnSave.Tag = 0 then
       // Add new record
       frmMain.QRY.SQL.Text :=
-        'INSERT INTO links (lin_name, lin_link, lin_shortcut, lin_comment) VALUES ('
-        +
-        ':NAME, :LINK, :SHORTCUT, :COMMENT)'
+        'INSERT OR IGNORE INTO links (lin_name, lin_link, lin_shortcut, lin_comment) ' +
+          'VALUES (:NAME, :LINK, :SHORTCUT, :COMMENT)'
     else
     begin
       // Edit selected record
       VST.Tag := StrToInt(VST.Text[VST.FocusedNode, 5]);
       frmMain.QRY.SQL.Text :=
-        'UPDATE links SET ' +            // update
+        'UPDATE OR IGNORE links SET ' +            // update
         'lin_name = :NAME, ' +            // name
         'lin_link = :LINK, ' + // link
         'lin_shortcut = :SHORTCUT, ' +        // status
@@ -526,6 +583,10 @@ begin
 end;
 
 procedure TfrmLinks.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
 begin
   if pnlButton.Visible = True then
   begin
@@ -533,6 +594,29 @@ begin
     CloseAction := Forms.caNone;
     Exit;
   end;
+
+  // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmLinks.Name, '') <>
+          IntToStr(frmLinks.Left) + separ + // form left
+        IntToStr(frmLinks.Top) + separ + // form top
+        IntToStr(frmLinks.Width) + separ + // form width
+        IntToStr(frmLinks.Height) + separ + // form height
+        IntToStr(frmLinks.pnlDetail.Width) then
+          INI.WriteString('POSITION', frmLinks.Name,
+            IntToStr(frmLinks.Left) + separ + // form left
+            IntToStr(frmLinks.Top) + separ + // form top
+            IntToStr(frmLinks.Width) + separ + // form width
+            IntToStr(frmLinks.Height) + separ + // form height
+            IntToStr(frmLinks.pnlDetail.Width));
+      finally
+        INI.Free;
+      end;
+    end;
 end;
 
 procedure TfrmLinks.FormCreate(Sender: TObject);
@@ -545,28 +629,16 @@ begin
       'F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z');
     cbxShortCut.ItemIndex := -1;
 
-    // form size
-    (Sender as TForm).Width :=
-      Round((Screen.Width / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-      (Round(1020 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height :=
-      Round(Screen.Height / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-      4 * (250 - ScreenRatio);
-
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
-    {$IFDEF WINDOWS}
     // set components height
     VST.Header.Height := PanelHeight;
     pnlDetailCaption.Height := PanelHeight;
     pnlListCaption.Height := PanelHeight;
-
     pnlButtons.Height := ButtonHeight;
     pnlButton.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
-    {$ENDIF}
+
+    // get form icon
+  frmMain.img16.GetIcon(31, (Sender as TForm).Icon);
   finally
   end;
 end;

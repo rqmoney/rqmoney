@@ -7,7 +7,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls, StrUtils,
-  ActnList, StdCtrls, BCPanel, BCMDButtonFocus, LazUTF8, laz.VirtualTrees, Math;
+  ActnList, StdCtrls, BCPanel, BCMDButtonFocus, LazUTF8, laz.VirtualTrees, Math,
+  DateUtils, IniFiles;
 
 type
 
@@ -33,6 +34,7 @@ type
     VST1: TLazVirtualStringTree;
     VST2: TLazVirtualStringTree;
     procedure actExitExecute(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -42,8 +44,8 @@ type
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
     procedure VST1GetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
-      Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean;
-      var ImageIndex: Integer);
+      Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean;
+      var ImageIndex: integer);
     procedure VST1GetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure VST1Resize(Sender: TObject);
@@ -51,8 +53,8 @@ type
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
     procedure VST2GetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
-      Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean;
-      var ImageIndex: Integer);
+      Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean;
+      var ImageIndex: integer);
     procedure VST2GetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
   private
@@ -73,7 +75,7 @@ implementation
 uses
   uniMain, uniSettings;
 
-{ TfrmHistory }
+  { TfrmHistory }
 
 procedure TfrmHistory.FormCreate(Sender: TObject);
 begin
@@ -84,20 +86,22 @@ begin
   VST2.Images := frmMain.ImgTypes;
 
   // set components height
-  VST1.Header.Height := ProgramFontSize + 4;
+  VST1.Header.Height := PanelHeight;
   if VST1.Header.Height < 20 then
     VST1.Header.Height := 20;
 
-  VST2.Header.Height := ProgramFontSize + 4;
+  VST2.Header.Height := PanelHeight;
   if VST2.Header.Height < 20 then
     VST2.Header.Height := 20;
 
-  pnlOriginalCaption.Height := ProgramFontSize + 4;
-  pnlHistoryCaption.Height := ProgramFontSize + 4;
+  pnlOriginalCaption.Height := PanelHeight;
+  pnlHistoryCaption.Height := PanelHeight;
 
-  pnlButtons.Height := ProgramFontSize + 4;
-  pnlBottom.Height := ProgramFontSize + 4;
+  pnlButtons.Height := PanelHeight;
+  pnlBottom.Height := PanelHeight;
 
+  // get form icon
+  frmMain.img16.GetIcon(33, (Sender as TForm).Icon);
 end;
 
 procedure TfrmHistory.FormDestroy(Sender: TObject);
@@ -108,9 +112,7 @@ end;
 
 procedure TfrmHistory.FormResize(Sender: TObject);
 begin
-  frmMain.imgSize.GetBitmap(0, imgWidth.Picture.Bitmap);
   lblWidth.Caption := IntToStr((Sender as TForm).Width);
-  frmMain.imgSize.GetBitmap(1, imgHeight.Picture.Bitmap);
   lblHeight.Caption := IntToStr((Sender as TForm).Height);
 
   pnlOriginalCaption.Repaint;
@@ -118,8 +120,59 @@ begin
 end;
 
 procedure TfrmHistory.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
-  pnlTop.Height := (5 * ProgramFontSize);
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmHistory.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmHistory.Name, '-1•-1•0•0');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmHistory.Width := Screen.Width - 300 - (200 - ScreenRatio)
+      else
+        frmHistory.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmHistory.Height := Screen.Height - 500 - (200 - ScreenRatio)
+      else
+        frmHistory.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmHistory.left := (Screen.Width - frmHistory.Width) div 2
+      else
+        frmHistory.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmHistory.Top := ((Screen.Height - frmHistory.Height) div 2) - 75
+      else
+        frmHistory.Top := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
+  pnlTop.Height := (5 * PanelHeight);
 
   slOriginal.Clear;
   VST1.Clear;
@@ -205,7 +258,7 @@ begin
       frmMain.QRY.FieldByName('d_time').AsString + separ + // time 10
       frmMain.QRY.FieldByName('d_id').AsString + separ + // ID 11
       frmMain.QRY.FieldByName('d_type').AsString + separ +  // type 12
-    frmMain.QRY.FieldByName('cat_parent_ID').AsString); // 13
+      frmMain.QRY.FieldByName('cat_parent_ID').AsString); // 13
 
     frmMain.QRY.Close;
 
@@ -231,8 +284,8 @@ begin
       VST1.RootNodeCount := slOriginal.Count;
   end;
 
-  SetNodeHeight(frmHistory.VST1);
-  SetNodeHeight(frmHistory.VST2);
+  SetNodeHeight(VST1);
+  SetNodeHeight(VST2);
 end;
 
 procedure TfrmHistory.pnlButtonsResize(Sender: TObject);
@@ -244,16 +297,16 @@ procedure TfrmHistory.VST1BeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-    TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clWhite,
-    frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color :=
+    IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
   TargetCanvas.FillRect(CellRect);
 end;
 
 procedure TfrmHistory.VST1GetImageIndex(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
-  var Ghosted: Boolean; var ImageIndex: Integer);
+  var Ghosted: boolean; var ImageIndex: integer);
 begin
-  If  Column = 0 then
+  if Column = 0 then
     ImageIndex := StrToInt(Field(separ, slOriginal.Strings[Node.Index], 12));
 end;
 
@@ -262,15 +315,21 @@ procedure TfrmHistory.VST1GetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
 var
   M: integer;
   A: double;
-
+  B: byte;
 begin
   M := Node.Index;
 
   case Column of
     // date
-    1: CellText :=
+    1: begin
+      B := DayOfTheWeek(StrToDate(Field(separ, slOriginal.Strings[M], 1),
+        'YYYY-MM-DD', '-')) + 1;
+      if B = 8 then
+        B := 1;
+      CellText := FS_own.ShortDayNames[B] + ' ' +
         DateToStr(StrToDate(Field(separ, slOriginal.Strings[M], 1),
-        'YYYY-MM-DD', '-'));
+        'YYYY-MM-DD', '-'), FS_own);
+    end;
     // comment
     2: CellText := Field(Separ, slOriginal.Strings[M], 2);
     // amount
@@ -289,8 +348,9 @@ begin
     7: if Field(separ, slOriginal.Strings[M], 13) = '0' then
         CellText := ''
       else
-        CellText := IfThen(frmSettings.chkDisplaySubCatCapital.Checked = True,
-          AnsiUpperCase(Field(separ, slOriginal.Strings[M], 7)), Field(separ, slOriginal.Strings[M], 7));
+        CellText := IfThen(frmSettings.chkDisplaySubCatCapital.Checked =
+          True, AnsiUpperCase(Field(separ, slOriginal.Strings[M], 7)),
+          Field(separ, slOriginal.Strings[M], 7));
     // person
     8: CellText := Field(Separ, slOriginal.Strings[M], 8);
     // payee
@@ -305,16 +365,18 @@ end;
 procedure TfrmHistory.VST1Resize(Sender: TObject);
 var
   X: integer;
-
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
-  (Sender as TLazVirtualStringTree).Header.Columns[0].Width := round(Screen.PixelsPerInch div 96 * 25);
+  (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+    round(ScreenRatio / 100 * 25);
   X := ((Sender as TLazVirtualStringTree).Width - 45) div 100;
 
   (Sender as TLazVirtualStringTree).Header.Columns[1].Width := 10 * X; // date
   (Sender as TLazVirtualStringTree).Header.Columns[2].Width :=
-    (Sender as TLazVirtualStringTree).Width - (Sender as TLazVirtualStringTree).Header.Columns[0].Width - ScrollBarWidth - (87 * X); // comment
+    (Sender as TLazVirtualStringTree).Width -
+    (Sender as TLazVirtualStringTree).Header.Columns[0].Width - ScrollBarWidth - (87 * X);
+  // comment
   (Sender as TLazVirtualStringTree).Header.Columns[3].Width := 10 * X; // amount
   (Sender as TLazVirtualStringTree).Header.Columns[4].Width := 5 * X; // currency
   (Sender as TLazVirtualStringTree).Header.Columns[5].Width := 10 * X; // account
@@ -330,26 +392,29 @@ procedure TfrmHistory.VST2BeforeCellPaint(Sender: TBaseVirtualTree;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
   TargetCanvas.Brush.Color :=
-        IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
+    IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
 
-  If (Node.Index > 0) then begin
-    If ((Column in [1..9]) and (VST2.Text[VST2.GetPrevious(Node), Column] <> VST2.Text[Node, Column])) or
-      ((Column = 0) and (VST2.Text[VST2.GetPrevious(Node), 11] <> VST2.Text[Node, 11])) then
+  if (Node.Index > 0) then
+  begin
+    if ((Column in [1..9]) and (VST2.Text[VST2.GetPrevious(Node), Column] <>
+      VST2.Text[Node, Column])) or ((Column = 0) and
+      (VST2.Text[VST2.GetPrevious(Node), 11] <> VST2.Text[Node, 11])) then
       TargetCanvas.Brush.Color := clYellow;
   end
-  Else
-    If (Column in [1..9]) and (VST1.Text[VST1.GetFirst(), Column] <> VST2.Text[Node, Column]) or
-      (Column = 0) and (VST1.Text[VST1.GetFirst(), 11] <> VST2.Text[Node, 11]) then
-      TargetCanvas.Brush.Color := clYellow;
+  else
+  if (Column in [1..9]) and (VST1.Text[VST1.GetFirst(), Column] <>
+    VST2.Text[Node, Column]) or (Column = 0) and
+    (VST1.Text[VST1.GetFirst(), 11] <> VST2.Text[Node, 11]) then
+    TargetCanvas.Brush.Color := clYellow;
 
   TargetCanvas.FillRect(CellRect);
 end;
 
 procedure TfrmHistory.VST2GetImageIndex(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
-  var Ghosted: Boolean; var ImageIndex: Integer);
+  var Ghosted: boolean; var ImageIndex: integer);
 begin
-  If  Column = 0 then
+  if Column = 0 then
     ImageIndex := StrToInt(Field(separ, slHistory.Strings[Node.Index], 12));
 end;
 
@@ -358,15 +423,21 @@ procedure TfrmHistory.VST2GetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
 var
   M: integer;
   A: double;
-
+  B: byte;
 begin
   M := Node.Index;
 
   case Column of
     // date
-    1: CellText :=
+    1: begin
+      B := DayOfTheWeek(StrToDate(Field(separ, slHistory.Strings[M], 1),
+        'YYYY-MM-DD', '-')) + 1;
+      if B = 8 then
+        B := 1;
+      CellText := FS_own.ShortDayNames[B] + ' ' +
         DateToStr(StrToDate(Field(separ, slHistory.Strings[M], 1),
-        'YYYY-MM-DD', '-'));
+        'YYYY-MM-DD', '-'), FS_own);
+    end;
     // comment
     2: CellText := Field(Separ, slHistory.Strings[M], 2);
     // amount
@@ -385,8 +456,8 @@ begin
     7: if Field(separ, slHistory.Strings[M], 13) = '0' then
         CellText := ''
       else
-        CellText := IfThen(frmSettings.chkDisplaySubCatCapital.Checked = True,
-          AnsiUpperCase(Field(separ, slHistory.Strings[M], 7)),
+        CellText := IfThen(frmSettings.chkDisplaySubCatCapital.Checked =
+          True, AnsiUpperCase(Field(separ, slHistory.Strings[M], 7)),
           Field(separ, slHistory.Strings[M], 7));
     // person
     8: CellText := Field(Separ, slHistory.Strings[M], 8);
@@ -402,6 +473,33 @@ end;
 procedure TfrmHistory.actExitExecute(Sender: TObject);
 begin
   frmHistory.ModalResult := mrCancel;
+end;
+
+procedure TfrmHistory.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+begin
+  // write position and window size
+  if frmSettings.chkLastFormsSize.Checked = True then
+  begin
+    try
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmHistory.Name, '') <>
+          IntToStr(frmHistory.Left) + separ + // form left
+          IntToStr(frmHistory.Top) + separ + // form top
+          IntToStr(frmHistory.Width) + separ + // form width
+          IntToStr(frmHistory.Height) then
+        INI.WriteString('POSITION', frmHistory.Name,
+          IntToStr(frmHistory.Left) + separ + // form left
+          IntToStr(frmHistory.Top) + separ + // form top
+          IntToStr(frmHistory.Width) + separ + // form width
+          IntToStr(frmHistory.Height)); // form height
+    finally
+      INI.Free;
+    end;
+  end;
 end;
 
 end.

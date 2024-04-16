@@ -8,15 +8,15 @@ interface
 uses
   Classes, SysUtils, FileUtil, laz.VirtualTrees, Forms, Controls, Graphics,
   Dialogs, Menus, ExtCtrls, ComCtrls, StdCtrls, Buttons, StrUtils, Clipbrd,
-  ActnList, Spin, BCPanel, BCMDButtonFocus, Math;
+  ActnList, Spin, BCPanel, BCMDButtonFocus, Math, IniFiles;
 
 type
   TNominal = record
-    Value: Double;
-    Coin: Boolean;
-    Currency_id: Integer;
-    Time: String;
-    ID: Integer;
+    Value: double;
+    Coin: boolean;
+    Currency_id: integer;
+    Time: string;
+    ID: integer;
   end;
   PNominal = ^TNominal;
 
@@ -109,7 +109,7 @@ type
     procedure VSTGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean;
       var ImageIndex: integer);
-    procedure VSTGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+    procedure VSTGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: integer);
     procedure VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure VSTResize(Sender: TObject);
@@ -131,22 +131,11 @@ implementation
 uses
   uniMain, uniSettings, uniCounter, uniResources;
 
-{ TfrmValues }
+  { TfrmValues }
 
 procedure TfrmValues.FormCreate(Sender: TObject);
 begin
   try
-    // form size
-    (Sender as TForm).Width := Round((Screen.Width /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - (Round(1220 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height := Round(Screen.Height /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - 4 * (250 - ScreenRatio);
-
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
-    {$IFDEF WINDOWS}
     // set components height
     VST.Header.Height := PanelHeight;
     pnlDetailCaption.Height := PanelHeight;
@@ -154,7 +143,9 @@ begin
     pnlButtons.Height := ButtonHeight;
     pnlButton.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
-    {$ENDIF}
+
+    // get form icon
+    frmMain.img16.GetIcon(23, (Sender as TForm).Icon);
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -276,11 +267,10 @@ procedure TfrmValues.btnDeleteClick(Sender: TObject);
 var
   IDs: string;
   N: PVirtualNode;
-
 begin
   try
     if (frmMain.Conn.Connected = False) or (VST.SelectedCount = 0) then
-        exit;
+      exit;
 
     // get IDs of all selected nodes
     IDs := '';
@@ -296,15 +286,15 @@ begin
     end;
 
     case VST.SelectedCount of
-      1: if MessageDlg(Message_00, Question_01 +
-          sLineBreak + sLineBreak + VST.Header.Columns[1].Text + ': ' +
-          VST.Text[VST.FocusedNode, 1] + ' (' + VST.Text[VST.FocusedNode, 2] +
-          ')', mtConfirmation, mbYesNo, 0) <> 6 then
+      1: if MessageDlg(Message_00, Question_01 + sLineBreak +
+          sLineBreak + VST.Header.Columns[1].Text + ': ' + VST.Text[VST.FocusedNode, 1] +
+          ' (' + VST.Text[VST.FocusedNode, 2] + ')', mtConfirmation,
+          mbYesNo, 0) <> 6 then
           Exit;
       else
         if MessageDlg(Message_00, AnsiReplaceStr(
-          Question_02, '%', IntToStr(VST.SelectedCount)),
-          mtConfirmation, mbYesNo, 0) <> 6 then
+          Question_02, '%', IntToStr(VST.SelectedCount)), mtConfirmation,
+          mbYesNo, 0) <> 6 then
           Exit;
     end;
 
@@ -320,6 +310,10 @@ begin
 end;
 
 procedure TfrmValues.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
 begin
   try
     if pnlButton.Visible = True then
@@ -327,6 +321,29 @@ begin
       btnCancelClick(btnCancel);
       CloseAction := Forms.caNone;
       Exit;
+    end;
+
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmValues.Name, '') <>
+          IntToStr(frmValues.Left) + separ + // form left
+        IntToStr(frmValues.Top) + separ + // form top
+        IntToStr(frmValues.Width) + separ + // form width
+        IntToStr(frmValues.Height) + separ + // form height
+        IntToStr(frmValues.pnlDetail.Width) then
+          INI.WriteString('POSITION', frmValues.Name,
+            IntToStr(frmValues.Left) + separ + // form left
+            IntToStr(frmValues.Top) + separ + // form top
+            IntToStr(frmValues.Width) + separ + // form width
+            IntToStr(frmValues.Height) + separ + // form height
+            IntToStr(frmValues.pnlDetail.Width));
+      finally
+        INI.Free;
+      end;
     end;
   except
     on E: Exception do
@@ -337,7 +354,6 @@ end;
 procedure TfrmValues.spiValueChange(Sender: TObject);
 var
   I: double;
-
 begin
   try
     TryStrToFloat(spiValue.Text, I);
@@ -367,7 +383,7 @@ end;
 
 procedure TfrmValues.btnSelectClick(Sender: TObject);
 begin
-  If (VST.Enabled = False) or (VST.RootNodeCount < 1) then
+  if (VST.Enabled = False) or (VST.RootNodeCount < 1) then
     Exit;
   VST.SelectAll(False);
   VST.SetFocus;
@@ -386,7 +402,7 @@ end;
 procedure TfrmValues.spiValueEnter(Sender: TObject);
 begin
   try
-     spiValue.Font.Bold := True;
+    spiValue.Font.Bold := True;
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -436,7 +452,8 @@ begin
       frmMain.QRY.SQL.Text :=
         'INSERT INTO nominal (nom_value, nom_coin, nom_currency_id) VALUES (' +
         ':VALUE, :COIN, :CURRENCY);';
-      frmMain.QRY.Params.ParamByName('VALUE').AsString := ReplaceStr(FloatToStr(spiValue.Value), ',', '.');
+      frmMain.QRY.Params.ParamByName('VALUE').AsString :=
+        ReplaceStr(FloatToStr(spiValue.Value), ',', '.');
       frmMain.QRY.Params.ParamByName('COIN').AsInteger := cbxType.ItemIndex;
       frmMain.QRY.Params.ParamByName('CURRENCY').AsInteger := frmValues.Tag;
       frmMain.QRY.Prepare;
@@ -453,10 +470,10 @@ begin
     VST.Tag := StrToInt(VST.Text[VST.GetFirstSelected, 3]);
     frmMain.QRY.SQL.Text :=
       'UPDATE nominal SET nom_value = :VALUE, nom_coin = :COIN WHERE nom_id = :ID;';
-    frmMain.QRY.Params.ParamByName('VALUE').AsString := ReplaceStr(FloatToStr(spiValue.Value), ',', '.');
+    frmMain.QRY.Params.ParamByName('VALUE').AsString :=
+      ReplaceStr(FloatToStr(spiValue.Value), ',', '.');
     frmMain.QRY.Params.ParamByName('COIN').AsInteger := cbxType.ItemIndex;
     frmMain.QRY.Params.ParamByName('ID').AsInteger := VST.Tag;
-
     frmMain.QRY.Prepare;
     frmMain.QRY.ExecSQL;
     frmMain.Tran.Commit;
@@ -475,9 +492,67 @@ begin
 end;
 
 procedure TfrmValues.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmValues.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmValues.Name, '-1•-1•0•0•220');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmValues.Width := 650
+      else
+        frmValues.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmValues.Height := 500
+      else
+        frmValues.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmValues.left := (Screen.Width - frmValues.Width) div 2
+      else
+        frmValues.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmValues.Top := ((Screen.Height - frmValues.Height) div 2) - 75
+      else
+        frmValues.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 150) or (I > 350) then
+        frmValues.pnlDetail.Width := 220
+      else
+        frmValues.pnlDetail.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   UpdateValues;
-  SetNodeHeight(frmValues.VST);
+  SetNodeHeight(VST);
 end;
 
 procedure TfrmValues.pnlButtonResize(Sender: TObject);
@@ -496,7 +571,7 @@ end;
 
 procedure TfrmValues.btnCopyClick(Sender: TObject);
 begin
-  If (VST.Enabled = False) then
+  if (VST.Enabled = False) then
     Exit;
   CopyVST(VST);
 end;
@@ -595,15 +670,16 @@ procedure TfrmValues.VSTGetImageIndex(Sender: TBaseVirtualTree;
   var Ghosted: boolean; var ImageIndex: integer);
 var
   Nominal: PNominal;
-
 begin
-  if Column = 0 then begin
+  if Column = 0 then
+  begin
     Nominal := Sender.GetNodeData(Node);
     ImageIndex := Abs(StrToInt(BoolToStr(Nominal.Coin))); // banknote or coin image
   end;
 end;
 
-procedure TfrmValues.VSTGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+procedure TfrmValues.VSTGetNodeDataSize(Sender: TBaseVirtualTree;
+  var NodeDataSize: integer);
 begin
   NodeDataSize := SizeOf(TNominal);
 end;
@@ -612,14 +688,13 @@ procedure TfrmValues.VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
   Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
 var
   Nominal: PNominal;
-
 begin
   Nominal := Sender.GetNodeData(Node);
   try
     case Column of
       1: begin
         CellText := Format('%n', [Nominal.Value], FS_own);
-        end;
+      end;
       2: CellText := cbxType.Items[Abs(StrToInt(BoolToStr(Nominal.Coin)))];
       3: CellText := IntToStr(Nominal.ID);
     end;
@@ -632,14 +707,15 @@ end;
 procedure TfrmValues.VSTResize(Sender: TObject);
 var
   X: integer;
-
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
-  (Sender as TLazVirtualStringTree).Header.Columns[0].Width := round(ScreenRatio * 25 /100);
+  (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+    round(ScreenRatio * 25 / 100);
   X := (VST.Width - VST.Header.Columns[0].Width) div 100;
   VST.Header.Columns[1].Width := 40 * X; // name
-  VST.Header.Columns[2].Width := VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (60 * X); // comment
+  VST.Header.Columns[2].Width :=
+    VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (60 * X); // comment
   VST.Header.Columns[3].Width := 20 * X; // status
 end;
 
@@ -665,7 +741,6 @@ procedure UpdateValues;
 var
   Nominal: PNominal;
   P: PVirtualNode;
-
 begin
   try
     frmValues.VST.Clear;
@@ -679,8 +754,7 @@ begin
     frmMain.QRY.SQL.Text := 'SELECT nom_value, nom_coin, nom_time, nom_id ' +
       'FROM nominal WHERE nom_currency_id = :ID ORDER BY nom_value DESC';
     frmMain.QRY.Params.ParamByName('ID').AsInteger := frmValues.Tag;
-
-    //ShowMessage (frmMain.QRY.SQL.Text);
+    frmMain.QRY.Prepare;
     frmMain.QRY.Open;
     while not (frmMain.QRY.EOF) do
     begin
@@ -701,7 +775,7 @@ begin
 
     // =============================================================================================
     // items icon
-    frmValues.lblItems.Caption := IntToStr(frmValues.VST.RootNodeCount);
+    frmValues.lblItems.Caption := IntToStr(frmValues.VST.TotalCount);
 
     frmValues.popCopy.Enabled := frmValues.VST.RootNodeCount > 0;
     frmValues.btnCopy.Enabled := frmValues.popCopy.Enabled;
@@ -723,7 +797,6 @@ begin
 
     if frmCounter.Visible = True then
       frmCounter.cbxCurrencyChange(frmCounter.cbxCurrency);
-
   except
     on E: Exception do
       ShowErrorMessage(E);

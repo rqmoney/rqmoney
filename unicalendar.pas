@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ActnList,
   Buttons, StdCtrls, ComCtrls, laz.VirtualTrees, BCPanel, BGRABitmap,
-  DateUtils, Math, StrUtils, BCMDButtonFocus, CalendarLite;
+  DateUtils, Math, StrUtils, BCMDButtonFocus, CalendarLite, IniFiles;
 
 type // bottom grid (Calendar)
   TDailyPayment = record
@@ -30,12 +30,14 @@ type
     actExit: TAction;
     actEdit: TAction;
     actDelete: TAction;
+    actCurrencies: TAction;
+    actAccounts: TAction;
     ActionList1: TActionList;
-    btnAccount: TSpeedButton;
+    btnAccounts: TSpeedButton;
     btnDelete: TBCMDButtonFocus;
     btnEdit: TBCMDButtonFocus;
     btnExit: TBCMDButtonFocus;
-    btnCurrency: TSpeedButton;
+    btnCurrencies: TSpeedButton;
     Calendar: TCalendarLite;
     cbxAccount: TComboBox;
     cbxCurrency: TComboBox;
@@ -90,15 +92,17 @@ type
     VST: TLazVirtualStringTree;
     VSTFloat: TLazVirtualStringTree;
     procedure actExitExecute(Sender: TObject);
-    procedure btnAccountClick(Sender: TObject);
+    procedure btnAccountsClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
-    procedure btnCurrencyClick(Sender: TObject);
+    procedure btnCurrenciesClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure CalendarDateChange(Sender: TObject);
     procedure CalendarMonthChange(Sender: TObject);
     procedure cbxAccountChange(Sender: TObject);
     procedure cbxCurrencyChange(Sender: TObject);
+    procedure cbxCurrencyDropDown(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -157,23 +161,11 @@ procedure TfrmCalendar.FormCreate(Sender: TObject);
 var
   I: byte;
 begin
-  // form size
-  (Sender as TForm).Width :=
-    Round((Screen.Width / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-    (Round(520 / (ScreenRatio / 100)) - ScreenRatio));
-  (Sender as TForm).Height :=
-    Round(Screen.Height / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-    2 * (250 - ScreenRatio);
-
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
   frmMain.imgArrows.GetBitmap(1, imgMonthYear.Picture.Bitmap);
   frmMain.imgArrows.GetBitmap(0, imgCurrency.Picture.Bitmap);
   frmMain.imgArrows.GetBitmap(0, imgAccount.Picture.Bitmap);
 
-  //ShowMessage(FloatToStr(ScreenRatio));
+  // create daily panels
   for I := 0 to 6 do
   begin
     Week_day[I] := TPanel.Create(pnlClient);
@@ -230,7 +222,6 @@ begin
   cbxAccount.Items.Add('*');
   cbxAccount.ItemIndex := 0;
 
-  {$IFDEF WINDOWS}
   // set components height
   VST.Header.Height := PanelHeight;
   VSTFloat.Header.Height := PanelHeight;
@@ -244,7 +235,9 @@ begin
   pnlButtons.Height := ButtonHeight;
   btnExit.Height := ButtonHeight;
   pnlBottom.Height := ButtonHeight;
-  {$ENDIF}
+
+  // get form icon
+  frmMain.img16.GetIcon(20, (Sender as TForm).Icon);
 end;
 
 procedure TfrmCalendar.FormResize(Sender: TObject);
@@ -260,7 +253,65 @@ begin
 end;
 
 procedure TfrmCalendar.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmCalendar.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmCalendar.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmCalendar.Width := Screen.Width - 200 - (200 - ScreenRatio)
+      else
+        frmCalendar.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmCalendar.Height := Screen.Height - 200 - (200 - ScreenRatio)
+      else
+        frmCalendar.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmCalendar.left := (Screen.Width - frmCalendar.Width) div 2
+      else
+        frmCalendar.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmCalendar.Top := ((Screen.Height - frmCalendar.Height) div 2) - 75
+      else
+        frmCalendar.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 150) or (I > 400) then
+        frmCalendar.pnlLeft.Width := 250
+      else
+        frmCalendar.pnlLeft.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   // btnEdit
   btnEdit.Enabled := VST.SelectedCount = 1;
   actEdit.Enabled := VST.SelectedCount = 1;
@@ -274,15 +325,15 @@ begin
   pnlAccount.Tag := 0;
   pnlAccountCaptionClick(pnlAccountCaption);
   CalendarMonthChange(Calendar);
-  btnCurrency.Enabled := frmMain.Conn.Connected = True;
-  btnAccount.Enabled := frmMain.Conn.Connected = True;
+  btnCurrencies.Enabled := frmMain.Conn.Connected = True;
+  btnAccounts.Enabled := frmMain.Conn.Connected = True;
 end;
 
 procedure TfrmCalendar.pnlAccountCaptionClick(Sender: TObject);
 begin
   pnlAccount.Tag := 1 - pnlAccount.Tag;
   cbxAccount.Visible := pnlAccount.Tag = 1;
-  btnAccount.Visible := pnlAccount.Tag = 1;
+  btnAccounts.Visible := pnlAccount.Tag = 1;
   frmMain.imgArrows.GetBitmap(pnlAccount.Tag, imgAccount.Picture.Bitmap);
 end;
 
@@ -368,35 +419,36 @@ var
   H, W: word;
 begin
   try
-  H := (pnlDays.Height - Round(20 * (ScreenRatio / 100))) div 6; // day height
-  W := (pnlDays.Width - Round(25 * (ScreenRatio / 100))) div 7; // day width
+    H := (pnlDays.Height - Round(20 * (ScreenRatio / 100))) div 6; // day height
+    W := (pnlDays.Width - Round(25 * (ScreenRatio / 100))) div 7; // day width
 
-  pnlDays.Visible := False;
-  // days captions (monday..sunday)
-  for I := 0 to 6 do
-  begin
-    Week_day[I].Width := W;
-    Week_day[I].Left := Round(25 * (ScreenRatio / 100)) + (I * Week_day[I].Width);
-  end;
+    pnlDays.Visible := False;
+    // days captions (monday..sunday)
+    for I := 0 to 6 do
+    begin
+      Week_day[I].Width := W;
+      Week_day[I].Left := Round(25 * (ScreenRatio / 100)) + (I * Week_day[I].Width);
+    end;
 
-  // weeks numbers (1..52)
-  for I := 0 to 5 do
-  begin
-    Week_number[I].Height := H;
-    Week_number[I].Top := Round(20 * (ScreenRatio /100)) + (I * Week_number[I].Height);
-  end;
+    // weeks numbers (1..52)
+    for I := 0 to 5 do
+    begin
+      Week_number[I].Height := H;
+      Week_number[I].Top := Round(20 * (ScreenRatio / 100)) +
+        (I * Week_number[I].Height);
+    end;
 
-  // days in calendar
-  for I := 0 to 41 do
-  begin
-    pnlDay[I].Height := H;
-    pnlDay[I].Top := Round(20 * (ScreenRatio / 100)) + ((I div 7) * H);
-    pnlDay[I].Width := W;
-    pnlDay[I].Left := Round(25 * (ScreenRatio / 100)) + ((I mod 7) * W);
-    pnlDay[I].OnPaint := @PaintPanel;
-    pnlDay[I].OnClick := @ClickPanel;
-  end;
-  pnlDays.Visible := True;
+    // days in calendar
+    for I := 0 to 41 do
+    begin
+      pnlDay[I].Height := H;
+      pnlDay[I].Top := Round(20 * (ScreenRatio / 100)) + ((I div 7) * H);
+      pnlDay[I].Width := W;
+      pnlDay[I].Left := Round(25 * (ScreenRatio / 100)) + ((I mod 7) * W);
+      pnlDay[I].OnPaint := @PaintPanel;
+      pnlDay[I].OnClick := @ClickPanel;
+    end;
+    pnlDays.Visible := True;
 
   finally
   end;
@@ -406,7 +458,7 @@ procedure TfrmCalendar.pnlCurrencyCaptionClick(Sender: TObject);
 begin
   pnlCurrency.Tag := 1 - pnlCurrency.Tag;
   cbxCurrency.Visible := pnlCurrency.Tag = 1;
-  btnCurrency.Visible := pnlCurrency.Tag = 1;
+  btnCurrencies.Visible := pnlCurrency.Tag = 1;
   frmMain.imgArrows.GetBitmap(pnlCurrency.Tag, imgCurrency.Picture.Bitmap);
 end;
 
@@ -441,10 +493,16 @@ end;
 procedure TfrmCalendar.tabCalendarChange(Sender: TObject);
 begin
   pnlButtons.Visible := tabCalendar.TabIndex = 1;
+  if tabCalendar.TabIndex = 1 then
+    VSTFloat.Visible := False;
+
   case tabCalendar.TabIndex of
-    0: pnlCalendarCaption.Caption :=
+    0: begin
+      pnlCalendarCaption.Caption :=
         AnsiUpperCase(DefaultFormatSettings.LongMonthNames[MonthOf(Calendar.Date)]) +
-        '   ' + IntToStr(YearOf(Calendar.Date))
+        '   ' + IntToStr(YearOf(Calendar.Date));
+      CalendarMonthChange(Calendar);
+    end
     else
     begin
       CalendarDateChange(Calendar);
@@ -494,7 +552,8 @@ end;
 
 procedure TfrmCalendar.VSTFloatResize(Sender: TObject);
 begin
-  (Sender as TLazVirtualStringTree).Header.Columns[0].Width := round(ScreenRatio * 25 / 100);
+  (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+    round(ScreenRatio * 25 / 100);
 end;
 
 procedure TfrmCalendar.VSTGetImageIndex(Sender: TBaseVirtualTree;
@@ -518,11 +577,18 @@ procedure TfrmCalendar.VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
   Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
 var
   DailyPayment: PDailyPayment;
+  B: byte;
 begin
   DailyPayment := Sender.GetNodeData(Node);
 
   case Column of
-    1: CellText := DateToStr(StrToDate(DailyPayment.Date, 'YYYY-MM-DD', '-'), FS_own);
+    1: begin
+      B := DayOfTheWeek(StrToDate(DailyPayment.Date, 'YYYY-MM-DD', '-')) + 1;
+      if B = 8 then
+        B := 1;
+      CellText := FS_own.ShortDayNames[B] + ' ' +
+        DateToStr(StrToDate(DailyPayment.Date, 'YYYY-MM-DD', '-'), FS_own);
+    end;
     2: begin // periodicity
       if DailyPayment.Periodicity < 0 then
         CellText := AnsiReplaceStr(frmScheduler.cbxPeriodicity.Items[1],
@@ -554,7 +620,7 @@ begin
     0: case frmSettings.pnlCreditTransactionsColor.Tag of
         0: TargetCanvas.Font.Color := clDefault;
         1: begin
-          if Column = 4 then
+          if Column = 3 then
             TargetCanvas.Font.Color := clBlue
           else
             TargetCanvas.Font.Color := clDefault;
@@ -567,7 +633,7 @@ begin
     1: case frmSettings.pnlDebitTransactionsColor.Tag of
         0: TargetCanvas.Font.Color := clDefault;
         1: begin
-          if Column = 4 then
+          if Column = 3 then
             TargetCanvas.Font.Color := clRed
           else
             TargetCanvas.Font.Color := clDefault;
@@ -580,7 +646,7 @@ begin
     2: case frmSettings.pnlTransferPTransactionsColor.Tag of
         0: TargetCanvas.Font.Color := clDefault;
         1: begin
-          if Column = 4 then
+          if Column = 3 then
             TargetCanvas.Font.Color := clGreen
           else
             TargetCanvas.Font.Color := clDefault;
@@ -594,7 +660,7 @@ begin
       case frmSettings.pnlTransferMTransactionsColor.Tag of
         0: TargetCanvas.Font.Color := clDefault;
         1: begin
-          if Column = 4 then
+          if Column = 3 then
             TargetCanvas.Font.Color := rgbToColor(240, 160, 0)
           else
             TargetCanvas.Font.Color := clDefault;
@@ -603,7 +669,6 @@ begin
           TargetCanvas.Font.Color := rgbToColor(240, 160, 0);
       end;
   end;
-
 end;
 
 procedure TfrmCalendar.VSTResize(Sender: TObject);
@@ -612,7 +677,8 @@ var
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
-  (Sender as TLazVirtualStringTree).Header.Columns[0].Width := round(ScreenRatio * 25 / 100);
+  (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+    round(ScreenRatio * 25 / 100);
   X := (VST.Width - VST.Header.Columns[0].Width) div 100;
 
   VST.Header.Columns[1].Width := 15 * X; // date
@@ -629,9 +695,13 @@ begin
   frmCalendar.Close;
 end;
 
-procedure TfrmCalendar.btnAccountClick(Sender: TObject);
+procedure TfrmCalendar.btnAccountsClick(Sender: TObject);
 begin
+  if btnAccounts.Enabled = False then
+    Exit;
+
   frmAccounts.ShowModal;
+  cbxCurrencyChange(cbxCurrency);
   cbxAccount.SetFocus;
 end;
 
@@ -640,8 +710,11 @@ begin
   frmCalendar.ModalResult := mrCancel;
 end;
 
-procedure TfrmCalendar.btnCurrencyClick(Sender: TObject);
+procedure TfrmCalendar.btnCurrenciesClick(Sender: TObject);
 begin
+  if btnCurrencies.Enabled = False then
+    Exit;
+
   frmCurrencies.ShowModal;
   cbxCurrency.SetFocus;
 end;
@@ -695,8 +768,7 @@ begin
     mtConfirmation, mbYesNo, 0) <> 6 then
     Exit;
 
-  frmMain.QRY.SQL.Text := 'DELETE FROM payments WHERE pay_id IN (' + IDs + ')';
-  //ShowMessage (frmMain.QRY.SQL.Text);
+  frmMain.QRY.SQL.Text := 'DELETE FROM payments WHERE pay_id IN (' + IDs + ');';
   frmMain.QRY.ExecSQL;
   frmMain.Tran.Commit;
 
@@ -772,21 +844,21 @@ begin
       'AND currency = :CURRENCY1 ' + sLineBreak +
       IfThen(cbxAccount.ItemIndex > 0, ' AND pay_account = ' +
       '(SELECT acc_id FROM ACCOUNTS WHERE acc_name = :ACCOUNT AND acc_currency = :CURRENCY2) ',
-      '') + sLineBreak + 'ORDER BY pay_type';
+      '') + sLineBreak + 'ORDER BY pay_type;';
 
     frmMain.QRY.Params.ParamByName('DATE').AsString :=
       IfThen(tabCalendar.TabIndex = 1, FormatDateTime('YYYY-MM-DD', Calendar.Date),
       pnlDays.Hint);
 
     frmMain.QRY.Params.ParamByName('CURRENCY1').AsString :=
-      Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
+      Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
 
     if cbxAccount.ItemIndex > 0 then
     begin
       frmMain.QRY.Params.ParamByName('ACCOUNT').AsString :=
-        Field(' | ', cbxAccount.Items[cbxAccount.ItemIndex], 1);
+        Field(separ_1, cbxAccount.Items[cbxAccount.ItemIndex], 1);
       frmMain.QRY.Params.ParamByName('CURRENCY2').AsString :=
-        Field(' | ', cbxAccount.Items[cbxAccount.ItemIndex], 2);
+        Field(separ_1, cbxAccount.Items[cbxAccount.ItemIndex], 2);
     end;
 
     try
@@ -798,6 +870,7 @@ begin
     finally
     end;
 
+    frmMain.QRY.Prepare;
     frmMain.QRY.Open;
     while not frmMain.QRY.EOF do
     begin
@@ -915,18 +988,18 @@ begin
       // Get account
       if cbxAccount.ItemIndex > 0 then
         frmMain.QRY.Params.ParamByName('ACCOUNT').AsString :=
-          Field(' | ', cbxAccount.Items[cbxAccount.ItemIndex], 1);
+          Field(separ_1, cbxAccount.Items[cbxAccount.ItemIndex], 1);
 
 
       {If (cbxCurrency.Items.Count = 0) or (cbxCurrency.Itemindex = -1) then
       frmMain.QRY.Params.ParamByName('CURRENCY').AsString :=  'EUR'
       Else}
       frmMain.QRY.Params.ParamByName('CURRENCY1').AsString :=
-        Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
+        Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
 
       if cbxAccount.ItemIndex > 0 then
         frmMain.QRY.Params.ParamByName('CURRENCY2').AsString :=
-          Field(' | ', cbxAccount.Items[cbxAccount.ItemIndex], 2);
+          Field(separ_1, cbxAccount.Items[cbxAccount.ItemIndex], 2);
 
       frmMain.QRY.Open;
 
@@ -972,7 +1045,7 @@ begin
     frmMain.QRY.Params.ParamByName('CURRENCY').AsString := 'EUR'
   else
     frmMain.QRY.Params.ParamByName('CURRENCY').AsString :=
-      Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
+      Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
 
   frmMain.QRY.Open;
   while not frmMain.QRY.EOF do
@@ -1017,7 +1090,7 @@ begin
     'LEFT JOIN accounts ON (acc_currency = cur_code) ' +
     'WHERE acc_status < 2 AND cur_status < 2 AND acc_currency = :CURRENCY;';
   frmMain.QRY.Params.ParamByName('CURRENCY').AsString :=
-    Field(' | ', cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
+    Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
 
   frmMain.QRY.Open;
   frmMain.QRY.Last;
@@ -1028,7 +1101,7 @@ begin
     while not (frmMain.QRY.EOF) do
     begin
       cbxAccount.Items.Add(
-        frmMain.QRY.FieldByName('acc_name').AsString + ' | ' +
+        frmMain.QRY.FieldByName('acc_name').AsString + separ_1 +
         frmMain.QRY.FieldByName('acc_currency').AsString);
       frmMain.QRY.Next;
     end;
@@ -1042,6 +1115,43 @@ begin
     CalendarMonthChange(Calendar)
   else
     CalendarDateChange(Calendar);
+end;
+
+procedure TfrmCalendar.cbxCurrencyDropDown(Sender: TObject);
+begin
+  {$IFDEF WINDOWS}
+    ComboDDWidth(TComboBox(Sender));
+  {$ENDIF}
+end;
+
+procedure TfrmCalendar.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
+begin
+  // write position and window size
+  if frmSettings.chkLastFormsSize.Checked = True then
+  begin
+    try
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmCalendar.Name, '') <>
+        IntToStr(frmCalendar.Left) + separ + // form left
+      IntToStr(frmCalendar.Top) + separ + // form top
+      IntToStr(frmCalendar.Width) + separ + // form width
+      IntToStr(frmCalendar.Height) + separ + // form height
+      IntToStr(frmCalendar.pnlLeft.Width) then
+        INI.WriteString('POSITION', frmCalendar.Name,
+          IntToStr(frmCalendar.Left) + separ + // form left
+          IntToStr(frmCalendar.Top) + separ + // form top
+          IntToStr(frmCalendar.Width) + separ + // form width
+          IntToStr(frmCalendar.Height) + separ + // form height
+          IntToStr(frmCalendar.pnlLeft.Width));
+    finally
+      INI.Free;
+    end;
+  end;
 end;
 
 procedure TfrmCalendar.ShowDailyPayments(Sender: TObject; Shift: TShiftState;

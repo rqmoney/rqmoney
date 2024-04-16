@@ -1,0 +1,2505 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Slavomir Svetlik <info@rqmoney.eu>\n"
+"Language-Team: \n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: uniresources.caption_00
+msgid "Add"
+msgstr "Pridať"
+
+#: uniresources.caption_01
+msgid "Add +"
+msgstr "Pridať +"
+
+#: uniresources.caption_02
+msgid "Edit"
+msgstr "Upraviť"
+
+#: uniresources.caption_03
+msgid "Delete"
+msgstr "Vymazať"
+
+#: uniresources.caption_04
+msgid "Save"
+msgstr "Uložiť"
+
+#: uniresources.caption_05
+msgid "Cancel"
+msgstr "Zrušiť"
+
+#: uniresources.caption_06
+msgid "Values"
+msgstr "Hodnoty"
+
+#: uniresources.caption_07
+msgid "Copy all"
+msgstr "Kopírovať všetko"
+
+#: uniresources.caption_08
+msgid "Photo"
+msgstr "Obrázok"
+
+#: uniresources.caption_09
+msgid "Print all"
+msgstr "Vytlačiť všetko"
+
+#: uniresources.caption_10
+msgid "Duplicate"
+msgstr "Duplikovať"
+
+#: uniresources.caption_100
+msgid "RECORDS IN THE TABLES"
+msgstr "ZÁZNAMY V TABUĽKÁCH"
+
+#: uniresources.caption_101
+msgid "CHOOSE CURRENCY"
+msgstr "VYBERTE MENU"
+
+#: uniresources.caption_102
+msgid "Select a nominal value and type its count"
+msgstr "Vyberte nominálnu hodnotu a zadajte jej počet"
+
+#: uniresources.caption_103
+msgid "MANY CURRENCIES"
+msgstr "VIACERÉ MENY"
+
+#: uniresources.caption_104
+msgid "SELECT MAIN CURRENCY"
+msgstr "OZNAČTE HLAVNÚ MENU"
+
+#: uniresources.caption_105
+#, object-pascal-format
+msgid ""
+"Only one currency can be designated as the main one!%0:sPlease, select one "
+"currency as main one."
+msgstr ""
+"Ako hlavná mena môže byť označená len jedna mena!%0:sProsím, vyberte jednu "
+"menu ako hlavnú."
+
+#: uniresources.caption_106
+msgid "Execute !"
+msgstr "Vykonať !"
+
+#: uniresources.caption_107
+msgid "UNLOCK !"
+msgstr "ODOMKNÚŤ!"
+
+#: uniresources.caption_108
+msgid "Yes"
+msgstr "Áno"
+
+#: uniresources.caption_109
+msgid "No"
+msgstr "Nie"
+
+#: uniresources.caption_11
+msgid "Payments"
+msgstr "Platby"
+
+#: uniresources.caption_110
+msgid "CHOOSE FIELDS YOU WANT TO EDIT"
+msgstr "VYBERTE POLIA, KTORÉ CHCETE UPRAVIŤ"
+
+#: uniresources.caption_111
+msgid "Monthly preview"
+msgstr "Mesačný náhľad"
+
+#: uniresources.caption_112
+msgid "Daily preview"
+msgstr "Denný náhľad"
+
+#: uniresources.caption_113
+msgid "PROTECTED DATABASE !"
+msgstr "CHRÁNENÁ DATABÁZA !"
+
+#: uniresources.caption_114
+msgid "Database name:"
+msgstr "Názov databázy:"
+
+#: uniresources.caption_115
+#, object-pascal-format
+msgid ""
+"This database is protected by password.%0:sType correct password and then "
+"press the key ENTER to unlock the database."
+msgstr ""
+"Táto databáza je chránená heslom.%0:sZadajte správne heslo a potom stlačte "
+"kláves ENTER na odomknutie databázy."
+
+#: uniresources.caption_116
+msgid "Backspace"
+msgstr "Backspace"
+
+#: uniresources.caption_117
+msgid "TRANSACTIONS TO DELETING"
+msgstr "TRANSAKCIE NA VYMAZANIE"
+
+#: uniresources.caption_118
+msgid "Backup"
+msgstr "Zálohovanie"
+
+#: uniresources.caption_119
+msgid "Global"
+msgstr "Globálne"
+
+#: uniresources.caption_12
+msgid "Select"
+msgstr "Označiť"
+
+#: uniresources.caption_120
+msgid "Visual"
+msgstr "Vizuálne"
+
+#: uniresources.caption_121
+msgid "On open"
+msgstr "Pri otvorení"
+
+#: uniresources.caption_122
+msgid "ShortCuts"
+msgstr "Klávesové skratky"
+
+#: uniresources.caption_123
+msgid "HELPFUL INFO"
+msgstr "POMOCNÉ INFO"
+
+#: uniresources.caption_124
+msgid "Operating system"
+msgstr "Operačný systém"
+
+#: uniresources.caption_125
+msgid "Program version"
+msgstr "Verzia programu"
+
+#: uniresources.caption_126
+msgid "SQLite library name"
+msgstr "Názov knižnice SQLite"
+
+#: uniresources.caption_127
+msgid "SQLite library version"
+msgstr "Verzia knižnice SQLite"
+
+#: uniresources.caption_128
+msgid "Program folder"
+msgstr "Programový priečinok"
+
+#: uniresources.caption_129
+msgid "GLOBAL SETTINGS"
+msgstr "GLOBÁLNE NASTAVENIA"
+
+#: uniresources.caption_13
+msgid "Nominal value"
+msgstr "Nominálna hodnota"
+
+#: uniresources.caption_130
+msgid "Language"
+msgstr "Jazyk"
+
+#: uniresources.caption_131
+msgctxt "uniresources.caption_131"
+msgid "Date and numeric format"
+msgstr "Formát dátumu a čísla"
+
+#: uniresources.caption_132
+msgid "automatic (from OS)"
+msgstr "automatické (z operačného systému)"
+
+#: uniresources.caption_133
+msgid "own settings"
+msgstr "vlastné nastavenie"
+
+#: uniresources.caption_134
+msgid "Numeric format"
+msgstr "Číselný formát"
+
+#: uniresources.caption_135
+msgid "Thousand separator"
+msgstr "Oddeľovač tisícok"
+
+#: uniresources.caption_136
+msgid "Decimal separator"
+msgstr "Desatinný oddeľovač"
+
+#: uniresources.caption_137
+msgid "Example"
+msgstr "Príklad"
+
+#: uniresources.caption_138
+msgid "Date format"
+msgstr "Formát dátumu"
+
+#: uniresources.caption_139
+msgid "1. week day"
+msgstr "1. deň v týždni"
+
+#: uniresources.caption_14
+msgid "Count"
+msgstr "Počet"
+
+#: uniresources.caption_140
+msgid "Short date"
+msgstr "Krátky dátum"
+
+#: uniresources.caption_141
+msgid "Long date"
+msgstr "Dlhý dátum"
+
+#: uniresources.caption_142
+msgid "VISUAL SETTINGS"
+msgstr "VIZUÁLNE NASTAVENIA"
+
+#: uniresources.caption_143
+msgid "Panels and buttons captions"
+msgstr "Nadpisy panelov a tlačidiel"
+
+#: uniresources.caption_144
+msgid "Shadowed font"
+msgstr "Tienené písmo"
+
+#: uniresources.caption_145
+msgid "Bold font"
+msgstr "Tučné písmo"
+
+#: uniresources.caption_146
+msgid "Gradient effect"
+msgstr "Efekt farebného prechodu"
+
+#: uniresources.caption_147
+msgid "Background color"
+msgstr "Farba pozadia"
+
+#: uniresources.caption_148
+msgid "Font color"
+msgstr "Farba písma"
+
+#: uniresources.caption_149
+msgid "Tables"
+msgstr "Zoznamy"
+
+#: uniresources.caption_15
+msgid "Summary"
+msgstr "Sumár"
+
+#: uniresources.caption_150
+msgid "Odd row color"
+msgstr "Farba nepárneho riadku"
+
+#: uniresources.caption_151
+msgid "Transactions color scheme"
+msgstr "Farebná schéma pre transakcie"
+
+#: uniresources.caption_152
+msgctxt "uniresources.caption_152"
+msgid "black for all fields in the row"
+msgstr "čierna pre všetky polia v riadkoch"
+
+#: uniresources.caption_153
+msgctxt "uniresources.caption_153"
+msgid "colored the field Amount only"
+msgstr "farebná len pre pole Suma"
+
+#: uniresources.caption_154
+msgctxt "uniresources.caption_154"
+msgid "colored all fields in the row"
+msgstr "farebná pre všetky polia v riadkoch"
+
+#: uniresources.caption_155
+msgid "General font"
+msgstr "Hlavné písmo"
+
+#: uniresources.caption_156
+msgid "The quick brown fox jumps over the lazy dog."
+msgstr "Čulý kôň a mláďa žriebä žujú šťaveľové lístky v Štósi."
+
+#: uniresources.caption_157
+msgid "On run"
+msgstr "Pri spustení"
+
+#: uniresources.caption_158
+msgid "open last used forms size"
+msgstr "použiť naposledy nastavenú veľkosť okien"
+
+#: uniresources.caption_159
+msgid ""
+"when new transaction is added, open the window \"New transaction\" again to "
+"add another transaction"
+msgstr ""
+"po pridaní novej transakcie otvoriť znova okno \"Nová transakcia\" pre "
+"pridanie ďalšej transakcie"
+
+#: uniresources.caption_16
+msgid "Total"
+msgstr "CELKOM"
+
+#: uniresources.caption_160
+msgid "open last used database"
+msgstr "otvoriť naposledy použitú databázu"
+
+#: uniresources.caption_161
+msgid "open last used filter"
+msgstr "otvoriť naposledy použitý filter"
+
+#: uniresources.caption_162
+msgid "automatic columns width for all tables"
+msgstr "automatická šírka stĺpcov pre všetky tabuľky"
+
+#: uniresources.caption_163
+msgid "Miscellaneous"
+msgstr "Rôzne"
+
+#: uniresources.caption_164
+msgid "KEYBOARD SHORTCUTS"
+msgstr "KLÁVESOVÉ SKRATKY"
+
+#: uniresources.caption_165
+msgid "WRITE SCHEDULED PAYMENTS"
+msgstr "ZAPÍSAŤ PLÁNOVANÉ PLATBY"
+
+#: uniresources.caption_166
+#, object-pascal-format
+msgid "Write all %0:s selected scheduled payments"
+msgstr "Zapísať všetkých %0:s označených platieb"
+
+#: uniresources.caption_167
+msgid "at once"
+msgstr "naraz"
+
+#: uniresources.caption_168
+msgid "gradually (in parts)"
+msgstr "postupne (po jednej)"
+
+#: uniresources.caption_169
+msgid "Show transactions"
+msgstr "Zobraziť transakcie"
+
+#: uniresources.caption_17
+msgid "Date and time"
+msgstr "Dátum a čas"
+
+#: uniresources.caption_170
+msgid "All"
+msgstr "Všetky"
+
+#: uniresources.caption_171
+msgid "Renewable only"
+msgstr "Len obnoviteľné"
+
+#: uniresources.caption_172
+msgid "Non-renewable only (damaged)"
+msgstr "Len neobnoviteľné (poškodené)"
+
+#: uniresources.caption_173
+msgid "SQL COMMAND RESULTS"
+msgstr "VÝSLEDKY SQL PRÍKAZU"
+
+#: uniresources.caption_174
+msgid "MAKE A DATABASE BACKUP BEFORE USE !"
+msgstr "PRED POUŽITÍM SI ZÁLOHUJTE DATABÁZU!"
+
+#: uniresources.caption_175
+msgid "WRONG SQL COMMAND CAN CORRUPT YOUR DATABASE !"
+msgstr "NESPRÁVNY SQL PRÍKAZ MÔŽE POŠKODIŤ VAŠU DATABÁZU !"
+
+#: uniresources.caption_176
+msgid "Select SQL command:"
+msgstr "Vyberte SQL príkaz:"
+
+#: uniresources.caption_177
+msgid "Show database structure (\"master table\")"
+msgstr "Zobraziť štruktúru databázy (tzv. \"master table\")"
+
+#: uniresources.caption_178
+msgid "Show all transactions"
+msgstr "Ukázať všetky transakcie"
+
+#: uniresources.caption_179
+msgid "VACUUM (this command reduces database size by erasing deleted records)"
+msgstr ""
+"VACUUM (tento príkaz zmenší veľkosť databázy odstránením vymazaných záznamov)"
+
+#: uniresources.caption_18
+msgid "FILTER"
+msgstr "FILTER"
+
+#: uniresources.caption_180
+msgid "Own SQL command:"
+msgstr "Vlastný SQL príkaz:"
+
+#: uniresources.caption_181
+msgid "Transfer"
+msgstr "Presun"
+
+#: uniresources.caption_182
+msgid "IMPORT FILE"
+msgstr "IMPORTOVAŤ SÚBOR"
+
+#: uniresources.caption_183
+msgid "SELECT FILE TO IMPORT"
+msgstr "OZNAČTE SÚBOR PRE IMPORT"
+
+#: uniresources.caption_184
+msgid ""
+"To be strong, your password should contain:%- at least one lower case "
+"letter%- at least one upper case letter%- at least one digit"
+msgstr ""
+"Aby bolo Vaše heslo silné, musí obsahovať:%- najmenej jedno malé písmeno%- "
+"najmenej jedno veľké písmeno%- najmenej jednu číslicu"
+
+#: uniresources.caption_185
+msgid "USE STRONG PASSWORD !"
+msgstr "POUŽITE SILNÉ HESLO !"
+
+#: uniresources.caption_186
+msgid "Old password"
+msgstr "Staré heslo"
+
+#: uniresources.caption_187
+msgid "New password"
+msgstr "Nové heslo"
+
+#: uniresources.caption_188
+msgid "Confirm password"
+msgstr "Potvrdenie hesla"
+
+#: uniresources.caption_189
+msgid "CONGRATULATION !!!"
+msgstr "GRATULUJEM !!!"
+
+#: uniresources.caption_19
+msgid "Month"
+msgstr "Mesiac"
+
+#: uniresources.caption_190
+msgid "YOUR NEW DATABASE WAS SUCCESSFULY CREATED !"
+msgstr "VAŠA NOVÁ DATABÁZA BOLA ÚSPEŠNE VYTVORENÁ !"
+
+#: uniresources.caption_191
+msgid "Choose your next step now:"
+msgstr "Vyberte si nasledovný krok:"
+
+#: uniresources.caption_192
+msgid "Strongly reccomanded"
+msgstr "Silne odporúčané"
+
+#: uniresources.caption_193
+msgid "PROTECT THE DATABASE WITH THE PASSWORD"
+msgstr "OCHRÁNIŤ DATABÁZU HESLOM"
+
+#: uniresources.caption_194
+msgid "For new users"
+msgstr "Pre nových užívateľov"
+
+#: uniresources.caption_195
+msgid "RUN THE BEGINNER'S GUIDE"
+msgstr "SPUSTIŤ SPRIEVODCU PRE ZAČIATOČNÍKA"
+
+#: uniresources.caption_196
+msgid "For old users"
+msgstr "Pre starších užívateľov"
+
+#: uniresources.caption_197
+msgid "IMPORT VERSION 2.x"
+msgstr "IMPORTOVAŤ VERZIU 2.x"
+
+#: uniresources.caption_198
+msgid "I am ready"
+msgstr "Som pripravený"
+
+#: uniresources.caption_199
+msgid "LET'S GO WORK"
+msgstr "POĎME PRACOVAŤ"
+
+#: uniresources.caption_20
+msgid "Year"
+msgstr "Rok"
+
+#: uniresources.caption_200
+msgid "ORIGINAL TRANSACTION"
+msgstr "PÔVODNÁ TRANSAKCIA"
+
+#: uniresources.caption_201
+msgid "CHANGED FIELDS"
+msgstr "ZMENENÉ POLIA"
+
+#: uniresources.caption_202
+msgid "SHORTCUT KEY"
+msgstr "KLÁVESOVÁ SKRATKA"
+
+#: uniresources.caption_203
+msgid "New shortcut"
+msgstr "Nová klávesová skratka"
+
+#: uniresources.caption_204
+msgid "Action"
+msgstr "Akcia"
+
+#: uniresources.caption_205
+msgid "Current shortcut"
+msgstr "Aktuálna klávesová skratka"
+
+#: uniresources.caption_206
+msgid "Shortcut"
+msgstr "Skratka"
+
+#: uniresources.caption_207
+msgid "Once"
+msgstr "Raz"
+
+#: uniresources.caption_208
+msgid "Every X days"
+msgstr "Každých X dní"
+
+#: uniresources.caption_209
+msgid "Daily"
+msgstr "Denne"
+
+#: uniresources.caption_21
+msgid "Reset"
+msgstr "Resetovať"
+
+#: uniresources.caption_210
+msgid "Weekly"
+msgstr "Týždenne"
+
+#: uniresources.caption_211
+msgid "Fortnightly"
+msgstr "Dvojtýždenne"
+
+#: uniresources.caption_212
+msgid "Monthly"
+msgstr "Mesačne"
+
+#: uniresources.caption_213
+msgid "Quarterly"
+msgstr "Štvrťročne"
+
+#: uniresources.caption_214
+msgid "Biannually"
+msgstr "Polročne"
+
+#: uniresources.caption_215
+msgid "Yearly"
+msgstr "Ročne"
+
+#: uniresources.caption_216
+msgid "If a scheduled payment falls on a"
+msgstr "Ak pripadne plánovaná platba na deň"
+
+#: uniresources.caption_217
+msgid "move the payment to one day"
+msgstr "presunúť platbu o jeden deň"
+
+#: uniresources.caption_218
+msgid "before"
+msgstr "skôr"
+
+#: uniresources.caption_219
+msgid "after"
+msgstr "neskôr"
+
+#: uniresources.caption_22
+msgid "Show INI file"
+msgstr "Zobraziť INI súbor"
+
+#: uniresources.caption_220
+msgid "Note"
+msgstr "Poznámka"
+
+#: uniresources.caption_221
+msgid ""
+"These options work only for monthly, quarterly, biannually and yearly "
+"repeating transactions!"
+msgstr ""
+"Táto voľba funguje len pre mesačne, štvrťročne, polročne a ročne sa "
+"opakujúce transakcie!"
+
+#: uniresources.caption_222
+msgctxt "uniresources.caption_222"
+msgid "public holiday"
+msgstr "štátny sviatok"
+
+#: uniresources.caption_223
+msgid "to make backup of database"
+msgstr "vytvoriť zálohu databázy"
+
+#: uniresources.caption_224
+#, object-pascal-format
+msgctxt "uniresources.caption_224"
+msgid ""
+"Your backup folder doesn't exists.%Please, set the folder first or turn off "
+"the back up."
+msgstr ""
+"Váš záložný priečinok neexistuje.%Prosím, najprv nastavte priečinok alebo "
+"vypnite zálohovanie."
+
+#: uniresources.caption_225
+msgid "Maximal count of backup files"
+msgstr "Maximálny počet súborov pre zálohovanie"
+
+#: uniresources.caption_226
+msgid "Show message about successful backup of the database"
+msgstr "Zobraziť správu o úspešnom zálohovaní databázy"
+
+#: uniresources.caption_227
+msgid "Your database has been backed up successful to the folder"
+msgstr "Vaša databáza bola úspešne zálohovaná do adresára"
+
+#: uniresources.caption_228
+msgid "Plan"
+msgstr "Plán"
+
+#: uniresources.caption_229
+msgid "Reality"
+msgstr "Skutočnosť"
+
+#: uniresources.caption_23
+msgid "Back"
+msgstr "Späť"
+
+#: uniresources.caption_230
+msgid "Index"
+msgstr "Index"
+
+#: uniresources.caption_231
+msgid "Difference"
+msgstr "Rozdiel"
+
+#: uniresources.caption_232
+msgid "Planned amount"
+msgstr "Plánovaná suma"
+
+#: uniresources.caption_233
+msgid "Budgets"
+msgstr "Rozpočty"
+
+#: uniresources.caption_234
+msgid "Periods"
+msgstr "Obdobia"
+
+#: uniresources.caption_235
+msgid "Budget type"
+msgstr "Typ rozpočtu"
+
+#: uniresources.caption_236
+msgid "Hide column DIFFERENCE"
+msgstr "Skryť stĺpec ROZDIEL"
+
+#: uniresources.caption_237
+msgid "Hide column INDEX"
+msgstr "Skryť stĺpec INDEX"
+
+#: uniresources.caption_238
+msgid "Main window"
+msgstr "Hlavné okno"
+
+#: uniresources.caption_239
+msgid "Show marks"
+msgstr "Zobraziť značky"
+
+#: uniresources.caption_24
+msgid "Next"
+msgstr "Ďalej"
+
+#: uniresources.caption_240
+msgid "Credit transactions color"
+msgstr "Farba kreditnej transakcie"
+
+#: uniresources.caption_241
+msgctxt "uniresources.caption_241"
+msgid "Transfers(+) transactions color"
+msgstr "Farba transakcie pre presun(+)"
+
+#: uniresources.caption_242
+msgctxt "uniresources.caption_242"
+msgid "Transfers(-) transactions color"
+msgstr "Farba transakcie pre presun(-)"
+
+#: uniresources.caption_243
+msgid "On close"
+msgstr "Pri ukončení"
+
+#: uniresources.caption_244
+msgid "to show a confirmation dialog about closing the database"
+msgstr "zobraziť dialógové okno s potvrdením o zatvorení databázy"
+
+#: uniresources.caption_245
+msgid "List of reports"
+msgstr "Zoznam reportov"
+
+#: uniresources.caption_246
+msgid "Font of all lists"
+msgstr "Písmo všetkých zoznamov"
+
+#: uniresources.caption_247
+msgid "Time"
+msgstr "Čas"
+
+#: uniresources.caption_248
+msgid "Order"
+msgstr "Poradie"
+
+#: uniresources.caption_249
+msgid "File"
+msgstr "Súbor"
+
+#: uniresources.caption_25
+msgid "Transactions"
+msgstr "Transakcie"
+
+#: uniresources.caption_250
+msgid "All files"
+msgstr "Všetky súbory"
+
+#: uniresources.caption_251
+msgid "Template"
+msgstr "Šablóna"
+
+#: uniresources.caption_252
+msgctxt "uniresources.caption_252"
+msgid "Template name"
+msgstr "Názov šablóny"
+
+#: uniresources.caption_253
+msgid "TEMPLATE FOR IMPORT"
+msgstr "ŠABLÓNA PRE IMPORT"
+
+#: uniresources.caption_254
+msgid "Do not import"
+msgstr "Neimportovať"
+
+#: uniresources.caption_255
+msgid "lines from the begining"
+msgstr "riadkov od začiatku"
+
+#: uniresources.caption_256
+msgid "lines from the end"
+msgstr "riadkov od konca"
+
+#: uniresources.caption_257
+msgid "Fields separator"
+msgstr "Oddeľovač polí"
+
+#: uniresources.caption_258
+msgid "Cut quotes"
+msgstr "Orezať úvodzovky"
+
+#: uniresources.caption_259
+msgid "Origin text"
+msgstr "Pôvodný text"
+
+#: uniresources.caption_26
+msgid "Date"
+msgstr "Dátum"
+
+#: uniresources.caption_260
+msgid "PREPARED DATA FOR IMPORT"
+msgstr "PRIPRAVENÉ ÚDAJE NA IMPORT"
+
+#: uniresources.caption_261
+msgctxt "uniresources.caption_261"
+msgid "Imported file"
+msgstr "Importovaný súbor"
+
+#: uniresources.caption_262
+msgid "Column"
+msgstr "Stĺpec"
+
+#: uniresources.caption_263
+msgid "First value test"
+msgstr "Test prvej hodnoty"
+
+#: uniresources.caption_264
+msgid "Use amount sign (+/-)"
+msgstr "Použiť znak sumy (+/-)"
+
+#: uniresources.caption_265
+msgid "Credit symbol"
+msgstr "Symbol pre príjem"
+
+#: uniresources.caption_266
+msgid "Debit symbol"
+msgstr "Symbol výdaju"
+
+#: uniresources.caption_267
+msgid "Set manually"
+msgstr "Nastaviť ručne"
+
+#: uniresources.caption_268
+msgid "Set automatically"
+msgstr "Nastaviť automaticky"
+
+#: uniresources.caption_269
+msgid "Imported row"
+msgstr "Importovaný riadok"
+
+#: uniresources.caption_27
+msgid "Day"
+msgstr "Deň"
+
+#: uniresources.caption_270
+msgid "Icons size"
+msgstr "Veľkosť ikon"
+
+#: uniresources.caption_271
+msgid "Record"
+msgstr "Záznam"
+
+#: uniresources.caption_272
+msgid "Copy"
+msgstr "Kopírovať"
+
+#: uniresources.caption_273
+msgid "Select all"
+msgstr "Označiť všetko"
+
+#: uniresources.caption_274
+msgid "Form"
+msgstr "Okno (formulár)"
+
+#: uniresources.caption_275
+msgid "Edit template"
+msgstr "Opraviť šablónu"
+
+#: uniresources.caption_276
+msgid "Press a key (or keys) to set new shortcut for this action"
+msgstr ""
+"Stlačte kláves (alebo klávesy) pre nastavenie klávesovej skratky pre túto "
+"akciu"
+
+#: uniresources.caption_277
+msgid "Old shortcut"
+msgstr "Stará klávesová skratka"
+
+#: uniresources.caption_278
+msgid "Default"
+msgstr "Prednastavené"
+
+#: uniresources.caption_279
+msgid "Check new version"
+msgstr "Skontrolovať novú verziu"
+
+#: uniresources.caption_28
+msgid "Period"
+msgstr "Obdobie"
+
+#: uniresources.caption_280
+msgid "Confirm each payment separately"
+msgstr "Potvrdiť každú platby zvlášť"
+
+#: uniresources.caption_281
+msgid "Show scheduled payments for"
+msgstr "Zobraziť tiež plánované platby pre"
+
+#: uniresources.caption_282
+msgid "weeks too"
+msgstr "týždňov"
+
+#: uniresources.caption_283
+#, object-pascal-format
+msgid "Wrong SQL command.%Please, check the name of the tables or fields."
+msgstr "Nesprávny príkaz SQL.%Prosím, skontrolujte názov tabuliek alebo polí."
+
+#: uniresources.caption_284
+msgid "Backup folder"
+msgstr "Záložný priečinok"
+
+#: uniresources.caption_285
+msgid "External link"
+msgstr "Externý odkaz"
+
+#: uniresources.caption_286
+msgid "NOTE% Don't forget to use negative numbers for debits."
+msgstr "POZNÁMKA% Nezabudnite používať záporné čísla pre debety."
+
+#: uniresources.caption_287
+msgid "Balance detail"
+msgstr "Detail salda"
+
+#: uniresources.caption_288
+msgctxt "uniresources.caption_288"
+msgid "Print the transactions summary table on a separately page"
+msgstr "Vytlačiť sumárnu tabuľku transakcií na samostatnej strane"
+
+#: uniresources.caption_29
+msgid "Copy selected"
+msgstr "Skopírovať označené"
+
+#: uniresources.caption_299
+msgid "display the amount in bold"
+msgstr "zobrazenie sumy tučným písmom"
+
+#: uniresources.caption_30
+msgid "Print selected"
+msgstr "Vytlačiť označené"
+
+#: uniresources.caption_300
+msgid "display subcategories in capital letters"
+msgstr "zobrazenie podkategórií veľkými písmenami"
+
+#: uniresources.caption_301
+msgctxt "uniresources.caption_301"
+msgid "enable transfer to the same account"
+msgstr "umožniť prevod na ten istý účet"
+
+#: uniresources.caption_302
+msgid "Weeks"
+msgstr "Týždne"
+
+#: uniresources.caption_303
+msgid "Months"
+msgstr "Mesiace"
+
+#: uniresources.caption_304
+msgid "Quarters"
+msgstr "Štvrťroky"
+
+#: uniresources.caption_305
+msgid "Restrictions"
+msgstr "Obmedzenia"
+
+#: uniresources.caption_306
+msgid "no restrictions"
+msgstr "bez obmedzenia"
+
+#: uniresources.caption_307
+msgid "not older than"
+msgstr "nie staršie než"
+
+#: uniresources.caption_308
+msgid "Days"
+msgstr "Dni"
+
+#: uniresources.caption_309
+msgid "Years"
+msgstr "Roky"
+
+#: uniresources.caption_31
+msgid "Print transaction"
+msgstr "Vytlačiť transakcie"
+
+#: uniresources.caption_310
+msgid "Chronology"
+msgstr "Chronológia"
+
+#: uniresources.caption_311
+msgid "Intervals"
+msgstr "Intervaly"
+
+#: uniresources.caption_312
+msgid "Show pie chart of summary"
+msgstr "Zobrazovať kruhový graf sumarizácie"
+
+#: uniresources.caption_313
+msgid "Icons by"
+msgstr "Ikonky zo servera"
+
+#: uniresources.caption_314
+msgid "Show series"
+msgstr "Zobraziť série"
+
+#: uniresources.caption_315
+msgid "Show points"
+msgstr "Zobraziť body"
+
+#: uniresources.caption_316
+msgid "if a day is set in the filter, use the current date"
+msgstr "ak je vo filtri nastavený deň, použiť aktuálny dátum"
+
+#: uniresources.caption_317
+msgid "use the date shift according to the settings in the program"
+msgstr "použiť posun dátumu podľa nastavenia v programe"
+
+#: uniresources.caption_318
+msgid "Cross tables"
+msgstr "Krížové tabuľky"
+
+#: uniresources.caption_319
+msgid "Simple transaction"
+msgstr "Jednoduchá transakcia"
+
+#: uniresources.caption_32
+msgid "Scheduled date"
+msgstr "Plánovaný dátum"
+
+#: uniresources.caption_320
+msgid "Multiple transaction"
+msgstr "Viacnásobná transakcia"
+
+#: uniresources.caption_321
+msgid "Kind"
+msgstr "Druh"
+
+#: uniresources.caption_322
+msgid "DB structure"
+msgstr "Štruktúra databázy"
+
+#: uniresources.caption_323
+msgid "Created in Apricot software"
+msgstr "Vytvorené v softvéri Apricot"
+
+#: uniresources.caption_324
+msgid "to show a confirmation dialog about backup of the database"
+msgstr "zobraziť dialógové okno s potvrdením o zatvorení databázy"
+
+#: uniresources.caption_325
+msgid "to encrypt the database (required database password protection!)"
+msgstr "zašifrovať databázu (vyžaduje ochranu databázy heslom!)"
+
+#: uniresources.caption_326
+msgctxt "uniresources.caption_326"
+msgid "Your database was not encrypt now."
+msgstr "Vaša databáza teraz nebola zašifrovaná."
+
+#: uniresources.caption_327
+msgid "Red color for buttons DELETE"
+msgstr "Červená farba pre tlačidlá DELETE"
+
+#: uniresources.caption_328
+msgid "Buttons bar"
+msgstr "Panel tlačidiel"
+
+#: uniresources.caption_329
+msgid "Buttons size"
+msgstr "Veľkosť tlačidiel"
+
+#: uniresources.caption_33
+msgid "Swap order"
+msgstr "Vymeniť poradie"
+
+#: uniresources.caption_330
+msgid "Buttons visibility"
+msgstr "Viditeľnosť tlačidiel"
+
+#: uniresources.caption_34
+msgid "Account book"
+msgstr "Účtovná kniha"
+
+#: uniresources.caption_35
+msgid "Current balance"
+msgstr "Saldo"
+
+#: uniresources.caption_36
+msgid "Final balance"
+msgstr "Konečný stav"
+
+#: uniresources.caption_37
+msgid "Starting balance"
+msgstr "Počiatočný stav"
+
+#: uniresources.caption_38
+msgid "Credits"
+msgstr "Príjmy"
+
+#: uniresources.caption_39
+msgid "Debits"
+msgstr "Výdaje"
+
+#: uniresources.caption_40
+msgid "Transfers"
+msgstr "Presuny"
+
+#: uniresources.caption_41
+msgid "Average"
+msgstr "Priemer"
+
+#: uniresources.caption_42
+msgid "Amount"
+msgstr "Suma"
+
+#: uniresources.caption_43
+msgid "Detail"
+msgstr "Detail"
+
+#: uniresources.caption_44
+msgid "List"
+msgstr "Zoznam"
+
+#: uniresources.caption_45
+msgid "New record"
+msgstr "Nový záznam"
+
+#: uniresources.caption_46
+msgid "Edit record"
+msgstr "Opraviť záznam"
+
+#: uniresources.caption_47
+msgid "Count of selected transactions:"
+msgstr "Počet označených transakcií:"
+
+#: uniresources.caption_48
+msgid "Restore"
+msgstr "Obnoviť"
+
+#: uniresources.caption_49
+msgid "Name"
+msgstr "Názov"
+
+#: uniresources.caption_50
+msgid "Account"
+msgstr "Účet"
+
+#: uniresources.caption_51
+msgid "Status"
+msgstr "Status"
+
+#: uniresources.caption_52
+msgid "Currency"
+msgstr "Mena"
+
+#: uniresources.caption_53
+msgid "ID"
+msgstr "ID"
+
+#: uniresources.caption_54
+msgid "Category"
+msgstr "Kate&gória"
+
+#: uniresources.caption_55
+msgid "Active"
+msgstr "Aktívny"
+
+#: uniresources.caption_56
+msgid "Comment"
+msgstr "Popis"
+
+#: uniresources.caption_57
+msgid "Passive"
+msgstr "Pasívny"
+
+#: uniresources.caption_58
+msgid "Person"
+msgstr "Osoba"
+
+#: uniresources.caption_59
+msgid "Archive"
+msgstr "Archívny"
+
+#: uniresources.caption_60
+msgid "Payee"
+msgstr "Partner"
+
+#: uniresources.caption_61
+msgid "in the category"
+msgstr "v kategórii"
+
+#: uniresources.caption_62
+msgid "Tag"
+msgstr "Štítok"
+
+#: uniresources.caption_63
+msgid "Type"
+msgstr "Typ"
+
+#: uniresources.caption_64
+msgid "Records"
+msgstr "Záznamy"
+
+#: uniresources.caption_65
+msgid "Database properties"
+msgstr "Vlastnosti databázy"
+
+#: uniresources.caption_66
+msgid "Scheduled payments"
+msgstr "Plánované platby"
+
+#: uniresources.caption_67
+msgid "History"
+msgstr "História"
+
+#: uniresources.caption_68
+msgid "Print"
+msgstr "Vytlačiť"
+
+#: uniresources.caption_69
+msgid "From the date"
+msgstr "Od dátumu"
+
+#: uniresources.caption_70
+msgid "To the date"
+msgstr "Do dátumu"
+
+#: uniresources.caption_71
+msgid "Code"
+msgstr "Kód"
+
+#: uniresources.caption_72
+msgid "Write"
+msgstr "Zapísať"
+
+#: uniresources.caption_73
+msgid "Common data"
+msgstr "Spoločné údaje"
+
+#: uniresources.caption_74
+msgid "Multiple additions"
+msgstr "Viacnásobné pridanie"
+
+#: uniresources.caption_75
+msgid "Debit"
+msgstr "Výdaj"
+
+#: uniresources.caption_76
+msgid "Credit"
+msgstr "Príjem"
+
+#: uniresources.caption_77
+msgid "From account"
+msgstr "Z účtu"
+
+#: uniresources.caption_78
+msgid "To account"
+msgstr "Na účet"
+
+#: uniresources.caption_79
+msgid "Balance"
+msgstr "Rozdiel"
+
+#: uniresources.caption_80
+msgid "Subcategory"
+msgstr "Podkategória"
+
+#: uniresources.caption_81
+msgid "Edited"
+msgstr "Opravené"
+
+#: uniresources.caption_82
+msgid "Statistics"
+msgstr "Štatistika"
+
+#: uniresources.caption_83
+msgid "Paid"
+msgstr "Uhradené"
+
+#: uniresources.caption_84
+msgid "Main currency"
+msgstr "Hlavná mena"
+
+#: uniresources.caption_85
+msgid "Planning calendar"
+msgstr "Plánovací kalendár"
+
+#: uniresources.caption_86
+msgid "EDIT TRANSACTION"
+msgstr "OPRAVIŤ TRANSAKCIU"
+
+#: uniresources.caption_87
+msgid "EDIT TRANSACTIONS"
+msgstr "OPRAVIŤ TRANSAKCIE"
+
+#: uniresources.caption_88
+msgid "Exchange rate"
+msgstr "Výmenný kurz"
+
+#: uniresources.caption_89
+msgid "Value"
+msgstr "Hodnota"
+
+#: uniresources.caption_90
+msgid "Added"
+msgstr "Pridané"
+
+#: uniresources.caption_91
+msgid "Starting date"
+msgstr "Počiatočný dátum"
+
+#: uniresources.caption_92
+msgid "Holiday name"
+msgstr "Názov sviatku"
+
+#: uniresources.caption_93
+msgid "Deduct from the amount"
+msgstr "Odpočítať zo sumy"
+
+#: uniresources.caption_94
+msgid "Summary of the list"
+msgstr "Sumár za zoznam"
+
+#: uniresources.caption_95
+msgid "Periodicity"
+msgstr "Periodicita"
+
+#: uniresources.caption_96
+msgid "File name"
+msgstr "Názov súboru"
+
+#: uniresources.caption_97
+msgid "Location"
+msgstr "Lokalita"
+
+#: uniresources.caption_98
+msgid "File size"
+msgstr "Veľkosť súboru"
+
+#: uniresources.caption_99
+msgid "Protection by password"
+msgstr "Ochrana heslom"
+
+#: uniresources.chart_01
+msgid "Graphs"
+msgstr "Grafy"
+
+#: uniresources.chart_02
+msgctxt "uniresources.chart_02"
+msgid "left mouse click to switch between marks"
+msgstr "prepínanie značiek ľavým tlačidlom myši"
+
+#: uniresources.chart_03
+msgctxt "uniresources.chart_03"
+msgid "Show legend"
+msgstr "Zobraziť legendu"
+
+#: uniresources.chart_04
+msgctxt "uniresources.chart_04"
+msgid "Labels on bottom axis"
+msgstr "Štítky na spodnej osi"
+
+#: uniresources.chart_05
+msgctxt "uniresources.chart_05"
+msgid "Angle of rotation"
+msgstr "Uhol pootočenia"
+
+#: uniresources.chart_06
+msgctxt "uniresources.chart_06"
+msgid "degree"
+msgstr "stupňov"
+
+#: uniresources.chart_07
+msgctxt "uniresources.chart_07"
+msgid "Show empty rows (with zero values)"
+msgstr "Zobraziť prázdne riadky (s nulovými hodnotami)"
+
+#: uniresources.chart_08
+msgctxt "uniresources.chart_08"
+msgid "rows in the table"
+msgstr "riadkov v tabuľke"
+
+#: uniresources.chart_09
+msgid "The Chart has been copied to the clipboard"
+msgstr "Graf bol skopírovaný do schránky"
+
+#: uniresources.chart_10
+msgid "Wrap the text string"
+msgstr "Zalamovať text"
+
+#: uniresources.chart_11
+msgid "Graph"
+msgstr "Graf"
+
+#: uniresources.chart_12
+msgid "Data"
+msgstr "Údaje"
+
+#: uniresources.error_00
+#, object-pascal-format
+msgid "Missing SQLITE3.DLL library.%Database can not be created or opened."
+msgstr "Chýba knižnica SQLITE3.DLL.%Databázu nemožno vytvoriť ani otvoriť."
+
+#: uniresources.error_01
+msgid "There is a problem with deleting existing file."
+msgstr "Vyskytol sa problém s odstránením existujúceho súboru."
+
+#: uniresources.error_02
+#, object-pascal-format
+msgid ""
+"The connectivity with database failed.%Program can not open the database."
+msgstr "Spojenie s databázou zlyhalo.%Program nemôže otvoriť databázu."
+
+#: uniresources.error_03
+msgid "You can not add or edit this item due the duplicity."
+msgstr "Túto položku nemožno pridať ani upraviť z dôvodu duplicity."
+
+#: uniresources.error_04
+msgid "The field % is required. You have to fill it before saving ..."
+msgstr "Pole % je povinné. Musíte ho vyplniť pred uložením..."
+
+#: uniresources.error_05
+msgid "Wrong value of the number!"
+msgstr "Nesprávna hodnota čísla!"
+
+#: uniresources.error_06
+msgid "Forbidden character % in the text! Please, correct it first ..."
+msgstr "Zakázaný znak % v texte! Najskôr ho opravte, prosím ..."
+
+#: uniresources.error_07
+msgid "Wrong day in selected month! Please, check it now ..."
+msgstr "Nesprávny deň vo vybranom mesiaci! Prosím, skontrolujte to teraz..."
+
+#: uniresources.error_08
+msgid "The minimum length of the password is 5 letters, digits or signs."
+msgstr "Minimálna dĺžka hesla je 5 písmen, číslic alebo znakov."
+
+#: uniresources.error_09
+msgid "New and confirmed password are different!"
+msgstr "Nové a potvrdené heslo sa líšia!"
+
+#: uniresources.error_10
+msgid ""
+"You can't delete selected currency %2 [%1]%4because it is used in the "
+"account %3.%4Please, delete this account first ..."
+msgstr ""
+"Vybranú menu %2 [%1]%4 nemôžete odstrániť, pretože sa používa na účte %3."
+"%4Prosím, najskôr odstráňte tento účet..."
+
+#: uniresources.error_11
+#, object-pascal-format
+msgid "The database seems to be malformed.%Program can not open it."
+msgstr "Zdá sa, že databáza je poškodená.%Program ju nemôže otvoriť."
+
+#: uniresources.error_12
+msgid ""
+"You can not use the same account %1 for transfer (credit and debit) at the "
+"same time. %2 Use two different accounts."
+msgstr ""
+"Nemôžete použiť ten istý účet %1 pre presun (kreditný a debetný) súčasne. %2 "
+"Použite dva rôzne účty."
+
+#: uniresources.error_13
+msgid ""
+"You can not use in the transaction older date than the date, when the "
+"account % was created!"
+msgstr ""
+"V transakcii nemôžete použiť starší dátum, ako je dátum, kedy bol účet % "
+"vytvorený!"
+
+#: uniresources.error_14
+msgid "Program can not find a printing template assigned to this list:"
+msgstr "Program nemôže nájsť tlačovú šablónu priradenú k tomuto zoznamu:"
+
+#: uniresources.error_15
+msgid "Wrong date !"
+msgstr "Nesprávny dátum !"
+
+#: uniresources.error_16
+msgid ""
+"Choose one account in the filter only and then try print \"The account "
+"book\" again."
+msgstr ""
+"Vo filtri vyberte len jeden účet a potom skúste znova vytlačiť \"Knihu "
+"účtov\"."
+
+#: uniresources.error_17
+#, object-pascal-format
+msgid ""
+"This function is not working yet.%Maybe in the next version it will be "
+"implemented.%Please be patient."
+msgstr ""
+"Táto funkcia zatiaľ nefunguje.%Možno bude implementovaná v ďalšej verzii."
+"%Prosím o trpezlivosť."
+
+#: uniresources.error_18
+msgid ""
+"Program can not open this type of database (perhaps created in different "
+"program)."
+msgstr ""
+"Program nedokáže otvoriť tento typ databázy (možno vytvorený v inom "
+"programe)."
+
+#: uniresources.error_19
+msgid "Sorry, there are no data to show you ..."
+msgstr "Žiaľ, nie sú k dispozícii žiadne údaje na zobrazenie..."
+
+#: uniresources.error_20
+#, object-pascal-format
+msgid ""
+"The import failed due the problem with the file.%Please, be sure that the "
+"imported file is not encrypted!"
+msgstr ""
+"Import sa nepodaril kvôli problému so súborom.%Prosím, uistite sa, že "
+"importovaný súbor nie je zašifrovaný!"
+
+#: uniresources.error_21
+msgid "Wrong password!"
+msgstr "Nesprávne heslo!"
+
+#: uniresources.error_22
+#, object-pascal-format
+msgid ""
+"Program requires SQLite3 library (libsqlite3-dev).%Program will be "
+"terminated now."
+msgstr ""
+"Program vyžaduje knižnicu SQLite3 (libsqlite3-dev).%Program bude teraz "
+"ukončený."
+
+#: uniresources.error_23
+msgid "The table has more than 255 columns. The query will be closed."
+msgstr "Tabuľka má viac  ako 255 stĺpcov. Dotaz nebude vykonaný."
+
+#: uniresources.error_24
+msgid "Unrecognized character %1 in the formula."
+msgstr "Nerozpoznaný znak %1 vo vzorci."
+
+#: uniresources.error_25
+msgid "There is 1 corrupted record in your database."
+msgstr "V databáze je 1 poškodený záznam."
+
+#: uniresources.error_26
+msgid "There are % corrupted records in your database."
+msgstr "Vo vašej databáze sú poškodené záznamy v počte %."
+
+#: uniresources.error_27
+msgid "Corrupted records will not be imported into your new database!"
+msgstr "Poškodené záznamy sa do novej databázy neimportujú!"
+
+#: uniresources.error_28
+msgid "You can change this restriction in the program settings."
+msgstr "Toto obmedzenie môžete zmeniť v nastaveniach programu."
+
+#: uniresources.error_29
+msgid "You can not add transactions older then"
+msgstr "Nemôžete pridať transakciu staršiu než"
+
+#: uniresources.error_30
+msgid "You can not edit transactions older then"
+msgstr "Nemôžete opraviť transakciu staršiu než"
+
+#: uniresources.error_31
+msgid "You can not delete transactions older then"
+msgstr "Nemôžete vymazať transakciu staršiu než"
+
+#: uniresources.error_32
+msgid ""
+"The program cannot open your database % because another program is already "
+"using it."
+msgstr ""
+"Program nemôže otvoriť Vašu databázu %, pretože už ju používa iný program."
+
+#: uniresources.guide_01
+msgid "A BEGINNER'S GUIDE"
+msgstr "PRÍRUČKA PRE ZAČIATOČNÍKOV"
+
+#: uniresources.guide_02
+msgid "WELCOME TO THE GUIDE !"
+msgstr "VITAJTE V SPRIEVODCOVI !"
+
+#: uniresources.guide_03
+msgid ""
+"WELCOME TO THIS SIMPLE GUIDE!%You can find here a simple and short "
+"instructioms of how to add one daily record (transaction) to the database."
+"%It is important to know, that each transaction is bounded with some:%a) "
+"person,%b) account,%c) category (or subcategory) and%d) payee.%Therefore you "
+"have to add at least one person, one account (include the currency), one "
+"category (or subcategory) and one payee to the database first.%Let's go work!"
+msgstr ""
+"VITAJTE V TEJTO JEDNODUCHEJ PRÍRUČKE!%%Nájdete tu jednoduchý a krátky návod, "
+"ako pridať jeden denný záznam (transakciu) do databázy.%Je dôležité vedieť, "
+"že každá transakcia je ohraničená nejakou:%a) osobou,%b) účtom,%c) "
+"kategóriou (alebo podkategóriou) a%d) príjemcom platby.%Preto musíte do "
+"databázy najprv pridať aspoň jednu osobu, jeden účet (vrátane meny), jednu "
+"kategóriu (alebo podkategóriu) a jedného príjemcu.%%\n"
+"Poďme pracovať!"
+
+#: uniresources.guide_04
+msgid ""
+"ADD SOME PERSON TO THE LIST!%Click on following button (with persons image), "
+"to show the form for the LIST OF PERSONS. You can add, edit or delete "
+"people, who will used in the program.%You can NOW add the person's name "
+"(like JOHN, JOAN, SUGAR, ...) or you can simply use other descriptions (like "
+"MOTHER, SON, ALL, etc.).%Remember 4 basic commands (shortcuts), you can use "
+"for faster work with the lists:%1) press key INSERT to input new record to "
+"the list%2) press key SPACE to edit selected record in the list%3) press key "
+"DELETE to delete selected record(s) from the list%4) press key ESC to close "
+"any form (without any changes)."
+msgstr ""
+"PRIDAŤ NEJAKÚ OSOBU NA ZOZNAM!%\n"
+"Kliknutím na nasledujúce tlačidlo (s obrázkom osôb) zobrazíte formulár pre "
+"ZOZNAM OSÔB. Môžete pridávať, upravovať alebo odstraňovať osoby, ktoré sa "
+"budú používať v programe.%\n"
+"TERAZ môžete pridať meno osoby (napríklad JOHN, JOAN, SUGAR, ...) alebo "
+"môžete jednoducho použiť iné popisy (napríklad MATKA, SYN, VŠETCI atď.).%\n"
+"Zapamätajte si 4 základné príkazy (skratky), ktoré môžete použiť na "
+"rýchlejšiu prácu so zoznamami:%\n"
+"1) stlačením tlačidla INSERT vložíte do zoznamu nový záznam%\n"
+"2) stlačte kláves SPACE (medzerník) na úpravu vybraného záznamu v zozname%\n"
+"3) stlačením klávesu DELETE vymažete vybraný(-é) záznam(-y) zo zoznamu%\n"
+"4) stlačením klávesu ESC zatvoríte akýkoľvek formulár (bez akýchkoľvek "
+"zmien)."
+
+#: uniresources.guide_05
+msgid ""
+"NOW YOU CAN ADD YOUR ACCOUNT.%It can be cash, wallet, bank account, etc."
+"%Call them whatever you want (like My Cash, BANK1, BANK2, etc.)%You also "
+"have to fill at least 3 fields:%a) define starting amount of this account%b) "
+"starting day (of evidence) and%c) currency of this account."
+msgstr ""
+"TERAZ MÔŽETE PRIDAŤ SVOJ ÚČET.%Môže to byť hotovosť, peňaženka, bankový účet "
+"atď.%Nazvite ho ľubovoľne (napríklad Moja hotovosť, BANKA1, BANKA2 "
+"atď.)%Musíte tiež vyplniť aspoň 3 polia:%a) definujte počiatočnú sumu tohto "
+"účtu%b) počiatočný deň (evidencie) a%c) menu tohto účtu."
+
+#: uniresources.guide_06
+msgid ""
+"ADD CATEGORY TO THE LIST!%For viewing easy it is better to split your credit "
+"and debit records into categories and subcategories.%If you have a CAR "
+"(category), perhaps you would like to see all car expenses arranged by "
+"various  subcategories (eg. FUEL, SERVICE, TUNING, ...)%To do so, Open List "
+"of categories (push button) and add category CAR.%Then create subcategory "
+"FUEL.%After saving this CATEGORY and SUBCATEGORY repeat all this activities "
+"with subcategory SERVICE and TUNING.%Just select the category CAR from "
+"dropdown list."
+msgstr ""
+"PRIDAŤ KATEGÓRIU DO ZOZNAMU!%Pre jednoduché zobrazenie je lepšie rozdeliť "
+"záznamy o príjmoch a výdajoch na%kategórie a podkategórie.%Ak máte AUTO "
+"(kategória), možno by ste chceli vidieť všetky výdavky na auto%usporiadané "
+"podľa rôznych podkategórií (napr. PALIVO, SERVIS, TUNING, ...)%Ak to chcete "
+"urobiť, otvorte Zoznam kategórií (tlačidlo) a pridajte kategóriu AUTO%Potom "
+"vytvorte podkategóriu PALIVO.%Po uložení tejto KATEGÓRIE a podkategórie "
+"zopakujte všetky tieto činnosti%s podkategóriami SERVIS a TUNING%Stačí "
+"vybrať kategóriu AUTO z rozbaľovacieho zoznamu."
+
+#: uniresources.guide_07
+msgid ""
+"... AND AT THE END ADD SOME PAYEE TO THE LIST!%Click on following button "
+"(with basket image), to show the form for the LIST OF PAYEES.%You can add, "
+"edit or delete your business partner (where you get used to spending your "
+"money or from whom you receive the money).%You can NOW add the partner's "
+"name (like WALLMART, TESCO, AMAZON, LIDL, ...) or you can simply use other "
+"descriptions (like PARTNER 1, PARTNER 2, EMPLOYER, etc.)."
+msgstr ""
+"... A NA KONIEC PRIDAJTE DO ZOZNAMU PARTNERA (príjemcu alebo odosielateľa "
+"platby) !%\n"
+"Kliknutím na nasledujúce tlačidlo (s obrázkom košíka) zobrazíte formulár pre "
+"ZOZNAM PARTNEROV.%\n"
+"Môžete pridať, upraviť alebo vymazať svojho obchodného partnera (u ktorého "
+"zvyknete vydávať peniaze alebo od ktorého dostávate peniaze).%\n"
+"TERAZ môžete pridať meno partnera (napríklad WALLMART, TESCO, AMAZON, "
+"LIDL, ...) alebo môžete jednoducho použiť iný popis (napríklad PARTNER 1, "
+"PARTNER 2, ZAMESTNÁVATEĽ atď.)."
+
+#: uniresources.guide_08
+msgid ""
+"ADD YOUR FIRST TRANSACTION!%If you have added some persons, some accounts, "
+"some categories (with subcategories) and some payee, you can easily add new "
+"daily records (transactions) to the database.%To add a new debit record into "
+"the daily records, use button to open transaction form and fill all "
+"necessary fields.%Field AMOUNT and COMMENT are optional. If you did not "
+"previously add a required person, account, category (subcategory) or payee, "
+"just open the appropriate list again and add it to the list.%If you are "
+"finished, save this record and take a look at the main window.%Your new "
+"record should be visible there!!!%There are a few other lists, but these "
+"four are the most important."
+msgstr ""
+"PRIDAJTE SVOJU PRVÚ TRANSAKCIU!%\n"
+"Ak ste pridali niektoré osoby, niektoré účty, niektoré kategórie (s "
+"podkategóriami) a niektorých partnerov, môžete do databázy ľahko pridávať "
+"nové denné záznamy (transakcie).%\n"
+"Ak chcete pridať nový debetný záznam do denných záznamov, použite tlačidlo "
+"na otvorenie formulára transakcie a vyplňte všetky potrebné polia.%\n"
+"Polia SUMA a KOMENTÁR sú nepovinné. Ak ste predtým nepridali požadovanú "
+"osobu, účet, kategóriu (podkategóriu) alebo príjemcu, stačí znovu otvoriť "
+"príslušný zoznam a pridať ho do zoznamu.%\n"
+"Ak ste skončili, uložte tento záznam a pozrite sa na hlavné okno.%\n"
+"Váš nový záznam by tam mal byť viditeľný!!!%\n"
+"Existuje niekoľko ďalších zoznamov, ale tieto štyri sú najdôležitejšie."
+
+#: uniresources.guide_09
+msgid ""
+"FINISH! %We have reached the end of the guide!%If you have added some "
+"transactions to the main window, congratulations!%If not, go back and try "
+"again step by step.%I wish you success with this program! Good luck!%Author "
+"of the program%%If you won't be satisfied with my program, e-mail me.%But - "
+"if you are satisfied with it, tell your friends about it."
+msgstr ""
+"DOKONČENÉ!%Sme na konci tohto sprievodcu!%Ak ste do hlavného okna pridali "
+"niekoľko transakcií, gratulujem!%Ak nie, vráťte sa späť a skúste to krok za "
+"krokom znova.%Prajem vám, aby ste s týmto programom uspeli! Veľa šťastia!"
+"%Autor programu%%Ak nebudete s mojím programom spokojní, napíšte mi e-mail."
+"%Ale - ak s ním budete spokojní, povedzte o ňom svojim priateľom."
+
+#: uniresources.hint_01
+msgid "Add new item"
+msgstr "Pridať novú položku"
+
+#: uniresources.hint_02
+msgid "Edit selected item(s)"
+msgstr "Opraviť označený/é záznam/y"
+
+#: uniresources.hint_03
+msgid "Delete selected item(s)"
+msgstr "Vymazať označené položky"
+
+#: uniresources.hint_04
+msgid "Save item to the list"
+msgstr "Uložiť položku do zoznamu"
+
+#: uniresources.hint_05
+msgid "Cancel this activity"
+msgstr "Prerušiť túto činnosť"
+
+#: uniresources.hint_06
+msgid "Exit this window"
+msgstr "Opustiť toto okno"
+
+#: uniresources.hint_09
+msgid "Copy all item(s) to the clipboard"
+msgstr "Kopírovať všetky položky do schránky"
+
+#: uniresources.hint_10
+msgid "Show all nominal values of selected currency"
+msgstr "Zobraziť všetky nominálne hodnoty označenej meny"
+
+#: uniresources.hint_100
+msgid "Swap the order of both transactions within one day."
+msgstr "Vymeniť poradie obidvoch transakcií v rámci jedného dňa."
+
+#: uniresources.hint_101
+msgid "Write all checked scheduled payments to the transactions"
+msgstr "Zapísať všetky zaškrtnuté plánované platby do transakcií"
+
+#: uniresources.hint_102
+msgid "Save your password to the database"
+msgstr "Uložiť Vaše heslo do databázy"
+
+#: uniresources.hint_12
+msgid "Take a photo of current form"
+msgstr "Získať obrázok aktuálneho okna"
+
+#: uniresources.hint_13
+msgid "Print the list"
+msgstr "Vytlačiť zoznam"
+
+#: uniresources.hint_14
+msgid "Active = visible in all modules"
+msgstr "Aktívny = viditeľný vo všetkých moduloch"
+
+#: uniresources.hint_15
+msgid "Passive = visible in module Statistics only"
+msgstr "Pasívny = viditeľný iba v module Štatistika"
+
+#: uniresources.hint_16
+msgid "Archive = hidden in all modules"
+msgstr "Archívny = neviditeľný vo všetkých moduloch"
+
+#: uniresources.hint_17
+msgid "Show all scheduled payments in the selected schedule"
+msgstr "Zobraziť všetky plánované platby v označenom plánovači"
+
+#: uniresources.hint_18
+msgid "Duplicate selected item"
+msgstr "Duplikovať označenú položku"
+
+#: uniresources.hint_19
+msgid "Add new multiple items"
+msgstr "Pridať viaceré nové položky naraz"
+
+#: uniresources.hint_21
+#, object-pascal-format
+msgid "Execute SQL command.%0:sThe results wil be shown in the second panel."
+msgstr "Vykonať SQL príkaz.%0:s Výsledok bude zobrazený v novom okne."
+
+#: uniresources.hint_22
+msgid "Select all items in the list"
+msgstr "Označiť všetky položky v zozname"
+
+#: uniresources.hint_23
+msgid "Save all items to the list at once"
+msgstr "Uložiť všetky položky do zoznamu naraz"
+
+#: uniresources.hint_24
+msgid "Print the selected item detail"
+msgstr "Vytlačiť označený detail položky"
+
+#: uniresources.hint_25
+msgid "Show history of changes of the transaction"
+msgstr "Zobraziť históriu zmien transakcie"
+
+#: uniresources.hint_26
+msgid "Filter for multiple selection of items"
+msgstr "Filter pre viacnásobný výber položiek"
+
+#: uniresources.hint_30
+msgid "Create a new database"
+msgstr "Vytvoriť novú databázu"
+
+#: uniresources.hint_31
+msgid "Open an existing database"
+msgstr "Otvoriť existujúcu databázu"
+
+#: uniresources.hint_32
+msgid "Close open database"
+msgstr "Zatvoriť otvorenú databázu"
+
+#: uniresources.hint_33
+msgid "Import transactions to the database"
+msgstr "Import transakcií do databázy"
+
+#: uniresources.hint_34
+msgid "Export transactions from the database"
+msgstr "Export transakcií z databázy"
+
+#: uniresources.hint_35
+msgid "Change the database password"
+msgstr "Zmeniť heslo databázy"
+
+#: uniresources.hint_36
+msgid "Run SQL manager"
+msgstr "Spustiť SQL príkaz"
+
+#: uniresources.hint_37
+msgid "Run beginner's guide"
+msgstr "Spustiť sprievodcu pre začiatočníka"
+
+#: uniresources.hint_38
+msgid "Show database properties"
+msgstr "Zobraziť vlastnosti databázy"
+
+#: uniresources.hint_39
+msgid "Show recycle bin"
+msgstr "Zobraziť odpadkový kôš"
+
+#: uniresources.hint_40
+msgid "Show list of holidays"
+msgstr "Zobraziť zoznam štátnych sviatkov"
+
+#: uniresources.hint_41
+msgid "Show list of tags"
+msgstr "Zobraziť zoznam štítkov"
+
+#: uniresources.hint_42
+msgid "Show list of currencies"
+msgstr "Zobraziť zoznam mien"
+
+#: uniresources.hint_43
+msgid "Show list of payees"
+msgstr "Zobraziť zoznam partnerov"
+
+#: uniresources.hint_44
+msgid "Show list of comments"
+msgstr "Zobraziť zoznam popisov"
+
+#: uniresources.hint_45
+msgid "Show list of accounts"
+msgstr "Zobraziť zoznam účtov"
+
+#: uniresources.hint_46
+msgid "Show list of categories"
+msgstr "Zobraziť zoznam kategórií"
+
+#: uniresources.hint_47
+msgid "Show list of persons"
+msgstr "Zobraziť zoznam osôb"
+
+#: uniresources.hint_48
+msgid "Show list of values"
+msgstr "Zobraziť zoznam hodnôt"
+
+#: uniresources.hint_49
+msgid "Show list of types"
+msgstr "Zobraziť zoznam typov"
+
+#: uniresources.hint_50
+msgid "Show scheduler"
+msgstr "Zobraziť plánovač"
+
+#: uniresources.hint_51
+msgid "Write scheduled payments to the main table"
+msgstr "Zapísať plánované platby do hlavného okna"
+
+#: uniresources.hint_52
+msgid "Show calendar"
+msgstr "Zobraziť kalendár"
+
+#: uniresources.hint_53
+msgid "Show budget"
+msgstr "Zobraziť rozpočet"
+
+#: uniresources.hint_54
+msgid "Show reports"
+msgstr "Zobraziť reporty"
+
+#: uniresources.hint_55
+msgid "Show cash counter"
+msgstr "Zobraziť počítadlo hotovosti"
+
+#: uniresources.hint_56
+msgid "Show calculator"
+msgstr "Zobraziť kalkulačku"
+
+#: uniresources.hint_57
+msgid "Show program settings"
+msgstr "Zobraziť nastavenia programu"
+
+#: uniresources.hint_58
+msgid "Show About program"
+msgstr "Zobraziť okno O programe"
+
+#: uniresources.hint_59
+msgid "Exit program"
+msgstr "Ukončiť program"
+
+#: uniresources.hint_60
+msgid "Hint"
+msgstr "Nápoveď"
+
+#: uniresources.hint_61
+msgid ""
+"Name your budget and check some categories / subcategories, you want to "
+"watch (compare plan and real amounts). Then SAVE this new budget."
+msgstr ""
+"Pomenujte svoj rozpočet a zaškrtnite kategórie alebo podkategórie, ktoré "
+"chcete sledovať (porovnáva sa plánovaná a skutočná suma). Potom tento nový "
+"rozpočet ULOŽTE."
+
+#: uniresources.hint_62
+msgid "Now you can add the first period with the budgeted (planned) amounts."
+msgstr ""
+"Teraz môžete pridať prvé obdobie s rozpočtovanými (plánovanými) sumami."
+
+#: uniresources.hint_70
+msgid "Restore selected item(s)"
+msgstr "Obnoviť označený/é záznam/y"
+
+#: uniresources.hint_80
+msgid "Reset all fields (to be unchecked)"
+msgstr "Resetovať všetky polia (aby neboli zaškrtnuté)"
+
+#: uniresources.hint_81
+msgid "Check / uncheck all items"
+msgstr "Označiť / zrušiť označenie všetkých položiek"
+
+#: uniresources.license_01
+msgid ""
+"RQ MONEY is free software: you can redistribute it and/or modify it under "
+"the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 3 of the License, or (at your option) "
+"any later version.% %RQ MONEY is distributed in the hope that it will be "
+"useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General "
+"Public License for more details.% %You should have received a copy of the "
+"GNU General Public License along with RQ MONEY. If not, see:"
+msgstr ""
+"RQ MONEY je slobodný softvér; môžete ho šíriť a/alebo meniť za podmienok "
+"licencie GNU General Public License ako ju publikovala Free Software "
+"Foundation; a to buď verzie 3 alebo (podľa vášho uváženia) hociktorej "
+"neskoršej verzie.% %RQ MONEY je šírený vo viere, že bude užitočný, ale BEZ "
+"AKEJKOĽVEK ZÁRUKY; dokonca aj bez implicitnej záruky OBCHODOVATEĽNOSTI či "
+"VHODNOSTI NA URČITÝ ÚČEL. Podrobnosti nájdete v GNU General Public License.% "
+"%Spolu s programom RQ MONEY by ste mali dostať kópiu GNU General Public "
+"License. Ak sa tak nestalo, nájdete ju na adrese:"
+
+#: uniresources.menu_00
+msgid "&Database"
+msgstr "&Databáza"
+
+#: uniresources.menu_01
+msgid "&New"
+msgstr "&Nová"
+
+#: uniresources.menu_02
+msgid "&Open"
+msgstr "&Otvoriť"
+
+#: uniresources.menu_03
+msgid "&Close"
+msgstr "&Zatvoriť"
+
+#: uniresources.menu_04
+msgid "&Import"
+msgstr "&Import"
+
+#: uniresources.menu_05
+msgid "&Export"
+msgstr "&Export"
+
+#: uniresources.menu_06
+msgid "&Password"
+msgstr "&Heslo"
+
+#: uniresources.menu_07
+msgid "&Tutorial"
+msgstr "&Sprievodca"
+
+#: uniresources.menu_08
+msgid "S&QL manager"
+msgstr "S&QL manažér"
+
+#: uniresources.menu_09
+msgid "&Recycle bin"
+msgstr "&Kôš"
+
+#: uniresources.menu_10
+msgid "Propertie&s"
+msgstr "&Vlastnosti"
+
+#: uniresources.menu_20
+msgid "&Lists"
+msgstr "&Zoznamy"
+
+#: uniresources.menu_21
+msgid "&Holidays"
+msgstr "Š&tátne sviatky"
+
+#: uniresources.menu_22
+msgid "&Tags"
+msgstr "&Štítky"
+
+#: uniresources.menu_23
+msgid "&Currencies"
+msgstr "&Meny"
+
+#: uniresources.menu_24
+msgid "&Payees"
+msgstr "&Partneri"
+
+#: uniresources.menu_25
+msgid "C&omments"
+msgstr "&Komentáre"
+
+#: uniresources.menu_26
+msgid "&Accounts"
+msgstr "Ú&čty"
+
+#: uniresources.menu_27
+msgid "Cate&gories"
+msgstr "Kate&górie"
+
+#: uniresources.menu_28
+msgid "Per&sons"
+msgstr "&Osoby"
+
+#: uniresources.menu_29
+msgid "Subcategories"
+msgstr "Podkategórie"
+
+#: uniresources.menu_30
+msgid "&External links"
+msgstr "&Externé odkazy"
+
+#: uniresources.menu_40
+msgid "&Financial tools"
+msgstr "&Finančné nástroje"
+
+#: uniresources.menu_41
+msgid "&Scheduler"
+msgstr "&Plánovač"
+
+#: uniresources.menu_42
+msgid "&Write scheduled"
+msgstr "&Zapísať plánované platby"
+
+#: uniresources.menu_43
+msgid "Calen&dar"
+msgstr "&Kalendár"
+
+#: uniresources.menu_44
+msgid "&Budget"
+msgstr "&Rozpočet"
+
+#: uniresources.menu_45
+msgid "&Reports"
+msgstr "R&eporty"
+
+#: uniresources.menu_46
+msgid "&Cash counter"
+msgstr "P&očítadlo hotovosti"
+
+#: uniresources.menu_47
+msgid "Ca&lc"
+msgstr "Ka&lkulačka"
+
+#: uniresources.menu_60
+msgid "&Program"
+msgstr "&Program"
+
+#: uniresources.menu_61
+msgid "&Settings"
+msgstr "&Nastavenia"
+
+#: uniresources.menu_62
+msgid "&About"
+msgstr "&O programe"
+
+#: uniresources.menu_63
+msgid "&Exit"
+msgstr "&Ukončiť"
+
+#: uniresources.menu_64
+msgid "Check update"
+msgstr "Kontrola novej verzie"
+
+#: uniresources.menu_a01
+msgid "Author"
+msgstr "Autor"
+
+#: uniresources.menu_a02
+msgid "E-mail"
+msgstr "E-mail"
+
+#: uniresources.menu_a03
+msgid "Version"
+msgstr "Verzia"
+
+#: uniresources.menu_a04
+msgid "License"
+msgstr "Licencia"
+
+#: uniresources.menu_a05
+msgid "Translator"
+msgstr "Prekladateľ"
+
+#: uniresources.menu_a06
+msgid "Released"
+msgstr "Dátum vydania"
+
+#: uniresources.menu_a07
+msgid "Official website"
+msgstr "Oficiálne stránky"
+
+#: uniresources.menu_a08
+msgid "Developed in"
+msgstr "Programovací jazyk"
+
+#: uniresources.menu_a09
+msgid "Thanks"
+msgstr "Poďakovanie"
+
+#: uniresources.menu_a10
+msgid ""
+"Thanks to all the users who helped me a lot in developing this program with "
+"their advices, ideas, bug fixes or financial support for this project."
+"%Without their help, this program would not have been so successful in all "
+"those years.%Author"
+msgstr ""
+"Poďakovanie patrí všetkým užívateľom, ktorí autorovi často pomohli s vývojom "
+"programu svojimi radami, nápadmi, upozorneniami na chyby alebo finančnou "
+"podporou tohto projektu.%Bez ich pomoci počas všetkých rokov by nebol tento "
+"program tak úspešný.%Autor"
+
+#: uniresources.menu_a11
+msgid "Donation"
+msgstr "Podpora"
+
+#: uniresources.menu_a12
+msgid ""
+"RQ Money is free software, which means you can use it without any fees.%The "
+"author has already paid for this program with his free time (several "
+"thousand hours of development since 2005!), his energy and also paid several "
+"fees (buying software, renting a domain, buying an SSL certificate, etc.)."
+"%So, if you like RQ Money and find it useful, the author will be grateful if "
+"you consider a small reward. Using the Paypal button below, you can send "
+"support to the author from your own debit / credit card or from your PayPal "
+"account."
+msgstr ""
+"RQ Money je bezplatný softvér, čo znamená, že ho môžete používať bez "
+"akýchkoľvek poplatkov.% Autor už za tento program zaplatil svojím voľným "
+"časom (niekoľko tisíc hodín vývoja od roku 2005!), svojou energiou a "
+"zaplatil aj niekoľko poplatkov (nákup softvéru, prenájom domény, nákup SSL "
+"certifikátu atď.).% Ak sa vám teda RQ Money páči a považujete ho za "
+"užitočný, autor vám bude vďačný, ak zvážite malú odmenu. Pomocou tlačidla "
+"Paypal nižšie môžete autorovi poslať podporu z vlastnej debetnej/kreditnej "
+"karty alebo z účtu PayPal."
+
+#: uniresources.menu_a13
+msgid ""
+"Click to open web page for donation%(via PayPal or other way - debit or "
+"credit card)"
+msgstr ""
+"Kliknite pre otvorenie webovej stránky pre podporu%(cez PayPal alebo iným "
+"spôsobom - debetnou či kreditnou kartou)"
+
+#: uniresources.menu_a14
+msgid "Use the left mouse button to display popup menu"
+msgstr "Použite ľavé tlačidlo myši pre zobrazenie kontextovej nápovedy"
+
+#: uniresources.menu_b01
+msgid "Legend"
+msgstr "Legenda"
+
+#: uniresources.menu_c1
+msgid "Expand selected category"
+msgstr "Rozbaliť označenú kategóriu"
+
+#: uniresources.menu_c2
+msgid "Expand all categories"
+msgstr "Rozbaliť všetky kategórie"
+
+#: uniresources.menu_c3
+msgid "Collapse selected category"
+msgstr "Zbaliť označenú kategóriu"
+
+#: uniresources.menu_c4
+msgid "Collapse all categories"
+msgstr "Zbaliť všetky kategórie"
+
+#: uniresources.menu_d1
+msgid "Delete date of payment"
+msgstr "Vymazať dátum úhrady"
+
+#: uniresources.menu_d2
+msgid "Edit date of payment"
+msgstr "Upraviť dátum úhrady"
+
+#: uniresources.menu_d3
+msgid "Select a date"
+msgstr "Vyberte dátum"
+
+#: uniresources.menu_f1
+msgid "Reset filter"
+msgstr "Resetovať filter"
+
+#: uniresources.menu_f2
+msgid "Expand all filters"
+msgstr "Rozbaliť všetky filtre"
+
+#: uniresources.menu_f3
+msgid "Collapse all filters"
+msgstr "Zbaliť všetky filtre"
+
+#: uniresources.menu_f5
+msgid "whenewer in the text"
+msgstr "kdekoľvek v texte"
+
+#: uniresources.menu_f6
+msgid "starting with the text"
+msgstr "začínajúce textom"
+
+#: uniresources.menu_f7
+msgid "ending with the text"
+msgstr "končiace textom"
+
+#: uniresources.menu_f8
+msgid "Apply filter"
+msgstr "Použiť filter"
+
+#: uniresources.menu_t1
+msgid "Expand all panels"
+msgstr "Rozbaliť všetky panely"
+
+#: uniresources.menu_t2
+msgid "Collapse all panels"
+msgstr "Zbaliť všetky panely"
+
+#: uniresources.menu_v1
+msgid "banknote"
+msgstr "bankovka"
+
+#: uniresources.menu_v2
+msgid "coin"
+msgstr "minca"
+
+#: uniresources.menu_xx
+msgid "Menu"
+msgstr "Menu"
+
+#: uniresources.message_00
+msgid "WARNING"
+msgstr "VAROVANIE"
+
+#: uniresources.message_01
+#, object-pascal-format
+msgid "%0:s item(s) was copied to the clipboard."
+msgstr "%0:s položiek bolo skopírovaných do schránky."
+
+#: uniresources.message_02
+msgid "E-mail address was copied to the clipboard."
+msgstr "E-mailová adresa bola skopírovaná do schránky."
+
+#: uniresources.message_03
+msgid "Database password was successfully created."
+msgstr "Heslo databázy bolo úspešne vytvorené."
+
+#: uniresources.message_04
+msgid "Database password was successfully changed."
+msgstr "Heslo databázy bolo úspešne zmenené."
+
+#: uniresources.message_05
+msgid "SQL command was executed successful."
+msgstr "SQL príkaz bol úspešne vykonaný."
+
+#: uniresources.message_06
+msgid "Import finished successful."
+msgstr "Import bol úspešne ukončený."
+
+#: uniresources.message_07
+#, object-pascal-format
+msgid ""
+"Selected picture was copied to the clipboard.%0:sSize: %1:s px x %2:s px."
+msgstr ""
+"Označený obrázok bol skopírovaný do schránky.%0:sVeľkosť: %1:s px x %2:s px."
+
+#: uniresources.message_09
+msgid "You are using the current version of the program."
+msgstr "Používate aktuálnu verziu programu RQ MONEY."
+
+#: uniresources.message_10
+msgctxt "uniresources.message_10"
+msgid "This feature is not available in this operating system"
+msgstr "Táto funkcia nie je dostupná v tomto operačnom systéme"
+
+#: uniresources.question_00
+msgid "Do you want to close opened database?"
+msgstr "Chcete zavrieť otvorenú databázu?"
+
+#: uniresources.question_01
+msgid "Do you want to delete selected item?"
+msgstr "Chcete vymazať označenú položku?"
+
+#: uniresources.question_02
+msgid "Do you want to delete % selected items?"
+msgstr "Chcete vymazať % označených záznamov?"
+
+#: uniresources.question_03
+msgid "Do you want to reset all filter items?"
+msgstr "Chcete restovať všetky položky filtra ?"
+
+#: uniresources.question_04
+msgid "Do you want to save all program settings?"
+msgstr "Chcete uložiť všetky nastavenia programu ?"
+
+#: uniresources.question_05
+msgid "IF YOU DELETE THIS ACCOUNT, FOLLOWING ITEMS WILL BE DELETED TOO"
+msgstr "AK VYMAŽETE TENTO ÚČET, SÚČASNE VYMAŽETE AJ NASLEDOVNÉ POLOŽKY"
+
+#: uniresources.question_06
+msgid "IF YOU DELETE THIS CATEGORY, FOLLOWING ITEMS WILL BE DELETED TOO"
+msgstr "AK VYMAŽETE TÚTO KATEGÓRIU, SÚČASNE VYMAŽETE AJ NASLEDOVNÉ POLOŽKY"
+
+#: uniresources.question_07
+msgid "IF YOU DELETE THIS PERSON, FOLLOWING ITEMS WILL BE DELETED TOO"
+msgstr "AK VYMAŽETE TÚTO OSOBU, SÚČASNE VYMAŽETE AJ NASLEDOVNÉ POLOŽKY"
+
+#: uniresources.question_08
+msgid "IF YOU DELETE THIS PAYEE, FOLLOWING ITEMS WILL BE DELETED TOO"
+msgstr "AK VYMAŽETE TOHTO PARTNERA, SÚČASNE VYMAŽETE AJ NASLEDOVNÉ POLOŽKY"
+
+#: uniresources.question_09
+msgid ""
+"Do you want to change the currency to %1 ?%2WARNING! All values in the cash "
+"counter will be reset to zero."
+msgstr ""
+"Chcete zmeniť menu na %1 ?%2VAROVANIE! Všetky hodnoty v počítadle hotovosti "
+"budú vynulované."
+
+#: uniresources.question_10
+msgid "Do you want to reset all fields (to be unchecked) ?"
+msgstr "Chcete resetovať všetky polia (aby neboli zaškrtnuté) ?"
+
+#: uniresources.question_11
+msgid ""
+"Do you want to run this command ?%%BE CAREFUL !%All selected transactions "
+"will be affected ..."
+msgstr ""
+"Chcete spustiť tento príkaz ?%%BUĎTE OPATRNÍ!%Zmena sa dotkne všetkých "
+"označených záznamov."
+
+#: uniresources.question_12
+msgid "Do you want to restore selected transactions to the main table ?"
+msgstr "Chcete obnoviť označené transakcie späť do hlavnej tabuľky ?"
+
+#: uniresources.question_13
+msgid ""
+"Do you really want to close this window without writing created "
+"transaction(s)?%All created transactions in this window will be lost."
+msgstr ""
+"Skutočne chcete opustiť toto okno bez zápisu vytvorených transakcií?%Všetky "
+"vytvorené transakcie v tomto okne sa stratia."
+
+#: uniresources.question_14
+msgid "Do you want to write mass created transactions to the main table ?"
+msgstr "Chcete zapísať hromadne vytvorené transakcie do hlavnej tabuľky ?"
+
+#: uniresources.question_15
+msgid "Do you want to write scheduled transactions to the main table ?"
+msgstr "Chcete zapísať plánované transakcie do hlavnej tabuľky ?"
+
+#: uniresources.question_16
+msgid "Do you want to import following file ?"
+msgstr "Chcete importovať nasledovný súbor ?"
+
+#: uniresources.question_17
+msgid "All selected payments will be deleted from the scheduler !"
+msgstr "Všetky označené platby budú vymazané z plánovača !"
+
+#: uniresources.question_18
+msgid "Do you want to delete the date of payment from selected items?"
+msgstr "Chcete vymazať dátum úhrady z označených položiek?"
+
+#: uniresources.question_19
+msgid "Do you want to close this window without saving data?"
+msgstr "Chcete zavrieť toto okno bez uloženia dát ?"
+
+#: uniresources.question_20
+msgctxt "uniresources.question_20"
+msgid ""
+"Do you want to create new budget and write all checked categories / "
+"subcategories to this budget?"
+msgstr ""
+"Chcete vytvoriť nový rozpočet a zapísať všetky zaškrtnuté kategórie / "
+"podkategórie do tohto rozpočtu ?"
+
+#: uniresources.question_21
+msgctxt "uniresources.question_21"
+msgid "Do you want to save changes to the selected budget?"
+msgstr "Chcete uložiť zmeny vo vybranom rozpočte ?"
+
+#: uniresources.question_22
+msgctxt "uniresources.question_22"
+msgid ""
+"Do you want to write checked categories / subcategories with planned amounts "
+"to the budget?"
+msgstr ""
+"Chcete zapísať zaškrtnuté kategórie / podkategórie s plánovanými sumami do "
+"rozpočtu ?"
+
+#: uniresources.question_23
+msgid "Are you sure you want to delete entire budget with all periods?"
+msgstr "Určite chcete vymazať celý rozpočet so všetkými jeho obdobiami ?"
+
+#: uniresources.question_24
+msgid "Do you want to set default shortcuts for all actions?"
+msgstr "Chcete nastaviť predvolené klávesové skratky pre všetky akcie ?"
+
+#: uniresources.question_25
+msgid ""
+"There exists brand new stable version %1 of this program.%2Release date: %3 "
+"%2Do you want do visit official website to download it?"
+msgstr ""
+"Existuje úplne nová verzia %1 tohto programu.%2 Dátum vydania: %3 %2Chcete "
+"navštíviť oficiálnu webovú stránku pre stiahnutie programu?"
+
+#: uniresources.question_26
+msgid ""
+"Do you want to delete corrupted records now? You can view them later in the "
+"recycle bin."
+msgstr ""
+"Chcete teraz vymazať poškodené údaje? Neskôr si ich môžete prezrieť v "
+"odpadkovom koši."
+
+#: uniresources.question_27
+msgid "Do you want to back up your database to the selected folder now?"
+msgstr "Chcete teraz zálohovať Vašu databázu do vybraného priečinka?"
+
+#: uniresources.question_28
+msgid ""
+"The encryption of your database requires password protection.% Do you want "
+"to set this password now?"
+msgstr ""
+"Šifrovanie databázy si vyžaduje ochranu databázy heslom.% Chcete teraz "
+"nastaviť toto heslo?"
+
+#: uniresources.version_01
+msgid "stable"
+msgstr "stabilná"
+
+#: uniresources.version_02
+msgid "testing"
+msgstr "testovacia"
+
+#~ msgid "ENCRYPT THE DATABASE"
+#~ msgstr "ZAŠIFROVAŤ DATABÁZU"
+
+#~ msgid ""
+#~ "After editing this budget all previous periods with categories and "
+#~ "planned amounts will be deleted!Do you want to save this changes?"
+#~ msgstr ""
+#~ "Po oprave tohto rozpočtu budú všetky predošlé obdobia s kategóriami a "
+#~ "plánovanými sumami vymazané.%Chcete teraz uložiť tieto zmeny?"
+
+#~ msgid "Show clock"
+#~ msgstr "Zobraziť hodiny"

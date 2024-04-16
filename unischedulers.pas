@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, sqldb, DB, FileUtil, Forms, Controls, Graphics, Dialogs,
   Menus, ExtCtrls, BCPanel, Buttons, StdCtrls, DBGrids, ActnList, ExtDlgs, ComCtrls,
-  LazUTF8, BCMDButtonFocus, laz.VirtualTrees, StrUtils, Math, DateUtils;
+  LazUTF8, BCMDButtonFocus, laz.VirtualTrees, StrUtils, Math, DateUtils, IniFiles;
 
 type // main grid (Scheduler)
   TScheduler = record
@@ -110,6 +110,7 @@ type
     procedure btnDeleteClick(Sender: TObject);
     procedure btnEdit1Click(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -133,6 +134,8 @@ type
       Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode;
       CellRect: TRect; var ContentRect: TRect);
     procedure VSTChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure VSTCompareNodes(Sender: TBaseVirtualTree; Node1,
+      Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
     procedure VSTDblClick(Sender: TObject);
     procedure VSTGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean;
@@ -167,7 +170,7 @@ uses
 
 procedure TfrmSchedulers.btnAddClick(Sender: TObject);
 var
-  S, Sum, Category, SubCategory: string;
+  S, Sum: string;
   Amount: double;
   I: word;
 begin
@@ -177,10 +180,8 @@ begin
   try
     // panel Detail
     if frmScheduler.cbxType.ItemIndex = -1 then
-    begin
       frmScheduler.cbxType.ItemIndex := 1;
-      frmScheduler.cbxTypeChange(frmScheduler.cbxType);
-    end;
+    frmScheduler.cbxTypeChange(frmScheduler.cbxType);
 
     // set all fields FROM
     if frmScheduler.cbxPeriodicity.ItemIndex = -1 then
@@ -188,7 +189,7 @@ begin
     frmScheduler.datDateFrom.Date := Now();
     frmScheduler.datDateTo.Date := Now() + 364;
 
-    frmScheduler.spiAmountFrom.Value := 0.0;
+    frmScheduler.spiAmountFrom.Text := Format('%n', [0.0]);
     frmScheduler.cbxComment.ItemIndex := -1;
     if (frmScheduler.cbxPerson.ItemIndex = -1) and
       (frmScheduler.cbxPerson.Items.Count > 0) then
@@ -202,9 +203,10 @@ begin
     if (frmScheduler.cbxCategory.ItemIndex = -1) and
       (frmScheduler.cbxCategory.Items.Count > 0) then
       frmScheduler.cbxCategory.ItemIndex := 0;
+    frmScheduler.cbxCategoryChange(frmScheduler.cbxCategory);
 
     // set all fields TO
-    frmScheduler.spiAmountTo.Value := 0.0;
+    frmScheduler.spiAmountTo.Text := Format('%n', [0.0]);
     if (frmScheduler.cbxAccountTo.ItemIndex = -1) and
       (frmScheduler.cbxAccountTo.Items.Count > 0) then
       frmScheduler.cbxAccountTo.ItemIndex := 0;
@@ -224,8 +226,7 @@ begin
       '(SELECT acc_id FROM accounts ' + sLineBreak + // account
       'WHERE acc_name = :ACCOUNT1 and acc_currency = :CURRENCY1), ' +
       sLineBreak + // d_account
-      '(SELECT cat_id FROM categories ' + sLineBreak + // category
-      'WHERE cat_name = :CATEGORY and cat_parent_name = :SUBCATEGORY), ' +
+      ':CATEGORY, ' +
       sLineBreak + // subcategory
       '(SELECT per_id FROM persons WHERE per_name = :PERSON), ' +
       sLineBreak + // d_person
@@ -252,37 +253,31 @@ begin
     frmMain.QRY.Params.ParamByName('PAYEE').AsString := frmScheduler.cbxPayee.Text;
     // account 1
     frmMain.QRY.Params.ParamByName('ACCOUNT1').AsString :=
-      Field(' | ', frmScheduler.cbxAccountFrom.Items[
+      Field(separ_1, frmScheduler.cbxAccountFrom.Items[
       frmScheduler.cbxAccountFrom.ItemIndex], 1);
     frmMain.QRY.Params.ParamByName('CURRENCY1').AsString :=
-      Field(' | ', frmScheduler.cbxAccountFrom.Items[
+      Field(separ_1, frmScheduler.cbxAccountFrom.Items[
       frmScheduler.cbxAccountFrom.ItemIndex], 2);
 
     // account 2
     if frmScheduler.cbxType.ItemIndex = 2 then
     begin
       frmMain.QRY.Params.ParamByName('ACCOUNT2').AsString :=
-        Field(' | ', frmScheduler.cbxAccountTo.Items[
+        Field(separ_1, frmScheduler.cbxAccountTo.Items[
         frmScheduler.cbxAccountTo.ItemIndex], 1);
       frmMain.QRY.Params.ParamByName('CURRENCY2').AsString :=
-        Field(' | ', frmScheduler.cbxAccountTo.Items[
+        Field(separ_1, frmScheduler.cbxAccountTo.Items[
         frmScheduler.cbxAccountTo.ItemIndex], 2);
     end;
 
     // Get category
-    Category := AnsiUpperCase(frmScheduler.cbxCategory.Items[
-      frmScheduler.cbxCategory.ItemIndex]);
-    SubCategory := AnsiUpperCase(Category);
-    if UTF8Pos(' | ', Category) > 0 then
-    begin
-      SubCategory := AnsiUpperCase(Field(' | ', Category, 1));
-      Category := AnsiLowerCase(Field(' | ', Category, 2));
-    end;
-    frmMain.QRY.Params.ParamByName('CATEGORY').AsString := Category;
-    frmMain.QRY.Params.ParamByName('SUBCATEGORY').AsString := Subcategory;
+    frmMain.QRY.Params.ParamByName('CATEGORY').AsInteger :=
+      GetCategoryID(frmScheduler.cbxCategory.Items[frmScheduler.cbxCategory.ItemIndex] +
+      IfThen(frmScheduler.cbxSubcategory.ItemIndex = 0, '', separ_1 +
+      frmScheduler.cbxSubcategory.Items[frmScheduler.cbxSubcategory.ItemIndex]));
 
     // amount 1
-    Amount := frmScheduler.spiAmountFrom.Value;
+    TryStrToFloat(frmScheduler.spiAmountFrom.Text, Amount);
     if frmScheduler.cbxType.ItemIndex > 0 then
       Amount := -Amount;
     Sum := FloatToStr(amount);
@@ -292,7 +287,7 @@ begin
     // amount 2
     if frmScheduler.cbxType.ItemIndex = 2 then
     begin
-      Amount := frmScheduler.spiAmountTo.Value;
+      TryStrToFloat(frmScheduler.spiAmountTo.Text, Amount);
       Sum := FloatToStr(amount);
       frmMain.QRY.Params.ParamByName('AMOUNT2').AsString :=
         ReplaceStr(Sum, FS_own.DecimalSeparator, '.');
@@ -315,6 +310,7 @@ begin
             S + ', (SELECT tag_id FROM tags WHERE tag_name = :TAG));';
           frmMain.QRY.Params.ParamByName('TAG').AsString :=
             frmScheduler.lbxTag.Items[I];
+          frmMain.QRY.Prepare;
           frmMain.QRY.ExecSQL;
         end;
     end;
@@ -341,7 +337,7 @@ var
   I: integer;
   D1, D2, D3, D4: TDate;
   Amount: double;
-  S, Category, SubCategory: string;
+  S: string;
   N: PVirtualNode;
   GoodDate: boolean;
 begin
@@ -360,53 +356,57 @@ begin
 
     D3 := D1;
 
-    // ========================================================================================
-    // CHECK THE WRONG DAYS (SATURDAY, SUNDAY, PUBLIC HOLIDAYS)
-    // IN MONTHLY, QUARTERLY, BIANNUALY AND YEARLY PERIODICITY
-    // ========================================================================================
-
-    if frmScheduler.cbxPeriodicity.ItemIndex in [5..8] then
+    if frmScheduler.chkUseDateShift.Checked = True then
     begin
-      // label to jump when day is saturday, sunday or holiday
-      ChangeDate:
+      // ========================================================================================
+      // CHECK THE WRONG DAYS (SATURDAY, SUNDAY, PUBLIC HOLIDAYS)
+      // IN MONTHLY, QUARTERLY, BIANNUALY AND YEARLY PERIODICITY
+      // ========================================================================================
 
-        // compare SUNDAY
-        if (frmSettings.chkSunday.Checked = True) and (DayOfTheWeek(D3) = DaySunday) then
+      if frmScheduler.cbxPeriodicity.ItemIndex in [5..8] then
+      begin
+        // label to jump when day is saturday, sunday or holiday
+        ChangeDate:
+
+          // compare SUNDAY
+          if (frmSettings.chkSunday.Checked = True) and
+            (DayOfTheWeek(D3) = DaySunday) then
+          begin
+            D3 := D3 + IfThen(frmSettings.rbtBefore.Checked = True, -1, 1);
+            goto ChangeDate;
+          end;
+
+        // compare SATURDAY
+        if (frmSettings.chkSaturday.Checked = True) and
+          (DayOfTheWeek(D3) = DaySaturday) then
         begin
           D3 := D3 + IfThen(frmSettings.rbtBefore.Checked = True, -1, 1);
           goto ChangeDate;
         end;
 
-      // compare SATURDAY
-      if (frmSettings.chkSaturday.Checked = True) and
-        (DayOfTheWeek(D3) = DaySaturday) then
-      begin
-        D3 := D3 + IfThen(frmSettings.rbtBefore.Checked = True, -1, 1);
-        goto ChangeDate;
-      end;
-
-      // compare PUBLIC HOLIDAYS
-      if (frmSettings.chkHoliday.Checked = True) then
-      begin
-        GoodDate := True;
-        N := frmHolidays.VST.GetFirst;
-        while Assigned(N) do
+        // compare PUBLIC HOLIDAYS
+        if (frmSettings.chkHoliday.Checked = True) then
         begin
-          D4 := EncodeDate(YearOf(D3), StrToInt(frmHolidays.VST.Text[N, 4]),
-            StrToInt(frmHolidays.VST.Text[N, 5]));
-
-          if CompareDate(D3, D4) = 0 then
+          GoodDate := True;
+          N := frmHolidays.VST.GetFirst;
+          while Assigned(N) do
           begin
-            GoodDate := False;
-            D3 := D3 + IfThen(frmSettings.rbtBefore.Checked = True, -1, 1);
+            D4 := EncodeDate(YearOf(D3), StrToInt(frmHolidays.VST.Text[N, 4]),
+              StrToInt(frmHolidays.VST.Text[N, 5]));
+
+            if CompareDate(D3, D4) = 0 then
+            begin
+              GoodDate := False;
+              D3 := D3 + IfThen(frmSettings.rbtBefore.Checked = True, -1, 1);
+            end;
+            if GoodDate = False then
+              Break
+            else
+              N := frmHolidays.VST.GetNext(N);
           end;
           if GoodDate = False then
-            Break
-          else
-            N := frmHolidays.VST.GetNext(N);
+            goto ChangeDate;
         end;
-        if GoodDate = False then
-          goto ChangeDate;
       end;
     end;
 
@@ -422,8 +422,7 @@ begin
       '(SELECT acc_id FROM accounts ' +
       'WHERE acc_name = :ACCOUNT and acc_currency = :CURRENCY), ' + sLineBreak +
       // d_category
-      '(SELECT cat_id FROM categories ' +
-      'WHERE cat_name = :CATEGORY and cat_parent_name = :SUBCATEGORY), ' + sLineBreak +
+      ':CATEGORY, ' + sLineBreak +
       // d_person
       '(SELECT per_id FROM persons WHERE per_name = :PERSON), ' + sLineBreak +
       // d_payee
@@ -438,26 +437,20 @@ begin
     frmMain.QRY.Params.ParamByName('PERSON').AsString := frmScheduler.cbxPerson.Text;
     frmMain.QRY.Params.ParamByName('PAYEE').AsString := frmScheduler.cbxPayee.Text;
     frmMain.QRY.Params.ParamByName('ACCOUNT').AsString :=
-      Field(' | ', frmScheduler.cbxAccountFrom.Items[
+      Field(separ_1, frmScheduler.cbxAccountFrom.Items[
       frmScheduler.cbxAccountFrom.ItemIndex], 1);
     frmMain.QRY.Params.ParamByName('CURRENCY').AsString :=
-      Field(' | ', frmScheduler.cbxAccountFrom.Items[
+      Field(separ_1, frmScheduler.cbxAccountFrom.Items[
       frmScheduler.cbxAccountFrom.ItemIndex], 2);
-    // Get category
-    Category := AnsiUpperCase(frmScheduler.cbxCategory.Items[
-      frmScheduler.cbxCategory.ItemIndex]);
-    SubCategory := AnsiUpperCase(Category);
-    if UTF8Pos(' | ', Category) > 0 then
-    begin
-      SubCategory := AnsiUpperCase(Field(' | ', Category, 1));
-      Category := AnsiLowerCase(Field(' | ', Category, 2));
-    end;
 
-    frmMain.QRY.Params.ParamByName('CATEGORY').AsString := Category;
-    frmMain.QRY.Params.ParamByName('SUBCATEGORY').AsString := Subcategory;
+    // Get category
+    frmMain.QRY.Params.ParamByName('CATEGORY').AsInteger :=
+      GetCategoryID(frmScheduler.cbxCategory.Items[frmScheduler.cbxCategory.ItemIndex] +
+      IfThen(frmScheduler.cbxSubcategory.ItemIndex = 0, '', separ_1 +
+      frmScheduler.cbxSubcategory.Items[frmScheduler.cbxSubcategory.ItemIndex]));
 
     // amount
-    Amount := frmScheduler.spiAmountFrom.Value;
+    TryStrToFloat(frmScheduler.spiAmountFrom.Text, Amount);
     I := IfThen(frmScheduler.cbxType.ItemIndex = 2, 3, frmScheduler.cbxType.ItemIndex);
     if I in [1, 3] then
       Amount := -Amount;
@@ -482,6 +475,7 @@ begin
 
           frmMain.QRY.Params.ParamByName('TAG').AsString :=
             frmScheduler.lbxTag.Items[I];
+          frmMain.QRY.Prepare;
           frmMain.QRY.ExecSQL;
         end;
     end;
@@ -497,8 +491,7 @@ begin
         '(SELECT acc_id FROM accounts ' +
         'WHERE acc_name = :ACCOUNT and acc_currency = :CURRENCY), ' + sLineBreak +
         // d_category
-        '(SELECT cat_id FROM categories ' +
-        'WHERE cat_name = :CATEGORY and cat_parent_name = :SUBCATEGORY), ' + sLineBreak +
+        ':CATEGORY, ' + sLineBreak +
         // d_person
         '(SELECT per_id FROM persons WHERE per_name = :PERSON), ' + sLineBreak +
         // d_payee
@@ -512,16 +505,19 @@ begin
       frmMain.QRY.Params.ParamByName('PERSON').AsString := frmScheduler.cbxPerson.Text;
       frmMain.QRY.Params.ParamByName('PAYEE').AsString := frmScheduler.cbxPayee.Text;
       frmMain.QRY.Params.ParamByName('ACCOUNT').AsString :=
-        Field(' | ', frmScheduler.cbxAccountTo.Items[
+        Field(separ_1, frmScheduler.cbxAccountTo.Items[
         frmScheduler.cbxAccountTo.ItemIndex], 1);
       frmMain.QRY.Params.ParamByName('CURRENCY').AsString :=
-        Field(' | ', frmScheduler.cbxAccountTo.Items[
+        Field(separ_1, frmScheduler.cbxAccountTo.Items[
         frmScheduler.cbxAccountTo.ItemIndex], 2);
-      frmMain.QRY.Params.ParamByName('CATEGORY').AsString := Category;
-      frmMain.QRY.Params.ParamByName('SUBCATEGORY').AsString := Subcategory;
-      // amount
+      // Get category
+      frmMain.QRY.Params.ParamByName('CATEGORY').AsInteger :=
+      GetCategoryID(frmScheduler.cbxCategory.Items[frmScheduler.cbxCategory.ItemIndex] +
+      IfThen(frmScheduler.cbxSubcategory.ItemIndex = 0, '', separ_1 +
+      frmScheduler.cbxSubcategory.Items[frmScheduler.cbxSubcategory.ItemIndex]));
+    // amount
 
-      Amount := frmScheduler.spiAmountTo.Value;
+      TryStrToFloat(frmScheduler.spiAmountTo.Text, Amount);
       S := FloatToStr(amount);
       frmMain.QRY.Params.ParamByName('S').AsString :=
         ReplaceStr(S, FS_own.DecimalSeparator, '.');
@@ -542,7 +538,7 @@ begin
               S + ', (SELECT tag_id FROM tags WHERE tag_name = :TAG));';
             frmMain.QRY.Params.ParamByName('TAG').AsString :=
               frmScheduler.lbxTag.Items[I];
-
+            frmMain.QRY.Prepare;
             frmMain.QRY.ExecSQL;
           end;
       end;
@@ -692,6 +688,7 @@ begin
 
     frmMain.QRY.Params.ParamByName('ID').AsString :=
       VST.Text[VST.GetFirstSelected(), 12];
+    frmMain.QRY.Prepare;
 
   finally
     //ShowMessage (frmMain.QRY.SQL.Text);
@@ -760,22 +757,22 @@ begin
     // account 1
     frmScheduler.cbxAccountFrom.ItemIndex :=
       frmScheduler.cbxAccountFrom.Items.IndexOf(
-      frmMain.QRY.FieldByName('account1').AsString + ' | ' +
+      frmMain.QRY.FieldByName('account1').AsString + separ_1 +
       frmMain.QRY.FieldByName('currency1').AsString);
 
     // account 2
     frmScheduler.cbxAccountTo.ItemIndex :=
       frmScheduler.cbxAccountTo.Items.IndexOf(frmMain.QRY.FieldByName(
-      'account2').AsString + ' | ' + frmMain.QRY.FieldByName('currency2').AsString);
+      'account2').AsString + separ_1 + frmMain.QRY.FieldByName('currency2').AsString);
 
     // amount 1
     TryStrToFloat(frmMain.QRY.FieldByName('sch_sum1').AsString, X);
     if frmScheduler.cbxType.ItemIndex > 0 then X := ABS(X);
-    frmScheduler.spiAmountFrom.Value := X;
+    frmScheduler.spiAmountFrom.Text := FloatToStr(X);
 
     // amount 2
     TryStrToFloat(frmMain.QRY.FieldByName('sch_sum2').AsString, X);
-    frmScheduler.spiAmountTo.Value := X;
+    frmScheduler.spiAmountTo.Text := FloatToStr(X);
 
     // comment
     frmScheduler.cbxComment.Text := frmMain.QRY.FieldByName('sch_comment').AsString;
@@ -785,7 +782,7 @@ begin
       0, frmMain.QRY.FieldByName('cat_name').AsString,
       frmMain.QRY.FieldByName('cat_parent_name').AsString)) +
       IfThen(frmMain.QRY.FieldByName('cat_parent_ID').AsInteger = 0,
-      '', ' | ' + frmMain.QRY.FieldByName('cat_name').AsString);
+      '', separ_1 + frmMain.QRY.FieldByName('cat_name').AsString);
     frmScheduler.cbxCategory.ItemIndex := frmScheduler.cbxCategory.Items.IndexOf(S);
 
     // person
@@ -919,22 +916,45 @@ begin
   frmSchedulers.Close;
 end;
 
+procedure TfrmSchedulers.FormClose(Sender: TObject;
+  var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
+begin
+  try
+    // write position and window size
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      try
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        if INI.ReadString('POSITION', frmSchedulers.Name, '') <>
+          IntToStr(frmSchedulers.Left) + separ + // form left
+        IntToStr(frmSchedulers.Top) + separ + // form top
+        IntToStr(frmSchedulers.Width) + separ + // form width
+        IntToStr(frmSchedulers.Height) + separ + // form height
+        IntToStr(frmSchedulers.pnlRight.Width) then
+          INI.WriteString('POSITION', frmSchedulers.Name,
+            IntToStr(frmSchedulers.Left) + separ + // form left
+            IntToStr(frmSchedulers.Top) + separ + // form top
+            IntToStr(frmSchedulers.Width) + separ + // form width
+            IntToStr(frmSchedulers.Height) + separ + // form height
+            IntToStr(frmSchedulers.pnlRight.Width));
+      finally
+        INI.Free;
+      end;
+    end;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
+end;
+
 procedure TfrmSchedulers.FormCreate(Sender: TObject);
 begin
   try
-    // form size
-    (Sender as TForm).Width :=
-      Round((Screen.Width / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-      (Round(420 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height :=
-      Round(Screen.Height / IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) -
-      2 * (250 - ScreenRatio);
-
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := (Screen.Height - 100 - (Sender as TForm).Height) div 2;
-
-    {$IFDEF WINDOWS}
   // set components height
     VST.Header.Height := PanelHeight;
     VST1.Header.Height := PanelHeight;
@@ -943,7 +963,10 @@ begin
     pnlButtons.Height := ButtonHeight;
     pnlButton.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
-    {$ENDIF}
+    pnlBottom1.Height := ButtonHeight;
+
+    // get form icon
+    frmMain.img16.GetIcon(18, (Sender as TForm).Icon);
 
   except
     on E: Exception do
@@ -966,8 +989,64 @@ end;
 
 procedure TfrmSchedulers.FormShow(Sender: TObject);
 var
+  INI: TINIFile;
+  S: string;
   I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmSchedulers.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmSchedulers.Name, '-1•-1•0•0•380');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmSchedulers.Width := Screen.Width - 200 - (200 - ScreenRatio)
+      else
+        frmSchedulers.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmSchedulers.Height := Screen.Height - 300 - (200 - ScreenRatio)
+      else
+        frmSchedulers.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmSchedulers.left := (Screen.Width - frmSchedulers.Width) div 2
+      else
+        frmSchedulers.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmSchedulers.Top := ((Screen.Height - frmSchedulers.Height) div 2) - 75
+      else
+        frmSchedulers.Top := I;
+
+      // right panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 1) or (I > 650) then
+        frmSchedulers.pnlRight.Width := 220
+      else
+        frmSchedulers.pnlRight.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;
@@ -990,11 +1069,8 @@ begin
   btnDelete1.Enabled := VST1.SelectedCount > 0;
 
   UpdateScheduler;
-  SetNodeHeight(frmSchedulers.VST);
-  SetNodeHeight(frmSchedulers.VST1);
   VST.SetFocus;
   VST.ClearSelection;
-
 
   if VST.SelectedCount = 1 then
   begin
@@ -1073,7 +1149,7 @@ begin
     'UPDATE payments SET pay_date_paid = :DATE ' + 'WHERE pay_id IN (' + Str + ');';
   frmMain.QRY.Params.ParamByName('DATE').AsString :=
     FormatDateTime('YYYY-MM-DD', Calendar.Date);
-
+  frmMain.QRY.Prepare;
   frmMain.QRY.ExecSQL;
   frmMain.Tran.Commit;
   VSTChange(VST, VST.FocusedNode);
@@ -1212,16 +1288,29 @@ procedure TfrmSchedulers.VST1GetText(Sender: TBaseVirtualTree;
   var CellText: string);
 var
   Payment: PPayment;
+  M: byte;
 begin
   Payment := Sender.GetNodeData(Node);
   case Column of
     // date (plan)
-    1: CellText := DateToStr(StrToDate(Payment.DatePlan, 'YYYY-MM-DD', '-'));
+    1: begin
+      M := DayOfTheWeek(StrToDate(Payment.DatePlan, 'YYYY-MM-DD', '-')) + 1;
+      if M = 8 then
+        M := 1;
+      CellText := FS_own.ShortDayNames[M] + ' ' +
+        DateToStr(StrToDate(Payment.DatePlan, 'YYYY-MM-DD', '-'));
+    end;
     // amount
     2: CellText := Format('%n', [Payment.Amount], FS_own);
     // date (paid)
     3: if Length(Payment.DatePaid) = 10 then
-        CellText := DateToStr(StrToDate(Payment.DatePaid, 'YYYY-MM-DD', '-'));
+      begin
+        M := DayOfTheWeek(StrToDate(Payment.DatePaid, 'YYYY-MM-DD', '-')) + 1;
+        if M = 8 then
+          M := 1;
+        CellText := FS_own.ShortDayNames[M] + ' ' +
+          DateToStr(StrToDate(Payment.DatePaid, 'YYYY-MM-DD', '-'));
+      end;
     // ID
     4: CellText := IntToStr(Payment.ID);
   end;
@@ -1235,13 +1324,13 @@ begin
     if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
     (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
-      round(ScreenRatio * 25 / 100);
+      Round(ScreenRatio * 25 / 100);
     X := (VST1.Width - VST1.Header.Columns[0].Width) div 100;
-    VST1.Header.Columns[1].Width := 30 * X; // date plan
-    VST1.Header.Columns[2].Width := 30 * X; // amount
-    VST1.Header.Columns[3].Width := 30 * X; // payment date
+    VST1.Header.Columns[1].Width := 35 * X; // date plan
+    VST1.Header.Columns[2].Width := 26 * X; // amount
+    VST1.Header.Columns[3].Width := 35 * X; // payment date
     VST1.Header.Columns[4].Width :=
-      VST1.Width - VST1.Header.Columns[0].Width - ScrollBarWidth - (90 * X); // ID
+      VST1.Width - VST1.Header.Columns[0].Width - ScrollBarWidth - (96 * X); // ID
   except
   end;
 end;
@@ -1284,7 +1373,7 @@ begin
     end
     else
     begin
-      if VST.SelectedCount = VST.TotalCount then
+      if (VST.SelectedCount = VST.TotalCount) and (VST.SelectedCount > 1) then
       begin
         imgItem.ImageIndex := 7;
         lblItem.Caption := '# ' + IntToStr(VST.SelectedCount);
@@ -1320,6 +1409,7 @@ begin
         frmMain.QRY.Close;
 
         // frmSchedulers.VST1.SortTree(1, sdAscending);
+        SetNodeHeight(VST1);
         frmSchedulers.VST1.EndUpdate;
         screen.Cursor := crDefault;
         imgItem.ImageIndex := 5;
@@ -1335,6 +1425,29 @@ begin
     end;
 
   except
+  end;
+end;
+
+procedure TfrmSchedulers.VSTCompareNodes(Sender: TBaseVirtualTree; Node1,
+  Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
+var
+  Data1, Data2: PScheduler;
+begin
+  Data1 := Sender.GetNodeData(Node1);
+  Data2 := Sender.GetNodeData(Node2);
+  case Column of
+    1: Result := UTF8CompareText(Data1.DateFrom, Data2.DateFrom);
+    2: Result := UTF8CompareText(Data1.DateTo, Data2.DateTo);
+    3: Result := CompareValue(Data1.Periodicity, Data2.Periodicity);
+    4: Result := CompareValue(Data1.Amount, Data2.Amount);
+    5: Result := UTF8CompareText(Data1.currency, Data2.currency);
+    6: Result := UTF8CompareText(Data1.Comment, Data2.Comment);
+    7: Result := UTF8CompareText(Data1.Account, Data2.Account);
+    8: Result := UTF8CompareText(Data1.Category, Data2.Category);
+    9: Result := UTF8CompareText(Data1.SubCategory, Data2.SubCategory);
+    10: Result := UTF8CompareText(Data1.Person, Data2.Person);
+    11: Result := UTF8CompareText(Data1.Payee, Data2.Payee);
+    12: Result := CompareValue(Data1.ID, Data2.Id)
   end;
 end;
 
@@ -1558,6 +1671,7 @@ begin
   end;
   frmMain.QRY.Close;
 
+  SetNodeHeight(frmSchedulers.VST);
   frmSchedulers.VST.SortTree(1, sdAscending);
   frmSchedulers.VST.EndUpdate;
   screen.Cursor := crDefault;

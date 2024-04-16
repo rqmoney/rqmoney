@@ -8,16 +8,16 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   Clipbrd, Variants, ExtCtrls, ComCtrls, Buttons, Menus, ActnList,
-  BCPanel, BCMDButtonFocus, LazUTF8, laz.VirtualTrees, SpinEx,
+  BCPanel, BCMDButtonFocus, LazUTF8, laz.VirtualTrees, SpinEx, IniFiles,
   StrUtils, dateutils, Math;
 
 type
   THoliday = record
-    Day: Integer;
-    Month: Integer;
-    Name: String;
-    Time: String;
-    ID: Integer;
+    Day: integer;
+    Month: integer;
+    Name: string;
+    Time: string;
+    ID: integer;
   end;
   PHoliday = ^THoliday;
 
@@ -72,7 +72,6 @@ type
     pnlItems: TPanel;
     pnlBottom: TPanel;
     pnlHeight: TPanel;
-    pnlTip: TPanel;
     pnlWidth: TPanel;
     pnlItem: TPanel;
     popAdd: TMenuItem;
@@ -86,7 +85,8 @@ type
     VST: TLazVirtualStringTree;
     procedure btnCopyClick(Sender: TObject);
     procedure btnPrintClick(Sender: TObject);
-    procedure btnPrintMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure btnPrintMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
     procedure btnSelectClick(Sender: TObject);
     procedure lbxMonthEnter(Sender: TObject);
     procedure lbxMonthExit(Sender: TObject);
@@ -106,7 +106,7 @@ type
     procedure VSTGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean;
       var ImageIndex: integer);
-    procedure VSTGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+    procedure VSTGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: integer);
     procedure VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure VSTResize(Sender: TObject);
@@ -142,13 +142,12 @@ implementation
 uses
   uniMain, uniSettings, uniProperties, uniResources;
 
-{ TfrmHolidays }
+  { TfrmHolidays }
 
 
 procedure TfrmHolidays.FormCreate(Sender: TObject);
 var
   I: byte;
-
 begin
   try
     // create list of months
@@ -156,24 +155,15 @@ begin
       lbxMonth.Items.Add(FormatDateTime('MMMM', EncodeDate(2000, I, 1)));
     lbxMonth.ItemIndex := -1;
 
-    // form size
-    (Sender as TForm).Width := Round((Screen.Width /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - (Round(1020 / (ScreenRatio / 100)) - ScreenRatio));
-    (Sender as TForm).Height := Round(Screen.Height /
-      IfThen(ScreenIndex = 0, 1, (ScreenRatio / 100))) - 4 * (250 - ScreenRatio);
-
-    // form position
-    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-    (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
-
-    {$IFDEF WINDOWS}
     VST.Header.Height := PanelHeight;
     pnlDetailCaption.Height := PanelHeight;
     pnlListCaption.Height := PanelHeight;
     pnlButtons.Height := ButtonHeight;
     pnlButton.Height := ButtonHeight;
     pnlBottom.Height := ButtonHeight;
-    {$ENDIF}
+
+    // get form icon
+    frmMain.img16.GetIcon(10, (Sender as TForm).Icon);
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -224,7 +214,8 @@ end;
 
 procedure TfrmHolidays.btnEditClick(Sender: TObject);
 begin
-  if (VST.Enabled = False) or (VST.SelectedCount <> 1) or (frmMain.Conn.Connected = False) then
+  if (VST.Enabled = False) or (VST.SelectedCount <> 1) or
+    (frmMain.Conn.Connected = False) then
     Exit;
 
   try
@@ -301,57 +292,56 @@ end;
 
 procedure TfrmHolidays.btnPrintClick(Sender: TObject);
 var
- FileName: String;
-
+  FileName: string;
 begin
- if btnPrint.Enabled = False then Exit;
+  if btnPrint.Enabled = False then Exit;
 
- FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Templates' +
-     DirectorySeparator + 'holidays.lrf';
+  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
+    'Templates' + DirectorySeparator + 'holidays.lrf';
 
- if FileExists(FileName) = False then
- begin
-   ShowMessage(Error_14 + sLineBreak + FileName);
-   Exit;
- end;
+  if FileExists(FileName) = False then
+  begin
+    ShowMessage(Error_14 + sLineBreak + FileName);
+    Exit;
+  end;
 
- // left mouse button = show report
- try
-  frmMain.Report.LoadFromFile(FileName);
-  frmMain.Report.FindObject('lblName').Memo.Text := AnsiUpperCase(lblName.Caption);
-  frmMain.Report.FindObject('lblDate').Memo.Text :=
-    AnsiUpperCase(VST.Header.Columns[1].Text);
-  frmMain.Report.FindObject('lblID').Memo.Text :=
-    AnsiUpperCase(VST.Header.Columns[3].Text);
-  frmMain.Report.FindObject('lblFooter').Memo.Text :=
-    AnsiUpperCase(Application.Title + ' - ' + frmHolidays.Caption);
+  // left mouse button = show report
+  try
+    frmMain.Report.LoadFromFile(FileName);
+    frmMain.Report.FindObject('lblName').Memo.Text := AnsiUpperCase(lblName.Caption);
+    frmMain.Report.FindObject('lblDate').Memo.Text :=
+      AnsiUpperCase(VST.Header.Columns[1].Text);
+    frmMain.Report.FindObject('lblID').Memo.Text :=
+      AnsiUpperCase(VST.Header.Columns[3].Text);
+    frmMain.Report.FindObject('lblFooter').Memo.Text :=
+      AnsiUpperCase(Application.Title + ' - ' + frmHolidays.Caption);
 
-  frmMain.Report.Tag := 17;
-  frmMain.Report.ShowReport;
-  VST.SetFocus;
+    frmMain.Report.Tag := 17;
+    frmMain.Report.ShowReport;
+    VST.SetFocus;
 
   except
-  on E: Exception do
-    ShowErrorMessage(E);
+    on E: Exception do
+      ShowErrorMessage(E);
   end;
 end;
 
-procedure TfrmHolidays.btnPrintMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TfrmHolidays.btnPrintMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: integer);
 var
- FileName: String;
-
+  FileName: string;
 begin
- FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Templates' +
-     DirectorySeparator + 'holidays.lrf';
+  FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
+    'Templates' + DirectorySeparator + 'holidays.lrf';
 
- if FileExists(FileName) = False then
- begin
-   ShowMessage(Error_14 + sLineBreak + FileName);
-   Exit;
- end;
+  if FileExists(FileName) = False then
+  begin
+    ShowMessage(Error_14 + sLineBreak + FileName);
+    Exit;
+  end;
 
- // right mouse button = show design report
- if Button = mbRight then
+  // right mouse button = show design report
+  if Button = mbRight then
   begin
     frmMain.Report.LoadFromFile(FileName);
     frmMain.Report.DesignReport;
@@ -362,7 +352,8 @@ end;
 
 procedure TfrmHolidays.btnSelectClick(Sender: TObject);
 begin
-  if (VST.RootNodeCount < 1) or (VST.Enabled = False) or (frmMain.Conn.Connected = False) then
+  if (VST.RootNodeCount < 1) or (VST.Enabled = False) or
+    (frmMain.Conn.Connected = False) then
     Exit;
 
   VST.SelectAll(False);
@@ -461,35 +452,35 @@ procedure TfrmHolidays.VSTChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
 begin
   try
     // set images
-      if VST.SelectedCount = 0 then
+    if VST.SelectedCount = 0 then
+    begin
+      imgItem.ImageIndex := -1;
+      lblItem.Caption := '';
+    end
+    else
+    begin
+      if VST.SelectedCount = VST.TotalCount then
       begin
-        imgItem.ImageIndex := -1;
-        lblItem.Caption := '';
+        imgItem.ImageIndex := 7;
+        lblItem.Caption := '# ' + IntToStr(VST.SelectedCount);
+      end
+      else if VST.SelectedCount = 1 then
+      begin
+        imgItem.ImageIndex := 5;
+        lblItem.Caption := IntToStr(VST.GetFirstSelected(False).Index + 1) + '.';
       end
       else
       begin
-        if VST.SelectedCount = VST.TotalCount then
-        begin
-          imgItem.ImageIndex := 7;
-          lblItem.Caption := '# ' + IntToStr(VST.SelectedCount);
-        end
-        else if VST.SelectedCount = 1 then
-        begin
-          imgItem.ImageIndex := 5;
-          lblItem.Caption := IntToStr(VST.GetFirstSelected(False).Index + 1) + '.';
-        end
-        else
-        begin
-          imgItem.ImageIndex := 6;
-          lblItem.Caption := '# ' + IntToStr(VST.SelectedCount);
-        end;
+        imgItem.ImageIndex := 6;
+        lblItem.Caption := '# ' + IntToStr(VST.SelectedCount);
       end;
+    end;
 
-      // set buttons
-      popEdit.Enabled := VST.SelectedCount = 1;
-      popDelete.Enabled := VST.SelectedCount > 0;
-      btnEdit.Enabled := VST.SelectedCount = 1;
-      btnDelete.Enabled := VST.SelectedCount > 0;
+    // set buttons
+    popEdit.Enabled := VST.SelectedCount = 1;
+    popDelete.Enabled := VST.SelectedCount > 0;
+    btnEdit.Enabled := VST.SelectedCount = 1;
+    btnDelete.Enabled := VST.SelectedCount > 0;
 
     if (VST.RootNodeCount = 0) or (VST.SelectedCount <> 1) then
     begin
@@ -514,7 +505,6 @@ end;
 procedure TfrmHolidays.VSTFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
 var
   Holiday: PHoliday;
-
 begin
   Holiday := Sender.GetNodeData(Node);
   Holiday.Day := 0;
@@ -532,7 +522,8 @@ begin
     ImageIndex := 10;
 end;
 
-procedure TfrmHolidays.VSTGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+procedure TfrmHolidays.VSTGetNodeDataSize(Sender: TBaseVirtualTree;
+  var NodeDataSize: integer);
 begin
   NodeDataSize := SizeOf(THoliday);
 end;
@@ -541,13 +532,12 @@ procedure TfrmHolidays.VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
   Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
 var
   Holiday: PHoliday;
-
 begin
   Holiday := Sender.GetNodeData(Node);
   try
     case Column of
       1: CellText := IntToStr(Holiday.Day) + '. ' +
-        DefaultFormatSettings.LongMonthNames[Holiday.Month];
+          DefaultFormatSettings.LongMonthNames[Holiday.Month];
       2: CellText := Holiday.Name;
       3: CellText := IntToStr(Holiday.ID);
       4: CellText := IntToStr(Holiday.Month);
@@ -562,7 +552,6 @@ end;
 procedure TfrmHolidays.VSTResize(Sender: TObject);
 var
   X: integer;
-
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
@@ -570,7 +559,8 @@ begin
     Round(ScreenRatio * 25 / 100);
   X := (VST.Width - VST.Header.Columns[0].Width) div 100;
   VST.Header.Columns[1].Width := 25 * X; // ID
-  VST.Header.Columns[2].Width := VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (36 * X); // text
+  VST.Header.Columns[2].Width :=
+    VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (36 * X); // text
   VST.Header.Columns[3].Width := 11 * X; // ID
 end;
 
@@ -578,10 +568,10 @@ procedure TfrmHolidays.btnDeleteClick(Sender: TObject);
 var
   IDs: string;
   N: PVirtualNode;
-
 begin
   try
-    if (frmMain.Conn.Connected = False) or (VST.SelectedCount = 0) or (frmMain.Conn.Connected = False) then
+    if (frmMain.Conn.Connected = False) or (VST.SelectedCount = 0) or
+      (frmMain.Conn.Connected = False) then
       exit;
 
     // get IDs of all selected nodes
@@ -612,7 +602,6 @@ begin
     end;
 
     frmMain.QRY.SQL.Text := 'DELETE FROM holidays WHERE hol_id IN (' + IDs + ');';
-
     frmMain.QRY.ExecSQL;
     frmMain.Tran.Commit;
 
@@ -644,13 +633,13 @@ begin
     // Add new category
     if btnSave.Tag = 0 then
       frmMain.QRY.SQL.Text :=
-        'INSERT INTO holidays (hol_day, hol_month, hol_name) VALUES (:DAY, :MONTH, :NAME);'
+        'INSERT OR IGNORE INTO holidays (hol_day, hol_month, hol_name) VALUES (:DAY, :MONTH, :NAME);'
     else
     begin
       // Edit selected
       VST.Tag := StrToInt(VST.Text[VST.GetFirstSelected(False), 3]);
       frmMain.QRY.SQL.Text :=
-        'UPDATE holidays SET ' + // update
+        'UPDATE OR IGNORE holidays SET ' + // update
         'hol_day = :DAY, ' +     // day
         'hol_month = :MONTH, ' + // month
         'hol_name = :NAME ' +   // name
@@ -700,12 +689,39 @@ begin
 end;
 
 procedure TfrmHolidays.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  INI: TINIFile;
+  INIFile: string;
+
 begin
   if (pnlDetail.Enabled = True) then
   begin
     btnCancelClick(btnCancel);
     CloseAction := Forms.caNone;
     Exit;
+  end;
+
+  // write position and window size
+  if frmSettings.chkLastFormsSize.Checked = True then
+  begin
+    try
+      INIFile := ChangeFileExt(ParamStr(0), '.ini');
+      INI := TINIFile.Create(INIFile);
+      if INI.ReadString('POSITION', frmHolidays.Name, '') <>
+          IntToStr(frmHolidays.Left) + separ + // form left
+          IntToStr(frmHolidays.Top) + separ + // form top
+          IntToStr(frmHolidays.Width) + separ + // form width
+          IntToStr(frmHolidays.Height) + separ + // form height
+          IntToStr(frmHolidays.pnlDetail.Width) then
+        INI.WriteString('POSITION', frmHolidays.Name,
+          IntToStr(frmHolidays.Left) + separ + // form left
+          IntToStr(frmHolidays.Top) + separ + // form top
+          IntToStr(frmHolidays.Width) + separ + // form width
+          IntToStr(frmHolidays.Height) + separ + // form height
+          IntToStr(frmHolidays.pnlDetail.Width));
+    finally
+      INI.Free;
+    end;
   end;
 end;
 
@@ -723,7 +739,65 @@ begin
 end;
 
 procedure TfrmHolidays.FormShow(Sender: TObject);
+var
+  INI: TINIFile;
+  S: string;
+  I: integer;
 begin
+  // ********************************************************************
+  // FORM SIZE START
+  // ********************************************************************
+  try
+    S := ChangeFileExt(ParamStr(0), '.ini');
+    // INI file READ procedure (if file exists) =========================
+    if FileExists(S) = True then
+    begin
+      INI := TINIFile.Create(S);
+      frmHolidays.Position := poDesigned;
+      S := INI.ReadString('POSITION', frmHolidays.Name, '-1•-1•0•0•200');
+
+      // width
+      TryStrToInt(Field(Separ, S, 3), I);
+      if (I < 1) or (I > Screen.Width) then
+        frmHolidays.Width := Screen.Width div 2
+      else
+        frmHolidays.Width := I;
+
+      /// height
+      TryStrToInt(Field(Separ, S, 4), I);
+      if (I < 1) or (I > Screen.Height) then
+        frmHolidays.Height := Screen.Height div 2
+      else
+        frmHolidays.Height := I;
+
+      // left
+      TryStrToInt(Field(Separ, S, 1), I);
+      if (I < 0) or (I > Screen.Width) then
+        frmHolidays.left := (Screen.Width - frmHolidays.Width) div 2
+      else
+        frmHolidays.Left := I;
+
+      // top
+      TryStrToInt(Field(Separ, S, 2), I);
+      if (I < 0) or (I > Screen.Height) then
+        frmHolidays.Top := ((Screen.Height - frmHolidays.Height) div 2) - 75
+      else
+        frmHolidays.Top := I;
+
+      // detail panel
+      TryStrToInt(Field(Separ, S, 5), I);
+      if (I < 150) or (I > 350) then
+        frmHolidays.pnlDetail.Width := 220
+      else
+        frmHolidays.pnlDetail.Width := I;
+    end;
+  finally
+    INI.Free
+  end;
+  // ********************************************************************
+  // FORM SIZE END
+  // ********************************************************************
+
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;
@@ -754,7 +828,7 @@ begin
   popPrint.Enabled := VST.RootNodeCount > 0;
   actPrint.Enabled := VST.RootNodeCount > 0;
 
-  SetNodeHeight(frmHolidays.VST);
+  SetNodeHeight(VST);
   VST.SetFocus;
   VST.ClearSelection;
   spiDay.Clear;
@@ -791,7 +865,6 @@ procedure UpdateHolidays;
 var
   Holiday: PHoliday;
   P: PVirtualNode;
-
 begin
   try
     frmHolidays.VST.Clear;
@@ -800,7 +873,7 @@ begin
     // =============================================================================================
     // update list of Holidays in form Holidays
     if frmMain.Conn.Connected = False then
-    Exit;
+      Exit;
 
     screen.Cursor := crHourGlass;
     frmHolidays.VST.BeginUpdate;
