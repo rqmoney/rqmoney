@@ -27331,12 +27331,12 @@ object frmMain: TfrmMain
     Top = 360
   end
   object souBalanceCredits: TListChartSource
-    Left = 826
-    Top = 438
+    Left = 736
+    Top = 416
   end
   object souBalanceDebits: TListChartSource
-    Left = 854
-    Top = 466
+    Left = 800
+    Top = 416
   end
   object styBalanceCredit: TChartStyles
     Styles = <    
@@ -27352,8 +27352,8 @@ object frmMain: TfrmMain
         Pen.Width = 2
         UsePen = False
       end>
-    Left = 704
-    Top = 432
+    Left = 672
+    Top = 416
   end
   object styBalanceDebit: TChartStyles
     Styles = <    
@@ -27367,12 +27367,12 @@ object frmMain: TfrmMain
         Pen.Color = clWhite
         Pen.Width = 2
       end>
-    Left = 732
-    Top = 460
+    Left = 616
+    Top = 416
   end
   object popChartBalance: TPopupMenu
-    Left = 396
-    Top = 445
+    Left = 456
+    Top = 416
     object popCopyChartBalance: TMenuItem
       OnClick = popCopyChartBalanceClick
     end
@@ -27391,12 +27391,12 @@ object frmMain: TfrmMain
     end
   end
   object souChrono: TListChartSource
-    Left = 930
-    Top = 455
+    Left = 864
+    Top = 416
   end
   object popChartChrono: TPopupMenu
     Left = 520
-    Top = 438
+    Top = 416
     object popCopyChartChrono: TMenuItem
       OnClick = popCopyChartBalanceClick
     end

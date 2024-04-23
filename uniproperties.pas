@@ -30,6 +30,9 @@ type
     btnRecycle: TBCMDButtonFocus;
     btnScheduler: TBCMDButtonFocus;
     btnTags: TBCMDButtonFocus;
+    emoji: TImageList;
+    imgPassword: TImage;
+    imgEncryption: TImage;
     imgAccounts: TImage;
     imgBudget: TImage;
     imgLinks: TImage;
@@ -61,11 +64,13 @@ type
     lblLocation_: TLabel;
     lblOS1: TLabel;
     lblOS2: TLabel;
+    lblEncryptionProtection: TLabel;
+    lblEncryptionProtection_: TLabel;
     lblPayees: TLabel;
     lblPayments: TLabel;
     lblPersons: TLabel;
-    lblProtection: TLabel;
-    lblProtection_: TLabel;
+    lblPasswordProtection: TLabel;
+    lblPasswordProtection_: TLabel;
     lblRecycle: TLabel;
     lblSchedulers: TLabel;
     lblSize: TLabel;
@@ -76,6 +81,8 @@ type
     lblSQLiteVersion2: TLabel;
     lblTags: TLabel;
     lblWidth: TLabel;
+    Panel1: TPanel;
+    Panel2: TPanel;
     pnlAccounts: TPanel;
     pnlBottom: TPanel;
     pnlBudget: TPanel;
@@ -87,6 +94,7 @@ type
     pnlHeight: TPanel;
     pnlHolidays: TPanel;
     pnlOS: TPanel;
+    pnlEncryptionProtection: TPanel;
     pnlPayees: TPanel;
     pnlPayments: TPanel;
     pnlPersons: TPanel;
@@ -103,7 +111,7 @@ type
     pnlCaption: TBCPanel;
     pnlFileName: TPanel;
     pnlLocation: TPanel;
-    pnlProtection: TPanel;
+    pnlPasswordProtection: TPanel;
     pnlSize: TPanel;
     tabDatabase: TTabSheet;
     tabRecords: TTabSheet;
@@ -139,9 +147,9 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniRecycleBin, uniAccounts, uniCurrencies, uniCategories, uniComments, uniPersons,
-  uniPayees, uniHolidays, uniTags, uniSchedulers, uniWrite, uniBudgets, uniLinks,
-  uniSettings;
+  uniMain, uniRecycleBin, uniAccounts, uniCurrencies, uniCategories, uniComments,
+  uniPersons, uniPayees, uniHolidays, uniTags, uniSchedulers, uniWrite, uniBudgets,
+  uniLinks, uniResources, uniSettings;
 
 { TfrmProperties }
 
@@ -330,6 +338,16 @@ begin
 
   // get file location
   lblLocation.Caption := ExtractFilePath(frmMain.Conn.DatabaseName);
+
+  // get password protection
+  lblPasswordProtection.Caption := IfThen(lblPasswordProtection.Tag = 0,
+    Caption_109, Caption_108);
+  emoji.GetBitmap(lblPasswordProtection.Tag, imgPassword.Picture.Bitmap);
+
+  // get encryption protection
+  lblEncryptionProtection.Caption := IfThen(lblEncryptionProtection.Tag = 0,
+    Caption_109, Caption_108);
+  emoji.GetBitmap(2 + lblEncryptionProtection.Tag, imgEncryption.Picture.Bitmap);
 
   // get file I
   try

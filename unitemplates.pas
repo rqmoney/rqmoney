@@ -922,6 +922,7 @@ var
   S, Temp: string;
   Import, Done: boolean;
   ImageIndex: integer;
+  Separator: char;
 begin
 
   if (cbxTemplates.ItemIndex = -1) or (VST.RootNodeCount = 0) then
@@ -940,7 +941,19 @@ begin
     Linex := VST.GetNodeData(N);
 
     // date
-    TryStrToDate(Linex.Value[spiDate.Value - 1], D, frmTemplates.ediFormat.Text);
+    S := ReplaceStr(frmTemplates.ediFormat.Text, ' ', '');
+    if Pos('.', S) > 0 then
+      Separator := '.'
+    else if Pos(',', S) > 0 then
+      Separator := ','
+    else if Pos('-', S) > 0 then
+      Separator := '-'
+    else if Pos('\', S) > 0 then
+      Separator := '\'
+    else
+      Separator := '/';
+
+    D := StrToDate(Linex.Value[spiDate.Value - 1], S, Separator);
     frmEdit.datDate.Date := D;
 
     // amount
@@ -1539,6 +1552,7 @@ procedure FileToGrid;
 var
   I, J, K: integer;
   S: string;
+  Separator: char;
   LineX: PLineX;
   P: PVirtualNode;
   D: TDate;
@@ -1628,8 +1642,20 @@ begin
     begin
       S := frmTemplates.VST.Text[frmTemplates.VST.GetFirst(),
         frmTemplates.spiDate.Value];
+      S := ReplaceStr(S, ' ', '');
       try
-        D := StrToDate(S, frmTemplates.ediFormat.Text);
+        if Pos('.', S) > 0 then
+          Separator := '.'
+        else if Pos(',', S) > 0 then
+          Separator := ','
+        else if Pos('-', S) > 0 then
+          Separator := '-'
+        else if Pos('\', S) > 0 then
+          Separator := '\'
+        else
+          Separator := '/';
+
+        D := StrToDate(S, frmTemplates.ediFormat.Text, Separator);
         frmTemplates.lblDateTest.Caption := DateToStr(D, FS_own);
         frmTemplates.VST.Header.Columns[frmTemplates.spiDate.Value].Text :=
           Trim(frmTemplates.pnlDateCaption.Caption);

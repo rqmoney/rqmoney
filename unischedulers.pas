@@ -277,7 +277,10 @@ begin
       frmScheduler.cbxSubcategory.Items[frmScheduler.cbxSubcategory.ItemIndex]));
 
     // amount 1
-    TryStrToFloat(frmScheduler.spiAmountFrom.Text, Amount);
+    Sum := ReplaceStr(frmScheduler.spiAmountFrom.Text, FS_own.ThousandSeparator, '');
+    Sum := ReplaceStr(Sum, '.', FS_own.DecimalSeparator);
+    Sum := ReplaceStr(Sum, ',', FS_own.DecimalSeparator);
+    TryStrToFloat(Sum, Amount);
     if frmScheduler.cbxType.ItemIndex > 0 then
       Amount := -Amount;
     Sum := FloatToStr(amount);
@@ -287,9 +290,12 @@ begin
     // amount 2
     if frmScheduler.cbxType.ItemIndex = 2 then
     begin
-      TryStrToFloat(frmScheduler.spiAmountTo.Text, Amount);
-      Sum := FloatToStr(amount);
-      frmMain.QRY.Params.ParamByName('AMOUNT2').AsString :=
+    Sum := ReplaceStr(frmScheduler.spiAmountTo.Text, FS_own.ThousandSeparator, '');
+    Sum := ReplaceStr(Sum, '.', FS_own.DecimalSeparator);
+    Sum := ReplaceStr(Sum, ',', FS_own.DecimalSeparator);
+    TryStrToFloat(Sum, Amount);
+    Sum := FloatToStr(amount);
+    frmMain.QRY.Params.ParamByName('AMOUNT2').AsString :=
         ReplaceStr(Sum, FS_own.DecimalSeparator, '.');
     end;
 
@@ -450,7 +456,10 @@ begin
       frmScheduler.cbxSubcategory.Items[frmScheduler.cbxSubcategory.ItemIndex]));
 
     // amount
-    TryStrToFloat(frmScheduler.spiAmountFrom.Text, Amount);
+    S := ReplaceStr(frmScheduler.spiAmountFrom.Text, FS_own.ThousandSeparator, '');
+    S := ReplaceStr(S, '.', FS_own.DecimalSeparator);
+    S := ReplaceStr(S, ',', FS_own.DecimalSeparator);
+    TryStrToFloat(S, Amount);
     I := IfThen(frmScheduler.cbxType.ItemIndex = 2, 3, frmScheduler.cbxType.ItemIndex);
     if I in [1, 3] then
       Amount := -Amount;
@@ -517,7 +526,11 @@ begin
       frmScheduler.cbxSubcategory.Items[frmScheduler.cbxSubcategory.ItemIndex]));
     // amount
 
-      TryStrToFloat(frmScheduler.spiAmountTo.Text, Amount);
+    S := ReplaceStr(frmScheduler.spiAmountTo.Text, FS_own.ThousandSeparator, '');
+    S := ReplaceStr(S, '.', FS_own.DecimalSeparator);
+    S := ReplaceStr(S, ',', FS_own.DecimalSeparator);
+
+      TryStrToFloat(S, Amount);
       S := FloatToStr(amount);
       frmMain.QRY.Params.ParamByName('S').AsString :=
         ReplaceStr(S, FS_own.DecimalSeparator, '.');

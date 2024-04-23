@@ -55,6 +55,7 @@ type
     chkChartWrapLabelsText: TCheckBox;
     chkChartZeroBalance: TCheckBox;
     chkCloseDbWarning: TCheckBox;
+    chkRememberNewTransactionsForm: TCheckBox;
     chkEncryptDatabase: TCheckBox;
     chkDisplayFontBold: TCheckBox;
     chkDisplaySubCatCapital: TCheckBox;
@@ -76,7 +77,6 @@ type
     gbxCharts: TGroupBox;
     gbxTransactionsEdit: TGroupBox;
     gbxTransactionsDelete: TGroupBox;
-    gbxTransactionsRestrictions: TGroupBox;
     gbxTransactionsAdd: TGroupBox;
     imgFlags: TImageList;
     lblButtonsSize: TLabel;
@@ -88,6 +88,7 @@ type
     lblTransactionsDeleteDate: TLabel;
     lblTransactionsEditDays: TLabel;
     lblTransactionsDeleteDays: TLabel;
+    tabTransactions: TPageControl;
     pnlButtonVisibilityTop: TPanel;
     pnlButtonsVisibility: TPanel;
     pnlButtonsSize: TPanel;
@@ -251,6 +252,8 @@ type
     tabFormat: TTabSheet;
     tabPayments: TTabSheet;
     tabButtons: TTabSheet;
+    tabTransactionsGlobal: TTabSheet;
+    tabTransactionsRestrictions: TTabSheet;
     tabTables: TTabSheet;
     tabTool: TPageControl;
     tabTransferMFontColor: TTabSheet;
@@ -399,6 +402,7 @@ begin
     tabVisualSettings.TabIndex := 0;
     tabFontColor.TabIndex := 0;
     tabTool.TabIndex := 0;
+    tabTransactions.TabIndex := 0;
 
     // get form icon
     frmMain.img16.GetIcon(25, (Sender as TForm).Icon);
@@ -584,6 +588,7 @@ begin
         INI.WriteBool('TRANSACTIONS', 'DisplayAmountFontBold', True);
         INI.WriteBool('TRANSACTIONS', 'DisplaySubcategoryCapitalLetters', True);
         INI.WriteBool('TRANSACTIONS', 'EnableSelfTransfer', False);
+        INI.WriteBool('TRANSACTIONS', 'RememberNewTransactionsForm', False);
 
         // restrictions
         INI.WriteString('TRANSACTIONS', 'RestrictionsAdd', '');
@@ -724,11 +729,6 @@ begin
       // =========================================================
       if INI.ReadInteger('GLOBAL', 'Version', 2) < 3 then
       begin
-        {INI.WriteInteger('frmDetail', 'SimpleForm', frmDetail.pnlSimple.Tag);
-        INI.WriteInteger('frmDetail', 'MultipleForm', frmDetail.pnlMultiple.Tag);
-        INI.WriteInteger('frmDetail', 'pnlLeft', frmDetail.pnlLeft.Width);
-        INI.WriteInteger('frmDetail', 'pnlDetail', frmDetail.pnlDetail.Width);}
-
         // add new transactions key
         INI.WriteString('KEYS', 'new_transaction_simple', 'F1');
         INI.WriteString('KEYS', 'new_transaction_multiple', 'F2');
@@ -961,6 +961,8 @@ begin
         INI.ReadBool('TRANSACTIONS', 'DisplaySubcategoryCapitalLetters', True);
       chkEnableSelfTransfer.Checked :=
         INI.ReadBool('TRANSACTIONS', 'EnableSelfTransfer', False);
+      chkRememberNewTransactionsForm.Checked :=
+        INI.ReadBool('TRANSACTIONS', 'RememberNewTransactionsForm', False);
 
       TempStr := INI.ReadString('TRANSACTIONS', 'RestrictionsAdd', '');
       case Length(TempStr) of
@@ -1072,7 +1074,6 @@ begin
       // ---------------------------------------------------
       chkCloseDbWarning.Checked := INI.ReadBool('ON_CLOSE', 'ConfirmDialog', True);
       chkEncryptDatabase.Checked := INI.ReadBool('ON_CLOSE', 'EncryptDatabase', True);
-
     except
     end;
 
@@ -1816,6 +1817,9 @@ begin
     INI.WriteBool('TRANSACTIONS', 'DisplaySubcategoryCapitalLetters',
       chkDisplaySubCatCapital.Checked);
     INI.WriteBool('TRANSACTIONS', 'EnableSelfTransfer', chkEnableSelfTransfer.Checked);
+    INI.WriteBool('TRANSACTIONS', 'RememberNewTransactionsForm',
+      chkRememberNewTransactionsForm.Checked);
+
 
     // restrictions
     INI.WriteString('TRANSACTIONS', 'RestrictionsAdd',
@@ -1857,6 +1861,9 @@ begin
     // ---------------------------------------------------
     INI.WriteBool('ON_CLOSE', 'ConfirmDialog', chkCloseDbWarning.Checked);
     INI.WriteBool('ON_CLOSE', 'EncryptDatabase', chkEncryptDatabase.Checked);
+    frmProperties.lblEncryptionProtection.Tag :=
+      Abs(StrToInt(BoolToStr(chkEncryptDatabase.Checked)));
+
 
     // write key shortcuts
     P := frmSettings.VSTKeys.GetFirst();
@@ -2054,7 +2061,7 @@ end;
 
 procedure TfrmSettings.gbxTransactionsRestrictionsResize(Sender: TObject);
 begin
-  gbxTransactionsAdd.Width := (gbxTransactionsRestrictions.Width - 12) div 3;
+  gbxTransactionsAdd.Width := (tabTransactionsRestrictions.Width - 12) div 3;
   gbxTransactionsEdit.Width := gbxTransactionsAdd.Width;
 end;
 
@@ -2304,6 +2311,7 @@ begin
     chkDisplayFontBold.Tag := IfThen(chkDisplayFontBold.Checked = True, 1, 0);
     chkDisplaySubCatCapital.Tag := IfThen(chkDisplaySubCatCapital.Checked = True, 1, 0);
     chkEnableSelfTransfer.Tag := IfThen(chkEnableSelfTransfer.Checked = True, 1, 0);
+    chkRememberNewTransactionsForm.Tag := IfThen(chkRememberNewTransactionsForm.Checked = True, 1, 0);
     datTransactionsAddDateChange(datTransactionsAddDate);
     datTransactionsEditDateChange(datTransactionsEditDate);
     datTransactionsDeleteDateChange(datTransactionsDeleteDate);
@@ -3007,6 +3015,11 @@ begin
       IntToStr(chkEnableSelfTransfer.Tag) then
       chkEnableSelfTransfer.Checked := StrToBool(IntToStr(chkEnableSelfTransfer.Tag));
 
+    // chkRememberNewTransactionsForm
+    if BoolToStr(chkRememberNewTransactionsForm.Checked) <>
+      IntToStr(chkRememberNewTransactionsForm.Tag) then
+      chkRememberNewTransactionsForm.Checked := StrToBool(IntToStr(chkRememberNewTransactionsForm.Tag));
+
     // restrictions
     case gbxTransactionsAdd.Tag of
       0: rbtTransactionsAddNo.Checked := True;
@@ -3451,19 +3464,6 @@ begin
     FullColor := frmSettings.btnCaptionColorBack.Tag;
     BrightenColor := Brighten(FullColor, 234);
 
-    // ======================================================================================
-    // date format in all forms
-    // ======================================================================================
-    //frmDetail.datDateFrom.Format := frmSettings.ediLongDateFormat.Text;
-    //frmDetail.datDateTo.DateFormat := frmSettings.ediLongDateFormat.Text;
-    //frmMain.datFrom.DateFormat := frmSettings.ediLongDateFormat.Text;
-    //frmMain.datTo.DateFormat := frmSettings.ediLongDateFormat.Text;
-    //frmAccounts.datDate.DateFormat := frmSettings.ediLongDateFormat.Text;
-    //frmScheduler.datDateFrom.DateFormat := frmSettings.ediLongDateFormat.Text;
-    //frmScheduler.datDateTo.DateFormat := frmSettings.ediLongDateFormat.Text;
-    //frmEdit.datDate.DateFormat := frmSettings.ediLongDateFormat.Text;
-    //frmMultiple.datDate.DateFormat := frmSettings.ediLongDateFormat.Text;
-
     // Forms color
     {$IFDEF WINDOWS}
     frmDetail.Color := $00DEDEDE; // gray
@@ -3536,16 +3536,6 @@ begin
     //frmMain.chaBalance.BackColor := RGBToColor(222,222,222);
 
     // ===============================================================================
-    // frmDetail
-    // ===============================================================================
-    // buttons
-    SetBtnProperty(frmDetail.btnCancel);
-    SetBtnProperty(frmDetail.btnSave);
-    SetBtnProperty(frmDetail.btnSettings);
-    SetBtnProperty(frmDetail.btnCancelX);
-    SetBtnProperty(frmDetail.btnSaveX);
-
-    // ===============================================================================
     // frmEdit
     // ===============================================================================
     SetBtnProperty(frmEdit.btnSave);
@@ -3568,7 +3558,11 @@ begin
     SetPanelProperty(frmDetail.pnlDetailCaption);
 
     // buttons
+    SetBtnProperty(frmDetail.btnCancel);
     SetBtnProperty(frmDetail.btnSave);
+    SetBtnProperty(frmDetail.btnSettings);
+    SetBtnProperty(frmDetail.btnCancelX);
+    SetBtnProperty(frmDetail.btnSaveX);
     SetBtnProperty(frmDetail.btnCancel);
     SetBtnProperty(frmDetail.btnAdd);
     SetBtnProperty(frmDetail.btnEdit);

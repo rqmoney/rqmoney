@@ -1,23 +1,8 @@
-// Program: RQMONEY
-// Version: 3.9.1
+// Program: RQ MONEY
+// Version: 3.9.2
 // Starting date: March 3, 2016
 // Author: Slavomir Svetlik
 // Contact: rqmoney@gmail.com
-
-// ------------------------------------------
-// INSTALL SQLITE LIBRARY ON LINUX
-// sudo apt-get update
-// sudo apt-get install libsqlite3-dev
-
-// ------------------------------------------
-// UNINSTALL SQLITE LIBRARY ON LINUX
-// sudo apt remove libsqlite3-dev
-
-// -------------------------------------
-// INSTALL BGRA LIBRARY ON LINUX
-// sudo apt-get install libgl-dev
-
-{To do: !!! allow insert multiple trasanctions on separately import !!!}
 
 unit uniMain;
 
@@ -6215,153 +6200,171 @@ begin
         // enabled buttons
         frmDetail.btnSave.Tag := 0;
 
-        frmMain.QRY.SQL.Text :=
-          'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_used"';
-        frmMain.QRY.Open;
-        UsedLastImage := frmMain.QRY.Fields[0].AsString <> '0';
-        frmMain.QRY.Close;
+        try
+          if frmSettings.chkRememberNewTransactionsForm.Checked = True then
+          begin
+            frmMain.QRY.SQL.Text :=
+              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_used"';
+            frmMain.QRY.Open;
+            UsedLastImage := frmMain.QRY.Fields[0].AsString <> '0';
+            frmMain.QRY.Close;
 
-        if UsedLastImage = True then
-        begin
+            if UsedLastImage = False then
+            begin
+              // set type
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_type"';
+              frmMain.QRY.Open;
+              frmDetail.cbxType.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
+              frmDetail.cbxTypeChange(frmDetail.cbxType);
+              frmMain.QRY.Close;
+
+              // set date from
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_date_from"';
+              frmMain.QRY.Open;
+              if Length(frmMain.QRY.Fields[0].AsString) = 10 then
+                frmDetail.datDateFrom.Date :=
+                  StrToDate(frmMain.QRY.Fields[0].AsString, 'YYYY-MM-DD', '-')
+              else
+                frmDetail.datDateFrom.Date := Now();
+              frmMain.QRY.Close;
+
+              // set date to
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_date_to"';
+              frmMain.QRY.Open;
+              if Length(frmMain.QRY.Fields[0].AsString) = 10 then
+                frmDetail.datDateTo.Date :=
+                  StrToDate(frmMain.QRY.Fields[0].AsString, 'YYYY-MM-DD', '-')
+              else
+                frmDetail.datDateTo.Date := Now();
+              frmMain.QRY.Close;
+
+              // set account from
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_account_from"';
+              frmMain.QRY.Open;
+              frmDetail.cbxAccountFrom.ItemIndex :=
+                StrToInt(frmMain.QRY.Fields[0].AsString);
+              frmMain.QRY.Close;
+
+              // set account to
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_account_to"';
+              frmMain.QRY.Open;
+              frmDetail.cbxAccountTo.ItemIndex :=
+                StrToInt(frmMain.QRY.Fields[0].AsString);
+              frmMain.QRY.Close;
+
+              // set amount from
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_amount_from"';
+              frmMain.QRY.Open;
+              frmDetail.spiAmountFrom.Text :=
+                ReplaceStr(frmMain.QRY.Fields[0].AsString, '.', FS_own.DecimalSeparator);
+              frmMain.QRY.Close;
+
+              // set amount to
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_amount_to"';
+              frmMain.QRY.Open;
+              frmDetail.spiAmountTo.Text :=
+                ReplaceStr(frmMain.QRY.Fields[0].AsString, '.', FS_own.DecimalSeparator);
+              frmMain.QRY.Close;
+
+              // set comment
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_comment"';
+              frmMain.QRY.Open;
+              frmDetail.cbxComment.Text := frmMain.QRY.Fields[0].AsString;
+              frmMain.QRY.Close;
+
+              // set category
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_category"';
+              frmMain.QRY.Open;
+              frmDetail.cbxCategory.ItemIndex :=
+                StrToInt(frmMain.QRY.Fields[0].AsString);
+              frmDetail.cbxCategoryChange(frmDetail.cbxCategory);
+              frmMain.QRY.Close;
+
+              // set subcategory
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_subcategory"';
+              frmMain.QRY.Open;
+              frmDetail.cbxSubcategory.ItemIndex :=
+                StrToInt(frmMain.QRY.Fields[0].AsString);
+              frmMain.QRY.Close;
+
+              // set person
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_person"';
+              frmMain.QRY.Open;
+              frmDetail.cbxPerson.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
+              frmMain.QRY.Close;
+
+              // set payee
+              frmMain.QRY.SQL.Text :=
+                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_payee"';
+              frmMain.QRY.Open;
+              frmDetail.cbxPayee.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
+              frmMain.QRY.Close;
+
+              // set last used transaction to true
+              frmMain.QRY.SQL.Text :=
+                'UPDATE settings SET set_value = 1 WHERE set_parameter = "last_transaction_used";';
+              frmMain.QRY.ExecSQL;
+              frmMain.Tran.Commit;
+            end;
+          end;
+        except
+          frmMain.QRY.Close;
+        end;
+
+        try
           // panel Detail
           frmDetail.cbxType.Enabled := True;
-          if frmDetail.cbxType.ItemIndex = -1 then
+          // type
+          if (frmDetail.cbxType.ItemIndex = -1) then
+          begin
             frmDetail.cbxType.ItemIndex := 1;
-          frmDetail.cbxTypeChange(frmDetail.cbxType);
-
-          // set all fields FROM
-          frmDetail.spiAmountFrom.Text := Format('%n', [0.0]);
-          frmDetail.spiAmountTo.Text := Format('%n', [0.0]);
-          frmDetail.cbxComment.Text := '';
+            frmDetail.cbxTypeChange(frmDetail.cbxType);
+          end;
+          // amount
+          if frmDetail.spiAmountFrom.Text = '' then
+            frmDetail.spiAmountFrom.Text := Format('%n', [0.0]);
+          if frmDetail.spiAmountTo.Text = '' then
+            frmDetail.spiAmountTo.Text := Format('%n', [0.0]);
+          // comment
+          //frmDetail.cbxComment.Text := '';
+          // person
           if (frmDetail.cbxPerson.ItemIndex = -1) and
             (frmDetail.cbxPerson.Items.Count > 0) then
             frmDetail.cbxPerson.ItemIndex := 0;
-
-          if (frmDetail.cbxAccountFrom.Items.Count > 0) then
+          // account from
+          if (frmDetail.cbxAccountFrom.ItemIndex = -1) and
+            (frmDetail.cbxAccountFrom.Items.Count > 0) then
             frmDetail.cbxAccountFrom.ItemIndex :=
-              IfThen(cbxAccount.ItemIndex > 0, cbxAccount.ItemIndex -
-              1, IfThen(frmDetail.cbxAccountFrom.ItemIndex = -1, 0,
-              frmDetail.cbxAccountFrom.ItemIndex));
-          frmDetail.cbxAccountTo.ItemIndex := -1;
+              IfThen(cbxAccount.ItemIndex > 0, cbxAccount.ItemIndex - 1, 0);
+          // account to
+          if (frmDetail.cbxAccountFrom.ItemIndex = -1) and
+            (frmDetail.cbxAccountFrom.Items.Count > 0) then
+            frmDetail.cbxAccountTo.ItemIndex := 0;
+          // payee
           if (frmDetail.cbxPayee.ItemIndex = -1) and
             (frmDetail.cbxPayee.Items.Count > 0) then
             frmDetail.cbxPayee.ItemIndex := 0;
+          // category
           if (frmDetail.cbxCategory.ItemIndex = -1) and
             (frmDetail.cbxCategory.Items.Count > 0) then
             frmDetail.cbxCategory.ItemIndex := 0;
           frmDetail.cbxCategoryChange(frmDetail.cbxCategory);
+          // tag
           frmDetail.lbxTag.CheckAll(cbUnchecked, False, False);
-        end
-        else
-        begin
-          try
-            // set type
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_type"';
-            frmMain.QRY.Open;
-            frmDetail.cbxType.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
-            frmDetail.cbxTypeChange(frmDetail.cbxType);
-            frmMain.QRY.Close;
-
-            // set date from
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_date_from"';
-            frmMain.QRY.Open;
-            if Length(frmMain.QRY.Fields[0].AsString) = 10 then
-              frmDetail.datDateFrom.Date :=
-                StrToDate(frmMain.QRY.Fields[0].AsString, 'YYYY-MM-DD', '-')
-            else
-              frmDetail.datDateFrom.Date := Now();
-            frmMain.QRY.Close;
-
-            // set date to
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_date_to"';
-            frmMain.QRY.Open;
-            if Length(frmMain.QRY.Fields[0].AsString) = 10 then
-              frmDetail.datDateTo.Date :=
-                StrToDate(frmMain.QRY.Fields[0].AsString, 'YYYY-MM-DD', '-')
-            else
-              frmDetail.datDateTo.Date := Now();
-            frmMain.QRY.Close;
-
-            // set account from
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_account_from"';
-            frmMain.QRY.Open;
-            frmDetail.cbxAccountFrom.ItemIndex :=
-              StrToInt(frmMain.QRY.Fields[0].AsString);
-            frmMain.QRY.Close;
-
-            // set account to
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_account_to"';
-            frmMain.QRY.Open;
-            frmDetail.cbxAccountTo.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
-            frmMain.QRY.Close;
-
-            // set amount from
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_amount_from"';
-            frmMain.QRY.Open;
-            frmDetail.spiAmountFrom.Text :=
-              ReplaceStr(frmMain.QRY.Fields[0].AsString, '.', FS_own.DecimalSeparator);
-            frmMain.QRY.Close;
-
-            // set amount to
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_amount_to"';
-            frmMain.QRY.Open;
-            frmDetail.spiAmountTo.Text :=
-              ReplaceStr(frmMain.QRY.Fields[0].AsString, '.', FS_own.DecimalSeparator);
-            frmMain.QRY.Close;
-
-            // set comment
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_comment"';
-            frmMain.QRY.Open;
-            frmDetail.cbxComment.Text := frmMain.QRY.Fields[0].AsString;
-            frmMain.QRY.Close;
-
-            // set category
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_category"';
-            frmMain.QRY.Open;
-            frmDetail.cbxCategory.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
-            frmDetail.cbxCategoryChange(frmDetail.cbxCategory);
-            frmMain.QRY.Close;
-
-            // set subcategory
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_subcategory"';
-            frmMain.QRY.Open;
-            frmDetail.cbxSubcategory.ItemIndex :=
-              StrToInt(frmMain.QRY.Fields[0].AsString);
-            frmMain.QRY.Close;
-
-            // set person
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_person"';
-            frmMain.QRY.Open;
-            frmDetail.cbxPerson.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
-            frmMain.QRY.Close;
-
-            // set payee
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_payee"';
-            frmMain.QRY.Open;
-            frmDetail.cbxPayee.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
-            frmMain.QRY.Close;
-
-            // set last used transaction to true
-            frmMain.QRY.SQL.Text :=
-              'UPDATE settings SET set_value = 1 WHERE set_parameter = "last_transaction_used";';
-            frmMain.QRY.ExecSQL;
-            frmMain.Tran.Commit;
-          except
-            frmMain.QRY.Close;
-          end;
+        except
         end;
+
         if frmDetail.ShowModal = mrOk then
           if (frmSettings.chkOpenNewTransaction.Checked = True) and
             (frmDetail.tabKind.TabIndex = 0) then
@@ -9372,7 +9375,7 @@ var
   Temp, T1, T2: string;
   s1, s2: TStringStream;
   bf: TBlowfishDecryptStream;
-  NeedP: boolean; // needed password ?
+  ExistsCorruptedRecord: boolean;
   I: integer;
   slTemp: TStringList;
   D: double;
@@ -9388,38 +9391,36 @@ begin
       end;
 
     // FILE DECRYPTION
+    frmGate.ediGate.Clear;
     s1 := TStringStream.Create(''); //used as your source string
     s1.LoadFromFile(FileName);
     if LeftStr(s1.DataString, 6) <> 'SQLite' then
     begin
-      NeedP := True;
       frmGate.lblFileName2.Caption := FileName;
-      if frmGate.ShowModal = mrOk then
-      begin
-        s2 := TStringStream.Create('');  //make sure destination stream is blank
-        bf := TBlowfishDecryptStream.Create(ReverseString(frmGate.ediGate.Text) +
-          frmGate.ediGate.Text, s1);
-        //reads from source stream
-        s2.copyfrom(bf, s1.size);
-        if LeftStr(s2.DataString, 6) <> 'SQLite' then
-        begin
-          ShowMessage(Error_21);
-          bf.Free;
-          s2.Free;
-          s1.Free;
-          Exit;
-        end;
+      if frmGate.ShowModal <> mrOk then
+        Exit;
 
-        s2.savetofile(FileName);
+      s2 := TStringStream.Create('');  //make sure destination stream is blank
+      bf := TBlowfishDecryptStream.Create(ReverseString(frmGate.ediGate.Text) +
+        frmGate.ediGate.Text, s1);
+      //reads from source stream
+      s2.copyfrom(bf, s1.size);
+      if LeftStr(s2.DataString, 6) <> 'SQLite' then
+      begin
+        ShowMessage(Error_21);
         bf.Free;
         s2.Free;
-      end
-      else
+        s1.Free;
         Exit;
+      end;
+
+      s2.savetofile(FileName);
+      bf.Free;
+      s2.Free;
+      frmProperties.lblEncryptionProtection.Tag := 1; // yes (protected by encryption)
     end
     else
-      NeedP := False;
-
+     frmProperties.lblEncryptionProtection.Tag := 0; // no (protected by encryption)
   except
     Exit;
   end;
@@ -9505,35 +9506,34 @@ begin
   end;
 
   // check password
-  if NeedP = True then
-  begin
-    frmMain.QRY.SQL.Text :=
-      'SELECT set_value FROM settings WHERE set_parameter = "password"';
-    frmMain.QRY.Open;
-    Temp := XorDecode('5!9x4', frmMain.QRY.Fields[0].AsString);
-    frmMain.QRY.Close;
+  frmMain.QRY.SQL.Text :=
+    'SELECT set_value FROM settings WHERE set_parameter = "password"';
+  frmMain.QRY.Open;
+  Temp := XorDecode('5!9x4', frmMain.QRY.Fields[0].AsString);
+  frmMain.QRY.Close;
 
-    if Length(Temp) > 0 then
+  if Length(Temp) > 0 then
+  begin
+    if frmGate.ediGate.Text = '' then
+      frmGate.ShowModal;
+    if (Temp <> frmGate.ediGate.Text) then
     begin
-      frmProperties.lblProtection.Caption := Caption_108;
-      if (Temp <> frmGate.ediGate.Text) then
-      begin
-        frmGate.ediGate.Clear;
-        frmPassWord.Hint := '';
-        frmMain.conn.Close();
-        s1.savetofile(FileName);
-        s1.Free;
-        ShowMessage(Error_21);
-        Exit;
-      end;
-    end
-    else
-    begin
-      frmProperties.lblProtection.Caption := Caption_109; // no protection
+      frmGate.ediGate.Clear;
+      frmPassWord.Hint := '';
+      frmMain.conn.Close();
+      s1.savetofile(FileName);
       s1.Free;
+      ShowMessage(Error_21);
+      Exit;
     end;
-    frmGate.ediGate.Clear;
+    frmProperties.lblPasswordProtection.Tag := 1; // yes (protected by password)
+  end
+  else
+  begin
+    frmProperties.lblPasswordProtection.Tag := 0; // no password protection
+    s1.Free;
   end;
+  frmGate.ediGate.Clear;
 
   // DELETE EMPTY CATEGORIES IN SCHEDULER (IMPORTANT - THIS FIND OUT THE DUPLICITY OF OPENING DATABASES !!!)
   try
@@ -9742,7 +9742,7 @@ begin
   // CHECK CORRUPTED RECORDS IN DATABASE FIRST
   // ========================================
   // **************************************************************************
-
+  ExistsCorruptedRecord := False;
   frmMain.QRY.SQL.Text :=
     'SELECT COUNT(d_date) FROM data ' + // 0
     'WHERE d_account IS NULL or d_category IS NULL or d_person IS NULL or d_payee IS NULL;';
@@ -9752,23 +9752,23 @@ begin
 
   if I > 0 then
   begin
-    NeedP := True;
+    ExistsCorruptedRecord := True;
     if I = 1 then
     begin
       if MessageDlg(Message_00, Error_25 + sLineBreak + Question_26,
         mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
-        NeedP := False;
+        ExistsCorruptedRecord := False;
     end
     else if I > 1 then
     begin
       if MessageDlg(Message_00, AnsiReplaceStr(Error_26, '%', IntToStr(I)) +
         sLineBreak + Question_26, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
-        NeedP := False;
+        ExistsCorruptedRecord := False;
     end;
 
     // delete corrupted records
     try
-      if NeedP = True then
+      if ExistsCorruptedRecord = True then
       begin
         frmMain.QRY.SQL.Text :=
           'DELETE FROM data ' + // 0
@@ -10686,11 +10686,18 @@ begin
       'SELECT acc_name, acc_amount, acc_comment, acc_id, ' + sLineBreak +
 
       // STARTING BALANCE SUMMARY ======================================
-      '(SELECT TOTAL(d_sum) FROM data ' + 'WHERE d_account = acc_id AND d_date < "' +
-      DateFrom + '") as start_sum, ' + sLineBreak +
+      '(SELECT TOTAL(d_sum) FROM data ' + // from
+      'LEFT JOIN ' + // JOIN
+      'categories ON (cat_id = d_category), ' + // categories
+      'persons ON (per_id = d_person), ' + // categories
+      'payees ON (pee_id = d_payee) ' + // categories
+      'WHERE d_account = acc_id AND d_date < "' + DateFrom + '"' +
+      f_amount + f_comment + f_category + f_subcategory + f_person +
+      f_payee + f_tag + ') as start_sum, ' + sLineBreak +
 
       // CREDIT ========================================================
-      '(SELECT TOTAL(d_sum) FROM data ' + 'LEFT JOIN ' + // JOIN
+      '(SELECT TOTAL(d_sum) FROM data ' + // select
+      'LEFT JOIN ' + // JOIN
       'categories ON (cat_id = d_category), ' + // categories
       'persons ON (per_id = d_person), ' + // categories
       'payees ON (pee_id = d_payee) ' + // categories

@@ -1077,6 +1077,18 @@ msgstr "Vymeniť poradie"
 msgid "Buttons visibility"
 msgstr "Viditeľnosť tlačidiel"
 
+#: uniresources.caption_331
+msgid ""
+"remember the last used transactions in the New transaction form (when you "
+"exit the program)"
+msgstr ""
+"zapamätať si naposledy použité transakcie vo formulári Nová transakcia (po "
+"ukončení programu)"
+
+#: uniresources.caption_332
+msgid "Encryption protection"
+msgstr "Ochrana šifrovaním"
+
 #: uniresources.caption_34
 msgid "Account book"
 msgstr "Účtovná kniha"
@@ -1338,7 +1350,7 @@ msgid "File size"
 msgstr "Veľkosť súboru"
 
 #: uniresources.caption_99
-msgid "Protection by password"
+msgid "Password protection"
 msgstr "Ochrana heslom"
 
 #: uniresources.chart_01
@@ -1756,10 +1768,6 @@ msgstr "Zapísať všetky zaškrtnuté plánované platby do transakcií"
 msgid "Save your password to the database"
 msgstr "Uložiť Vaše heslo do databázy"
 
-#: uniresources.hint_12
-msgid "Take a photo of current form"
-msgstr "Získať obrázok aktuálneho okna"
-
 #: uniresources.hint_13
 msgid "Print the list"
 msgstr "Vytlačiť zoznam"
@@ -1784,10 +1792,6 @@ msgstr "Zobraziť všetky plánované platby v označenom plánovači"
 msgid "Duplicate selected item"
 msgstr "Duplikovať označenú položku"
 
-#: uniresources.hint_19
-msgid "Add new multiple items"
-msgstr "Pridať viaceré nové položky naraz"
-
 #: uniresources.hint_21
 #, object-pascal-format
 msgid "Execute SQL command.%0:sThe results wil be shown in the second panel."
@@ -1800,10 +1804,6 @@ msgstr "Označiť všetky položky v zozname"
 #: uniresources.hint_23
 msgid "Save all items to the list at once"
 msgstr "Uložiť všetky položky do zoznamu naraz"
-
-#: uniresources.hint_24
-msgid "Print the selected item detail"
-msgstr "Vytlačiť označený detail položky"
 
 #: uniresources.hint_25
 msgid "Show history of changes of the transaction"
@@ -1884,10 +1884,6 @@ msgstr "Zobraziť zoznam kategórií"
 #: uniresources.hint_47
 msgid "Show list of persons"
 msgstr "Zobraziť zoznam osôb"
-
-#: uniresources.hint_48
-msgid "Show list of values"
-msgstr "Zobraziť zoznam hodnôt"
 
 #: uniresources.hint_49
 msgid "Show list of types"
@@ -2490,6 +2486,21 @@ msgstr "stabilná"
 #: uniresources.version_02
 msgid "testing"
 msgstr "testovacia"
+
+#~ msgid "Protection by password"
+#~ msgstr "Ochrana heslom"
+
+#~ msgid "Take a photo of current form"
+#~ msgstr "Získať obrázok aktuálneho okna"
+
+#~ msgid "Add new multiple items"
+#~ msgstr "Pridať viaceré nové položky naraz"
+
+#~ msgid "Print the selected item detail"
+#~ msgstr "Vytlačiť označený detail položky"
+
+#~ msgid "Show list of values"
+#~ msgstr "Zobraziť zoznam hodnôt"
 
 #~ msgid "ENCRYPT THE DATABASE"
 #~ msgstr "ZAŠIFROVAŤ DATABÁZU"

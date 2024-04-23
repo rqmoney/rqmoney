@@ -119,9 +119,7 @@ begin
     frmMain.Tran.Commit;
 
     // Set database protection in frmProprerties
-    If Length(ediNew.Text) = 0 then
-      frmProperties.lblProtection.Caption := Caption_109 // no protection
-    Else frmProperties.lblProtection.Caption := Caption_108; // protected database
+    frmProperties.lblPasswordProtection.Tag := Abs(StrToInt(BoolToStr(Length(ediNew.Text) > 0))); // protected database
 
     // Inform user about protection
     If ediOld.Enabled = False then

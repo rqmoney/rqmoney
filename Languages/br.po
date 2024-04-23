@@ -1082,6 +1082,18 @@ msgstr "Trocar pedido"
 msgid "Buttons visibility"
 msgstr "Visibilidade dos botões"
 
+#: uniresources.caption_331
+msgid ""
+"remember the last used transactions in the New transaction form (when you "
+"exit the program)"
+msgstr ""
+"lembrar as últimas transações usadas no formulário Nova transação (quando "
+"você sai do programa)"
+
+#: uniresources.caption_332
+msgid "Encryption protection"
+msgstr "Proteção por criptografia"
+
 #: uniresources.caption_34
 msgid "Account book"
 msgstr "Livro de contabilidade"
@@ -1343,7 +1355,7 @@ msgid "File size"
 msgstr "Tamanho do arquivo"
 
 #: uniresources.caption_99
-msgid "Protection by password"
+msgid "Password protection"
 msgstr "Proteção por senha"
 
 #: uniresources.chart_01
@@ -1766,10 +1778,6 @@ msgstr "Registre todos os pagamentos programados verificados nas transações"
 msgid "Save your password to the database"
 msgstr "Salve sua senha no banco de dados"
 
-#: uniresources.hint_12
-msgid "Take a photo of current form"
-msgstr "Tire uma foto do formulário atual"
-
 #: uniresources.hint_13
 msgid "Print the list"
 msgstr "Imprima a lista"
@@ -1794,10 +1802,6 @@ msgstr "Mostrar todos os pagamentos agendados na programação selecionada"
 msgid "Duplicate selected item"
 msgstr "Duplicar item selecionado"
 
-#: uniresources.hint_19
-msgid "Add new multiple items"
-msgstr "Adicionar novos itens múltiplos"
-
 #: uniresources.hint_21
 #, object-pascal-format
 msgid "Execute SQL command.%0:sThe results wil be shown in the second panel."
@@ -1811,10 +1815,6 @@ msgstr "Selecione todos os itens da lista"
 #: uniresources.hint_23
 msgid "Save all items to the list at once"
 msgstr "Salve todos os itens da lista de uma vez"
-
-#: uniresources.hint_24
-msgid "Print the selected item detail"
-msgstr "Imprimir o detalhe do item selecionado"
 
 #: uniresources.hint_25
 msgid "Show history of changes of the transaction"
@@ -1895,10 +1895,6 @@ msgstr "Mostrar lista de categorias"
 #: uniresources.hint_47
 msgid "Show list of persons"
 msgstr "Mostrar lista de pessoas"
-
-#: uniresources.hint_48
-msgid "Show list of values"
-msgstr "Mostrar lista de valores"
 
 #: uniresources.hint_49
 msgid "Show list of types"
@@ -2509,6 +2505,21 @@ msgstr "estável"
 #: uniresources.version_02
 msgid "testing"
 msgstr "teste"
+
+#~ msgid "Protection by password"
+#~ msgstr "Proteção por senha"
+
+#~ msgid "Take a photo of current form"
+#~ msgstr "Tire uma foto do formulário atual"
+
+#~ msgid "Add new multiple items"
+#~ msgstr "Adicionar novos itens múltiplos"
+
+#~ msgid "Print the selected item detail"
+#~ msgstr "Imprimir o detalhe do item selecionado"
+
+#~ msgid "Show list of values"
+#~ msgstr "Mostrar lista de valores"
 
 #~ msgid "ENCRYPT THE DATABASE"
 #~ msgstr "CRIPTOGRAFAR O BANCO DE DADOS"

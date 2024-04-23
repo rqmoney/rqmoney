@@ -488,7 +488,6 @@ msgid "Strongly reccomanded"
 msgstr "Strongly reccomanded"
 
 #: uniresources.caption_193
-#| msgid "PROTECTED DATABASE !"
 msgid "PROTECT THE DATABASE WITH THE PASSWORD"
 msgstr "PROTECT THE DATABASE WITH THE PASSWORD"
 
@@ -1064,7 +1063,6 @@ msgid "Buttons bar"
 msgstr "Buttons bar"
 
 #: uniresources.caption_329
-#| msgid "Icons size"
 msgid "Buttons size"
 msgstr "Buttons size"
 
@@ -1075,6 +1073,21 @@ msgstr "Swap order"
 #: uniresources.caption_330
 msgid "Buttons visibility"
 msgstr "Buttons visibility"
+
+#: uniresources.caption_331
+#| msgid ""
+#| "Remember the last used transactions in the New transaction form (when you "
+#| "exit the program)"
+msgid ""
+"remember the last used transactions in the New transaction form (when you "
+"exit the program)"
+msgstr ""
+"remember the last used transactions in the New transaction form (when you "
+"exit the program)"
+
+#: uniresources.caption_332
+msgid "Encryption protection"
+msgstr "Encryption protection"
 
 #: uniresources.caption_34
 msgid "Account book"
@@ -1337,8 +1350,8 @@ msgid "File size"
 msgstr "File size"
 
 #: uniresources.caption_99
-msgid "Protection by password"
-msgstr "Protection by password"
+msgid "Password protection"
+msgstr "Password protection"
 
 #: uniresources.chart_01
 msgid "Graphs"
@@ -1747,10 +1760,6 @@ msgstr "Write all checked scheduled payments to the transactions"
 msgid "Save your password to the database"
 msgstr "Save your password to the database"
 
-#: uniresources.hint_12
-msgid "Take a photo of current form"
-msgstr "Take a photo of current form"
-
 #: uniresources.hint_13
 msgid "Print the list"
 msgstr "Print the list"
@@ -1775,10 +1784,6 @@ msgstr "Show all scheduled payments in the selected schedule"
 msgid "Duplicate selected item"
 msgstr "Duplicate selected item"
 
-#: uniresources.hint_19
-msgid "Add new multiple items"
-msgstr "Add new multiple items"
-
 #: uniresources.hint_21
 #, object-pascal-format
 msgid "Execute SQL command.%0:sThe results wil be shown in the second panel."
@@ -1791,10 +1796,6 @@ msgstr "Select all items in the list"
 #: uniresources.hint_23
 msgid "Save all items to the list at once"
 msgstr "Save all items to the list at once"
-
-#: uniresources.hint_24
-msgid "Print the selected item detail"
-msgstr "Print the selected item detail"
 
 #: uniresources.hint_25
 msgid "Show history of changes of the transaction"
@@ -1875,10 +1876,6 @@ msgstr "Show list of categories"
 #: uniresources.hint_47
 msgid "Show list of persons"
 msgstr "Show list of persons"
-
-#: uniresources.hint_48
-msgid "Show list of values"
-msgstr "Show list of values"
 
 #: uniresources.hint_49
 msgid "Show list of types"
@@ -2165,14 +2162,6 @@ msgid "Donation"
 msgstr "Donation"
 
 #: uniresources.menu_a12
-#| msgid ""
-#| "RQ Money is free software, which means you can use it without any fees."
-#| "%The author has already paid for this program with his free time (several "
-#| "thousand hours of development since 2005!), his energy and also paid "
-#| "several fees (buying software, renting a domain, buying an SSL "
-#| "certificate, etc.).%So, if you like RQ Money and find it useful, the "
-#| "author will be grateful if you consider a small reward (e.g. 10 Euros) "
-#| "via PayPal or SEPA payment (more info on the program page)."
 msgid ""
 "RQ Money is free software, which means you can use it without any fees.%The "
 "author has already paid for this program with his free time (several "
@@ -2473,9 +2462,6 @@ msgid "Do you want to back up your database to the selected folder now?"
 msgstr "Do you want to back up your database to the selected folder now?"
 
 #: uniresources.question_28
-#| msgid ""
-#| "The encryption of your database requires password protection.%Do you want "
-#| "to set this password now?"
 msgid ""
 "The encryption of your database requires password protection.% Do you want "
 "to set this password now?"
@@ -2490,6 +2476,21 @@ msgstr "stable"
 #: uniresources.version_02
 msgid "testing"
 msgstr "testing"
+
+#~ msgid "Protection by password"
+#~ msgstr "Protection by password"
+
+#~ msgid "Take a photo of current form"
+#~ msgstr "Take a photo of current form"
+
+#~ msgid "Add new multiple items"
+#~ msgstr "Add new multiple items"
+
+#~ msgid "Print the selected item detail"
+#~ msgstr "Print the selected item detail"
+
+#~ msgid "Show list of values"
+#~ msgstr "Show list of values"
 
 #~ msgid "ENCRYPT THE DATABASE"
 #~ msgstr "ENCRYPT THE DATABASE"

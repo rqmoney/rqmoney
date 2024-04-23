@@ -15,18 +15,18 @@ object frmAbout: TfrmAbout
   Scaled = False
   object tabAbout: TPageControl
     Left = 5
-    Height = 123
+    Height = 328
     Top = 5
     Width = 390
-    ActivePage = tabProgram
-    Align = alTop
+    ActivePage = tabDonate
+    Align = alClient
     AutoSize = True
     BorderSpacing.Around = 5
-    TabIndex = 0
+    TabIndex = 4
     TabOrder = 0
     object tabProgram: TTabSheet
       AutoSize = True
-      ClientHeight = 95
+      ClientHeight = 300
       ClientWidth = 382
       ImageIndex = 30
       object pnlBack: TPanel
@@ -273,17 +273,17 @@ object frmAbout: TfrmAbout
       end
     end
     object tabLicense: TTabSheet
-      ClientHeight = 95
+      ClientHeight = 300
       ClientWidth = 382
       object pnlLicense: TPanel
         Left = 10
-        Height = 75
+        Height = 280
         Top = 10
         Width = 362
         Align = alClient
         BorderSpacing.Around = 10
         BevelOuter = bvNone
-        ClientHeight = 75
+        ClientHeight = 280
         ClientWidth = 362
         TabOrder = 0
         object lblLicense: TLabel
@@ -318,7 +318,7 @@ object frmAbout: TfrmAbout
     end
     object tabAuthor: TTabSheet
       AutoSize = True
-      ClientHeight = 95
+      ClientHeight = 300
       ClientWidth = 382
       ImageIndex = 17
       object pnlBack1: TPanel
@@ -450,7 +450,7 @@ object frmAbout: TfrmAbout
     end
     object tabThanks: TTabSheet
       AutoSize = True
-      ClientHeight = 95
+      ClientHeight = 300
       ClientWidth = 382
       ImageIndex = 31
       object lblThanks: TLabel
@@ -466,21 +466,21 @@ object frmAbout: TfrmAbout
     end
     object tabDonate: TTabSheet
       AutoSize = True
-      ClientHeight = 95
+      ClientHeight = 300
       ClientWidth = 382
       ImageIndex = 12
       object scrDonate: TScrollBox
         Left = 0
-        Height = 21
+        Height = 242
         Top = 0
         Width = 382
         HorzScrollBar.Page = 1
         HorzScrollBar.Visible = False
         VertScrollBar.Page = 21
-        Align = alTop
+        Align = alClient
         AutoSize = True
         BorderStyle = bsNone
-        ClientHeight = 21
+        ClientHeight = 242
         ClientWidth = 382
         Color = clDefault
         ParentColor = False
@@ -500,9 +500,9 @@ object frmAbout: TfrmAbout
         Cursor = crHandPoint
         Left = 5
         Height = 48
-        Top = 26
+        Top = 247
         Width = 372
-        Align = alTop
+        Align = alBottom
         BorderSpacing.Around = 5
         Center = True
         Constraints.MaxHeight = 48

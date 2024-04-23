@@ -1,10 +1,6 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: tfrmcounter.action1.caption
-msgid "Action1"
-msgstr ""
-
 #: uniresources.caption_00
 msgid "Add"
 msgstr ""
@@ -1043,6 +1039,14 @@ msgstr ""
 msgid "Buttons visibility"
 msgstr ""
 
+#: uniresources.caption_331
+msgid "remember the last used transactions in the New transaction form (when you exit the program)"
+msgstr ""
+
+#: uniresources.caption_332
+msgid "Encryption protection"
+msgstr ""
+
 #: uniresources.caption_34
 msgid "Account book"
 msgstr ""
@@ -1304,7 +1308,7 @@ msgid "File size"
 msgstr ""
 
 #: uniresources.caption_99
-msgid "Protection by password"
+msgid "Password protection"
 msgstr ""
 
 #: uniresources.chart_01

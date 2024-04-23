@@ -212,7 +212,7 @@ resourcestring
   Caption_96 = 'File name';
   Caption_97 = 'Location';
   Caption_98 = 'File size';
-  Caption_99 = 'Protection by password';
+  Caption_99 = 'Password protection';
   Caption_100 = 'RECORDS IN THE TABLES';
   Caption_101 = 'CHOOSE CURRENCY';
   Caption_102 = 'Select a nominal value and type its count';
@@ -441,6 +441,9 @@ resourcestring
   Caption_328 = 'Buttons bar';
   Caption_329 = 'Buttons size';
   Caption_330 = 'Buttons visibility';
+  Caption_331 = 'remember the last used transactions in the New transaction form (when you exit the program)';
+  Caption_332 = 'Encryption protection';
+
 
   // ===============================================================================================
   // A BEGINNER'S GUIDE FORM
@@ -1218,10 +1221,12 @@ begin
     frmDetail.btnAmountFrom.Hint := frmMain.btnCalc.Hint;
     frmDetail.btnAmountTo.Hint := frmMain.btnCalc.Hint;
     frmDetail.btnAmountX.Hint := frmMain.btnCalc.Hint;
+    I := frmDetail.cbxType.ItemIndex;
     frmDetail.cbxType.Clear;
     frmDetail.cbxType.Items.Add(AnsiUpperCase(Caption_76));
     frmDetail.cbxType.Items.Add(AnsiUpperCase(Caption_75));
     frmDetail.cbxType.Items.Add(AnsiUpperCase(Caption_181));
+    frmDetail.cbxType.ItemIndex := I;
     frmDetail.cbxTypeX.Items := frmDetail.cbxType.Items;
     frmDetail.cbxTypeX.Items.Delete(2);
     frmScheduler.cbxType.Items := frmDetail.cbxType.Items;
@@ -1955,7 +1960,7 @@ begin
     frmProperties.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', '');
     frmProperties.btnExit.Hint := frmMain.btnReportExit.Hint;
 
-    frmProperties.lblProtection.Caption := Caption_109;
+    //frmProperties.lblPasswordProtection.Caption := Caption_109;
     frmProperties.lblData.Caption := Caption_25;
     frmProperties.lblRecycle.Caption := AnsiReplaceStr(Menu_09, '&', '');
     frmProperties.lblAccounts.Caption := AnsiReplaceStr(Menu_26, '&', '');
@@ -1974,7 +1979,8 @@ begin
     frmProperties.lblFileName_.Caption := Caption_96;
     frmProperties.lblLocation_.Caption := Caption_97;
     frmProperties.lblSize_.Caption := Caption_98;
-    frmProperties.lblProtection_.Caption := Caption_99;
+    frmProperties.lblPasswordProtection_.Caption := Caption_99;
+    frmProperties.lblEncryptionProtection_.Caption := Caption_332;
     frmProperties.lblOS1.Caption := Caption_124;
     frmProperties.lblSQLiteName1.Caption := Caption_126;
     frmProperties.lblSQLiteVersion1.Caption := Caption_127;
@@ -2418,7 +2424,7 @@ begin
     frmSettings.rbtTransfersMColorAll.Caption := Caption_154;
 
     // Restrictions
-    frmSettings.gbxTransactionsRestrictions.Caption := AnsiUpperCase(Caption_305);
+    //frmSettings.gbxTransactionsRestrictions.Caption :=
     frmSettings.gbxTransactionsAdd.Caption := Caption_00;
     frmSettings.gbxTransactionsEdit.Caption := Caption_02;
     frmSettings.gbxTransactionsDelete.Caption := Caption_03;
@@ -2434,6 +2440,9 @@ begin
     frmSettings.lblTransactionsAddDays.Caption := AnsiLowerCase(Caption_308);
     frmSettings.lblTransactionsEditDays.Caption := Caption_308;
     frmSettings.lblTransactionsDeleteDays.Caption := Caption_308;
+    frmSettings.chkRememberNewTransactionsForm.Caption := Caption_331;
+    frmSettings.tabTransactionsGlobal.Caption := Caption_119;
+    frmSettings.tabTransactionsRestrictions.Caption := Caption_305;
 
     // PNL SHORTCUTS
     P := frmSettings.VSTKeys.GetFirst();

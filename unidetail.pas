@@ -251,6 +251,7 @@ type
     procedure lblDateFromClick(Sender: TObject);
     procedure lblDateToClick(Sender: TObject);
     procedure lblWidthClick(Sender: TObject);
+    procedure lbxTagsXKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure pnlBottomResize(Sender: TObject);
     procedure pnlMenuXResize(Sender: TObject);
     procedure pnlSizeResize(Sender: TObject);
@@ -664,11 +665,14 @@ begin
     begin
       cbxCommentX.ItemIndex := -1;
       if (cbxCategoryX.Items.Count > 0) then
+      begin
         cbxCategoryX.ItemIndex := 0;
+        cbxCategoryXChange(cbxCategoryX);
+      end;
     end;
+
     if (cbxPersonX.ItemIndex = -1) and (cbxPersonX.Items.Count > 0) then
       cbxPersonX.ItemIndex := 0;
-    cbxCategoryXChange(cbxCategoryX);
 
     // clear checked tags
     lbxTagsX.CheckAll(cbUnchecked, False, False);
@@ -683,9 +687,11 @@ begin
     pnlButtons.Visible := False;
     // panel Detail
     if cbxTypeX.ItemIndex = -1 then
+    begin
       cbxTypeX.ItemIndex := 1;
+      cbxTypeXChange(cbxTypeX);
+    end;
     cbxTypeX.SetFocus;
-    cbxTypeXChange(cbxTypeX);
   except
   end;
 end;
@@ -1841,6 +1847,16 @@ begin
 
 end;
 
+procedure TfrmDetail.lbxTagsXKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = 13 then
+  begin
+    Key := 0;
+    btnSaveX.SetFocus;
+  end;
+end;
+
 procedure TfrmDetail.pnlBottomResize(Sender: TObject);
 begin
   btnCancel.Width := (pnlBottom.Width - pnlWidth.Width - pnlHeight.Width - 10) div 3;
@@ -2172,11 +2188,11 @@ begin
   case tabKind.TabIndex of
     0: begin
       frmDetail.Width := pnlSimple.Tag;
-      cbxAccountFrom.ItemIndex := cbxAccountX.ItemIndex;
-      cbxPayee.ItemIndex := cbxPayeeX.ItemIndex;
-      datDateFrom.Date := datDateX.Date;
       if frmDetail.Visible = True then
       begin
+        cbxAccountFrom.ItemIndex := cbxAccountX.ItemIndex;
+        cbxPayee.ItemIndex := cbxPayeeX.ItemIndex;
+        datDateFrom.Date := datDateX.Date;
         cbxType.SetFocus;
         actAdd.Enabled := False;
         actEdit.Enabled := False;
@@ -2188,7 +2204,6 @@ begin
     end
     else
     begin
-
       frmDetail.Width := pnlMultiple.Tag;
       btnSave.Tag := 0;
       cbxAccountX.ItemIndex := cbxAccountFrom.ItemIndex;
