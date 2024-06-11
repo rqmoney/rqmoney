@@ -95,7 +95,7 @@ object frmCalendar: TfrmCalendar
           TabOrder = 1
           object cbxAccount: TComboBox
             Tag = 7
-            Left = 25
+            Left = 2
             Height = 23
             Top = 1
             Width = 203
@@ -118,11 +118,11 @@ object frmCalendar: TfrmCalendar
           object btnAccounts: TSpeedButton
             Tag = 3
             Cursor = crHandPoint
-            Left = 1
+            Left = 207
             Height = 20
             Top = 3
             Width = 22
-            Align = alLeft
+            Align = alRight
             BorderSpacing.Top = 2
             BorderSpacing.Bottom = 2
             BorderSpacing.Around = 1
@@ -192,7 +192,7 @@ object frmCalendar: TfrmCalendar
           TabOrder = 1
           object cbxCurrency: TComboBox
             Tag = 7
-            Left = 25
+            Left = 2
             Height = 23
             Top = 1
             Width = 203
@@ -218,11 +218,11 @@ object frmCalendar: TfrmCalendar
           object btnCurrencies: TSpeedButton
             Tag = 2
             Cursor = crHandPoint
-            Left = 1
+            Left = 207
             Height = 20
             Top = 3
             Width = 22
-            Align = alLeft
+            Align = alRight
             BorderSpacing.Top = 2
             BorderSpacing.Bottom = 2
             BorderSpacing.Around = 1

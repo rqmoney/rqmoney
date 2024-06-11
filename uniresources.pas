@@ -683,7 +683,8 @@ resourcestring
   Error_17 =
     'This function is not working yet.%Maybe in the next version it will be implemented.%Please be patient.';
   Error_18 =
-    'Program can not open this type of database (perhaps created in different program).';
+    'Program can not open this type of database (perhaps created in different program).% ' +
+    'If you try to open older database (with extension RQM), you can import it to the new database only.';
   Error_19 = 'Sorry, there are no data to show you ...';
   Error_20 =
     'The import failed due the problem with the file.%Please, be sure that the imported file is not encrypted!';

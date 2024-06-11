@@ -652,10 +652,11 @@ begin
     begin
       ediName.Text := VST.Text[VST.GetFirstSelected(False), 1];
 
-      for I := 0 to cbxCurrency.Items.Count - 1 do
-        if LeftStr(cbxCurrency.Items[I], 3) =
-          VST.Text[VST.GetFirstSelected(False), 2] then
-          cbxCurrency.ItemIndex := I;
+      if cbxCurrency.Items.Count > 0 then
+        for I := 0 to cbxCurrency.Items.Count - 1 do
+          if LeftStr(cbxCurrency.Items[I], 3) =
+            VST.Text[VST.GetFirstSelected(False), 2] then
+            cbxCurrency.ItemIndex := I;
 
       spiAmount.Value := Account.Amount;
       datDate.Date := StrToDate(VST.Text[VST.GetFirstSelected(False), 4]);
@@ -844,7 +845,6 @@ procedure TfrmAccounts.FormClose(Sender: TObject; var CloseAction: TCloseAction)
 var
   INI: TINIFile;
   INIFile: string;
-
 begin
   try
     if pnlButton.Visible = True then

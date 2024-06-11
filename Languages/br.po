@@ -1520,10 +1520,13 @@ msgstr ""
 #: uniresources.error_18
 msgid ""
 "Program can not open this type of database (perhaps created in different "
-"program)."
+"program).% If you try to open older database (with extension RQM), you can "
+"import it to the new database only."
 msgstr ""
-"O programa não pode abrir este tipo de banco de dados (talvez criado em um "
-"programa diferente)."
+"O programa não pode abrir este tipo de banco de dados (talvez criado em "
+"outro programa).% Se você estiver tentando abrir um banco de dados antigo "
+"(com a extensão RQM), você pode simplesmente importá-lo para o novo banco de "
+"dados."
 
 #: uniresources.error_19
 msgid "Sorry, there are no data to show you ..."

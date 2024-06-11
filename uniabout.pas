@@ -155,12 +155,12 @@ begin
   lblProgram.Caption := Application.Title;
   // ===========================================================================
   // ***************************************************************************
-  lblReleased.Hint := '2024-04-21'; // IMPORTANT DATE OF RELEASE !!!
+  lblReleased.Hint := '2024-05-05'; // IMPORTANT DATE OF RELEASE !!!
   // ***************************************************************************
   // ===========================================================================
   lblReleased.Caption := FormatDateTime(FS_own.LongDateFormat,
     StrToDate(lblReleased.Hint, 'YYYY-MM-DD', '-'));
-  lblVersion.Hint := '3.9.2';
+  lblVersion.Hint := '3.9.3';
   lblLicense.Hint := 'https://en.wikipedia.org/wiki/GNU_General_Public_License';
   lblWebsite.Caption := 'www.rqmoney.eu';
   lblDeveloped.Caption := 'Lazarus';

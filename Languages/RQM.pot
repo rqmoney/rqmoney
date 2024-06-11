@@ -1443,7 +1443,7 @@ msgid "This function is not working yet.%Maybe in the next version it will be im
 msgstr ""
 
 #: uniresources.error_18
-msgid "Program can not open this type of database (perhaps created in different program)."
+msgid "Program can not open this type of database (perhaps created in different program).% If you try to open older database (with extension RQM), you can import it to the new database only."
 msgstr ""
 
 #: uniresources.error_19

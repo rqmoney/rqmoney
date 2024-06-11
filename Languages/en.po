@@ -1075,9 +1075,6 @@ msgid "Buttons visibility"
 msgstr "Buttons visibility"
 
 #: uniresources.caption_331
-#| msgid ""
-#| "Remember the last used transactions in the New transaction form (when you "
-#| "exit the program)"
 msgid ""
 "remember the last used transactions in the New transaction form (when you "
 "exit the program)"
@@ -1507,12 +1504,17 @@ msgstr ""
 "implemented.%Please be patient."
 
 #: uniresources.error_18
+#| msgid ""
+#| "Program can not open this type of database (perhaps created in different "
+#| "program)."
 msgid ""
 "Program can not open this type of database (perhaps created in different "
-"program)."
+"program).% If you try to open older database (with extension RQM), you can "
+"import it to the new database only."
 msgstr ""
 "Program can not open this type of database (perhaps created in different "
-"program)."
+"program).% If you try to open older database (with extension RQM), you can "
+"import it to the new database only."
 
 #: uniresources.error_19
 msgid "Sorry, there are no data to show you ..."

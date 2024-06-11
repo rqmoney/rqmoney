@@ -987,7 +987,7 @@ begin
       'cat_name ' + // category name
       'FROM categories ' + // from
       'WHERE cat_parent_ID = 0 ' + // where
-      'AND cat_status < 2 ' + // status
+      'AND cat_status = 0 ' + // status
       'AND ((cat_type IS NULL) OR (cat_type = 0) OR (cat_type = :KIND));';
     // type (0 = all, 1 = credit, 2 = debit, 3 = transfer)
 
@@ -1032,7 +1032,7 @@ begin
   // GET SUBCATEGORIES ===========================================================================
   Qy.SQL.Text := // query
     'SELECT cat_name FROM categories ' + // select
-    'WHERE cat_parent_name = :CATEGORY AND cat_parent_id > 0 and cat_status < 2;';
+    'WHERE cat_parent_name = :CATEGORY AND cat_parent_id > 0 and cat_status = 0;';
   Qy.Params.ParamByName('CATEGORY').AsString := Category;
   Qy.Prepare;
   Qy.Open;
@@ -9459,7 +9459,7 @@ begin
         Exit;
       end;
     except
-      ShowMessage(Error_18);
+      ShowMessage(AnsiReplaceStr(Error_18, '% ', sLineBreak + sLineBreak));
       frmMain.QRY.Close;
       frmMain.Conn.Close(True);
       Exit;
@@ -9467,6 +9467,7 @@ begin
 
   except;
     begin
+      frmMain.QRY.Close;
       frmMain.Conn.Close(True);
       MessageDlg(AnsiReplaceStr(Error_11, '%', sLineBreak) + sLineBreak +
         sLineBreak + FileName,
@@ -9481,7 +9482,7 @@ begin
     frmMain.QRY.Open;
     if frmMain.QRY.Fields[0].AsInteger = 0 then
     begin
-      ShowMessage(Error_18);
+      ShowMessage(AnsiReplaceStr(Error_18, '% ', sLineBreak + sLineBreak));
       frmMain.QRY.Close;
       frmMain.Conn.Close(True);
       Exit;
@@ -9500,7 +9501,7 @@ begin
 
   if AnsiUpperCase(Temp) <> 'RQ3' then
   begin
-    ShowMessage(Error_18);
+    ShowMessage(AnsiReplaceStr(Error_18, '% ', sLineBreak + sLineBreak));
     frmMain.Conn.Close(True);
     Exit;
   end;
@@ -10485,10 +10486,10 @@ begin
       f_account + sLineBreak + // account filter
       f_amount + sLineBreak +  // amount filter
       f_comment + sLineBreak + // comment filter
-      f_category + sLineBreak + // category filter
+      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', ' AND cat_status < 2 ') + sLineBreak + // category filter
       f_subcategory + sLineBreak + // subcategory filter
-      f_person + sLineBreak + // person filter
-      f_payee + sLineBreak + // payee filter
+      AnsiReplaceStr(f_person, 'AND per_status = 0 ', 'AND per_status < 2 ') + sLineBreak + // person filter
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', 'AND pee_status < 2 ') + sLineBreak + // payee filter
       f_tag; // tag filter
 
     // ShowMessage (frmMain.QRY.SQL.Text);
@@ -10692,8 +10693,11 @@ begin
       'persons ON (per_id = d_person), ' + // categories
       'payees ON (pee_id = d_payee) ' + // categories
       'WHERE d_account = acc_id AND d_date < "' + DateFrom + '"' +
-      f_amount + f_comment + f_category + f_subcategory + f_person +
-      f_payee + f_tag + ') as start_sum, ' + sLineBreak +
+      f_amount + f_comment +
+      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') + f_subcategory +
+      AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') +
+      f_tag + ') as start_sum, ' + sLineBreak +
 
       // CREDIT ========================================================
       '(SELECT TOTAL(d_sum) FROM data ' + // select
@@ -10702,7 +10706,10 @@ begin
       'persons ON (per_id = d_person), ' + // categories
       'payees ON (pee_id = d_payee) ' + // categories
       'WHERE d_account = acc_id AND d_type = 0 ' + f_date + f_amount +
-      f_comment + f_category + f_subcategory + f_person + f_payee +
+      f_comment +
+      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') + f_subcategory +
+      AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') +
       f_tag + ') as credit, ' + sLineBreak +
 
       // DEBIT =========================================================
@@ -10711,7 +10718,10 @@ begin
       'persons ON (per_id = d_person), ' + // categories
       'payees ON (pee_id = d_payee) ' + // categories
       'WHERE d_account = acc_id AND d_type = 1 ' + f_date + f_amount +
-      f_comment + f_category + f_subcategory + f_person + f_payee +
+      f_comment +
+      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') + f_subcategory +
+      AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') +
       f_tag + ') as debit, ' + sLineBreak +
 
       // TRANSFER + ====================================================
@@ -10720,7 +10730,11 @@ begin
       'persons ON (per_id = d_person), ' + // categories
       'payees ON (pee_id = d_payee) ' + // categories
       'WHERE d_account = acc_id AND d_type = 2 ' + f_date + f_amount +
-      f_comment + f_category + f_subcategory + f_person + f_payee +
+      f_comment +
+      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') + f_subcategory +
+      AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') +
+
       f_tag + ') as transfer_plus, ' + sLineBreak +
 
       // TRANSFER - ====================================================
@@ -10729,7 +10743,10 @@ begin
       'persons ON (per_id = d_person), ' + // categories
       'payees ON (pee_id = d_payee) ' + // categories
       'WHERE d_account = acc_id AND d_type = 3 ' + f_date + f_amount +
-      f_comment + f_category + f_subcategory + f_person + f_payee +
+      f_comment +
+      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') + f_subcategory +
+      AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') +
       f_tag + ') as transfer_minus ' + sLineBreak +
 
       // FROM ==========================================================

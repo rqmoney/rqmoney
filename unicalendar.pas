@@ -825,6 +825,9 @@ begin
     (frmMain.Conn.Connected = False) then
     Exit;
 
+  If cbxCurrency.Items.Count = 0 then
+    cbxAccount.Clear;
+
   if cbxCurrency.ItemIndex = -1 then
     Exit;
 
@@ -1076,6 +1079,9 @@ end;
 procedure TfrmCalendar.cbxCurrencyChange(Sender: TObject);
 begin
   cbxAccount.Clear;
+
+  if cbxCurrency.Items.Count = 0 then
+    Exit;
 
   if (frmMain.Conn.Connected = False) then
   begin
