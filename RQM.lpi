@@ -26,9 +26,10 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="3"/>
-      <MinorVersionNr Value="9"/>
+      <MinorVersionNr Value="10"/>
+      <RevisionNr Value="1"/>
       <Attributes pvaPreRelease="True"/>
-      <StringTable CompanyName="Slavomir Svetlik" ProductName="RQ MONEY"/>
+      <StringTable CompanyName="Slavomir Svetlik" FileDescription="Financial evidence for households" ProductName="RQ MONEY"/>
     </VersionInfo>
     <BuildModes Count="5">
       <Item1 Name="Default" Default="True"/>
@@ -220,7 +221,7 @@
         <PackageName Value="LCL"/>
       </Item12>
     </RequiredPackages>
-    <Units Count="44">
+    <Units Count="45">
       <Unit0>
         <Filename Value="RQM.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -564,6 +565,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uniImage"/>
       </Unit43>
+      <Unit44>
+        <Filename Value="unisplash.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSplash"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniSplash"/>
+      </Unit44>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

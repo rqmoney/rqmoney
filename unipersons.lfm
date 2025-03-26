@@ -1,7 +1,7 @@
 object frmPersons: TfrmPersons
-  Left = 365
+  Left = 486
   Height = 482
-  Top = 168
+  Top = 280
   Width = 800
   ClientHeight = 482
   ClientWidth = 800
@@ -13,7 +13,7 @@ object frmPersons: TfrmPersons
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlBottom: TPanel
     Left = 0
@@ -446,14 +446,14 @@ object frmPersons: TfrmPersons
         TabOrder = 1
         object pnlName: TPanel
           Left = 3
-          Height = 30
+          Height = 35
           Top = 3
           Width = 212
           Align = alTop
           AutoSize = True
           BorderSpacing.Bottom = 3
           BorderSpacing.Around = 3
-          ClientHeight = 30
+          ClientHeight = 35
           ClientWidth = 212
           ParentFont = False
           TabOrder = 0
@@ -472,7 +472,7 @@ object frmPersons: TfrmPersons
           end
           object ediName: TEdit
             Left = 3
-            Height = 23
+            Height = 28
             Top = 4
             Width = 206
             Align = alTop
@@ -488,27 +488,27 @@ object frmPersons: TfrmPersons
         end
         object pnlStatus: TPanel
           Left = 3
-          Height = 44
-          Top = 316
+          Height = 51
+          Top = 309
           Width = 212
           Align = alBottom
           AutoSize = True
           BorderSpacing.Bottom = 3
           BorderSpacing.Around = 3
-          ClientHeight = 44
+          ClientHeight = 51
           ClientWidth = 212
           ParentFont = False
           TabOrder = 2
           object cbxStatus: TComboBox
             Left = 3
-            Height = 23
+            Height = 30
             Top = 18
             Width = 206
             Align = alTop
             BorderSpacing.Left = 2
             BorderSpacing.Right = 2
             BorderSpacing.Bottom = 2
-            ItemHeight = 15
+            ItemHeight = 0
             ParentFont = False
             Style = csDropDownList
             TabOrder = 0
@@ -575,13 +575,13 @@ object frmPersons: TfrmPersons
         end
         object pnlComment: TPanel
           Left = 3
-          Height = 274
-          Top = 39
+          Height = 262
+          Top = 44
           Width = 212
           Align = alClient
           AutoSize = True
           BorderSpacing.Around = 3
-          ClientHeight = 274
+          ClientHeight = 262
           ClientWidth = 212
           ParentFont = False
           TabOrder = 1
@@ -599,7 +599,7 @@ object frmPersons: TfrmPersons
           end
           object memComment: TMemo
             Left = 3
-            Height = 267
+            Height = 255
             Top = 4
             Width = 206
             Align = alClient

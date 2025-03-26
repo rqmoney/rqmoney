@@ -1,7 +1,7 @@
 object frmPayees: TfrmPayees
-  Left = 457
+  Left = 479
   Height = 501
-  Top = 128
+  Top = 238
   Width = 800
   ClientHeight = 501
   ClientWidth = 800
@@ -12,7 +12,7 @@ object frmPayees: TfrmPayees
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.2.0.0'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object splList: TSplitter
     Left = 567
@@ -651,13 +651,13 @@ object frmPayees: TfrmPayees
       TabOrder = 1
       object pnlComment: TPanel
         Left = 3
-        Height = 296
-        Top = 39
+        Height = 284
+        Top = 44
         Width = 212
         Align = alClient
         AutoSize = True
         BorderSpacing.Around = 3
-        ClientHeight = 296
+        ClientHeight = 284
         ClientWidth = 212
         TabOrder = 1
         object lblComment: TLabel
@@ -674,7 +674,7 @@ object frmPayees: TfrmPayees
         object memComment: TMemo
           Tag = 1
           Left = 3
-          Height = 289
+          Height = 277
           Top = 4
           Width = 206
           Align = alClient
@@ -691,14 +691,14 @@ object frmPayees: TfrmPayees
       end
       object pnlName: TPanel
         Left = 3
-        Height = 30
+        Height = 35
         Top = 3
         Width = 212
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 30
+        ClientHeight = 35
         ClientWidth = 212
         TabOrder = 0
         object lblName: TLabel
@@ -716,7 +716,7 @@ object frmPayees: TfrmPayees
         end
         object ediName: TEdit
           Left = 3
-          Height = 23
+          Height = 28
           Top = 4
           Width = 206
           Align = alTop
@@ -733,26 +733,26 @@ object frmPayees: TfrmPayees
       end
       object pnlStatus: TPanel
         Left = 3
-        Height = 44
-        Top = 338
+        Height = 51
+        Top = 331
         Width = 212
         Align = alBottom
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 44
+        ClientHeight = 51
         ClientWidth = 212
         TabOrder = 2
         object cbxStatus: TComboBox
           Left = 3
-          Height = 23
+          Height = 30
           Top = 18
           Width = 206
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
-          ItemHeight = 15
+          ItemHeight = 0
           Style = csDropDownList
           TabOrder = 0
           OnEnter = cbxStatusEnter

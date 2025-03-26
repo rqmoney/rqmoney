@@ -1,7 +1,7 @@
 object frmPeriod: TfrmPeriod
-  Left = 499
+  Left = 521
   Height = 400
-  Top = 249
+  Top = 358
   Width = 800
   ClientHeight = 400
   ClientWidth = 800
@@ -12,7 +12,7 @@ object frmPeriod: TfrmPeriod
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlLeft: TPanel
     Left = 5
@@ -84,7 +84,7 @@ object frmPeriod: TfrmPeriod
     object lblToDate: TLabel
       Left = 6
       Height = 1
-      Top = 77
+      Top = 76
       Width = 168
       Align = alTop
       BorderSpacing.Left = 5
@@ -96,15 +96,15 @@ object frmPeriod: TfrmPeriod
     end
     object pnlDateFrom: TPanel
       Left = 4
-      Height = 31
+      Height = 30
       Top = 36
       Width = 172
       Align = alTop
       AutoSize = True
       BorderSpacing.Around = 3
       BorderStyle = bsSingle
-      ClientHeight = 27
-      ClientWidth = 168
+      ClientHeight = 28
+      ClientWidth = 170
       Color = clWhite
       ParentBackground = False
       ParentColor = False
@@ -112,9 +112,9 @@ object frmPeriod: TfrmPeriod
       object datDateFrom: TDateTimePicker
         Cursor = crHandPoint
         Left = 3
-        Height = 19
+        Height = 20
         Top = 6
-        Width = 162
+        Width = 164
         CenturyFrom = 2000
         MaxDate = 117974
         MinDate = 2
@@ -152,7 +152,7 @@ object frmPeriod: TfrmPeriod
         Left = 3
         Height = 1
         Top = 3
-        Width = 162
+        Width = 164
         Align = alTop
         BorderSpacing.Left = 2
         BorderSpacing.Top = 2
@@ -168,15 +168,15 @@ object frmPeriod: TfrmPeriod
     end
     object pnlDateTo: TPanel
       Left = 4
-      Height = 31
-      Top = 81
+      Height = 30
+      Top = 80
       Width = 172
       Align = alTop
       AutoSize = True
       BorderSpacing.Around = 3
       BorderStyle = bsSingle
-      ClientHeight = 27
-      ClientWidth = 168
+      ClientHeight = 28
+      ClientWidth = 170
       Color = clWhite
       ParentBackground = False
       ParentColor = False
@@ -184,9 +184,9 @@ object frmPeriod: TfrmPeriod
       object datDateTo: TDateTimePicker
         Cursor = crHandPoint
         Left = 3
-        Height = 19
+        Height = 20
         Top = 6
-        Width = 162
+        Width = 164
         CenturyFrom = 1965
         MaxDate = 117974
         MinDate = 2
@@ -224,7 +224,7 @@ object frmPeriod: TfrmPeriod
         Left = 3
         Height = 1
         Top = 3
-        Width = 162
+        Width = 164
         Align = alTop
         BorderSpacing.Left = 2
         BorderSpacing.Top = 2

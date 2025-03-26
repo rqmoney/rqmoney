@@ -69,7 +69,7 @@ type
     tabLicense: TTabSheet;
     tabThanks: TTabSheet;
     procedure btnExitClick(Sender: TObject);
-    procedure FormCreate(Sender:TObject);
+    procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure imgDonateClick(Sender: TObject);
     procedure lblDevelopedClick(Sender: TObject);
@@ -95,7 +95,7 @@ implementation
 uses
   uniMain, uniResources;
 
-{ TfrmAbout }
+  { TfrmAbout }
 
 procedure TfrmAbout.lblDevelopedClick(Sender: TObject);
 begin
@@ -130,60 +130,65 @@ end;
 procedure TfrmAbout.pnlEmailClick(Sender: TObject);
 begin
   Clipboard.AsText := lblEmail.Caption;
-  ShowMessage (Message_02);
+  ShowMessage(Message_02);
 end;
 
-procedure TfrmAbout.FormCreate(Sender:TObject);
+procedure TfrmAbout.FormCreate(Sender: TObject);
 begin
-  // form size
-  (Sender as TForm).Width := Round(400 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinWidth := Round(400 * (ScreenRatio / 100));
-  (Sender as TForm).Height := Round(400 * (ScreenRatio / 100));
-  (Sender as TForm).Constraints.MinHeight := Round(400 * (ScreenRatio / 100));
+  try
+    // form size
+    (Sender as TForm).Width := Round(400 * (ScreenRatio / 100));
+    (Sender as TForm).Constraints.MinWidth := Round(400 * (ScreenRatio / 100));
+    (Sender as TForm).Height := Round(400 * (ScreenRatio / 100));
+    (Sender as TForm).Constraints.MinHeight := Round(400 * (ScreenRatio / 100));
 
-  // form position
-  (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
-  (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
+    // form position
+    (Sender as TForm).Left := (Screen.Width - (Sender as TForm).Width) div 2;
+    (Sender as TForm).Top := (Screen.Height - 200 - (Sender as TForm).Height) div 2;
 
-  // get form icon
-  frmMain.img16.GetIcon(26, (Sender as TForm).Icon);
+    // get form icon
+    frmMain.img16.GetIcon(26, (Sender as TForm).Icon);
 
-  pnlBottom.Height := ButtonHeight;
+    pnlBottom.Height := ButtonHeight;
 
-  tabAbout.TabIndex := 0;
+    tabAbout.TabIndex := 0;
 
-  lblProgram.Caption := Application.Title;
-  // ===========================================================================
-  // ***************************************************************************
-  lblReleased.Hint := '2024-05-05'; // IMPORTANT DATE OF RELEASE !!!
-  // ***************************************************************************
-  // ===========================================================================
-  lblReleased.Caption := FormatDateTime(FS_own.LongDateFormat,
-    StrToDate(lblReleased.Hint, 'YYYY-MM-DD', '-'));
-  lblVersion.Hint := '3.9.3';
-  lblLicense.Hint := 'https://en.wikipedia.org/wiki/GNU_General_Public_License';
-  lblWebsite.Caption := 'www.rqmoney.eu';
-  lblDeveloped.Caption := 'Lazarus';
-  lblDeveloped.Hint := 'https://www.lazarus-ide.org/';
-  pnlCopyright.Caption := 'Copyright:';
-  lblCopyright.Caption := '© 2005 - ' + IntToStr(YearOf(Today));
-  If (LeftStr(GetLang, 2) = 'sk') or (LeftStr(GetLang, 2) = 'cz') then begin
-    lblWebsite.Hint := 'https://www.rqmoney.eu/program.html';
-    lblAuthor.Caption := 'Slavomír Svetlík';
-    lblLocation.Caption := 'Banská Bystrica';
-  end
-  else begin
-    lblWebsite.Hint := 'https://www.rqmoney.eu/index.html';
-    lblAuthor.Caption := 'Slavomir Svetlik';
-    lblLocation.Caption := 'Banska Bystrica (Slovakia)';
+    lblProgram.Caption := Application.Title;
+    // ===========================================================================
+    // ***************************************************************************
+    lblReleased.Hint := '2025-01-30'; // IMPORTANT DATE OF RELEASE !!!
+    // ***************************************************************************
+    // ===========================================================================
+    lblReleased.Caption := FormatDateTime(FS_own.LongDateFormat,
+      StrToDate(lblReleased.Hint, 'YYYY-MM-DD', '-'));
+    lblVersion.Hint := '3.10.2';
+    lblLicense.Hint := 'https://en.wikipedia.org/wiki/GNU_General_Public_License';
+    lblWebsite.Caption := 'www.rqmoney.eu';
+    lblDeveloped.Caption := 'Lazarus';
+    lblDeveloped.Hint := 'https://www.lazarus-ide.org/';
+    pnlCopyright.Caption := 'Copyright:';
+    lblCopyright.Caption := '© 2005 - ' + IntToStr(YearOf(Today));
+    if (LeftStr(GetLang, 2) = 'sk') or (LeftStr(GetLang, 2) = 'cz') then
+    begin
+      lblWebsite.Hint := 'https://www.rqmoney.eu/program.html';
+      lblAuthor.Caption := 'Slavomír Svetlík';
+      lblLocation.Caption := 'Banská Bystrica';
+    end
+    else
+    begin
+      lblWebsite.Hint := 'https://www.rqmoney.eu/index.html';
+      lblAuthor.Caption := 'Slavomir Svetlik';
+      lblLocation.Caption := 'Banska Bystrica (Slovakia)';
+    end;
+    lblEmail.Caption := 'rqmoney@gmail.com';
+    lblLGPL.Caption := 'https://www.gnu.org/licenses/';
+    lblLGPL.Hint := lblLGPL.Caption;
+
+    pnlButtons.Height := PanelHeight;
+    lblLink2.Caption := 'Icons8';
+    lblLink2.Hint := 'https://icons8.com/';
+  except
   end;
-  lblEmail.Caption := 'rqmoney@gmail.com';
-  lblLGPL.Caption := 'https://www.gnu.org/licenses/';
-  lblLGPL.Hint := lblLGPL.Caption;
-
-  pnlButtons.Height := PanelHeight;
-  lblLink2.Caption := 'Icons8';
-  lblLink2.Hint := 'https://icons8.com/';
 end;
 
 procedure TfrmAbout.FormResize(Sender: TObject);
@@ -203,4 +208,3 @@ begin
 end;
 
 end.
-

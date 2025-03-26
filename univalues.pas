@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, laz.VirtualTrees, Forms, Controls, Graphics,
   Dialogs, Menus, ExtCtrls, ComCtrls, StdCtrls, Buttons, StrUtils, Clipbrd,
-  ActnList, Spin, BCPanel, BCMDButtonFocus, Math, IniFiles;
+  ActnList, Spin, BCPanel, BCMDButtonFocus, Math;
 
 type
   TNominal = record
@@ -287,9 +287,9 @@ begin
 
     case VST.SelectedCount of
       1: if MessageDlg(Message_00, Question_01 + sLineBreak +
-          sLineBreak + VST.Header.Columns[1].Text + ': ' + VST.Text[VST.FocusedNode, 1] +
-          ' (' + VST.Text[VST.FocusedNode, 2] + ')', mtConfirmation,
-          mbYesNo, 0) <> 6 then
+          sLineBreak + VST.Header.Columns[1].Text + ': ' +
+          VST.Text[VST.FocusedNode, 1] + ' (' + VST.Text[VST.FocusedNode, 2] +
+          ')', mtConfirmation, mbYesNo, 0) <> 6 then
           Exit;
       else
         if MessageDlg(Message_00, AnsiReplaceStr(
@@ -310,44 +310,12 @@ begin
 end;
 
 procedure TfrmValues.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-
 begin
-  try
-    if pnlButton.Visible = True then
-    begin
-      btnCancelClick(btnCancel);
-      CloseAction := Forms.caNone;
-      Exit;
-    end;
-
-    // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmValues.Name, '') <>
-          IntToStr(frmValues.Left) + separ + // form left
-        IntToStr(frmValues.Top) + separ + // form top
-        IntToStr(frmValues.Width) + separ + // form width
-        IntToStr(frmValues.Height) + separ + // form height
-        IntToStr(frmValues.pnlDetail.Width) then
-          INI.WriteString('POSITION', frmValues.Name,
-            IntToStr(frmValues.Left) + separ + // form left
-            IntToStr(frmValues.Top) + separ + // form top
-            IntToStr(frmValues.Width) + separ + // form width
-            IntToStr(frmValues.Height) + separ + // form height
-            IntToStr(frmValues.pnlDetail.Width));
-      finally
-        INI.Free;
-      end;
-    end;
-  except
-    on E: Exception do
-      ShowErrorMessage(E);
+  if pnlButton.Visible = True then
+  begin
+    btnCancelClick(btnCancel);
+    CloseAction := Forms.caNone;
+    Exit;
   end;
 end;
 
@@ -492,65 +460,7 @@ begin
 end;
 
 procedure TfrmValues.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmValues.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmValues.Name, '-1•-1•0•0•220');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmValues.Width := 650
-      else
-        frmValues.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmValues.Height := 500
-      else
-        frmValues.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmValues.left := (Screen.Width - frmValues.Width) div 2
-      else
-        frmValues.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmValues.Top := ((Screen.Height - frmValues.Height) div 2) - 75
-      else
-        frmValues.Top := I;
-
-      // detail panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 150) or (I > 350) then
-        frmValues.pnlDetail.Width := 220
-      else
-        frmValues.pnlDetail.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   UpdateValues;
   SetNodeHeight(VST);
 end;

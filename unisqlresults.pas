@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls, LazUTF8,
   Clipbrd, Buttons, ActnList, StdCtrls, BCPanel, BCMDButtonFocus, Math, laz.VirtualTrees,
-  StrUtils, IniFiles;
+  StrUtils;
 
 type // bottom grid (SQL)
   TSQL = record
@@ -47,7 +47,6 @@ type
     procedure btnCopyClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
     procedure btnSelectClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -109,40 +108,6 @@ begin
   VST.SetFocus;
 end;
 
-procedure TfrmSQLResult.FormClose(Sender: TObject; var CloseAction: TCloseAction
-  );
-var
-  INI: TINIFile;
-  INIFile: string;
-
-begin
-  try
-    // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmSQLResult.Name, '') <>
-          IntToStr(frmSQLResult.Left) + separ + // form left
-        IntToStr(frmSQLResult.Top) + separ + // form top
-        IntToStr(frmSQLResult.Width) + separ + // form width
-        IntToStr(frmSQLResult.Height) then
-          INI.WriteString('POSITION', frmSQLResult.Name,
-            IntToStr(frmSQLResult.Left) + separ + // form left
-            IntToStr(frmSQLResult.Top) + separ + // form top
-            IntToStr(frmSQLResult.Width) + separ + // form width
-            IntToStr(frmSQLResult.Height));
-      finally
-        INI.Free;
-      end;
-    end;
-  except
-    on E: Exception do
-      ShowErrorMessage(E);
-  end;
-end;
-
 procedure TfrmSQLResult.btnCopyClick(Sender: TObject);
 begin
   CopyVST(VST);
@@ -166,57 +131,8 @@ var
   SQL: PSQL;
   P: PVirtualNode;
   W: word;
-  INI: TINIFile;
-  S: string;
   I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmSQLResult.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmSQLResult.Name, '-1•-1•0•0');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmSQLResult.Width := Screen.Width - 100 - (200 - ScreenRatio)
-      else
-        frmSQLResult.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmSQLResult.Height := Screen.Height - 200 - (200 - ScreenRatio)
-      else
-        frmSQLResult.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmSQLResult.left := (Screen.Width - frmSQLResult.Width) div 2
-      else
-        frmSQLResult.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmSQLResult.Top := ((Screen.Height - frmSQLResult.Height) div 2) - 75
-      else
-        frmSQLResult.Top := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   try
     // clear previous data
     VST.BeginUpdate;
@@ -266,9 +182,10 @@ begin
     end;
     frmMain.QRY.Close;
 
-    VST.Header.Columns[0].Width :=  Round(ScreenRatio * 25 / 100);
+    VST.Header.Columns[0].Width := Round(ScreenRatio * 25 / 100);
 
     W := VST.Width - 50;
+    try
     if frmSQL.rbtMaster.Checked = True then
     begin
       VST.Header.Columns[1].Width := W div 11 * 1;
@@ -278,9 +195,12 @@ begin
       VST.Header.Columns[5].Width := W div 11 * 6;
     end
     else
+    if VST.Header.Columns.Count > 0 then
       for I := 1 to VST.Header.Columns.Count - 1 do
         VST.Header.Columns[I].Width :=
           W div (VST.Header.Columns.Count - 1);
+    except
+    end;
 
     SetNodeHeight(VST);
     VST.EndUpdate;
@@ -399,10 +319,13 @@ var
 begin
   if VST.Header.Columns.Count = 0 then Exit;
 
+  try
   VST.Header.Columns[0].Width := Round(ScreenRatio * 25 / 100);
   for Q := 1 to VST.Header.Columns.Count - 1 do
     VST.Header.Columns[Q].Width :=
       (VST.Width - VST.Header.Columns[0].Width) div (VST.Header.Columns.Count - 1);
+  except
+  end;
 end;
 
 end.

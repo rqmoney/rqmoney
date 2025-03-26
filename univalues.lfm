@@ -1,8 +1,9 @@
 object frmValues: TfrmValues
-  Left = 604
+  Left = 627
   Height = 500
-  Top = 247
+  Top = 356
   Width = 650
+  ActiveControl = splList
   ClientHeight = 500
   ClientWidth = 650
   Constraints.MinHeight = 400
@@ -12,17 +13,17 @@ object frmValues: TfrmValues
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.2.0.0'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlList: TPanel
     Left = 5
-    Height = 436
+    Height = 438
     Top = 5
     Width = 405
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 436
+    ClientHeight = 438
     ClientWidth = 405
     TabOrder = 0
     object pnlListCaption: TBCPanel
@@ -68,7 +69,7 @@ object frmValues: TfrmValues
     object VST: TLazVirtualStringTree
       Cursor = 63
       Left = 4
-      Height = 408
+      Height = 410
       Top = 24
       Width = 397
       Align = alClient
@@ -118,7 +119,7 @@ object frmValues: TfrmValues
   end
   object splList: TSplitter
     Left = 415
-    Height = 445
+    Height = 447
     Top = 0
     Width = 5
     Align = alRight
@@ -127,13 +128,13 @@ object frmValues: TfrmValues
   end
   object pnlDetail: TPanel
     Left = 425
-    Height = 436
+    Height = 438
     Top = 5
     Width = 220
     Align = alRight
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 436
+    ClientHeight = 438
     ClientWidth = 220
     Constraints.MaxWidth = 350
     Constraints.MinWidth = 150
@@ -141,14 +142,14 @@ object frmValues: TfrmValues
     TabOrder = 2
     object pnlValue: TPanel
       Left = 4
-      Height = 32
+      Height = 37
       Top = 24
       Width = 212
       Align = alTop
       AutoSize = True
       BorderSpacing.Bottom = 3
       BorderSpacing.Around = 3
-      ClientHeight = 32
+      ClientHeight = 37
       ClientWidth = 212
       TabOrder = 0
       object lblValue: TLabel
@@ -167,7 +168,7 @@ object frmValues: TfrmValues
       end
       object spiValue: TFloatSpinEdit
         Left = 3
-        Height = 23
+        Height = 28
         Top = 6
         Width = 206
         Align = alTop
@@ -184,14 +185,14 @@ object frmValues: TfrmValues
     end
     object pnlType: TPanel
       Left = 4
-      Height = 32
-      Top = 62
+      Height = 39
+      Top = 67
       Width = 212
       Align = alTop
       AutoSize = True
       BorderSpacing.Bottom = 3
       BorderSpacing.Around = 3
-      ClientHeight = 32
+      ClientHeight = 39
       ClientWidth = 212
       TabOrder = 1
       object lblType: TLabel
@@ -208,14 +209,14 @@ object frmValues: TfrmValues
       end
       object cbxType: TComboBox
         Left = 3
-        Height = 23
+        Height = 30
         Top = 6
         Width = 206
         Align = alTop
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Bottom = 2
-        ItemHeight = 15
+        ItemHeight = 0
         Style = csDropDownList
         TabOrder = 0
         OnEnter = cbxTypeEnter
@@ -225,14 +226,14 @@ object frmValues: TfrmValues
     end
     object pnlButton: TPanel
       Left = 2
-      Height = 27
-      Top = 407
+      Height = 25
+      Top = 411
       Width = 216
       Align = alBottom
       AutoSize = True
       BorderSpacing.Around = 1
       BevelOuter = bvNone
-      ClientHeight = 27
+      ClientHeight = 25
       ClientWidth = 216
       Constraints.MinHeight = 25
       TabOrder = 2
@@ -241,7 +242,7 @@ object frmValues: TfrmValues
       object btnSave: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 115
-        Height = 25
+        Height = 23
         Top = 1
         Width = 98
         Animation = True
@@ -268,7 +269,7 @@ object frmValues: TfrmValues
       object btnCancel: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 3
-        Height = 25
+        Height = 23
         Top = 1
         Width = 109
         Animation = True
@@ -521,14 +522,14 @@ object frmValues: TfrmValues
   end
   object pnlButtons: TPanel
     Left = 1
-    Height = 27
-    Top = 446
+    Height = 25
+    Top = 448
     Width = 648
     Align = alBottom
     AutoSize = True
     BorderSpacing.Around = 1
     BevelOuter = bvNone
-    ClientHeight = 27
+    ClientHeight = 25
     ClientWidth = 648
     Constraints.MinHeight = 25
     ParentColor = False
@@ -538,7 +539,7 @@ object frmValues: TfrmValues
     object btnAdd: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 3
-      Height = 25
+      Height = 23
       Top = 1
       Width = 102
       Animation = True
@@ -567,7 +568,7 @@ object frmValues: TfrmValues
     object btnEdit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 108
-      Height = 25
+      Height = 23
       Top = 1
       Width = 105
       Animation = True
@@ -596,7 +597,7 @@ object frmValues: TfrmValues
     object btnDelete: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 216
-      Height = 25
+      Height = 23
       Top = 1
       Width = 105
       Animation = True
@@ -625,7 +626,7 @@ object frmValues: TfrmValues
     object btnCopy: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 324
-      Height = 25
+      Height = 23
       Top = 1
       Width = 105
       Animation = True
@@ -654,7 +655,7 @@ object frmValues: TfrmValues
     object btnSelect: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 432
-      Height = 25
+      Height = 23
       Top = 1
       Width = 105
       Animation = True
@@ -683,7 +684,7 @@ object frmValues: TfrmValues
     object btnExit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 540
-      Height = 25
+      Height = 23
       Top = 1
       Width = 105
       Animation = True

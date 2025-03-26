@@ -9,7 +9,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
   LazUtf8, CheckLst, Buttons, ComCtrls, ActnList, BCMDButtonFocus, ECTabCtrl,
   StrUtils, DateUtils, LCLType, Spin, Menus, BCPanel, laz.VirtualTrees, Math,
-  DateTimePicker, SQLDB, IniFiles;
+  DateTimePicker, SQLDB, LCLIntf, sqlite3conn;
 
 type
 
@@ -40,6 +40,10 @@ type
     btnAmountFrom: TSpeedButton;
     btnAmountTo: TSpeedButton;
     btnAmountX: TSpeedButton;
+    btnAttachmentAdd: TBCMDButtonFocus;
+    btnAttachmentDelete: TBCMDButtonFocus;
+    btnAttachmentEdit: TBCMDButtonFocus;
+    btnAttachmentOpen: TBCMDButtonFocus;
     btnCancel: TBCMDButtonFocus;
     btnCancelX: TBCMDButtonFocus;
     btnCategory: TSpeedButton;
@@ -78,10 +82,21 @@ type
     datDateFrom: TDateTimePicker;
     datDateTo: TDateTimePicker;
     datDateX: TDateTimePicker;
+    lblMeterEnd: TLabel;
+    lblConsumption: TLabel;
+    pnlMeterEnd: TPanel;
+    pnlConsumption: TPanel;
+    spiConsumption: TFloatSpinEdit;
+    spiMeterStart: TFloatSpinEdit;
     gbxAccountFrom: TGroupBox;
     gbxAccountTo: TGroupBox;
     gbxAmountFrom: TGroupBox;
     gbxAmountTo: TGroupBox;
+    gbxMeter: TGroupBox;
+    lblMeterStart: TLabel;
+    pnlMeterStart: TPanel;
+    pnlEnergies: TPanel;
+    pnlAttachments: TPanel;
     gbxCategory: TGroupBox;
     gbxComment: TGroupBox;
     gbxDateFrom: TGroupBox;
@@ -89,7 +104,8 @@ type
     gbxFrom: TPanel;
     gbxPayee: TGroupBox;
     gbxPerson: TGroupBox;
-    gbxTag: TGroupBox;
+    lviAttachments: TListView;
+    pnlTags: TPanel;
     gbxTo: TPanel;
     gbxType: TGroupBox;
     imgHeight: TImage;
@@ -112,6 +128,7 @@ type
     lblWidth: TLabel;
     lbxTag: TCheckListBox;
     lbxTagsX: TCheckListBox;
+    od: TOpenDialog;
     Panel1: TPanel;
     Panel2: TPanel;
     pnlButtons: TPanel;
@@ -163,12 +180,14 @@ type
     spiAmountTo: TEdit;
     spiAmountX: TEdit;
     spiBalance: TFloatSpinEdit;
+    spiMeterEnd: TFloatSpinEdit;
     spiSummary: TFloatSpinEdit;
     splSimple: TSplitter;
     splDetail: TSplitter;
     splMultiple: TSplitter;
     tabKind: TECTabCtrl;
     pnlBottom: TPanel;
+    tabSimple: TECTabCtrl;
     VST: TLazVirtualStringTree;
     procedure actAccountsExecute(Sender: TObject);
     procedure actCalcExecute(Sender: TObject);
@@ -186,6 +205,10 @@ type
     procedure btnAmountFromClick(Sender: TObject);
     procedure btnAmountToClick(Sender: TObject);
     procedure btnAmountXClick(Sender: TObject);
+    procedure btnAttachmentAddClick(Sender: TObject);
+    procedure btnAttachmentDeleteClick(Sender: TObject);
+    procedure btnAttachmentEditClick(Sender: TObject);
+    procedure btnAttachmentOpenClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnCancelXClick(Sender: TObject);
     procedure btnCategoryClick(Sender: TObject);
@@ -226,6 +249,7 @@ type
     procedure cbxPayeeXKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxPersonKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxPersonXKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure cbxSubcategoryChange(Sender: TObject);
     procedure cbxSubcategoryExit(Sender: TObject);
     procedure cbxSubcategoryKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxSubcategoryXKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -236,6 +260,7 @@ type
     procedure cbxTypeXExit(Sender: TObject);
     procedure cbxTypeXKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure chkAmountMinusChange(Sender: TObject);
+    procedure chkAmountMinusEnter(Sender: TObject);
     procedure datDateFromChange(Sender: TObject);
     procedure datDateFromDropDown(Sender: TObject);
     procedure datDateFromEnter(Sender: TObject);
@@ -248,11 +273,17 @@ type
     procedure datDateXKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormDestroy(Sender: TObject);
+    procedure lviAttachmentsDblClick(Sender: TObject);
+    procedure lviAttachmentsResize(Sender: TObject);
+    procedure pnlAttachmentsResize(Sender: TObject);
     procedure lblDateFromClick(Sender: TObject);
     procedure lblDateToClick(Sender: TObject);
-    procedure lblWidthClick(Sender: TObject);
-    procedure lbxTagsXKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure lbxTagsXKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure lviAttachmentsChange(Sender: TObject; Item: TListItem;
+      Change: TItemChange);
     procedure pnlBottomResize(Sender: TObject);
+    procedure pnlClientXResize(Sender: TObject);
+    procedure pnlLeftResize(Sender: TObject);
     procedure pnlMenuXResize(Sender: TObject);
     procedure pnlSizeResize(Sender: TObject);
     procedure spiAmountFromChange(Sender: TObject);
@@ -271,10 +302,18 @@ type
     procedure lbxTagKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure pnlClientResize(Sender: TObject);
     procedure spiAmountXKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure spiMeterEndKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure spiMeterStartChange(Sender: TObject);
+    procedure spiMeterStartEnter(Sender: TObject);
+    procedure spiMeterStartKeyUp(Sender: TObject; var Key: word;
+      Shift: TShiftState);
+    procedure splDetailCanResize(Sender: TObject; var NewSize: integer;
+      var Accept: boolean);
     procedure splSimpleCanResize(Sender: TObject; var NewSize: integer;
       var Accept: boolean);
     procedure tabKindChange(Sender: TObject);
     procedure tabKindChanging(Sender: TObject; var AllowChange: boolean);
+    procedure tabSimpleChange(Sender: TObject);
     procedure VSTBeforeCellPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas;
       Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode;
       CellRect: TRect; var ContentRect: TRect);
@@ -313,6 +352,9 @@ uses
   { TfrmDetail }
 
 procedure TfrmDetail.cbxTypeChange(Sender: TObject);
+var
+  category, subcategory: string;
+  I: word;
 begin
   if (cbxType.ItemIndex = -1) or (frmMain.Conn.Connected = False) then Exit;
 
@@ -337,8 +379,26 @@ begin
   end;
   pnlClient.EnableAlign;
   cbxCategory.Tag := -1;
+  category := '';
+  subcategory := '';
+  if cbxCategory.ItemIndex > -1 then
+    category := cbxCategory.Items[cbxCategory.ItemIndex];
+  if cbxSubcategory.ItemIndex > -1 then
+    subcategory := cbxSubcategory.Items[cbxSubcategory.ItemIndex];
   FillCategory(cbxCategory, cbxType.ItemIndex);
+  if category <> '' then
+  begin
+    I := cbxCategory.Items.IndexOf(category);
+    if I > -1 then
+      cbxCategory.ItemIndex := I;
+  end;
   cbxCategoryChange(cbxCategory);
+  if subcategory <> '' then
+  begin
+    I := cbxSubcategory.Items.IndexOf(subcategory);
+    if I > -1 then
+      cbxSubcategory.ItemIndex := I;
+  end;
 end;
 
 procedure TfrmDetail.btnCancelClick(Sender: TObject);
@@ -465,6 +525,9 @@ begin
 end;
 
 procedure TfrmDetail.btnEditClick(Sender: TObject);
+var
+  D: double;
+  S: string;
 begin
   if (btnEdit.Enabled = False) or (tabKind.TabIndex = 0) then
     Exit;
@@ -503,13 +566,28 @@ begin
   actDelete.Enabled := False;
   actSave.Enabled := True;
 
-  // get data
-  spiAmountX.Text := ReplaceStr(VST.Text[VST.FocusedNode, 1],
-    FS_own.ThousandSeparator, '');
-  cbxCommentX.Text := VST.Text[VST.FocusedNode, 2];
-  cbxCategoryX.ItemIndex := cbxCategoryX.Items.IndexOf(VST.Text[VST.FocusedNode, 3]);
-  cbxPersonX.ItemIndex := cbxPersonX.Items.IndexOf(VST.Text[VST.FocusedNode, 4]);
+  // ================================
+  // GET DATA
+  // ================================
+  // type
   cbxTypeX.ItemIndex := StrToInt(VST.Text[VST.FocusedNode, 5]);
+  // amount
+  TryStrToFloat(ReplaceStr(VST.Text[VST.FocusedNode, 1],
+    FS_own.ThousandSeparator, ''), D);
+  if cbxTypeX.ItemIndex = 1 then
+    D := -D;
+  spiAmountX.Text := FloatToStr(D);
+  // comment
+  cbxCommentX.Text := VST.Text[VST.FocusedNode, 2];
+  // category
+  S := VST.Text[VST.FocusedNode, 3];
+  cbxCategoryX.ItemIndex := cbxCategoryX.Items.IndexOf(Field(separ_1, S, 1));
+  cbxCategoryXChange(cbxCategoryX);
+  // subcategory
+  if Pos(separ_1, S) > 0 then
+    cbxSubcategoryX.ItemIndex := cbxSubcategoryX.Items.IndexOf(Field(separ_1, S, 2));
+  // person
+  cbxPersonX.ItemIndex := cbxPersonX.Items.IndexOf(VST.Text[VST.FocusedNode, 4]);
 end;
 
 procedure TfrmDetail.btnPayeeClick(Sender: TObject);
@@ -666,8 +744,8 @@ begin
       cbxCommentX.ItemIndex := -1;
       if (cbxCategoryX.Items.Count > 0) then
       begin
-        cbxCategoryX.ItemIndex := 0;
-        cbxCategoryXChange(cbxCategoryX);
+        frmDetail.cbxTypeXChange(frmDetail.cbxTypeX);
+        frmDetail.cbxCategoryXChange(frmDetail.cbxCategoryX);
       end;
     end;
 
@@ -713,6 +791,62 @@ begin
   frmMain.mnuCalcClick(frmMain.mnuCalc);
   if pnlDetail.Visible = True then
     spiAmountX.SetFocus;
+end;
+
+procedure TfrmDetail.btnAttachmentAddClick(Sender: TObject);
+var
+  ItemX: TListItem;
+begin
+  if od.Execute = False then
+    Exit;
+
+  ItemX := TListItem.Create(lviAttachments.Items);
+  ItemX.ImageIndex := 15;
+  ItemX.Caption := ExtractFileName(OD.FileName);
+  ItemX.SubItems.Add(ExtractFilePath(OD.FileName));
+  lviAttachments.Items.AddItem(ItemX);
+end;
+
+procedure TfrmDetail.btnAttachmentDeleteClick(Sender: TObject);
+begin
+  if MessageDlg(Message_00, Question_01 + sLineBreak +
+    lviAttachments.Items[lviAttachments.ItemIndex].Caption + sLineBreak +
+    lviAttachments.Items[lviAttachments.ItemIndex].SubItems[0],
+    mtConfirmation, mbYesNo, 0) <> 6 then
+    Exit;
+
+  lviAttachments.Items.Delete(lviAttachments.ItemIndex);
+
+  lviAttachments.ItemIndex := -1;
+  btnAttachmentEdit.Enabled := False;
+  btnAttachmentDelete.Enabled := False;
+  btnAttachmentOpen.Enabled := False;
+end;
+
+procedure TfrmDetail.btnAttachmentEditClick(Sender: TObject);
+begin
+  if OD.Execute = False then
+    Exit;
+
+  lviAttachments.Items[lviAttachments.ItemIndex].Caption :=
+    ExtractFileName(OD.FileName);
+  lviAttachments.Items[lviAttachments.ItemIndex].SubItems[0] :=
+    ExtractFilePath(OD.FileName);
+end;
+
+procedure TfrmDetail.btnAttachmentOpenClick(Sender: TObject);
+var
+  S: string;
+begin
+  if lviAttachments.ItemIndex = -1 then
+    Exit;
+
+  S := lviAttachments.Items[lviAttachments.ItemIndex].SubItems[0] +
+    lviAttachments.Items[lviAttachments.ItemIndex].Caption;
+  if FileExists(S) = True then
+    OpenDocument(S)
+  else
+    ShowMessage(Error_33 + sLineBreak + S);
 end;
 
 procedure TfrmDetail.btnPersonClick(Sender: TObject);
@@ -1218,6 +1352,68 @@ begin
   finally
   end;
 
+  // write attachments to the table attachments
+  try
+    if lviAttachments.Items.Count > 0 then
+    begin
+      for I := 0 to lviAttachments.Items.Count - 1 do
+      begin
+        frmMain.QRY.SQL.Text :=
+          'INSERT OR IGNORE INTO attachments (att_path, att_d_id) VALUES (:PATH, :ID);';
+        frmMain.QRY.Params.ParamByName('PATH').AsString :=
+          lviAttachments.Items[I].SubItems[0] + lviAttachments.Items[I].Caption;
+        frmMain.QRY.Params.ParamByName('ID').AsInteger := ID1;
+        frmMain.QRY.Prepare;
+        frmMain.QRY.ExecSQL;
+
+        if Repeating = True then
+        begin
+          frmMain.QRY.SQL.Text :=
+            'INSERT OR IGNORE INTO attachments (att_path, att_d_id) VALUES (:PATH, :ID);';
+          frmMain.QRY.Params.ParamByName('PATH').AsString :=
+            lviAttachments.Items[I].SubItems[0] + lviAttachments.Items[I].Caption;
+          frmMain.QRY.Params.ParamByName('ID').AsInteger := ID2;
+          frmMain.QRY.Prepare;
+          frmMain.QRY.ExecSQL;
+        end;
+      end;
+      frmMain.Tran.Commit;
+    end;
+  except;
+  end;
+
+  // =====================================================================
+  // write energies
+  try
+    if tabSimple.Tabs[2].Options = [etoVisible] then
+    begin
+      frmMain.QRY.SQL.Text :=
+        'INSERT OR IGNORE INTO energies (ene_reading1, ene_reading2, ene_d_id) VALUES (:R1, :R2, :ID);';
+      frmMain.QRY.Params.ParamByName('R1').AsString :=
+        ReplaceStr(FloatToStr(spiMeterStart.Value), FS_own.DecimalSeparator, '.');
+      frmMain.QRY.Params.ParamByName('R2').AsString :=
+        ReplaceStr(FloatToStr(spiMeterEnd.Value), FS_own.DecimalSeparator, '.');
+      frmMain.QRY.Params.ParamByName('ID').AsInteger := ID1;
+      frmMain.QRY.Prepare;
+      frmMain.QRY.ExecSQL;
+
+      if Repeating = True then
+      begin
+        frmMain.QRY.SQL.Text :=
+          'INSERT OR IGNORE INTO energies (ene_reading1, ene_reading2, ene_d_id) VALUES (:R1, :R2, :ID);';
+        frmMain.QRY.Params.ParamByName('R1').AsString :=
+          ReplaceStr(FloatToStr(spiMeterStart.Value), FS_own.DecimalSeparator, '.');
+        frmMain.QRY.Params.ParamByName('R2').AsString :=
+          ReplaceStr(FloatToStr(spiMeterEnd.Value), FS_own.DecimalSeparator, '.');
+        frmMain.QRY.Params.ParamByName('ID').AsInteger := ID2;
+        frmMain.QRY.Prepare;
+        frmMain.QRY.ExecSQL;
+      end;
+      frmMain.Tran.Commit;
+    end;
+  except
+  end;
+
   try
     UpdateTransactions;
     FindNewRecord(frmMain.VST, 10);
@@ -1384,6 +1580,9 @@ end;
 procedure TfrmDetail.cbxAccountFromExit(Sender: TObject);
 begin
   ComboBoxExit((Sender as TCombobox));
+  if (spiMeterStart.Value = 0) and (frmDetail.tabSimple.Tabs[2].Options =
+    [etoVisible]) then
+    cbxSubcategoryChange(cbxSubcategory);
 end;
 
 procedure TfrmDetail.cbxAccountFromKeyUp(Sender: TObject; var Key: word;
@@ -1428,6 +1627,9 @@ end;
 
 procedure TfrmDetail.cbxCategoryChange(Sender: TObject);
 begin
+  frmDetail.tabSimple.Tabs[2].Options :=
+    frmDetail.tabSimple.Tabs[2].Options - [etoVisible];
+
   if cbxCategory.ItemIndex = -1 then
   begin
     cbxSubcategory.Clear;
@@ -1437,6 +1639,7 @@ begin
     FillSubcategory(cbxCategory.Items[cbxCategory.ItemIndex], cbxSubcategory);
 
   cbxCategory.Tag := cbxCategory.ItemIndex;
+  cbxSubcategoryChange(cbxSubcategory);
 end;
 
 procedure TfrmDetail.cbxCategoryExit(Sender: TObject);
@@ -1457,6 +1660,7 @@ begin
   else
   if NeedUpdate = True then
     FillSubcategory(cbxCategory.Text, cbxSubcategory);
+  cbxSubcategoryChange(cbxSubcategory);
 end;
 
 procedure TfrmDetail.cbxCategoryKeyUp(Sender: TObject; var Key: word;
@@ -1577,7 +1781,13 @@ begin
     if cbxPayee.Items.Count = 0 then
       btnPayeeClick(btnPayee)
     else
-      lbxTag.SetFocus;
+    begin
+      case tabSimple.TabIndex of
+        0: lbxTag.SetFocus;
+        1: lviAttachments.SetFocus;
+        2: spiMeterStart.SetFocus;
+      end;
+    end;
   end;
 end;
 
@@ -1611,11 +1821,110 @@ begin
   end;
 end;
 
+procedure TfrmDetail.cbxSubcategoryChange(Sender: TObject);
+var
+  S: TSQLite3Connection;
+  T: TSQLTransaction;
+  Q: TSQLQuery;
+begin
+  // create components
+  S := TSQLite3Connection.Create(nil);
+  T := TSQLTransaction.Create(nil);
+  Q := TSQLQuery.Create(nil);
+
+  // setup components
+  S.Transaction := T;
+  T.Database := S;
+  Q.Transaction := T;
+  Q.Database := S;
+
+
+  // setup db
+  S.DatabaseName := frmMain.Conn.DatabaseName;
+  S.HostName := 'localhost';
+  S.Open;
+
+  frmDetail.tabSimple.Tabs[2].Options :=
+    frmDetail.tabSimple.Tabs[2].Options - [etoVisible];
+
+  if (cbxCategory.ItemIndex > -1) and (cbxSubcategory.ItemIndex = 0) then
+    Q.SQL.Text :=
+      'SELECT cat_energy FROM categories WHERE cat_name = :CATEGORY AND cat_parent_id = 0;'
+  else if (cbxCategory.ItemIndex > -1) and (cbxSubcategory.ItemIndex > 0) then
+  begin
+    Q.SQL.Text := 'SELECT cat_energy FROM categories WHERE ' +
+      'cat_name = :SUBCATEGORY AND cat_parent_name = :CATEGORY AND cat_parent_id > 0;';
+    Q.Params.ParamByName('SUBCATEGORY').AsString :=
+      AnsiLowerCase(cbxSubcategory.Items[cbxSubcategory.ItemIndex]);
+  end
+  else
+    Exit;
+
+  Q.Params.ParamByName('CATEGORY').AsString :=
+    AnsiUpperCase(cbxCategory.Items[cbxCategory.ItemIndex]);
+  Q.Prepare;
+  Q.Open;
+
+  if Q.Fields[0].AsInteger = 0 then
+    frmDetail.tabSimple.Tabs[2].Options :=
+      frmDetail.tabSimple.Tabs[2].Options + [etoVisible]
+  else
+    frmDetail.tabSimple.Tabs[2].Options :=
+      frmDetail.tabSimple.Tabs[2].Options - [etoVisible];
+  Q.Close;
+
+  // =============================================================================================
+  // GET LAST ENERGY READING
+  // =============================================================================================
+  try
+    if frmDetail.tabSimple.Tabs[2].Options = [etoVisible] then
+    begin
+      spiMeterStart.Value := 0;
+      Q.SQL.Text :=
+        'SELECT ene_reading2 FROM ENERGIES WHERE ' +
+        'ene_d_id = (SELECT d_id FROM data WHERE d_category = :CATEGORY AND ' +
+        'd_payee = (SELECT pee_id FROM payees WHERE pee_name = :PAYEE) AND ' +
+        'd_person = (SELECT per_id FROM persons WHERE per_name = :PERSON) ' +
+        'ORDER BY d_id DESC LIMIT 1);';
+
+      // Get category
+      Q.Params.ParamByName('CATEGORY').AsInteger :=
+        GetCategoryID(cbxCategory.Items[cbxCategory.ItemIndex] +
+        IfThen(cbxSubcategory.ItemIndex = 0, '', separ_1 +
+        cbxSubcategory.Items[cbxSubcategory.ItemIndex]));
+      // Get payee
+      Q.Params.ParamByName('PAYEE').AsString :=
+        frmDetail.cbxPayee.Items[frmDetail.cbxPayee.ItemIndex];
+      // Get person
+      Q.Params.ParamByName('PERSON').AsString :=
+        frmDetail.cbxPerson.Items[frmDetail.cbxPerson.ItemIndex];
+
+      Q.Open;
+
+      while not (Q.EOF) do
+      begin
+        spiMeterStart.Value := Q.Fields[0].AsFloat;
+        Q.Next;
+      end;
+      Q.Close;
+      spiMeterStartChange(spiMeterStart);
+    end;
+  finally
+    begin
+      // release
+      Q.Free;
+      T.Free;
+      S.Free;
+    end;
+  end;
+end;
+
 procedure TfrmDetail.cbxSubcategoryExit(Sender: TObject);
 begin
   if (cbxSubcategory.ItemIndex = -1) then
     cbxSubcategory.ItemIndex := cbxSubcategory.Items.IndexOf(cbxSubcategory.Text);
   ComboBoxExit(cbxSubcategory);
+  cbxSubcategoryChange(cbxSubcategory);
 end;
 
 procedure TfrmDetail.cbxSubcategoryKeyUp(Sender: TObject; var Key: word;
@@ -1692,6 +2001,12 @@ end;
 procedure TfrmDetail.chkAmountMinusChange(Sender: TObject);
 begin
   spiAmountMinus.Enabled := chkAmountMinus.Checked;
+end;
+
+procedure TfrmDetail.chkAmountMinusEnter(Sender: TObject);
+begin
+  popEdit.Enabled := False;
+  actEdit.Enabled := False;
 end;
 
 procedure TfrmDetail.datDateFromChange(Sender: TObject);
@@ -1778,9 +2093,6 @@ begin
 end;
 
 procedure TfrmDetail.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
 begin
   if (pnlDetail.Visible = True) then
   begin
@@ -1797,39 +2109,34 @@ begin
     Exit;
   end;
 
-  // write position and window size
-  if frmSettings.chkLastFormsSize.Checked = True then
-  begin
-    try
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmDetail.Name, '') <>
-        IntToStr(frmDetail.Left) + separ + // form left
-      IntToStr(frmDetail.Top) + separ + // from top
-      IntToStr(frmDetail.Height) + separ + // form height
-      IntToStr(frmDetail.pnlSimple.Tag) + separ + // pnlSimple tag (aka width)
-      IntToStr(frmDetail.pnlMultiple.Tag) + separ + // pnlMultiple tag (aka width)
-      IntToStr(frmDetail.pnlRight.Width) + separ + // pnlRight width
-      IntToStr(frmDetail.pnlLeft.Width) + separ + // pnlLeft width
-      IntToStr(frmDetail.pnlDetail.Width) then
-        INI.WriteString('POSITION', frmDetail.Name,
-          IntToStr(frmDetail.Left) + separ + // form left
-          IntToStr(frmDetail.Top) + separ + // from top
-          IntToStr(frmDetail.Height) + separ + // form height
-          IntToStr(frmDetail.pnlSimple.Tag) + separ + // pnlSimple tag (aka width)
-          IntToStr(frmDetail.pnlMultiple.Tag) + separ + // pnlMultiple tag (aka width)
-          IntToStr(frmDetail.pnlRight.Width) + separ + // pnlRight width
-          IntToStr(frmDetail.pnlLeft.Width) + separ + // pnlLeft width
-          IntToStr(frmDetail.pnlDetail.Width)); // pnlDetail width
-    finally
-      INI.Free;
-    end;
-  end;
+  frmDetail.tabSimple.Tabs[2].Options :=
+    frmDetail.tabSimple.Tabs[2].Options - [etoVisible];
 end;
 
 procedure TfrmDetail.FormDestroy(Sender: TObject);
 begin
   slMultiple.Free;
+end;
+
+procedure TfrmDetail.lviAttachmentsDblClick(Sender: TObject);
+begin
+  if lviAttachments.ItemIndex = -1 then
+    btnAttachmentAddClick(btnAttachmentAdd)
+  else
+    btnAttachmentOpenClick(btnAttachmentOpen);
+end;
+
+procedure TfrmDetail.lviAttachmentsResize(Sender: TObject);
+begin
+  lviAttachments.Columns[0].Width := lviAttachments.Width - 4;
+end;
+
+procedure TfrmDetail.pnlAttachmentsResize(Sender: TObject);
+begin
+  btnAttachmentAdd.Repaint;
+  btnAttachmentEdit.Repaint;
+  btnAttachmentDelete.Repaint;
+  btnAttachmentOpen.Repaint;
 end;
 
 procedure TfrmDetail.lblDateFromClick(Sender: TObject);
@@ -1842,19 +2149,21 @@ begin
   datDateTo.SetFocus;
 end;
 
-procedure TfrmDetail.lblWidthClick(Sender: TObject);
-begin
-
-end;
-
-procedure TfrmDetail.lbxTagsXKeyUp(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmDetail.lbxTagsXKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
   if Key = 13 then
   begin
     Key := 0;
     btnSaveX.SetFocus;
   end;
+end;
+
+procedure TfrmDetail.lviAttachmentsChange(Sender: TObject; Item: TListItem;
+  Change: TItemChange);
+begin
+  btnAttachmentEdit.Enabled := lviAttachments.SelCount = 1;
+  btnAttachmentDelete.Enabled := lviAttachments.SelCount = 1;
+  btnAttachmentOpen.Enabled := lviAttachments.SelCount = 1;
 end;
 
 procedure TfrmDetail.pnlBottomResize(Sender: TObject);
@@ -1865,6 +2174,19 @@ begin
   btnSave.Repaint;
   btnCancel.Repaint;
   btnSettings.Repaint;
+end;
+
+procedure TfrmDetail.pnlClientXResize(Sender: TObject);
+begin
+  pnlListCaption.Repaint;
+  pnlDetailCaption.Repaint;
+  btnSaveX.Repaint;
+  btnCancelX.Repaint;
+end;
+
+procedure TfrmDetail.pnlLeftResize(Sender: TObject);
+begin
+  pnlBasicCaption.Repaint;
 end;
 
 procedure TfrmDetail.pnlMenuXResize(Sender: TObject);
@@ -1990,114 +2312,43 @@ begin
 
   // get form icon
   frmMain.img16.GetIcon(19, (Sender as TForm).Icon);
+  tabSimple.TabIndex := 0;
+
+  od.InitialDir := ExtractFileDir(Application.ExeName);
 end;
 
 procedure TfrmDetail.FormResize(Sender: TObject);
 begin
+  frmDetail.Tag := 1;
+
   imgWidth.ImageIndex := 0;
   lblWidth.Caption := IntToStr((Sender as TForm).Width);
 
   imgHeight.ImageIndex := 1;
   lblHeight.Caption := IntToStr((Sender as TForm).Height);
 
-  if tabKind.TabIndex = 0 then
-    pnlSimple.Tag := frmDetail.Width
-  else
-    pnlMultiple.Tag := frmDetail.Width;
-end;
+  if (frmDetail.Visible = False) then
+  exit;
 
-procedure TfrmDetail.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
-begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmDetail.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmDetail.Name,
-        '-1•-1•0•600•900•200•200•200');
-
-      /// height
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmDetail.Height := 530
-      else
-        frmDetail.Height := I;
-
-      // width of simple form
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Width) then
-        I := 700;
-      frmDetail.pnlSimple.Tag := I;
-
-      // width of multiple form
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 1) or (I > Screen.Width) then
-        I := Screen.Width - 300 - (200 - ScreenRatio);
-      frmDetail.pnlMultiple.Tag := I;
-
-      if tabKind.TabIndex = 0 then
-        frmDetail.Width := frmDetail.pnlSimple.Tag
-      else
-        frmDetail.Width := frmDetail.pnlMultiple.Tag;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmDetail.left := (Screen.Width - frmDetail.Width) div 2
-      else
-        frmDetail.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmDetail.Top := ((Screen.Height - frmDetail.Height) div 2) - 75
-      else
-        frmDetail.Top := I;
-
-      // right panel (simple)
-      TryStrToInt(Field(Separ, S, 6), I);
-      if (I < 150) or (I > 400) then
-        frmDetail.pnlRight.Width := 220
-      else
-        frmDetail.pnlRight.Width := I;
-
-      // left panel (multiple)
-      TryStrToInt(Field(Separ, S, 7), I);
-      if (I < 150) or (I > 400) then
-        frmDetail.pnlLeft.Width := 220
-      else
-        frmDetail.pnlLeft.Width := I;
-
-      // detail panel (multiple)
-      TryStrToInt(Field(Separ, S, 8), I);
-      if (I < 200) or (I > 400) then
-        frmDetail.pnlDetail.Width := 220
-      else
-        frmDetail.pnlDetail.Width := I;
-    end;
-  finally
-    INI.Free
+  if (tabKind.TabIndex = 0) then
+      pnlSimple.Tag := frmDetail.Width
+    else
+      pnlMultiple.Tag := frmDetail.Width;
   end;
 
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
+procedure TfrmDetail.FormShow(Sender: TObject);
+begin
   lblDateFrom.Caption := DefaultFormatSettings.LongDayNames[DayOfTheWeek(
     datDateFrom.Date + 1)];
   lblDateTo.Caption := DefaultFormatSettings.LongDayNames[DayOfTheWeek(
     datDateTo.Date + 1)];
   popAdd.Enabled := frmMain.Conn.Connected = True;
   btnAdd.Enabled := frmMain.Conn.Connected = True;
+
+  lviAttachments.Clear;
+  btnAttachmentEdit.Enabled := False;
+  btnAttachmentDelete.Enabled := False;
+  btnAttachmentOpen.Enabled := False;
 
   if tabKind.TabIndex = 0 then
   begin
@@ -2160,6 +2411,49 @@ begin
   end;
 end;
 
+procedure TfrmDetail.spiMeterEndKeyUp(Sender: TObject; var Key: word;
+  Shift: TShiftState);
+begin
+  if Key = 13 then
+  begin
+    Key := 0;
+    btnSave.SetFocus;
+  end;
+end;
+
+procedure TfrmDetail.spiMeterStartChange(Sender: TObject);
+begin
+  spiConsumption.Value := spiMeterEnd.Value - spiMeterStart.Value;
+end;
+
+procedure TfrmDetail.spiMeterStartEnter(Sender: TObject);
+begin
+  spiMeterStart.SelStart := 0;
+  spiMeterStart.SelLength := Length(spiMeterStart.Text);
+end;
+
+procedure TfrmDetail.spiMeterStartKeyUp(Sender: TObject; var Key: word;
+  Shift: TShiftState);
+begin
+  if Key = 13 then
+  begin
+    Key := 0;
+    spiMeterEnd.SetFocus;
+  end;
+end;
+
+procedure TfrmDetail.splDetailCanResize(Sender: TObject; var NewSize: integer;
+  var Accept: boolean);
+begin
+  frmDetail.Tag := 1;
+
+  imgHeight.ImageIndex := 2;
+  lblHeight.Caption := IntToStr(pnlDetail.Width);
+
+  imgWidth.ImageIndex := 3;
+  lblWidth.Caption := IntToStr(frmDetail.Width - pnlDetail.Width);
+end;
+
 procedure TfrmDetail.splSimpleCanResize(Sender: TObject; var NewSize: integer;
   var Accept: boolean);
 begin
@@ -2182,6 +2476,7 @@ procedure TfrmDetail.tabKindChange(Sender: TObject);
 begin
   if frmMain.Visible = False then
     Exit;
+
   pnlSimple.Visible := tabKind.TabIndex = 0;
   pnlMultiple.Visible := tabKind.TabIndex = 1;
 
@@ -2225,7 +2520,6 @@ begin
       end;
     end;
   end;
-  frmDetail.Left := (Screen.Width - frmDetail.Width) div 2;
 end;
 
 procedure TfrmDetail.tabKindChanging(Sender: TObject; var AllowChange: boolean);
@@ -2242,6 +2536,15 @@ begin
     (MessageDlg(Message_00, AnsiReplaceStr(Question_13, '%', sLineBreak),
     mtWarning, mbYesNo, 0) <> mrYes)) then
     AllowChange := False;
+end;
+
+procedure TfrmDetail.tabSimpleChange(Sender: TObject);
+begin
+  if frmDetail.Visible = False then
+    Exit;
+  pnlTags.Visible := tabSimple.TabIndex = 0;
+  pnlAttachments.Visible := tabSimple.TabIndex = 1;
+  pnlEnergies.Visible := tabSimple.TabIndex = 2;
 end;
 
 procedure TfrmDetail.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
@@ -2384,16 +2687,6 @@ begin
     end;
 
     // =====================================================================
-    // item icon
-    //frmDetail.pnlItem.Visible := frmDetail.VST.RootNodeCount > 0;
-    //frmDetail.lblItem.Caption := '';
-
-    // items icon
-    //frmDetail.pnlItems.Visible := frmDetail.VST.RootNodeCount > 0;
-    //frmDetail.lblItems.Caption := IntToStr(slMultiple.Count);
-
-    //if frmDetail.pnlItem.Visible = True then frmDetail.pnlItem.Left := 0;
-
     if frmDetail.chkAmountMinus.Checked = False then
       Exit;
 

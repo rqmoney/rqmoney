@@ -1,7 +1,7 @@
 object frmManyCurrencies: TfrmManyCurrencies
-  Left = 662
+  Left = 685
   Height = 170
-  Top = 231
+  Top = 340
   Width = 350
   BorderIcons = [biSystemMenu]
   ClientHeight = 170
@@ -9,12 +9,11 @@ object frmManyCurrencies: TfrmManyCurrencies
   Color = 14606046
   Constraints.MinHeight = 170
   Constraints.MinWidth = 350
-  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.6.0.0'
   Scaled = False
   object pnlManyCurrenciesCaption: TBCPanel
     Left = 5

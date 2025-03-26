@@ -1,6 +1,18 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: tfrmimage.lblapricotdb.hint
+msgid "https://www.apricotdb.co.za/joomla/"
+msgstr ""
+
+#: tfrmschedulers.calendar.cancelcaption
+msgid "Zrušit"
+msgstr ""
+
+#: tfrmschedulers.calendar.okcaption
+msgid "&OK"
+msgstr ""
+
 #: uniresources.caption_00
 msgid "Add"
 msgstr ""
@@ -184,7 +196,6 @@ msgid "Language"
 msgstr ""
 
 #: uniresources.caption_131
-msgctxt "uniresources.caption_131"
 msgid "Date and numeric format"
 msgstr ""
 
@@ -277,17 +288,14 @@ msgid "Transactions color scheme"
 msgstr ""
 
 #: uniresources.caption_152
-msgctxt "uniresources.caption_152"
 msgid "black for all fields in the row"
 msgstr ""
 
 #: uniresources.caption_153
-msgctxt "uniresources.caption_153"
 msgid "colored the field Amount only"
 msgstr ""
 
 #: uniresources.caption_154
-msgctxt "uniresources.caption_154"
 msgid "colored all fields in the row"
 msgstr ""
 
@@ -401,7 +409,7 @@ msgid "VACUUM (this command reduces database size by erasing deleted records)"
 msgstr ""
 
 #: uniresources.caption_18
-msgid "Filter"
+msgid "FILTER"
 msgstr ""
 
 #: uniresources.caption_180
@@ -461,7 +469,7 @@ msgid "Strongly reccomanded"
 msgstr ""
 
 #: uniresources.caption_193
-msgid "PROTECT THE DATABASE WITH THE PASSWORD"
+msgid "ENCRYPT THE DATABASE"
 msgstr ""
 
 #: uniresources.caption_194
@@ -589,7 +597,6 @@ msgid "These options work only for monthly, quarterly, biannually and yearly rep
 msgstr ""
 
 #: uniresources.caption_222
-msgctxt "uniresources.caption_222"
 msgid "public holiday"
 msgstr ""
 
@@ -599,7 +606,6 @@ msgstr ""
 
 #: uniresources.caption_224
 #, object-pascal-format
-msgctxt "uniresources.caption_224"
 msgid "Your backup folder doesn't exists.%Please, set the folder first or turn off the back up."
 msgstr ""
 
@@ -676,12 +682,10 @@ msgid "Credit transactions color"
 msgstr ""
 
 #: uniresources.caption_241
-msgctxt "uniresources.caption_241"
 msgid "Transfers(+) transactions color"
 msgstr ""
 
 #: uniresources.caption_242
-msgctxt "uniresources.caption_242"
 msgid "Transfers(-) transactions color"
 msgstr ""
 
@@ -726,7 +730,6 @@ msgid "Template"
 msgstr ""
 
 #: uniresources.caption_252
-msgctxt "uniresources.caption_252"
 msgid "Template name"
 msgstr ""
 
@@ -767,7 +770,6 @@ msgid "PREPARED DATA FOR IMPORT"
 msgstr ""
 
 #: uniresources.caption_261
-msgctxt "uniresources.caption_261"
 msgid "Imported file"
 msgstr ""
 
@@ -885,7 +887,6 @@ msgid "Balance detail"
 msgstr ""
 
 #: uniresources.caption_288
-msgctxt "uniresources.caption_288"
 msgid "Print the transactions summary table on a separately page"
 msgstr ""
 
@@ -906,7 +907,6 @@ msgid "display subcategories in capital letters"
 msgstr ""
 
 #: uniresources.caption_301
-msgctxt "uniresources.caption_301"
 msgid "enable transfer to the same account"
 msgstr ""
 
@@ -1015,7 +1015,6 @@ msgid "to encrypt the database (required database password protection!)"
 msgstr ""
 
 #: uniresources.caption_326
-msgctxt "uniresources.caption_326"
 msgid "Your database was not encrypt now."
 msgstr ""
 
@@ -1039,52 +1038,8 @@ msgstr ""
 msgid "Buttons visibility"
 msgstr ""
 
-#: uniresources.caption_331
-msgid "remember the last used transactions in the New transaction form (when you exit the program)"
-msgstr ""
-
-#: uniresources.caption_332
-msgid "Encryption protection"
-msgstr ""
-
-#: uniresources.caption_333
-msgid "Attachments"
-msgstr ""
-
-#: uniresources.caption_334
-msgid "Energies"
-msgstr ""
-
-#: uniresources.caption_335
-msgid "Monitor energy consumption"
-msgstr ""
-
-#: uniresources.caption_336
-msgid "Meter reading"
-msgstr ""
-
-#: uniresources.caption_337
-msgid "at the beginning"
-msgstr ""
-
-#: uniresources.caption_338
-msgid "at the end"
-msgstr ""
-
-#: uniresources.caption_339
-msgid "consumption"
-msgstr ""
-
 #: uniresources.caption_34
 msgid "Account book"
-msgstr ""
-
-#: uniresources.caption_340
-msgid "Meter"
-msgstr ""
-
-#: uniresources.caption_341
-msgid "Allow writing to the list of items"
 msgstr ""
 
 #: uniresources.caption_35
@@ -1344,7 +1299,7 @@ msgid "File size"
 msgstr ""
 
 #: uniresources.caption_99
-msgid "Password protection"
+msgid "Protection by password"
 msgstr ""
 
 #: uniresources.chart_01
@@ -1352,37 +1307,30 @@ msgid "Graphs"
 msgstr ""
 
 #: uniresources.chart_02
-msgctxt "uniresources.chart_02"
 msgid "left mouse click to switch between marks"
 msgstr ""
 
 #: uniresources.chart_03
-msgctxt "uniresources.chart_03"
 msgid "Show legend"
 msgstr ""
 
 #: uniresources.chart_04
-msgctxt "uniresources.chart_04"
 msgid "Labels on bottom axis"
 msgstr ""
 
 #: uniresources.chart_05
-msgctxt "uniresources.chart_05"
 msgid "Angle of rotation"
 msgstr ""
 
 #: uniresources.chart_06
-msgctxt "uniresources.chart_06"
 msgid "degree"
 msgstr ""
 
 #: uniresources.chart_07
-msgctxt "uniresources.chart_07"
 msgid "Show empty rows (with zero values)"
 msgstr ""
 
 #: uniresources.chart_08
-msgctxt "uniresources.chart_08"
 msgid "rows in the table"
 msgstr ""
 
@@ -1479,7 +1427,7 @@ msgid "This function is not working yet.%Maybe in the next version it will be im
 msgstr ""
 
 #: uniresources.error_18
-msgid "Program can not open this type of database (perhaps created in different program).% If you try to open older database (with extension RQM), you can import it to the new database only."
+msgid "Program can not open this type of database (perhaps created in different program)."
 msgstr ""
 
 #: uniresources.error_19
@@ -1538,10 +1486,6 @@ msgstr ""
 
 #: uniresources.error_32
 msgid "The program cannot open your database % because another program is already using it."
-msgstr ""
-
-#: uniresources.error_33
-msgid "The program cannot find the selected file to open"
 msgstr ""
 
 #: uniresources.guide_01
@@ -1624,6 +1568,10 @@ msgstr ""
 msgid "Save your password to the database"
 msgstr ""
 
+#: uniresources.hint_12
+msgid "Take a photo of current form"
+msgstr ""
+
 #: uniresources.hint_13
 msgid "Print the list"
 msgstr ""
@@ -1648,6 +1596,10 @@ msgstr ""
 msgid "Duplicate selected item"
 msgstr ""
 
+#: uniresources.hint_19
+msgid "Add new multiple items"
+msgstr ""
+
 #: uniresources.hint_21
 #, object-pascal-format
 msgid "Execute SQL command.%0:sThe results wil be shown in the second panel."
@@ -1659,6 +1611,10 @@ msgstr ""
 
 #: uniresources.hint_23
 msgid "Save all items to the list at once"
+msgstr ""
+
+#: uniresources.hint_24
+msgid "Print the selected item detail"
 msgstr ""
 
 #: uniresources.hint_25
@@ -1739,6 +1695,10 @@ msgstr ""
 
 #: uniresources.hint_47
 msgid "Show list of persons"
+msgstr ""
+
+#: uniresources.hint_48
+msgid "Show list of values"
 msgstr ""
 
 #: uniresources.hint_49
@@ -1998,7 +1958,7 @@ msgid "Donation"
 msgstr ""
 
 #: uniresources.menu_a12
-msgid "RQ Money is free software, which means you can use it without any fees.%The author has already paid for this program with his free time (several thousand hours of development since 2005!), his energy and also paid several fees (buying software, renting a domain, buying an SSL certificate, etc.).%So, if you like RQ Money and find it useful, the author will be grateful if you consider a small reward. Using the Paypal button below, you can send support to the author from your own debit / credit card or from your PayPal account."
+msgid "RQ Money is free software, which means you can use it without any fees.%The author has already paid for this program with his free time (several thousand hours of development since 2005!), his energy and also paid several fees (buying software, renting a domain, buying an SSL certificate, etc.).%So, if you like RQ Money and find it useful, the author will be grateful if you consider a small reward (e.g. 10 Euros) via PayPal or SEPA payment (more info on the program page)."
 msgstr ""
 
 #: uniresources.menu_a13
@@ -2128,7 +2088,6 @@ msgid "You are using the current version of the program."
 msgstr ""
 
 #: uniresources.message_10
-msgctxt "uniresources.message_10"
 msgid "This feature is not available in this operating system"
 msgstr ""
 
@@ -2213,17 +2172,14 @@ msgid "Do you want to close this window without saving data?"
 msgstr ""
 
 #: uniresources.question_20
-msgctxt "uniresources.question_20"
 msgid "Do you want to create new budget and write all checked categories / subcategories to this budget?"
 msgstr ""
 
 #: uniresources.question_21
-msgctxt "uniresources.question_21"
 msgid "Do you want to save changes to the selected budget?"
 msgstr ""
 
 #: uniresources.question_22
-msgctxt "uniresources.question_22"
 msgid "Do you want to write checked categories / subcategories with planned amounts to the budget?"
 msgstr ""
 
@@ -2248,7 +2204,8 @@ msgid "Do you want to back up your database to the selected folder now?"
 msgstr ""
 
 #: uniresources.question_28
-msgid "The encryption of your database requires password protection.% Do you want to set this password now?"
+#, object-pascal-format
+msgid "The encryption of your database requires password protection.%Do you want to set this password now?"
 msgstr ""
 
 #: uniresources.version_01

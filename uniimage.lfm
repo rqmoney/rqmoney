@@ -1,16 +1,14 @@
 object frmImage: TfrmImage
-  Left = 435
+  Left = 457
   Height = 542
-  Top = 172
+  Top = 282
   Width = 1000
   ClientHeight = 542
   ClientWidth = 1000
-  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
-  OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object imgDiagram: TImage
     Left = 3

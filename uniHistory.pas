@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls, StrUtils,
   ActnList, StdCtrls, BCPanel, BCMDButtonFocus, LazUTF8, laz.VirtualTrees, Math,
-  DateUtils, IniFiles;
+  DateUtils;
 
 type
 
@@ -25,7 +25,7 @@ type
     pnlBottom: TPanel;
     pnlHeight: TPanel;
     pnlTop: TPanel;
-    pnlList: TPanel;
+    pnlClient: TPanel;
     pnlHistoryCaption: TBCPanel;
     pnlOriginalCaption: TBCPanel;
     pnlButtons: TPanel;
@@ -34,7 +34,6 @@ type
     VST1: TLazVirtualStringTree;
     VST2: TLazVirtualStringTree;
     procedure actExitExecute(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -120,60 +119,7 @@ begin
 end;
 
 procedure TfrmHistory.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmHistory.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmHistory.Name, '-1•-1•0•0');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmHistory.Width := Screen.Width - 300 - (200 - ScreenRatio)
-      else
-        frmHistory.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmHistory.Height := Screen.Height - 500 - (200 - ScreenRatio)
-      else
-        frmHistory.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmHistory.left := (Screen.Width - frmHistory.Width) div 2
-      else
-        frmHistory.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmHistory.Top := ((Screen.Height - frmHistory.Height) div 2) - 75
-      else
-        frmHistory.Top := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
-  pnlTop.Height := (5 * PanelHeight);
-
   slOriginal.Clear;
   VST1.Clear;
 
@@ -473,33 +419,6 @@ end;
 procedure TfrmHistory.actExitExecute(Sender: TObject);
 begin
   frmHistory.ModalResult := mrCancel;
-end;
-
-procedure TfrmHistory.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-begin
-  // write position and window size
-  if frmSettings.chkLastFormsSize.Checked = True then
-  begin
-    try
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmHistory.Name, '') <>
-          IntToStr(frmHistory.Left) + separ + // form left
-          IntToStr(frmHistory.Top) + separ + // form top
-          IntToStr(frmHistory.Width) + separ + // form width
-          IntToStr(frmHistory.Height) then
-        INI.WriteString('POSITION', frmHistory.Name,
-          IntToStr(frmHistory.Left) + separ + // form left
-          IntToStr(frmHistory.Top) + separ + // form top
-          IntToStr(frmHistory.Width) + separ + // form width
-          IntToStr(frmHistory.Height)); // form height
-    finally
-      INI.Free;
-    end;
-  end;
 end;
 
 end.

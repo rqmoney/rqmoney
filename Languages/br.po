@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.5\n"
 
 #: uniresources.caption_00
 msgid "Add"
@@ -425,8 +425,8 @@ msgstr ""
 "excluídos)"
 
 #: uniresources.caption_18
-msgid "FILTER"
-msgstr "FILTRO"
+msgid "Filter"
+msgstr "Filtro"
 
 #: uniresources.caption_180
 msgid "Own SQL command:"
@@ -1094,9 +1094,45 @@ msgstr ""
 msgid "Encryption protection"
 msgstr "Proteção por criptografia"
 
+#: uniresources.caption_333
+msgid "Attachments"
+msgstr "Anexos"
+
+#: uniresources.caption_334
+msgid "Energies"
+msgstr "Energias"
+
+#: uniresources.caption_335
+msgid "Monitor energy consumption"
+msgstr "Monitorar o consumo de energia"
+
+#: uniresources.caption_336
+msgid "Meter reading"
+msgstr "Leitura do medidor"
+
+#: uniresources.caption_337
+msgid "at the beginning"
+msgstr "no começo"
+
+#: uniresources.caption_338
+msgid "at the end"
+msgstr "no final"
+
+#: uniresources.caption_339
+msgid "consumption"
+msgstr "consumo"
+
 #: uniresources.caption_34
 msgid "Account book"
 msgstr "Livro de contabilidade"
+
+#: uniresources.caption_340
+msgid "Meter"
+msgstr "Metro"
+
+#: uniresources.caption_341
+msgid "Allow writing to the list of items"
+msgstr "Permitir escrita na lista de itens"
 
 #: uniresources.caption_35
 msgid "Current balance"
@@ -1598,6 +1634,10 @@ msgid ""
 msgstr ""
 "O programa não pode abrir seu banco de dados % porque outro programa já o "
 "está utilizando."
+
+#: uniresources.error_33
+msgid "The program cannot find the selected file to open"
+msgstr "O programa não consegue encontrar o arquivo selecionado para abrir"
 
 #: uniresources.guide_01
 msgid "A BEGINNER'S GUIDE"
@@ -2508,6 +2548,9 @@ msgstr "estável"
 #: uniresources.version_02
 msgid "testing"
 msgstr "teste"
+
+#~ msgid "FILTER"
+#~ msgstr "FILTRO"
 
 #~ msgid "Protection by password"
 #~ msgstr "Proteção por senha"

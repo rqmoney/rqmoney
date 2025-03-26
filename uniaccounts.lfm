@@ -1,7 +1,7 @@
 object frmAccounts: TfrmAccounts
-  Left = 376
+  Left = 498
   Height = 400
-  Top = 134
+  Top = 248
   Width = 1000
   ClientHeight = 400
   ClientWidth = 1000
@@ -12,11 +12,11 @@ object frmAccounts: TfrmAccounts
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.2.0.0'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object splList: TSplitter
     Left = 765
-    Height = 343
+    Height = 345
     Top = 0
     Width = 5
     Align = alRight
@@ -25,13 +25,13 @@ object frmAccounts: TfrmAccounts
   end
   object pnlDetail: TPanel
     Left = 775
-    Height = 336
+    Height = 338
     Top = 5
     Width = 220
     Align = alRight
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 336
+    ClientHeight = 338
     ClientWidth = 220
     Constraints.MaxWidth = 300
     Constraints.MinWidth = 100
@@ -80,14 +80,14 @@ object frmAccounts: TfrmAccounts
     end
     object pnlButton: TPanel
       Left = 2
-      Height = 27
-      Top = 307
+      Height = 25
+      Top = 311
       Width = 216
       Align = alBottom
       AutoSize = True
       BorderSpacing.Around = 1
       BevelOuter = bvNone
-      ClientHeight = 27
+      ClientHeight = 25
       ClientWidth = 216
       Constraints.MinHeight = 25
       TabOrder = 2
@@ -96,7 +96,7 @@ object frmAccounts: TfrmAccounts
       object btnSave: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 115
-        Height = 25
+        Height = 23
         Top = 1
         Width = 98
         Animation = True
@@ -125,7 +125,7 @@ object frmAccounts: TfrmAccounts
       object btnCancel: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 3
-        Height = 25
+        Height = 23
         Top = 1
         Width = 109
         Animation = True
@@ -154,36 +154,36 @@ object frmAccounts: TfrmAccounts
     end
     object pnlBack: TPanel
       Left = 1
-      Height = 285
+      Height = 289
       Top = 21
       Width = 218
       Align = alClient
-      ClientHeight = 285
+      ClientHeight = 289
       ClientWidth = 218
       TabOrder = 1
       object pnlStatus: TPanel
         Left = 4
-        Height = 44
-        Top = 234
+        Height = 51
+        Top = 231
         Width = 210
         Align = alBottom
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 44
+        ClientHeight = 51
         ClientWidth = 210
         ParentFont = False
         TabOrder = 5
         object cbxStatus: TComboBox
           Left = 3
-          Height = 23
+          Height = 30
           Top = 18
           Width = 204
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
-          ItemHeight = 15
+          ItemHeight = 0
           ParentFont = False
           Style = csDropDownList
           TabOrder = 0
@@ -251,13 +251,13 @@ object frmAccounts: TfrmAccounts
       end
       object pnlComment: TPanel
         Left = 4
-        Height = 83
-        Top = 148
+        Height = 66
+        Top = 162
         Width = 210
         Align = alClient
         AutoSize = True
         BorderSpacing.Around = 3
-        ClientHeight = 83
+        ClientHeight = 66
         ClientWidth = 210
         ParentFont = False
         TabOrder = 4
@@ -275,7 +275,7 @@ object frmAccounts: TfrmAccounts
         end
         object memComment: TMemo
           Left = 3
-          Height = 76
+          Height = 59
           Top = 4
           Width = 204
           Align = alClient
@@ -293,14 +293,14 @@ object frmAccounts: TfrmAccounts
       end
       object pnlDate: TPanel
         Left = 4
-        Height = 30
-        Top = 112
+        Height = 29
+        Top = 127
         Width = 210
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 30
+        ClientHeight = 29
         ClientWidth = 210
         ParentFont = False
         TabOrder = 3
@@ -319,25 +319,25 @@ object frmAccounts: TfrmAccounts
         end
         object pnlDateFrom: TPanel
           Left = 1
-          Height = 25
+          Height = 24
           Top = 4
           Width = 208
           Align = alTop
           AutoSize = True
           BevelOuter = bvNone
           BorderStyle = bsSingle
-          ClientHeight = 21
-          ClientWidth = 204
+          ClientHeight = 22
+          ClientWidth = 206
           Color = clWhite
           ParentBackground = False
           ParentColor = False
           TabOrder = 0
           object datDate: TDateTimePicker
             Cursor = crHandPoint
-            Left = 84
-            Height = 19
+            Left = 64
+            Height = 20
             Top = 1
-            Width = 119
+            Width = 141
             CenturyFrom = 2000
             MaxDate = 117974
             MinDate = 2
@@ -374,9 +374,9 @@ object frmAccounts: TfrmAccounts
           end
           object lblDate1: TLabel
             Left = 1
-            Height = 17
+            Height = 18
             Top = 2
-            Width = 80
+            Width = 60
             Align = alClient
             Alignment = taRightJustify
             AutoSize = False
@@ -393,14 +393,14 @@ object frmAccounts: TfrmAccounts
       end
       object pnlAmount: TPanel
         Left = 4
-        Height = 30
-        Top = 76
+        Height = 35
+        Top = 86
         Width = 210
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 30
+        ClientHeight = 35
         ClientWidth = 210
         ParentFont = False
         TabOrder = 2
@@ -419,7 +419,7 @@ object frmAccounts: TfrmAccounts
         end
         object spiAmount: TFloatSpinEdit
           Left = 3
-          Height = 23
+          Height = 28
           Top = 4
           Width = 204
           Align = alTop
@@ -438,21 +438,21 @@ object frmAccounts: TfrmAccounts
       end
       object pnlCurrency: TPanel
         Left = 4
-        Height = 30
-        Top = 40
+        Height = 35
+        Top = 45
         Width = 210
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 30
+        ClientHeight = 35
         ClientWidth = 210
         ParentFont = False
         TabOrder = 1
         object cbxCurrency: TComboBox
           Tag = 2
           Left = 3
-          Height = 23
+          Height = 28
           Top = 4
           Width = 182
           Align = alClient
@@ -463,7 +463,7 @@ object frmAccounts: TfrmAccounts
           BorderSpacing.Top = 2
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
-          ItemHeight = 15
+          ItemHeight = 0
           ParentFont = False
           TabOrder = 0
           OnDropDown = cbxCurrencyDropDown
@@ -473,7 +473,7 @@ object frmAccounts: TfrmAccounts
         end
         object btnCurrency: TSpeedButton
           Left = 187
-          Height = 24
+          Height = 29
           Top = 3
           Width = 20
           Align = alRight
@@ -504,14 +504,14 @@ object frmAccounts: TfrmAccounts
       end
       object pnlName: TPanel
         Left = 4
-        Height = 30
+        Height = 35
         Top = 4
         Width = 210
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 30
+        ClientHeight = 35
         ClientWidth = 210
         ParentFont = False
         TabOrder = 0
@@ -530,7 +530,7 @@ object frmAccounts: TfrmAccounts
         end
         object ediName: TEdit
           Left = 3
-          Height = 23
+          Height = 28
           Top = 4
           Width = 204
           Align = alTop
@@ -549,13 +549,13 @@ object frmAccounts: TfrmAccounts
   end
   object pnlList: TPanel
     Left = 5
-    Height = 336
+    Height = 338
     Top = 5
     Width = 755
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 336
+    ClientHeight = 338
     ClientWidth = 755
     ParentFont = False
     TabOrder = 0
@@ -602,7 +602,7 @@ object frmAccounts: TfrmAccounts
     object VST: TLazVirtualStringTree
       Cursor = 63
       Left = 4
-      Height = 308
+      Height = 310
       Top = 24
       Width = 747
       Align = alClient
@@ -850,14 +850,14 @@ object frmAccounts: TfrmAccounts
   end
   object pnlButtons: TPanel
     Left = 3
-    Height = 27
-    Top = 346
+    Height = 25
+    Top = 348
     Width = 994
     Align = alBottom
     AutoSize = True
     BorderSpacing.Around = 3
     BevelOuter = bvNone
-    ClientHeight = 27
+    ClientHeight = 25
     ClientWidth = 994
     Constraints.MinHeight = 25
     ParentColor = False
@@ -867,7 +867,7 @@ object frmAccounts: TfrmAccounts
     object btnAdd: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 3
-      Height = 25
+      Height = 23
       Top = 1
       Width = 160
       Animation = True
@@ -896,7 +896,7 @@ object frmAccounts: TfrmAccounts
     object btnEdit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 166
-      Height = 25
+      Height = 23
       Top = 1
       Width = 135
       Animation = True
@@ -925,7 +925,7 @@ object frmAccounts: TfrmAccounts
     object btnDelete: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 304
-      Height = 25
+      Height = 23
       Top = 1
       Width = 135
       Animation = True
@@ -954,7 +954,7 @@ object frmAccounts: TfrmAccounts
     object btnCopy: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 442
-      Height = 25
+      Height = 23
       Top = 1
       Width = 135
       Animation = True
@@ -983,7 +983,7 @@ object frmAccounts: TfrmAccounts
     object btnSelect: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 580
-      Height = 25
+      Height = 23
       Top = 1
       Width = 135
       Animation = True
@@ -1012,7 +1012,7 @@ object frmAccounts: TfrmAccounts
     object btnPrint: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 718
-      Height = 25
+      Height = 23
       Top = 1
       Width = 135
       Animation = True
@@ -1042,7 +1042,7 @@ object frmAccounts: TfrmAccounts
     object btnExit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 856
-      Height = 25
+      Height = 23
       Top = 1
       Width = 135
       Animation = True

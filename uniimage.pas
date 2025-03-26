@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  ActnList, BCMDButtonFocus, Clipbrd, LCLIntf, IniFiles;
+  ActnList, BCMDButtonFocus, Clipbrd, LCLIntf;
 
 type
 
@@ -30,10 +30,8 @@ type
     pnlWidth: TPanel;
     procedure btnCopyClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure lblApricotDBClick(Sender: TObject);
     procedure lblApricotDBMouseEnter(Sender: TObject);
     procedure lblApricotDBMouseLeave(Sender: TObject);
@@ -51,7 +49,7 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniResources, uniSettings;
+  uniMain, uniResources;
 
 { TfrmImage }
 
@@ -59,60 +57,6 @@ procedure TfrmImage.FormResize(Sender: TObject);
 begin
   lblWidth.Caption := IntToStr((Sender as TForm).Width);
   lblHeight.Caption := IntToStr((Sender as TForm).Height);
-end;
-
-procedure TfrmImage.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
-begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmImage.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmImage.Name, '-1•-1•0•0');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmImage.Width := Screen.Width - 100 - (200 - ScreenRatio)
-      else
-        frmImage.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmImage.Height := Screen.Height - 150 - (200 - ScreenRatio)
-      else
-        frmImage.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmImage.left := (Screen.Width - frmImage.Width) div 2
-      else
-        frmImage.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmImage.Top := ((Screen.Height - frmImage.Height) div 2) - 75
-      else
-        frmImage.Top := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
 end;
 
 procedure TfrmImage.lblApricotDBClick(Sender: TObject);
@@ -139,39 +83,6 @@ end;
 procedure TfrmImage.btnExitClick(Sender: TObject);
 begin
   frmImage.ModalResult := mrCancel;
-end;
-
-procedure TfrmImage.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-
-begin
-  try
-   // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmImage.Name, '') <>
-          IntToStr(frmImage.Left) + separ + // form left
-        IntToStr(frmImage.Top) + separ + // form top
-        IntToStr(frmImage.Width) + separ + // form width
-        IntToStr(frmImage.Height) then
-          INI.WriteString('POSITION', frmImage.Name,
-            IntToStr(frmImage.Left) + separ + // form left
-            IntToStr(frmImage.Top) + separ + // form top
-            IntToStr(frmImage.Width) + separ + // form width
-            IntToStr(frmImage.Height));
-      finally
-        INI.Free;
-      end;
-    end;
-  except
-    on E: Exception do
-      ShowErrorMessage(E);
-  end;
 end;
 
 procedure TfrmImage.FormCreate(Sender: TObject);

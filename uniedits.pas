@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  BCPanel, DateUtils, Buttons, ComCtrls, ActnList, CheckLst, Spin, IniFiles,
+  BCPanel, DateUtils, Buttons, ComCtrls, ActnList, CheckLst, Spin,
   LazUtf8, BCMDButtonFocus, StrUtils, laz.VirtualTrees, DateTimePicker;
 
 type
@@ -111,7 +111,6 @@ type
     procedure datDateChange(Sender: TObject);
     procedure datDateEnter(Sender: TObject);
     procedure datDateExit(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure lblDateClick(Sender: TObject);
     procedure spiAmountClick(Sender: TObject);
     procedure spiAmountEnter(Sender: TObject);
@@ -479,35 +478,6 @@ begin
   datDate.Font.Bold := False;
 end;
 
-procedure TfrmEdits.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-begin
-  // write position and window size
-  if frmSettings.chkLastFormsSize.Checked = True then
-  begin
-    try
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmEdits.Name, '') <>
-        IntToStr(frmEdits.Left) + separ + // form left
-      IntToStr(frmEdits.Top) + separ + // form top
-      IntToStr(frmEdits.Width) + separ + // form width
-      IntToStr(frmEdits.Height) + separ + // form height
-      IntToStr(frmEdits.pnlTag.Width) then
-        INI.WriteString('POSITION', frmEdits.Name,
-          IntToStr(frmEdits.Left) + separ + // form left
-          IntToStr(frmEdits.Top) + separ + // form top
-          IntToStr(frmEdits.Width) + separ + // form width
-          IntToStr(frmEdits.Height) + separ + // form height
-          IntToStr(frmEdits.pnlTag.Width));
-    finally
-      INI.Free;
-    end;
-  end;
-end;
-
 procedure TfrmEdits.lblDateClick(Sender: TObject);
 begin
   if datDate.Enabled = True then
@@ -588,65 +558,7 @@ begin
 end;
 
 procedure TfrmEdits.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmEdits.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmEdits.Name, '-1•-1•0•0•200');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmEdits.Width := 600
-      else
-        frmEdits.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmEdits.Height := 500
-      else
-        frmEdits.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmEdits.left := (Screen.Width - frmEdits.Width) div 2
-      else
-        frmEdits.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmEdits.Top := ((Screen.Height - frmEdits.Height) div 2) - 75
-      else
-        frmEdits.Top := I;
-
-      // detail panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 150) or (I > 400) then
-        frmEdits.pnlTag.Width := 220
-      else
-        frmEdits.pnlTag.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   case frmEdits.Tag of
     1: frmEdits.txtCount.Caption := IntToStr(frmMain.VST.SelectedCount);
     2: frmEdits.txtCount.Caption := IntToStr(frmRecycleBin.VST.SelectedCount);

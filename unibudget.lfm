@@ -1,7 +1,7 @@
 object frmBudget: TfrmBudget
-  Left = 674
+  Left = 697
   Height = 400
-  Top = 208
+  Top = 318
   Width = 700
   ActiveControl = splBudget
   ClientHeight = 400
@@ -13,7 +13,7 @@ object frmBudget: TfrmBudget
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlLeft: TPanel
     Left = 5
@@ -31,7 +31,7 @@ object frmBudget: TfrmBudget
     object pnlHint: TPanel
       Left = 4
       Height = 14
-      Top = 148
+      Top = 165
       Width = 192
       Align = alTop
       AutoSize = True
@@ -67,19 +67,19 @@ object frmBudget: TfrmBudget
     end
     object pnlType: TPanel
       Left = 4
-      Height = 66
+      Height = 78
       Top = 4
       Width = 192
       Align = alTop
       AutoSize = True
       BorderSpacing.Bottom = 10
       BorderSpacing.Around = 3
-      ClientHeight = 66
+      ClientHeight = 78
       ClientWidth = 192
       TabOrder = 1
       object rbtCategories: TRadioButton
         Left = 6
-        Height = 17
+        Height = 23
         Top = 24
         Width = 180
         Align = alTop
@@ -93,8 +93,8 @@ object frmBudget: TfrmBudget
       end
       object rbtSubcategories: TRadioButton
         Left = 6
-        Height = 17
-        Top = 43
+        Height = 23
+        Top = 49
         Width = 180
         Align = alTop
         BorderSpacing.Left = 5
@@ -148,14 +148,14 @@ object frmBudget: TfrmBudget
     end
     object pnlName: TPanel
       Left = 4
-      Height = 52
-      Top = 83
+      Height = 57
+      Top = 95
       Width = 192
       Align = alTop
       AutoSize = True
       BorderSpacing.Bottom = 10
       BorderSpacing.Around = 3
-      ClientHeight = 52
+      ClientHeight = 57
       ClientWidth = 192
       TabOrder = 2
       object pnlNameCaption: TBCPanel
@@ -201,7 +201,7 @@ object frmBudget: TfrmBudget
       end
       object ediName: TEdit
         Left = 4
-        Height = 23
+        Height = 28
         Top = 25
         Width = 184
         Align = alTop

@@ -1,7 +1,7 @@
 object frmEdit: TfrmEdit
-  Left = 498
+  Left = 521
   Height = 481
-  Top = 233
+  Top = 342
   Width = 550
   ActiveControl = splEdit
   BorderIcons = [biSystemMenu]
@@ -14,7 +14,7 @@ object frmEdit: TfrmEdit
   OnResize = FormResize
   OnShow = FormShow
   Position = poWorkAreaCenter
-  LCLVersion = '3.2.0.0'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object splEdit: TSplitter
     Left = 335
@@ -38,7 +38,7 @@ object frmEdit: TfrmEdit
     ClientWidth = 540
     Constraints.MinHeight = 20
     ParentBackground = False
-    TabOrder = 1
+    TabOrder = 0
     object pnlHeight: TPanel
       Left = 428
       Height = 22
@@ -197,69 +197,6 @@ object frmEdit: TfrmEdit
       end
     end
   end
-  object gbxTag: TGroupBox
-    Tag = 128
-    Left = 345
-    Height = 437
-    Top = 5
-    Width = 200
-    Align = alRight
-    BorderSpacing.Around = 5
-    ClientHeight = 417
-    ClientWidth = 196
-    Constraints.MaxWidth = 400
-    Constraints.MinWidth = 150
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 0
-    object lbxTag: TCheckListBox
-      Cursor = crHandPoint
-      Left = 5
-      Height = 393
-      Top = 24
-      Width = 189
-      Align = alClient
-      BorderSpacing.Left = 5
-      BorderSpacing.Right = 2
-      BorderStyle = bsNone
-      ItemHeight = 0
-      ParentFont = False
-      TabOrder = 0
-      OnEnter = lbxTagEnter
-      OnExit = lbxTagExit
-      OnKeyUp = lbxTagKeyUp
-    end
-    object pnlTagTop: TPanel
-      Left = 0
-      Height = 24
-      Top = 0
-      Width = 196
-      Align = alTop
-      AutoSize = True
-      BevelOuter = bvNone
-      ClientHeight = 24
-      ClientWidth = 196
-      ParentBackground = False
-      TabOrder = 1
-      object btnTag: TSpeedButton
-        Cursor = crHandPoint
-        Left = 174
-        Height = 20
-        Top = 2
-        Width = 20
-        Align = alRight
-        AutoSize = True
-        BorderSpacing.Around = 2
-        Images = frmMain.img16
-        ImageIndex = 11
-        OnClick = btnTagClick
-        ShowHint = True
-        ParentFont = False
-        ParentShowHint = False
-      end
-    end
-  end
   object pnlLeft: TPanel
     Left = 0
     Height = 442
@@ -270,7 +207,7 @@ object frmEdit: TfrmEdit
     ClientHeight = 442
     ClientWidth = 335
     Constraints.MinWidth = 300
-    TabOrder = 3
+    TabOrder = 2
     object scrLeft: TScrollBox
       Left = 6
       Height = 430
@@ -635,6 +572,7 @@ object frmEdit: TfrmEdit
             ItemHeight = 15
             ParentFont = False
             TabOrder = 1
+            OnChange = cbxSubcategoryChange
             OnDropDown = cbxAccountDropDown
             OnEnter = cbxTypeEnter
             OnExit = cbxSubcategoryExit
@@ -774,6 +712,405 @@ object frmEdit: TfrmEdit
       end
     end
   end
+  object pnlRight: TPanel
+    Tag = 200
+    Left = 344
+    Height = 435
+    Top = 6
+    Width = 200
+    Align = alRight
+    BorderSpacing.Left = 3
+    BorderSpacing.Top = 5
+    BorderSpacing.Right = 5
+    BorderSpacing.Bottom = 5
+    BorderSpacing.Around = 1
+    BevelOuter = bvLowered
+    ClientHeight = 435
+    ClientWidth = 200
+    Constraints.MaxWidth = 400
+    Constraints.MinWidth = 150
+    ParentBackground = False
+    TabOrder = 3
+    object tabSimple: TECTabCtrl
+      Left = 4
+      Height = 431
+      Top = 3
+      Width = 11
+      Align = alLeft
+      BorderSpacing.Left = 3
+      BorderSpacing.Top = 2
+      OnChange = tabSimpleChange
+      Options = [etcoAutoSizeTabsHeight, etcoAutoSizeTabsWidth]
+      TabHeight = 6
+      TabIndex = 2
+      TabMaxWidth = 300
+      TabMinWidth = 0
+      TabOrder = 0
+      TabPosition = tpLeft
+      Tabs = <      
+        item
+        end      
+        item
+        end      
+        item
+        end>
+    end
+    object pnlTags: TPanel
+      Left = 15
+      Height = 429
+      Top = 3
+      Width = 182
+      Align = alClient
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Bottom = 2
+      ClientHeight = 429
+      ClientWidth = 182
+      Font.Style = [fsBold]
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 1
+      object lbxTag: TCheckListBox
+        Cursor = crHandPoint
+        Left = 4
+        Height = 397
+        Top = 28
+        Width = 174
+        Align = alClient
+        BorderSpacing.Around = 3
+        BorderStyle = bsNone
+        ItemHeight = 0
+        ParentFont = False
+        TabOrder = 0
+        OnEnter = lbxTagEnter
+        OnExit = lbxTagExit
+        OnKeyUp = lbxTagKeyUp
+      end
+      object pnlTagLabel: TPanel
+        Left = 1
+        Height = 24
+        Top = 1
+        Width = 180
+        Align = alTop
+        AutoSize = True
+        BevelOuter = bvNone
+        ClientHeight = 24
+        ClientWidth = 180
+        ParentBackground = False
+        ParentFont = False
+        TabOrder = 1
+        object btnTag: TSpeedButton
+          Cursor = crHandPoint
+          Left = 156
+          Height = 20
+          Top = 2
+          Width = 22
+          Align = alRight
+          BorderSpacing.Around = 2
+          Constraints.MinHeight = 16
+          Constraints.MinWidth = 16
+          Images = frmMain.img16
+          ImageIndex = 11
+          OnClick = btnTagClick
+          ShowHint = True
+          ParentFont = False
+          ParentShowHint = False
+        end
+      end
+    end
+    object pnlAttachments: TPanel
+      Left = 15
+      Height = 429
+      Top = 3
+      Width = 182
+      Align = alClient
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Bottom = 2
+      ClientHeight = 429
+      ClientWidth = 182
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 2
+      Visible = False
+      OnResize = pnlAttachmentsResize
+      object btnAttachmentAdd: TBCMDButtonFocus
+        Cursor = crHandPoint
+        Left = 3
+        Height = 22
+        Top = 336
+        Width = 176
+        Animation = True
+        StyleNormal.Color = clWhite
+        StyleNormal.TextColor = clBlack
+        StyleHover.Color = 14474460
+        StyleHover.TextColor = clBlack
+        StyleActive.Color = 13027014
+        StyleActive.TextColor = clBlack
+        StyleDisabled.Color = clWhite
+        StyleDisabled.TextColor = 10724259
+        TextAutoSize = True
+        TextProportional = False
+        TextProportionalRatio = 0.5
+        Align = alBottom
+        BorderSpacing.Left = 1
+        BorderSpacing.Right = 1
+        BorderSpacing.Around = 1
+        Color = clNone
+        Font.Style = [fsBold]
+        OnClick = btnAttachmentAddClick
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object btnAttachmentEdit: TBCMDButtonFocus
+        Cursor = crHandPoint
+        Left = 3
+        Height = 22
+        Top = 359
+        Width = 176
+        Animation = True
+        StyleNormal.Color = clWhite
+        StyleNormal.TextColor = clBlack
+        StyleHover.Color = 14474460
+        StyleHover.TextColor = clBlack
+        StyleActive.Color = 13027014
+        StyleActive.TextColor = clBlack
+        StyleDisabled.Color = clWhite
+        StyleDisabled.TextColor = 10724259
+        TextAutoSize = True
+        TextProportional = False
+        TextProportionalRatio = 0.5
+        Align = alBottom
+        BorderSpacing.Left = 1
+        BorderSpacing.Right = 1
+        BorderSpacing.Around = 1
+        Color = clNone
+        Enabled = False
+        Font.Style = [fsBold]
+        OnClick = btnAttachmentEditClick
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object btnAttachmentDelete: TBCMDButtonFocus
+        Cursor = crHandPoint
+        Left = 3
+        Height = 22
+        Top = 382
+        Width = 176
+        Animation = True
+        StyleNormal.Color = clWhite
+        StyleNormal.TextColor = clBlack
+        StyleHover.Color = 14474460
+        StyleHover.TextColor = clBlack
+        StyleActive.Color = 13027014
+        StyleActive.TextColor = clBlack
+        StyleDisabled.Color = clWhite
+        StyleDisabled.TextColor = 10724259
+        TextAutoSize = True
+        TextProportional = False
+        TextProportionalRatio = 0.5
+        Align = alBottom
+        BorderSpacing.Left = 1
+        BorderSpacing.Right = 1
+        BorderSpacing.Around = 1
+        Color = clNone
+        Enabled = False
+        Font.Style = [fsBold]
+        OnClick = btnAttachmentDeleteClick
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object btnAttachmentOpen: TBCMDButtonFocus
+        Cursor = crHandPoint
+        Left = 3
+        Height = 22
+        Top = 405
+        Width = 176
+        Animation = True
+        StyleNormal.Color = clWhite
+        StyleNormal.TextColor = clBlack
+        StyleHover.Color = 14474460
+        StyleHover.TextColor = clBlack
+        StyleActive.Color = 13027014
+        StyleActive.TextColor = clBlack
+        StyleDisabled.Color = clWhite
+        StyleDisabled.TextColor = 10724259
+        TextAutoSize = True
+        TextProportional = False
+        TextProportionalRatio = 0.5
+        Align = alBottom
+        BorderSpacing.Left = 1
+        BorderSpacing.Right = 1
+        BorderSpacing.Around = 1
+        Color = clNone
+        Enabled = False
+        Font.Style = [fsBold]
+        OnClick = btnAttachmentOpenClick
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object lviAttachments: TListView
+        Left = 4
+        Height = 329
+        Top = 4
+        Width = 174
+        Align = alClient
+        BorderSpacing.Around = 3
+        Columns = <        
+          item
+            Width = 130
+          end        
+          item
+            Width = 200
+          end>
+        GridLines = True
+        MultiSelect = True
+        ParentFont = False
+        ReadOnly = True
+        ScrollBars = ssAutoBoth
+        SmallImages = frmMain.imgSize
+        TabOrder = 4
+        ViewStyle = vsReport
+        OnChange = lviAttachmentsChange
+        OnDblClick = lviAttachmentsDblClick
+        OnResize = lviAttachmentsResize
+      end
+    end
+    object pnlEnergies: TPanel
+      Left = 15
+      Height = 429
+      Top = 3
+      Width = 182
+      Align = alClient
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 2
+      BorderSpacing.Bottom = 2
+      ClientHeight = 429
+      ClientWidth = 182
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 3
+      Visible = False
+      object gbxMeter: TGroupBox
+        Left = 4
+        Height = 118
+        Top = 4
+        Width = 174
+        Align = alTop
+        AutoSize = True
+        BorderSpacing.Around = 3
+        ClientHeight = 98
+        ClientWidth = 170
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+        object pnlMeterStart: TPanel
+          Left = 2
+          Height = 30
+          Top = 2
+          Width = 166
+          Align = alTop
+          AutoSize = True
+          BorderSpacing.Around = 2
+          ClientHeight = 30
+          ClientWidth = 166
+          ParentFont = False
+          TabOrder = 0
+          object lblMeterStart: TLabel
+            Left = 1
+            Height = 1
+            Top = 1
+            Width = 164
+            Align = alTop
+          end
+          object spiMeterStart: TFloatSpinEdit
+            Left = 3
+            Height = 23
+            Top = 4
+            Width = 160
+            Align = alTop
+            Alignment = taRightJustify
+            BorderSpacing.Around = 2
+            DecimalPlaces = 5
+            OnChange = spiMeterStartChange
+            TabOrder = 0
+          end
+        end
+        object pnlMeterEnd: TPanel
+          Left = 2
+          Height = 30
+          Top = 34
+          Width = 166
+          Align = alTop
+          AutoSize = True
+          BorderSpacing.Around = 2
+          ClientHeight = 30
+          ClientWidth = 166
+          ParentFont = False
+          TabOrder = 1
+          object lblMeterEnd: TLabel
+            Left = 1
+            Height = 1
+            Top = 1
+            Width = 164
+            Align = alTop
+          end
+          object spiMeterEnd: TFloatSpinEdit
+            Left = 3
+            Height = 23
+            Top = 4
+            Width = 160
+            Align = alTop
+            Alignment = taRightJustify
+            BorderSpacing.Around = 2
+            DecimalPlaces = 5
+            OnChange = spiMeterStartChange
+            TabOrder = 0
+          end
+        end
+        object pnlConsumption: TPanel
+          Left = 2
+          Height = 30
+          Top = 66
+          Width = 166
+          Align = alTop
+          AutoSize = True
+          BorderSpacing.Around = 2
+          ClientHeight = 30
+          ClientWidth = 166
+          ParentFont = False
+          TabOrder = 2
+          object lblConsumption: TLabel
+            Left = 1
+            Height = 1
+            Top = 1
+            Width = 164
+            Align = alTop
+          end
+          object spiConsumption: TFloatSpinEdit
+            Left = 3
+            Height = 23
+            Top = 4
+            Width = 160
+            Align = alTop
+            Alignment = taRightJustify
+            BorderSpacing.Around = 2
+            DecimalPlaces = 5
+            Enabled = False
+            Font.Color = clMaroon
+            Font.Style = [fsBold]
+            ParentFont = False
+            ReadOnly = True
+            TabOrder = 0
+          end
+        end
+      end
+    end
+  end
   object ActionList1: TActionList
     Left = 456
     Top = 208
@@ -813,5 +1150,9 @@ object frmEdit: TfrmEdit
       OnExecute = btnTagClick
       ShortCut = 117
     end
+  end
+  object od: TOpenDialog
+    Left = 398
+    Top = 218
   end
 end

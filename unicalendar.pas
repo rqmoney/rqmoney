@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ActnList,
   Buttons, StdCtrls, ComCtrls, laz.VirtualTrees, BCPanel, BGRABitmap,
-  DateUtils, Math, StrUtils, BCMDButtonFocus, CalendarLite, IniFiles;
+  DateUtils, Math, StrUtils, BCMDButtonFocus, CalendarLite;
 
 type // bottom grid (Calendar)
   TDailyPayment = record
@@ -102,7 +102,6 @@ type
     procedure cbxAccountChange(Sender: TObject);
     procedure cbxCurrencyChange(Sender: TObject);
     procedure cbxCurrencyDropDown(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -253,65 +252,7 @@ begin
 end;
 
 procedure TfrmCalendar.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmCalendar.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmCalendar.Name, '-1•-1•0•0•200');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmCalendar.Width := Screen.Width - 200 - (200 - ScreenRatio)
-      else
-        frmCalendar.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmCalendar.Height := Screen.Height - 200 - (200 - ScreenRatio)
-      else
-        frmCalendar.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmCalendar.left := (Screen.Width - frmCalendar.Width) div 2
-      else
-        frmCalendar.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmCalendar.Top := ((Screen.Height - frmCalendar.Height) div 2) - 75
-      else
-        frmCalendar.Top := I;
-
-      // detail panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 150) or (I > 400) then
-        frmCalendar.pnlLeft.Width := 250
-      else
-        frmCalendar.pnlLeft.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   // btnEdit
   btnEdit.Enabled := VST.SelectedCount = 1;
   actEdit.Enabled := VST.SelectedCount = 1;
@@ -825,7 +766,7 @@ begin
     (frmMain.Conn.Connected = False) then
     Exit;
 
-  If cbxCurrency.Items.Count = 0 then
+  if cbxCurrency.Items.Count = 0 then
     cbxAccount.Clear;
 
   if cbxCurrency.ItemIndex = -1 then
@@ -1128,36 +1069,6 @@ begin
   {$IFDEF WINDOWS}
     ComboDDWidth(TComboBox(Sender));
   {$ENDIF}
-end;
-
-procedure TfrmCalendar.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-
-begin
-  // write position and window size
-  if frmSettings.chkLastFormsSize.Checked = True then
-  begin
-    try
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmCalendar.Name, '') <>
-        IntToStr(frmCalendar.Left) + separ + // form left
-      IntToStr(frmCalendar.Top) + separ + // form top
-      IntToStr(frmCalendar.Width) + separ + // form width
-      IntToStr(frmCalendar.Height) + separ + // form height
-      IntToStr(frmCalendar.pnlLeft.Width) then
-        INI.WriteString('POSITION', frmCalendar.Name,
-          IntToStr(frmCalendar.Left) + separ + // form left
-          IntToStr(frmCalendar.Top) + separ + // form top
-          IntToStr(frmCalendar.Width) + separ + // form width
-          IntToStr(frmCalendar.Height) + separ + // form height
-          IntToStr(frmCalendar.pnlLeft.Width));
-    finally
-      INI.Free;
-    end;
-  end;
 end;
 
 procedure TfrmCalendar.ShowDailyPayments(Sender: TObject; Shift: TShiftState;

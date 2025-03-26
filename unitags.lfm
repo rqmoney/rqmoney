@@ -1,7 +1,7 @@
 object frmTags: TfrmTags
-  Left = 415
+  Left = 437
   Height = 500
-  Top = 132
+  Top = 242
   Width = 850
   ClientHeight = 500
   ClientWidth = 850
@@ -12,7 +12,7 @@ object frmTags: TfrmTags
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object splList: TSplitter
     Left = 615
@@ -210,13 +210,13 @@ object frmTags: TfrmTags
     TabOrder = 1
     object pnlComment: TPanel
       Left = 4
-      Height = 353
-      Top = 55
+      Height = 348
+      Top = 60
       Width = 212
       Align = alClient
       AutoSize = True
       BorderSpacing.Around = 3
-      ClientHeight = 353
+      ClientHeight = 348
       ClientWidth = 212
       ParentFont = False
       TabOrder = 1
@@ -234,7 +234,7 @@ object frmTags: TfrmTags
       end
       object memComment: TMemo
         Left = 3
-        Height = 346
+        Height = 341
         Top = 4
         Width = 206
         Align = alClient
@@ -251,14 +251,14 @@ object frmTags: TfrmTags
     end
     object pnlName: TPanel
       Left = 4
-      Height = 28
+      Height = 33
       Top = 24
       Width = 212
       Align = alTop
       AutoSize = True
       BorderSpacing.Around = 3
       BevelOuter = bvNone
-      ClientHeight = 28
+      ClientHeight = 33
       ClientWidth = 212
       TabOrder = 0
       object lblName: TLabel
@@ -276,7 +276,7 @@ object frmTags: TfrmTags
       end
       object ediName: TEdit
         Left = 2
-        Height = 23
+        Height = 28
         Top = 3
         Width = 208
         Align = alTop

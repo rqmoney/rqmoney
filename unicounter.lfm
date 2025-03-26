@@ -1,7 +1,7 @@
 object frmCounter: TfrmCounter
-  Left = 574
+  Left = 597
   Height = 482
-  Top = 105
+  Top = 214
   Width = 444
   ActiveControl = pnlBackground
   BorderIcons = [biSystemMenu]
@@ -9,13 +9,12 @@ object frmCounter: TfrmCounter
   ClientWidth = 444
   Constraints.MinHeight = 400
   Constraints.MinWidth = 400
-  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.2.0.0'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlBackground: TPanel
     Left = 5
@@ -30,13 +29,13 @@ object frmCounter: TfrmCounter
     TabOrder = 0
     object pnlValue: TPanel
       Left = 6
-      Height = 334
-      Top = 65
+      Height = 327
+      Top = 72
       Width = 422
       Align = alClient
       AutoSize = True
       BorderSpacing.Around = 5
-      ClientHeight = 334
+      ClientHeight = 327
       ClientWidth = 422
       TabOrder = 0
       object lblValue: TLabel
@@ -55,7 +54,7 @@ object frmCounter: TfrmCounter
       end
       object BackGround: TScrollBox
         Left = 6
-        Height = 316
+        Height = 309
         Top = 12
         Width = 410
         HorzScrollBar.Page = 1
@@ -150,19 +149,19 @@ object frmCounter: TfrmCounter
     end
     object pnlCurrencies: TPanel
       Left = 6
-      Height = 29
+      Height = 36
       Top = 31
       Width = 422
       Align = alTop
       AutoSize = True
       BorderSpacing.Around = 5
-      ClientHeight = 29
+      ClientHeight = 36
       ClientWidth = 422
       TabOrder = 3
       object btnValues: TSpeedButton
         Tag = 2
         Left = 387
-        Height = 23
+        Height = 30
         Top = 3
         Width = 32
         Align = alRight
@@ -180,23 +179,23 @@ object frmCounter: TfrmCounter
       end
       object pnlCurrency: TPanel
         Left = 37
-        Height = 27
+        Height = 34
         Top = 1
         Width = 348
         Align = alClient
         AutoSize = True
         BevelOuter = bvNone
-        ClientHeight = 27
+        ClientHeight = 34
         ClientWidth = 348
         TabOrder = 0
         object cbxCurrency: TComboBox
           Left = 2
-          Height = 23
+          Height = 30
           Top = 2
           Width = 344
           Align = alTop
           BorderSpacing.Around = 2
-          ItemHeight = 15
+          ItemHeight = 0
           ParentFont = False
           Style = csDropDownList
           TabOrder = 0
@@ -206,7 +205,7 @@ object frmCounter: TfrmCounter
       end
       object btnCurrencies: TSpeedButton
         Left = 3
-        Height = 23
+        Height = 30
         Top = 3
         Width = 32
         Align = alLeft

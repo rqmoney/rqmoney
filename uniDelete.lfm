@@ -1,19 +1,18 @@
 object frmDelete: TfrmDelete
-  Left = 468
+  Left = 491
   Height = 500
-  Top = 276
+  Top = 386
   Width = 1000
   ActiveControl = pnlList
   ClientHeight = 500
   ClientWidth = 1000
   Constraints.MinHeight = 500
   Constraints.MinWidth = 800
-  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   object pnlList: TPanel
     Left = 2
     Height = 496
@@ -228,13 +227,13 @@ object frmDelete: TfrmDelete
       TabIndex = 1
       TabOrder = 2
       object tabTransactions: TTabSheet
-        ClientHeight = 385
-        ClientWidth = 986
+        ClientHeight = 383
+        ClientWidth = 984
         object VST1: TLazVirtualStringTree
           Left = 1
-          Height = 383
+          Height = 381
           Top = 1
-          Width = 984
+          Width = 982
           Align = alClient
           BorderSpacing.Around = 1
           Colors.BorderColor = clWindowText
@@ -358,14 +357,14 @@ object frmDelete: TfrmDelete
         end
       end
       object tabSchedulers: TTabSheet
-        ClientHeight = 385
-        ClientWidth = 986
+        ClientHeight = 383
+        ClientWidth = 984
         object VST2: TLazVirtualStringTree
           Cursor = 63
           Left = 3
-          Height = 379
+          Height = 377
           Top = 3
-          Width = 980
+          Width = 978
           Align = alClient
           BorderSpacing.Around = 3
           DefaultNodeHeight = 31
@@ -463,13 +462,13 @@ object frmDelete: TfrmDelete
         end
       end
       object tabBudget: TTabSheet
-        ClientHeight = 385
-        ClientWidth = 986
+        ClientHeight = 383
+        ClientWidth = 984
         object VST3: TLazVirtualStringTree
           Left = 3
-          Height = 379
+          Height = 377
           Top = 3
-          Width = 980
+          Width = 978
           Align = alClient
           BorderSpacing.Around = 3
           DefaultNodeHeight = 20

@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ActnList,
   ComCtrls, Menus, BCMDButtonFocus, BCPanel, ECTabCtrl, laz.VirtualTrees,
-  StdCtrls, Buttons, Math, sqldb, StrUtils, DateUtils, LazUTF8, IniFiles;
+  StdCtrls, Buttons, Math, sqldb, StrUtils, DateUtils, LazUTF8;
 
 type // left grid (Budgets)
   TBudgets = record
@@ -134,7 +134,6 @@ type
     procedure actPeriodDeleteExecute(Sender: TObject);
     procedure btnCopyClick(Sender: TObject);
     procedure btnSettingsClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure pnlBottom1Resize(Sender: TObject);
     procedure pnlBottom2Resize(Sender: TObject);
     procedure pnlBudgetsResize(Sender: TObject);
@@ -193,8 +192,8 @@ type
       const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       TextType: TVSTTextType);
     procedure VSTPeriodsChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
-    procedure VSTPeriodsCompareNodes(Sender: TBaseVirtualTree; Node1,
-      Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
+    procedure VSTPeriodsCompareNodes(Sender: TBaseVirtualTree;
+      Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: integer);
     procedure VSTPeriodsDblClick(Sender: TObject);
     procedure VSTPeriodsGetNodeDataSize(Sender: TBaseVirtualTree;
       var NodeDataSize: integer);
@@ -419,10 +418,10 @@ begin
 
   if frmBudgets.VSTPeriods.SelectedCount > 0 then
   begin
-     frmMain.QRY.SQL.Text :=
+    frmMain.QRY.SQL.Text :=
       'SELECT DISTINCT acc_currency FROM data ' + // select
       'LEFT JOIN accounts ON (acc_id = d_account);'; // accounts
-     frmMain.QRY.Open;
+    frmMain.QRY.Open;
 
     I := 0;
 
@@ -451,16 +450,18 @@ begin
   lblItemsBudCat.Caption := IntToStr(VSTBudCat.RootNodeCount);
 end;
 
-procedure TfrmBudgets.VSTPeriodsCompareNodes(Sender: TBaseVirtualTree; Node1,
-  Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
+procedure TfrmBudgets.VSTPeriodsCompareNodes(Sender: TBaseVirtualTree;
+  Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: integer);
 var
   Data1, Data2: PPeriods;
 begin
   Data1 := Sender.GetNodeData(Node1);
   Data2 := Sender.GetNodeData(Node2);
   case Column of
-    1: Result := UTF8CompareText(AnsiLowerCase(Data1.DateFrom), AnsiLowerCase(Data2.DateFrom));
-    2: Result := UTF8CompareText(AnsiLowerCase(Data1.DateTo), AnsiLowerCase(Data2.DateTo));
+    1: Result := UTF8CompareText(AnsiLowerCase(Data1.DateFrom),
+        AnsiLowerCase(Data2.DateFrom));
+    2: Result := UTF8CompareText(AnsiLowerCase(Data1.DateTo),
+        AnsiLowerCase(Data2.DateTo));
   end;
 end;
 
@@ -487,9 +488,10 @@ begin
   Periods := VSTPeriods.GetNodeData(Node);
 
   case Column of
-    0: If VSTPeriods.Header.SortDirection = sdAscending then
-      CellText := IntToStr(Node.Index + 1)
-      Else CellText := IntToStr(VSTPeriods.TotalCount - Node.Index);
+    0: if VSTPeriods.Header.SortDirection = sdAscending then
+        CellText := IntToStr(Node.Index + 1)
+      else
+        CellText := IntToStr(VSTPeriods.TotalCount - Node.Index);
     1: CellText := DateToStr(StrToDate(Periods.DateFrom, 'YYYY-MM-DD', '-'));
     2: CellText := DateToStr(StrToDate(Periods.DateTo, 'YYYY-MM-DD', '-'));
   end;
@@ -845,35 +847,6 @@ begin
   frmSettings.ShowModal;
 end;
 
-procedure TfrmBudgets.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-begin
-  // write position and window size
-  if frmSettings.chkLastFormsSize.Checked = True then
-  begin
-    try
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmBudgets.Name, '') <>
-        IntToStr(frmBudgets.Left) + separ + // form left
-      IntToStr(frmBudgets.Top) + separ + // form top
-      IntToStr(frmBudgets.Width) + separ + // form width
-      IntToStr(frmBudgets.Height) + separ + // form height
-      IntToStr(frmBudgets.tabLeft.Width) then
-        INI.WriteString('POSITION', frmBudgets.Name,
-          IntToStr(frmBudgets.Left) + separ + // form left
-          IntToStr(frmBudgets.Top) + separ + // form top
-          IntToStr(frmBudgets.Width) + separ + // form width
-          IntToStr(frmBudgets.Height) + separ + // form height
-          IntToStr(frmBudgets.tabLeft.Width)); // tabLeft width
-    finally
-      INI.Free;
-    end;
-  end;
-end;
-
 procedure TfrmBudgets.pnlBottom1Resize(Sender: TObject);
 begin
   pnlItemsBudgets.Width := pnlBottom1.Width div 2;
@@ -1120,65 +1093,7 @@ begin
 end;
 
 procedure TfrmBudgets.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmBudgets.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmBudgets.Name, '-1•-1•0•0•200');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmBudgets.Width := Screen.Width - 300 - (200 - ScreenRatio)
-      else
-        frmBudgets.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmBudgets.Height := Screen.Height - 400 - (200 - ScreenRatio)
-      else
-        frmBudgets.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmBudgets.left := (Screen.Width - frmBudgets.Width) div 2
-      else
-        frmBudgets.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmBudgets.Top := ((Screen.Height - frmBudgets.Height) div 2) - 75
-      else
-        frmBudgets.Top := I;
-
-      // left panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 250) or (I > 400) then
-        frmBudgets.tabLeft.Width := 300
-      else
-        frmBudgets.tabLeft.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   btnBudgetAdd.Enabled := frmMain.Conn.Connected = True;
   popBudgetAdd.Enabled := frmMain.Conn.Connected = True;
   popPeriodAdd.Enabled := (frmMain.Conn.Connected = True) and

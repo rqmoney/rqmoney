@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   Clipbrd, ExtCtrls, ComCtrls, Buttons, Menus, ActnList, BCPanel,
-  BCMDButtonFocus, LazUTF8, laz.VirtualTrees, StrUtils, Math, IniFiles;
+  BCMDButtonFocus, LazUTF8, laz.VirtualTrees, StrUtils, Math;
 
 type
   TPayee = record
@@ -761,10 +761,6 @@ begin
 end;
 
 procedure TfrmPayees.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-
 begin
   try
     if pnlButton.Visible = True then
@@ -772,29 +768,6 @@ begin
       btnCancelClick(btnCancel);
       CloseAction := Forms.caNone;
       Exit;
-    end;
-
-    // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmPayees.Name, '') <>
-          IntToStr(frmPayees.Left) + separ + // form left
-        IntToStr(frmPayees.Top) + separ + // form top
-        IntToStr(frmPayees.Width) + separ + // form width
-        IntToStr(frmPayees.Height) + separ + // form height
-        IntToStr(frmPayees.pnlDetail.Width) then
-          INI.WriteString('POSITION', frmPayees.Name,
-            IntToStr(frmPayees.Left) + separ + // form left
-            IntToStr(frmPayees.Top) + separ + // form top
-            IntToStr(frmPayees.Width) + separ + // form width
-            IntToStr(frmPayees.Height) + separ + // form height
-            IntToStr(frmPayees.pnlDetail.Width));
-      finally
-        INI.Free;
-      end;
     end;
   except
     on E: Exception do
@@ -816,65 +789,7 @@ begin
 end;
 
 procedure TfrmPayees.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmPayees.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmPayees.Name, '-1•-1•0•0•200');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmPayees.Width := Screen.Width - 600 - (200 - ScreenRatio)
-      else
-        frmPayees.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmPayees.Height := Screen.Height - 400 - (200 - ScreenRatio)
-      else
-        frmPayees.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmPayees.left := (Screen.Width - frmPayees.Width) div 2
-      else
-        frmPayees.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmPayees.Top := ((Screen.Height - frmPayees.Height) div 2) - 75
-      else
-        frmPayees.Top := I;
-
-      // detail panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 150) or (I > 350) then
-        frmPayees.pnlDetail.Width := 220
-      else
-        frmPayees.pnlDetail.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;

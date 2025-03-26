@@ -1,7 +1,7 @@
 object frmComments: TfrmComments
-  Left = 302
+  Left = 465
   Height = 482
-  Top = 50
+  Top = 296
   Width = 650
   ClientHeight = 482
   ClientWidth = 650
@@ -12,7 +12,7 @@ object frmComments: TfrmComments
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object splList: TSplitter
     Left = 415
@@ -489,7 +489,7 @@ object frmComments: TfrmComments
       Left = 0
       Height = 13
       Top = 1
-      Width = 0
+      Width = 1
       Animation = True
       StyleNormal.Color = clWhite
       StyleNormal.TextColor = clBlack

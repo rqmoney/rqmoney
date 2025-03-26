@@ -1,19 +1,18 @@
 object frmBudgets: TfrmBudgets
-  Left = 385
+  Left = 407
   Height = 542
-  Top = 225
+  Top = 334
   Width = 1088
   BorderIcons = [biSystemMenu, biMaximize]
   ClientHeight = 542
   ClientWidth = 1088
   Constraints.MinHeight = 400
   Constraints.MinWidth = 600
-  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.2.0.0'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlCategories: TPanel
     Left = 316
@@ -424,37 +423,37 @@ object frmBudgets: TfrmBudgets
     Height = 536
     Top = 3
     Width = 300
-    ActivePage = tabPeriods
+    ActivePage = tabBudgets
     Align = alLeft
     BorderSpacing.Around = 3
     Constraints.MaxWidth = 400
     Constraints.MinWidth = 250
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 2
     OnChange = tabLeftChange
     OnResize = tabLeftResize
     object tabBudgets: TTabSheet
-      ClientHeight = 508
-      ClientWidth = 292
+      ClientHeight = 506
+      ClientWidth = 290
       object pnlBudgets: TPanel
         Left = 5
-        Height = 474
+        Height = 472
         Top = 5
-        Width = 282
+        Width = 280
         Align = alClient
         BorderSpacing.Around = 5
         BevelOuter = bvLowered
-        ClientHeight = 474
-        ClientWidth = 282
+        ClientHeight = 472
+        ClientWidth = 280
         Constraints.MinHeight = 150
         TabOrder = 0
         OnResize = pnlBudgetsResize
         object VSTBudgets: TLazVirtualStringTree
           Cursor = 63
           Left = 4
-          Height = 358
+          Height = 356
           Top = 4
-          Width = 274
+          Width = 272
           Align = alClient
           BorderSpacing.Around = 3
           Header.AutoSizeIndex = 1
@@ -509,8 +508,8 @@ object frmBudgets: TfrmBudgets
           Cursor = crHandPoint
           Left = 5
           Height = 25
-          Top = 365
-          Width = 272
+          Top = 363
+          Width = 270
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -540,8 +539,8 @@ object frmBudgets: TfrmBudgets
           Cursor = crHandPoint
           Left = 5
           Height = 25
-          Top = 392
-          Width = 272
+          Top = 390
+          Width = 270
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -572,8 +571,8 @@ object frmBudgets: TfrmBudgets
           Cursor = crHandPoint
           Left = 5
           Height = 25
-          Top = 419
-          Width = 272
+          Top = 417
+          Width = 270
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -604,8 +603,8 @@ object frmBudgets: TfrmBudgets
           Cursor = crHandPoint
           Left = 5
           Height = 25
-          Top = 446
-          Width = 272
+          Top = 444
+          Width = 270
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -636,12 +635,12 @@ object frmBudgets: TfrmBudgets
       object pnlBottom1: TPanel
         Left = 0
         Height = 24
-        Top = 484
-        Width = 292
+        Top = 482
+        Width = 290
         Align = alBottom
         BorderSpacing.Top = 3
         ClientHeight = 24
-        ClientWidth = 292
+        ClientWidth = 290
         ParentFont = False
         TabOrder = 1
         OnResize = pnlBottom1Resize
@@ -687,12 +686,12 @@ object frmBudgets: TfrmBudgets
           Left = 123
           Height = 20
           Top = 2
-          Width = 167
+          Width = 165
           Align = alClient
           BorderSpacing.Around = 1
           BevelOuter = bvLowered
           ClientHeight = 20
-          ClientWidth = 167
+          ClientWidth = 165
           ParentFont = False
           TabOrder = 1
           object imgItemsBudgets: TImage
@@ -712,7 +711,7 @@ object frmBudgets: TfrmBudgets
             Left = 22
             Height = 16
             Top = 2
-            Width = 143
+            Width = 141
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -724,25 +723,25 @@ object frmBudgets: TfrmBudgets
       end
     end
     object tabPeriods: TTabSheet
-      ClientHeight = 508
-      ClientWidth = 292
+      ClientHeight = 506
+      ClientWidth = 290
       object pnlPeriods: TPanel
         Left = 5
-        Height = 474
+        Height = 472
         Top = 5
-        Width = 282
+        Width = 280
         Align = alClient
         BorderSpacing.Around = 5
         BevelOuter = bvLowered
-        ClientHeight = 474
-        ClientWidth = 282
+        ClientHeight = 472
+        ClientWidth = 280
         TabOrder = 0
         object VSTPeriods: TLazVirtualStringTree
           Cursor = 63
           Left = 4
-          Height = 337
+          Height = 335
           Top = 25
-          Width = 274
+          Width = 272
           Align = alClient
           BorderSpacing.Around = 3
           Colors.UnfocusedSelectionColor = clHighlight
@@ -795,8 +794,8 @@ object frmBudgets: TfrmBudgets
           Cursor = crHandPoint
           Left = 5
           Height = 25
-          Top = 365
-          Width = 272
+          Top = 363
+          Width = 270
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -827,8 +826,8 @@ object frmBudgets: TfrmBudgets
           Cursor = crHandPoint
           Left = 5
           Height = 25
-          Top = 392
-          Width = 272
+          Top = 390
+          Width = 270
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -859,8 +858,8 @@ object frmBudgets: TfrmBudgets
           Cursor = crHandPoint
           Left = 5
           Height = 25
-          Top = 419
-          Width = 272
+          Top = 417
+          Width = 270
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -891,8 +890,8 @@ object frmBudgets: TfrmBudgets
           Cursor = crHandPoint
           Left = 5
           Height = 25
-          Top = 446
-          Width = 272
+          Top = 444
+          Width = 270
           Animation = True
           StyleNormal.Color = clWhite
           StyleNormal.TextColor = clBlack
@@ -923,7 +922,7 @@ object frmBudgets: TfrmBudgets
           Left = 4
           Height = 20
           Top = 2
-          Width = 274
+          Width = 272
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
@@ -967,12 +966,12 @@ object frmBudgets: TfrmBudgets
       object pnlBottom2: TPanel
         Left = 0
         Height = 24
-        Top = 484
-        Width = 292
+        Top = 482
+        Width = 290
         Align = alBottom
         BorderSpacing.Top = 3
         ClientHeight = 24
-        ClientWidth = 292
+        ClientWidth = 290
         ParentFont = False
         TabOrder = 1
         OnResize = pnlBottom2Resize
@@ -1019,12 +1018,12 @@ object frmBudgets: TfrmBudgets
           Left = 123
           Height = 20
           Top = 2
-          Width = 167
+          Width = 165
           Align = alClient
           BorderSpacing.Around = 1
           BevelOuter = bvLowered
           ClientHeight = 20
-          ClientWidth = 167
+          ClientWidth = 165
           ParentFont = False
           TabOrder = 1
           object imgItemsPeriods: TImage
@@ -1044,7 +1043,7 @@ object frmBudgets: TfrmBudgets
             Left = 22
             Height = 16
             Top = 2
-            Width = 143
+            Width = 141
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -1057,29 +1056,29 @@ object frmBudgets: TfrmBudgets
       end
     end
     object tabLegend: TTabSheet
-      ClientHeight = 508
-      ClientWidth = 292
+      ClientHeight = 506
+      ClientWidth = 290
       object Panel1: TPanel
         Left = 5
-        Height = 498
+        Height = 496
         Top = 5
-        Width = 282
+        Width = 280
         Align = alClient
         BorderSpacing.Around = 5
         BevelOuter = bvNone
-        ClientHeight = 498
-        ClientWidth = 282
+        ClientHeight = 496
+        ClientWidth = 280
         TabOrder = 0
         object pnlPlan: TPanel
           Left = 5
           Height = 22
           Top = 5
-          Width = 272
+          Width = 270
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 5
           ClientHeight = 22
-          ClientWidth = 272
+          ClientWidth = 270
           TabOrder = 0
           object imgPlan: TImage
             Left = 3
@@ -1096,7 +1095,7 @@ object frmBudgets: TfrmBudgets
             Left = 29
             Height = 20
             Top = 1
-            Width = 242
+            Width = 240
             Align = alClient
             BorderSpacing.Left = 10
             TabOrder = 0
@@ -1106,12 +1105,12 @@ object frmBudgets: TfrmBudgets
           Left = 5
           Height = 22
           Top = 32
-          Width = 272
+          Width = 270
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 5
           ClientHeight = 22
-          ClientWidth = 272
+          ClientWidth = 270
           TabOrder = 1
           object imgReality: TImage
             Left = 3
@@ -1129,7 +1128,7 @@ object frmBudgets: TfrmBudgets
             Left = 29
             Height = 20
             Top = 1
-            Width = 242
+            Width = 240
             Align = alClient
             BorderSpacing.Left = 10
             TabOrder = 0
@@ -1139,12 +1138,12 @@ object frmBudgets: TfrmBudgets
           Left = 5
           Height = 22
           Top = 59
-          Width = 272
+          Width = 270
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 5
           ClientHeight = 22
-          ClientWidth = 272
+          ClientWidth = 270
           TabOrder = 2
           object imgDifference: TImage
             Left = 3
@@ -1162,7 +1161,7 @@ object frmBudgets: TfrmBudgets
             Left = 29
             Height = 20
             Top = 1
-            Width = 242
+            Width = 240
             Align = alClient
             BorderSpacing.Left = 10
             TabOrder = 0
@@ -1172,12 +1171,12 @@ object frmBudgets: TfrmBudgets
           Left = 5
           Height = 22
           Top = 86
-          Width = 272
+          Width = 270
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 5
           ClientHeight = 22
-          ClientWidth = 272
+          ClientWidth = 270
           TabOrder = 3
           object imgIndex: TImage
             Left = 3
@@ -1195,7 +1194,7 @@ object frmBudgets: TfrmBudgets
             Left = 29
             Height = 20
             Top = 1
-            Width = 242
+            Width = 240
             Align = alClient
             BorderSpacing.Left = 10
             TabOrder = 0

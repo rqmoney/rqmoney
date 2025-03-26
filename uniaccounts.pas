@@ -7,7 +7,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ComCtrls, ExtCtrls, Buttons, Menus, StrUtils, Math, LCLProc, LazUTF8, IniFiles,
+  ComCtrls, ExtCtrls, Buttons, Menus, StrUtils, Math, LCLProc, LazUTF8,
   laz.VirtualTrees, DateTimePicker, Clipbrd, ActnList, Spin, BCPanel,
   BCMDButtonFocus, Variants, DateUtils;
 
@@ -118,7 +118,6 @@ type
     procedure cbxCurrencyKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxStatusKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure datDateChange(Sender: TObject);
-    procedure datDateEnter(Sender: TObject);
     procedure datDateKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure lblDate1Click(Sender: TObject);
     procedure spiAmountKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -532,11 +531,6 @@ begin
   lblDate1.Caption := DefaultFormatSettings.LongDayNames[DayOfTheWeek(datDate.Date + 1)];
 end;
 
-procedure TfrmAccounts.datDateEnter(Sender: TObject);
-begin
-
-end;
-
 procedure TfrmAccounts.datDateKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
   try
@@ -758,19 +752,21 @@ var
   X: integer;
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
+  try
+    (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+      round(ScreenRatio / 100 * 25);
+    X := (VST.Width - VST.Header.Columns[0].Width) div 100;
 
-  (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
-    round(ScreenRatio / 100 * 25);
-  X := (VST.Width - VST.Header.Columns[0].Width) div 100;
-
-  VST.Header.Columns[1].Width := 27 * X; // name
-  VST.Header.Columns[2].Width := 8 * X; // currency
-  VST.Header.Columns[3].Width := 14 * X; // starting balance
-  VST.Header.Columns[4].Width := 13 * X; // date
-  VST.Header.Columns[5].Width :=
-    VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (81 * x); // comment
-  VST.Header.Columns[6].Width := 12 * X; // status
-  VST.Header.Columns[7].Width := 7 * X; // ID
+    VST.Header.Columns[1].Width := 27 * X; // name
+    VST.Header.Columns[2].Width := 8 * X; // currency
+    VST.Header.Columns[3].Width := 14 * X; // starting balance
+    VST.Header.Columns[4].Width := 13 * X; // date
+    VST.Header.Columns[5].Width :=
+      VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (81 * x); // comment
+    VST.Header.Columns[6].Width := 12 * X; // status
+    VST.Header.Columns[7].Width := 7 * X; // ID
+  except
+  end;
 end;
 
 procedure TfrmAccounts.ediNameChange(Sender: TObject);
@@ -842,9 +838,6 @@ begin
 end;
 
 procedure TfrmAccounts.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
 begin
   try
     if pnlButton.Visible = True then
@@ -852,29 +845,6 @@ begin
       btnCancelClick(btnCancel);
       CloseAction := Forms.caNone;
       Exit;
-    end;
-
-    // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmAccounts.Name, '') <>
-          IntToStr(frmAccounts.Left) + separ + // form left
-        IntToStr(frmAccounts.Top) + separ + // form top
-        IntToStr(frmAccounts.Width) + separ + // form width
-        IntToStr(frmAccounts.Height) + separ + // form height
-        IntToStr(frmAccounts.pnlDetail.Width) then
-          INI.WriteString('POSITION', frmAccounts.Name,
-            IntToStr(frmAccounts.Left) + separ + // form left
-            IntToStr(frmAccounts.Top) + separ + // form top
-            IntToStr(frmAccounts.Width) + separ + // form width
-            IntToStr(frmAccounts.Height) + separ + // form height
-            IntToStr(frmAccounts.pnlDetail.Width));
-      finally
-        INI.Free;
-      end;
     end;
   except
     on E: Exception do
@@ -901,65 +871,7 @@ begin
 end;
 
 procedure TfrmAccounts.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmAccounts.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmAccounts.Name, '-1•-1•0•0•200');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmAccounts.Width := Screen.Width - 300 - (200 - ScreenRatio)
-      else
-        frmAccounts.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmAccounts.Height := Screen.Height - 400 - (200 - ScreenRatio)
-      else
-        frmAccounts.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmAccounts.left := (Screen.Width - frmAccounts.Width) div 2
-      else
-        frmAccounts.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmAccounts.Top := ((Screen.Height - frmAccounts.Height) div 2) - 75
-      else
-        frmAccounts.Top := I;
-
-      // detail panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 100) or (I > 300) then
-        frmAccounts.pnlDetail.Width := 220
-      else
-        frmAccounts.pnlDetail.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   try
     // btnAdd
     btnAdd.Enabled := frmMain.Conn.Connected = True;

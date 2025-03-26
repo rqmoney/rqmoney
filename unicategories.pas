@@ -9,7 +9,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   ComCtrls, ExtCtrls, Buttons, Menus, StrUtils, Math, DB, sqldb, LCLProc,
   LCLType, DBGrids, DBCtrls, LazUTF8, laz.VirtualTrees, Clipbrd, ActnList,
-  BCPanel, BCMDButtonFocus, Variants, IniFiles;
+  BCPanel, BCMDButtonFocus, Variants;
 
 type
   TCategory = record
@@ -20,6 +20,7 @@ type
     Parent_name: string;
     Time: string;
     Kind: integer;
+    Energy: integer;
     ID: integer;
   end;
   PCategory = ^TCategory;
@@ -53,6 +54,7 @@ type
     btnSave: TBCMDButtonFocus;
     btnSelect: TBCMDButtonFocus;
     btnStatusInfo: TImage;
+    cbxEnergy: TComboBox;
     cbxStatus: TComboBox;
     cbxType: TComboBox;
     cbxTo: TComboBox;
@@ -64,6 +66,7 @@ type
     imgItem: TImage;
     imgItems: TImage;
     imgWidth: TImage;
+    lblEnergy: TLabel;
     lblHeight: TLabel;
     lblItem: TLabel;
     lblItems: TLabel;
@@ -74,6 +77,7 @@ type
     lblType: TLabel;
     lblWidth: TLabel;
     memComment: TMemo;
+    pnlEnergy: TPanel;
     pnlTip: TPanel;
     pnlKind: TPanel;
     popExpandOne: TMenuItem;
@@ -115,6 +119,7 @@ type
     procedure btnPrintMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure btnSelectClick(Sender: TObject);
+    procedure cbxEnergyKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxKindKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxStatusKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbxToKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -267,6 +272,9 @@ begin
         lblTo.Caption := '';
       end;
     end;
+
+    // cbxenergy
+    cbxEnergy.ItemIndex := 1;
 
     // disabled ActionList
     actAdd.Enabled := False;
@@ -478,6 +486,7 @@ begin
       cbxStatus.ItemIndex := -1;
       memComment.Clear;
       cbxKind.ItemIndex := 0;
+      cbxEnergy.ItemIndex := -1;
       Exit;
     end;
 
@@ -496,6 +505,7 @@ begin
         cbxKind.ItemIndex := StrToInt(VST.Text[VST.GetFirstSelected(), 7])
       else
         cbxKind.ItemIndex := StrToInt(VST.Text[VST.GetFirstSelected().Parent, 7]);
+      cbxEnergy.ItemIndex := StrToInt(VST.Text[VST.GetFirstSelected(), 8]);
     end;
   except
     on E: Exception do
@@ -563,6 +573,7 @@ begin
       5: CellText := IntToStr(Category.Parent_ID);
       6: CellText := Category.Parent_name;
       7: CellText := IntToStr(Category.Kind);
+      8: CellText := IntToStr(Category.Energy);
     end;
   except
     on E: Exception do
@@ -780,12 +791,21 @@ begin
   VST.SetFocus;
 end;
 
-procedure TfrmCategories.cbxKindKeyUp(Sender: TObject; var Key: word;
+procedure TfrmCategories.cbxEnergyKeyUp(Sender: TObject; var Key: word;
   Shift: TShiftState);
 begin
   if (Key = 13) then
   begin
     memComment.SetFocus;
+  end;
+end;
+
+procedure TfrmCategories.cbxKindKeyUp(Sender: TObject; var Key: word;
+  Shift: TShiftState);
+begin
+  if (Key = 13) then
+  begin
+    cbxEnergy.SetFocus;
   end;
 end;
 
@@ -795,6 +815,9 @@ begin
   begin
     if cbxKind.Enabled = True then
       cbxKind.SetFocus
+    else
+      if cbxEnergy.Enabled = True then
+      cbxEnergy.SetFocus
     else
       memComment.SetFocus;
   end;
@@ -916,13 +939,15 @@ begin
     begin
       if (cbxType.ItemIndex = 0) then
         frmMain.QRY.SQL.Text :=
-          'INSERT OR IGNORE INTO categories (cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment, cat_type) VALUES '
-          + '(:NAME, 0, :PARENTNAME, :STATUS, :COMMENT, :TYPE);'
+          'INSERT OR IGNORE INTO categories ' +
+          '(cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment, cat_type, cat_energy) VALUES '
+          + '(:NAME, 0, :PARENTNAME, :STATUS, :COMMENT, :TYPE, :ENERGY);'
       else
         frmMain.QRY.SQL.Text :=
-          'INSERT OR IGNORE INTO categories (cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment, cat_type) VALUES '
-          + '(:NAME, (SELECT cat_id FROM categories WHERE cat_parent_ID = 0 AND cat_name = :CATEGORY), '
-          + ':PARENTNAME, :STATUS, :COMMENT, :TYPE);';
+          'INSERT OR IGNORE INTO categories ' +
+          '(cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment, cat_type, cat_energy) VALUES '
+          + '(:NAME, (SELECT cat_id FROM categories WHERE cat_parent_ID = 0 AND cat_parent_name = :CATEGORY), '
+          + ':PARENTNAME, :STATUS, :COMMENT, :TYPE, :ENERGY);';
     end
     else
     begin
@@ -932,11 +957,12 @@ begin
         'UPDATE OR IGNORE categories SET ' +                  // update
         'cat_name = :NAME, ' +                                // name
         'cat_parent_ID = ' + IfThen(cbxType.ItemIndex = 0, '0',
-        '(SELECT cat_id FROM categories WHERE cat_parent_ID = 0 AND cat_name = :CATEGORY)')
+        '(SELECT cat_id FROM categories WHERE cat_parent_ID = 0 AND cat_parent_name = :CATEGORY)')
         + ', cat_parent_name = :PARENTNAME, ' +                 // parent name
         'cat_status = :STATUS, ' +                           // status
         'cat_comment = :COMMENT, ' +                         // comment
-        'cat_type = :TYPE ' + // type (0 = all, 1 = credit, 2 = debit, 3 = transfer)
+        'cat_type = :TYPE, ' + // type (0 = all, 1 = credit, 2 = debit, 3 = transfer)
+        'cat_energy = :ENERGY ' + // energy
         'WHERE cat_id = :ID;';
 
       frmMain.QRY.Params.ParamByName('ID').AsInteger := VST.Tag;
@@ -949,6 +975,9 @@ begin
       frmMain.QRY.Params.ParamByName('CATEGORY').AsString :=
         cbxTo.Items[cbxTo.ItemIndex];
 
+    // energy
+    frmMain.QRY.Params.ParamByName('ENERGY').AsInteger := cbxEnergy.ItemIndex;
+
     // get parent ID
     if cbxType.ItemIndex = 0 then
       //      CategoryAdded := True;
@@ -959,7 +988,7 @@ begin
         AnsiUpperCase(cbxTo.Items[cbxTo.ItemIndex]);
     frmMain.QRY.Params.ParamByName('TYPE').AsInteger := cbxKind.ItemIndex;
 
-    //ShowMessage(frmmain.QRY.SQL.Text);
+    //ShowMessage(frmmain.QRY.SQL.Text + sLineBreak + sLineBreak + cbxTo.Items[cbxTo.ItemIndex]);
     frmMain.QRY.Prepare;
     frmMain.QRY.ExecSQL;
     frmMain.Tran.Commit;
@@ -1050,38 +1079,12 @@ begin
 end;
 
 procedure TfrmCategories.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
 begin
   if pnlButton.Visible = True then
   begin
     btnCancelClick(btnCancel);
     CloseAction := Forms.caNone;
     Exit;
-  end;
-
-  // write position and window size
-  if frmSettings.chkLastFormsSize.Checked = True then
-  begin
-    try
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmCategories.Name, '') <>
-        IntToStr(frmCategories.Left) + separ + // form left
-      IntToStr(frmCategories.Top) + separ +  // form top
-      IntToStr(frmCategories.Width) + separ + // form width
-      IntToStr(frmCategories.Height) + separ + // form height
-      IntToStr(frmCategories.pnlDetail.Width) then
-        INI.WriteString('POSITION', frmCategories.Name,
-          IntToStr(frmCategories.Left) + separ + // form left
-          IntToStr(frmCategories.Top) + separ +  // form top
-          IntToStr(frmCategories.Width) + separ + // form width
-          IntToStr(frmCategories.Height) + separ + // form height
-          IntToStr(frmCategories.pnlDetail.Width));
-    finally
-      INI.Free;
-    end;
   end;
 end;
 
@@ -1099,65 +1102,7 @@ begin
 end;
 
 procedure TfrmCategories.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmCategories.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmCategories.Name, '-1•-1•0•0•200');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmCategories.Width := Screen.Width - 400 - (200 - ScreenRatio)
-      else
-        frmCategories.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmCategories.Height := Screen.Height - 200 - (200 - ScreenRatio)
-      else
-        frmCategories.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmCategories.left := (Screen.Width - frmCategories.Width) div 2
-      else
-        frmCategories.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmCategories.Top := ((Screen.Height - frmCategories.Height) div 2) - 75
-      else
-        frmCategories.Top := I;
-
-      // detail panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 100) or (I > 300) then
-        frmCategories.pnlDetail.Width := 220
-      else
-        frmCategories.pnlDetail.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;
@@ -1207,6 +1152,7 @@ procedure UpdateCategories;
 var
   Category: PCategory;
   P, C: PVirtualNode;
+  Cat, Subcat: string;
 begin
   try
     // update list of all items
@@ -1220,7 +1166,7 @@ begin
     Screen.Cursor := crHourGlass;
     frmCategories.VST.BeginUpdate;
 
-    // GET SUBCATEGORIES ===========================================================================
+    // GET CATEGORIES ===========================================================================
     frmMain.QRY.SQL.Text := // query
       'SELECT ' + // select
       'cat_name,' + // category name
@@ -1230,7 +1176,8 @@ begin
       'cat_parent_name,' + // parent name
       'cat_time,' + // time
       'cat_id, ' + // id
-      'cat_type ' + // kind
+      'cat_type, ' + // kind
+      'cat_energy ' + // energy
       'FROM categories ' + // from
       'ORDER BY cat_parent_name, cat_parent_ID;';
     frmMain.QRY.Open;
@@ -1266,6 +1213,7 @@ begin
       Category.Time := frmMain.QRY.Fields[5].AsString;
       Category.ID := frmMain.QRY.Fields[6].AsInteger;
       Category.Kind := frmMain.QRY.Fields[7].AsInteger;
+      Category.Energy := frmMain.QRY.Fields[8].AsInteger;
       frmMain.QRY.Next;
     end;
     frmMain.QRY.Close;
@@ -1279,6 +1227,14 @@ begin
 
     // =============================================================================================
     // update list of categories in frmMain
+    Cat := '';
+    SubCat := '';
+
+    if frmMain.cbxCategory.ItemIndex > -1 then
+      Cat := frmMain.cbxCategory.Items[frmMain.cbxCategory.ItemIndex];
+    if frmMain.cbxSubcategory.ItemIndex > -1 then
+      Subcat := frmMain.cbxSubcategory.Items[frmMain.cbxSubcategory.ItemIndex];
+
     frmMain.cbxCategory.Clear;
 
     if (frmCategories.VST.RootNodeCount > 0) and
@@ -1290,8 +1246,22 @@ begin
           frmMain.cbxCategory.Items.Add(frmCategories.VST.Text[P, 1]);
 
     frmMain.cbxCategory.Items.Insert(0, '*');
-    frmMain.cbxCategory.ItemIndex := 0;
-    frmMain.cbxCategoryChange(frmMain.cbxCategory);
+
+    try
+      if Cat = '' then
+        frmMain.cbxCategory.ItemIndex := 0
+      else
+        frmMain.cbxCategory.ItemIndex := frmMain.cbxCategory.Items.IndexOf(Cat);
+      frmMain.cbxCategorySelect(frmMain.cbxCategory);
+
+      if SubCat = '' then
+        frmMain.cbxSubcategory.ItemIndex := 0
+      else
+        frmMain.cbxSubcategory.ItemIndex :=
+          frmMain.cbxSubcategory.Items.IndexOf(SubCat);
+      frmMain.cbxSubcategorySelect(frmMain.cbxSubcategory);
+    except
+    end;
 
     // =============================================================================================
     // items icon

@@ -7,7 +7,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Math, ExtCtrls, ComCtrls, Buttons, Menus, DBGrids, ActnList, IniFiles,
+  Math, ExtCtrls, ComCtrls, Buttons, Menus, DBGrids, ActnList,
   BCPanel, BCMDButtonFocus, LazUTF8, laz.VirtualTrees, StrUtils;
 
 type
@@ -606,10 +606,6 @@ begin
 end;
 
 procedure TfrmComments.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-
 begin
   try
     if pnlButton.Visible = True then
@@ -621,29 +617,6 @@ begin
   except
     on E: Exception do
       ShowErrorMessage(E);
-  end;
-
-  // write position and window size
-  if frmSettings.chkLastFormsSize.Checked = True then
-  begin
-    try
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmComments.Name,'') <>
-          IntToStr(frmComments.Left) + separ + // form left
-          IntToStr(frmComments.Top) + separ + // form top
-          IntToStr(frmComments.Width) + separ + // form width
-          IntToStr(frmComments.Height) + separ + // form height
-          IntToStr(frmComments.pnlDetail.Width) then
-        INI.WriteString('POSITION', frmComments.Name,
-          IntToStr(frmComments.Left) + separ + // form left
-          IntToStr(frmComments.Top) + separ + // form top
-          IntToStr(frmComments.Width) + separ + // form width
-          IntToStr(frmComments.Height) + separ + // form height
-          IntToStr(frmComments.pnlDetail.Width));
-    finally
-      INI.Free;
-    end;
   end;
 end;
 
@@ -680,65 +653,7 @@ begin
 end;
 
 procedure TfrmComments.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmComments.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmComments.Name, '-1•-1•0•0•250');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmComments.Width := Screen.Width - 500 - (200 - ScreenRatio)
-      else
-        frmComments.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmComments.Height := Screen.Height - 400 - (200 - ScreenRatio)
-      else
-        frmComments.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmComments.left := (Screen.Width - frmComments.Width) div 2
-      else
-        frmComments.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmComments.Top := ((Screen.Height - frmComments.Height) div 2) - 75
-      else
-        frmComments.Top := I;
-
-      // detail panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 150) or (I > 400) then
-        frmComments.pnlDetail.Width := 220
-      else
-        frmComments.pnlDetail.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;

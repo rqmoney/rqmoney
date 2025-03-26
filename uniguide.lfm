@@ -1,7 +1,7 @@
 object frmGuide: TfrmGuide
-  Left = 422
+  Left = 445
   Height = 400
-  Top = 119
+  Top = 228
   Width = 700
   BorderIcons = [biSystemMenu]
   ClientHeight = 400
@@ -9,13 +9,12 @@ object frmGuide: TfrmGuide
   Constraints.MinHeight = 400
   Constraints.MinWidth = 700
   KeyPreview = True
-  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.1'
+  LCLVersion = '3.4.0.0'
   object pnlBottom: TPanel
     Left = 5
     Height = 22
@@ -205,8 +204,8 @@ object frmGuide: TfrmGuide
     Height = 333
     Top = 5
     Width = 690
-    HorzScrollBar.Page = 85
-    VertScrollBar.Page = 92
+    HorzScrollBar.Page = 11
+    VertScrollBar.Page = 34
     Align = alClient
     AutoSize = True
     BorderSpacing.Around = 5
@@ -218,7 +217,7 @@ object frmGuide: TfrmGuide
       Height = 308
       Top = 23
       Width = 688
-      PageIndex = 5
+      PageIndex = 0
       Align = alClient
       TabOrder = 0
       TabStop = True

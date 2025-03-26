@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, ComCtrls, Buttons, Menus, CheckLst, Spin, ActnList, IniFiles,
+  ExtCtrls, ComCtrls, Buttons, Menus, CheckLst, Spin, ActnList,
   BCPanel, BCMDButtonFocus, LazUTF8, DateTimePicker, StrUtils, dateutils;
 
 type
@@ -138,7 +138,6 @@ type
     procedure datDateFromKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure datDateToChange(Sender: TObject);
     procedure datDateToKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure lblDateFrom1Click(Sender: TObject);
     procedure lblDateTo1Click(Sender: TObject);
     procedure pnlButtonsResize(Sender: TObject);
@@ -444,40 +443,6 @@ begin
   end;
 end;
 
-procedure TfrmScheduler.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-begin
-  try
-    // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmScheduler.Name, '') <>
-          IntToStr(frmScheduler.Left) + separ + // form left
-        IntToStr(frmScheduler.Top) + separ + // form top
-        IntToStr(frmScheduler.Width) + separ + // form width
-        IntToStr(frmScheduler.Height) + separ + // form height
-        IntToStr(frmScheduler.pnlRight.Width) then
-          INI.WriteString('POSITION', frmScheduler.Name,
-            IntToStr(frmScheduler.Left) + separ + // form left
-            IntToStr(frmScheduler.Top) + separ + // form top
-            IntToStr(frmScheduler.Width) + separ + // form width
-            IntToStr(frmScheduler.Height) + separ + // form height
-            IntToStr(frmScheduler.pnlRight.Width));
-      finally
-        INI.Free;
-      end;
-    end;
-  except
-    on E: Exception do
-      ShowErrorMessage(E);
-  end;
-end;
-
 procedure TfrmScheduler.lblDateFrom1Click(Sender: TObject);
 begin
   datDateFrom.SetFocus;
@@ -684,65 +649,7 @@ begin
 end;
 
 procedure TfrmScheduler.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmScheduler.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmScheduler.Name, '-1•-1•0•0•220');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmScheduler.Width := Screen.Width div 3
-      else
-        frmScheduler.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmScheduler.Height := Screen.Height - 300 - (200 - ScreenRatio)
-      else
-        frmScheduler.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmScheduler.left := (Screen.Width - frmScheduler.Width) div 2
-      else
-        frmScheduler.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmScheduler.Top := ((Screen.Height - frmScheduler.Height) div 2) - 75
-      else
-        frmScheduler.Top := I;
-
-      // detail panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 100) or (I > 300) then
-        frmScheduler.pnlRight.Width := 220
-      else
-        frmScheduler.pnlRight.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   lblDateFrom1.Caption := FS_own.ShortDayNames[DayOfTheWeek(datDateFrom.Date + 1)];
   lblDateTo1.Caption := FS_own.ShortDayNames[DayOfTheWeek(datDateTo.Date + 1)];
   cbxPeriodicity.SetFocus;

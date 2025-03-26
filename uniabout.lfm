@@ -8,11 +8,11 @@ object frmAbout: TfrmAbout
   ClientWidth = 400
   Constraints.MinHeight = 400
   Constraints.MinWidth = 400
+  Position = poScreenCenter
+  LCLVersion = '4.0.0.2'
+  Scaled = False
   OnCreate = FormCreate
   OnResize = FormResize
-  Position = poScreenCenter
-  LCLVersion = '3.2.0.0'
-  Scaled = False
   object tabAbout: TPageControl
     Left = 5
     Height = 328
@@ -506,7 +506,6 @@ object frmAbout: TfrmAbout
         BorderSpacing.Around = 5
         Center = True
         Constraints.MaxHeight = 48
-        OnClick = imgDonateClick
         ParentShowHint = False
         Picture.Data = {
           1754506F727461626C654E6574776F726B47726170686963A625000089504E47
@@ -815,6 +814,7 @@ object frmAbout: TfrmAbout
         }
         Proportional = True
         ShowHint = True
+        OnClick = imgDonateClick
       end
     end
   end
@@ -978,8 +978,8 @@ object frmAbout: TfrmAbout
     Left = 216
     Top = 16
     object actExit: TAction
-      OnExecute = btnExitClick
       ShortCut = 27
+      OnExecute = btnExitClick
     end
   end
 end

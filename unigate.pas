@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, BCPanel, BCMDButtonFocus, IniFiles;
+  ExtCtrls, BCPanel, BCMDButtonFocus;
 
 type
 
@@ -52,7 +52,6 @@ type
     procedure ediGateExit(Sender: TObject);
     procedure ediGateKeyPress(Sender: TObject; var Key: char);
     procedure ediGateKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
@@ -70,7 +69,7 @@ var
 implementation
 
 uses
-  uniMain, uniSettings;
+  uniMain;
 
   {$R *.lfm}
 
@@ -97,58 +96,7 @@ begin
 end;
 
 procedure TfrmGate.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmGate.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmGate.Name, '-1•-1•0•0');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmGate.Width := Round(500 * (ScreenRatio / 100))
-      else
-        frmGate.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmGate.Height := Round(300 * (ScreenRatio / 100))
-      else
-        frmGate.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmGate.left := (Screen.Width - frmGate.Width) div 2
-      else
-        frmGate.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmGate.Top := ((Screen.Height - frmGate.Height) div 2) - 75
-      else
-        frmGate.Top := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   ediGate.Clear;
   btnOK.Enabled := False;
   ediGate.SetFocus;
@@ -156,17 +104,20 @@ end;
 
 procedure TfrmGate.pnlNumericResize(Sender: TObject);
 begin
-  btn0.Width := (Panel1.Width - 8) div 3;
-  btn1.Width := btn0.Width;
-  btn4.Width := btn0.Width;
-  btn7.Width := btn0.Width;
-  btn9.Width := btn0.Width;
-  btn6.Width := btn0.Width;
-  btn3.Width := btn0.Width;
+  try
+    btn0.Width := (Panel1.Width - 8) div 3;
+    btn1.Width := btn0.Width;
+    btn4.Width := btn0.Width;
+    btn7.Width := btn0.Width;
+    btn9.Width := btn0.Width;
+    btn6.Width := btn0.Width;
+    btn3.Width := btn0.Width;
 
-  Panel1.Height := (pnlNumeric.Height - 15) div 4;
-  Panel5.Height := Panel1.Height;
-  Panel9.Height := Panel1.Height;
+    Panel1.Height := (pnlNumeric.Height - 15) div 4;
+    Panel5.Height := Panel1.Height;
+    Panel9.Height := Panel1.Height;
+  except
+  end;
 end;
 
 procedure TfrmGate.FormCreate(Sender: TObject);
@@ -242,33 +193,6 @@ end;
 procedure TfrmGate.ediGateKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
   btnOK.Enabled := Length(ediGate.Text) > 4;
-end;
-
-procedure TfrmGate.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-begin
-  // write position and window size
-  if frmSettings.chkLastFormsSize.Checked = True then
-  begin
-    try
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmGate.Name, '') <>
-        IntToStr(frmGate.Left) + separ + // form left
-      IntToStr(frmGate.Top) + separ + // form top
-      IntToStr(frmGate.Width) + separ + // form width
-      IntToStr(frmGate.Height) then
-        INI.WriteString('POSITION', frmGate.Name,
-          IntToStr(frmGate.Left) + separ + // form left
-          IntToStr(frmGate.Top) + separ + // form top
-          IntToStr(frmGate.Width) + separ + // form width
-          IntToStr(frmGate.Height));
-    finally
-      INI.Free;
-    end;
-  end;
 end;
 
 end.

@@ -1,7 +1,7 @@
 object frmHolidays: TfrmHolidays
-  Left = 413
+  Left = 435
   Height = 501
-  Top = 166
+  Top = 276
   Width = 800
   ClientHeight = 501
   ClientWidth = 800
@@ -12,7 +12,7 @@ object frmHolidays: TfrmHolidays
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object splList: TSplitter
     Left = 565
@@ -204,13 +204,13 @@ object frmHolidays: TfrmHolidays
     TabOrder = 1
     object pnlName: TPanel
       Left = 4
-      Height = 133
-      Top = 276
+      Height = 128
+      Top = 281
       Width = 212
       Align = alClient
       AutoSize = True
       BorderSpacing.Around = 3
-      ClientHeight = 133
+      ClientHeight = 128
       ClientWidth = 212
       TabOrder = 2
       object lblName: TLabel
@@ -229,7 +229,7 @@ object frmHolidays: TfrmHolidays
       object memComment: TMemo
         Tag = 1
         Left = 3
-        Height = 126
+        Height = 121
         Top = 4
         Width = 206
         Align = alClient
@@ -247,14 +247,14 @@ object frmHolidays: TfrmHolidays
     end
     object pnlDay: TPanel
       Left = 4
-      Height = 30
+      Height = 35
       Top = 24
       Width = 212
       Align = alTop
       AutoSize = True
       BorderSpacing.Bottom = 3
       BorderSpacing.Around = 3
-      ClientHeight = 30
+      ClientHeight = 35
       ClientWidth = 212
       TabOrder = 0
       object lblDay: TLabel
@@ -273,7 +273,7 @@ object frmHolidays: TfrmHolidays
       object spiDay: TSpinEditEx
         Cursor = crHandPoint
         Left = 3
-        Height = 23
+        Height = 28
         Top = 4
         Width = 206
         Align = alTop
@@ -296,7 +296,7 @@ object frmHolidays: TfrmHolidays
     object pnlMonth: TPanel
       Left = 4
       Height = 210
-      Top = 60
+      Top = 65
       Width = 212
       Align = alTop
       BorderSpacing.Bottom = 3
@@ -329,6 +329,7 @@ object frmHolidays: TfrmHolidays
         Columns = 2
         ItemHeight = 0
         TabOrder = 0
+        TopIndex = -1
         OnEnter = lbxMonthEnter
         OnExit = lbxMonthExit
         OnKeyUp = lbxMonthKeyUp

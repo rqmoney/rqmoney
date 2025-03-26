@@ -1,21 +1,20 @@
 object frmHistory: TfrmHistory
-  Left = 439
+  Left = 461
   Height = 501
-  Top = 258
+  Top = 368
   Width = 1089
   ClientHeight = 501
   ClientWidth = 1089
   Constraints.MinHeight = 400
   Constraints.MinWidth = 800
-  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
-  object pnlList: TPanel
+  object pnlClient: TPanel
     Left = 3
     Height = 342
     Top = 128

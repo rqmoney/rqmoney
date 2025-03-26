@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ActnList, LazUtf8,
   StdCtrls, Menus, BCPanel, BCMDButtonFocus, laz.VirtualTrees, StrUtils, Math, ComCtrls,
-  DateUtils, IniFiles;
+  DateUtils;
 
 type // main grid (Write)
   TWrite = record
@@ -86,7 +86,6 @@ type
     procedure btnDeleteClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure btnSettingsClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     //procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -141,58 +140,7 @@ begin
 end;
 
 procedure TfrmWrite.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmWrite.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmWrite.Name, '-1•-1•0•0');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmWrite.Width := Screen.Width - 300 - (200 - ScreenRatio)
-      else
-        frmWrite.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmWrite.Height := Screen.Height - 400 - (200 - ScreenRatio)
-      else
-        frmWrite.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmWrite.left := (Screen.Width - frmWrite.Width) div 2
-      else
-        frmWrite.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmWrite.Top := ((Screen.Height - frmWrite.Height) div 2) - 75
-      else
-        frmWrite.Top := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   if frmMain.Conn.Connected = True then
     UpdatePayments;
 
@@ -591,38 +539,6 @@ begin
   end;
   frmSettings.tabTool.TabIndex := 1;
   frmSettings.ShowModal;
-end;
-
-procedure TfrmWrite.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-begin
-  try
-  // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmWrite.Name, '') <>
-          IntToStr(frmWrite.Left) + separ + // form left
-        IntToStr(frmWrite.Top) + separ + // form top
-        IntToStr(frmWrite.Width) + separ + // form width
-        IntToStr(frmWrite.Height) then
-          INI.WriteString('POSITION', frmWrite.Name,
-            IntToStr(frmWrite.Left) + separ + // form left
-            IntToStr(frmWrite.Top) + separ + // form top
-            IntToStr(frmWrite.Width) + separ + // form width
-            IntToStr(frmWrite.Height));
-      finally
-        INI.Free;
-      end;
-    end;
-  except
-    on E: Exception do
-      ShowErrorMessage(E);
-  end;
 end;
 
 procedure TfrmWrite.FormCreate(Sender: TObject);

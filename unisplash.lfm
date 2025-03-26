@@ -1,0 +1,57 @@
+object frmSplash: TfrmSplash
+  Left = 742
+  Height = 90
+  Top = 301
+  Width = 330
+  BorderIcons = []
+  BorderStyle = bsNone
+  ClientHeight = 90
+  ClientWidth = 330
+  Color = clBlack
+  FormStyle = fsSplash
+  Position = poScreenCenter
+  LCLVersion = '3.6.0.0'
+  object Panel1: TPanel
+    Left = 5
+    Height = 80
+    Top = 5
+    Width = 320
+    Align = alClient
+    AutoSize = True
+    BorderSpacing.Around = 5
+    BevelOuter = bvNone
+    ClientHeight = 80
+    ClientWidth = 320
+    Color = clWhite
+    ParentBackground = False
+    ParentColor = False
+    TabOrder = 0
+    object lblSplash: TLabel
+      Left = 10
+      Height = 1
+      Top = 10
+      Width = 300
+      Align = alTop
+      Alignment = taCenter
+      BorderSpacing.Around = 10
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object prgSplash: TBGRAFlashProgressBar
+      Left = 10
+      Height = 33
+      Top = 32
+      Width = 300
+      Align = alCustom
+      MinValue = 0
+      MaxValue = 100
+      Value = 0
+      BarColor = 14852966
+      BackgroundColor = 3092271
+      BackgroundRandomizeMinIntensity = 4000
+      BackgroundRandomizeMaxIntensity = 5000
+      BackgroundRandomize = True
+    end
+  end
+end

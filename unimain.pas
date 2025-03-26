@@ -1,5 +1,5 @@
 // Program: RQ MONEY
-// Version: 3.9.2
+// Current version: 3.10.1
 // Starting date: March 3, 2016
 // Author: Slavomir Svetlik
 // Contact: rqmoney@gmail.com
@@ -141,12 +141,13 @@ type
     cbxType: TComboBox;
     chaChrono: TChart;
     chkShowPieChart: TCheckBox;
+    popAddMulti: TMenuItem;
+    tabCurrency: TECTabCtrl;
     popEditToolBar: TMenuItem;
-    popAddMulitple: TMenuItem;
     popToolBar: TPopupMenu;
     tabBalanceShow: TECTabCtrl;
-    Panel3: TPanel;
-    Panel4: TPanel;
+    pnlCategory: TPanel;
+    pnlSubcategory: TPanel;
     tabBalanceHeader: TECTabCtrl;
     tabChronoHeader: TECTabCtrl;
     tabCrossTop: TECTabCtrl;
@@ -260,7 +261,6 @@ type
     pnlTagCaption: TPanel;
     pnlTypeCaption: TPanel;
     pnlCurrency1: TPanel;
-    Panel2: TPanel;
     pnlDay: TPanel;
     pnlMonthYear: TPanel;
     pnlPeriod: TPanel;
@@ -274,7 +274,6 @@ type
     tabBalance: TTabSheet;
     tabChrono: TTabSheet;
     tabCross: TTabSheet;
-    tabCurrency: TTabControl;
     tmrFirstRun: TTimer;
     VSTBalance: TLazVirtualStringTree;
     VSTChrono: TLazVirtualStringTree;
@@ -293,7 +292,7 @@ type
     pnlFilter: TPanel;
     pnlAccount: TPanel;
     pnlAmount: TPanel;
-    pnlCategory: TPanel;
+    pnlCategories: TPanel;
     pnlComment: TPanel;
     pnlCurrency: TPanel;
     pnlDate: TPanel;
@@ -331,7 +330,7 @@ type
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     pnlList: TPanel;
-    popAddSimple: TMenuItem;
+    popAdd: TMenuItem;
     pnlMax: TPanel;
     pnlMin: TPanel;
     pnlPayee: TPanel;
@@ -411,7 +410,14 @@ type
     procedure btnReportSettingsClick(Sender: TObject);
     procedure CalendarDateChange(Sender: TObject);
     procedure cbxAccountDropDown(Sender: TObject);
+    procedure cbxAccountSelect(Sender: TObject);
+    procedure cbxCategoryEnter(Sender: TObject);
+    procedure cbxCategoryExit(Sender: TObject);
+    procedure cbxCategorySelect(Sender: TObject);
+    procedure cbxPayeeSelect(Sender: TObject);
+    procedure cbxPersonSelect(Sender: TObject);
     procedure cbxSubcategoryChange(Sender: TObject);
+    procedure cbxSubcategorySelect(Sender: TObject);
     procedure chaBalanceClick(Sender: TObject);
     procedure datDateFromKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure datDateToKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -426,6 +432,7 @@ type
     procedure DSTNext(Sender: TObject);
     procedure ediCommentEnter(Sender: TObject);
     procedure ediCommentExit(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure lblDateFromClick(Sender: TObject);
     procedure lblDateToClick(Sender: TObject);
     procedure mnuCheckUpdateClick(Sender: TObject);
@@ -531,8 +538,8 @@ type
     procedure tabChronoHeaderChange(Sender: TObject);
     procedure tabCrossLeftChange(Sender: TObject);
     procedure tabCrossTopChange(Sender: TObject);
-    procedure tabReportsChange(Sender: TObject);
     procedure tabCurrencyChange(Sender: TObject);
+    procedure tabReportsChange(Sender: TObject);
     procedure tmrFirstRunTimer(Sender: TObject);
     procedure tmrTimer(Sender: TObject);
     procedure VSTBalanceChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
@@ -647,6 +654,7 @@ procedure ComboBoxExit(Sender: TComboBox);
 procedure FillSubcategory(Category: string; Component: TComboBox);
 procedure FillCategory(Component: TComboBox; Kind: byte);
 procedure ComboDDWidth(ComboBox: TComboBox);
+procedure SetColumnsWidth(Sender: TLazVirtualStringTree; Text: string);
 
 function Field(char, Str: string; Count: integer): string;
 function Brighten(AColor: TColor; Light: byte): TColor;
@@ -655,6 +663,9 @@ function GetLang: string;
 function GetMainCurrency: string;
 function GetCategoryID(S: string): integer;
 function Eval(Text: string): string;
+function CountCharacterInText(const Text: string; CharToCount: char): integer;
+function ExtendedScreenWidth: longint;
+function ReadColumnsWidth(Sender: TLazVirtualStringTree): string;
 
 var
   frmMain: TfrmMain;
@@ -670,6 +681,8 @@ var
   Start: int64;
   ScrollBarWidth, ScreenIndex: byte;
   cb: TClipboard;
+  //workarea: TRect;
+  //mon: TMonitor;
 
 implementation
 
@@ -679,11 +692,295 @@ uses
   unicomments, uniAccounts, uniCurrencies, uniSettings, uniSuccess, uniEdits,
   uniPersons, uniDetail, uniEdit, uniWrite, uniProperties, uniCalendar, uniValues,
   uniAbout, uniPayees, uniTags, uniHolidays, uniCategories, uniSchedulers,
-  uniGuide, uniPassword, uniGate, uniFilter, uniSQL, uniCounter,
-  uniRecycleBin, uniImport, uniHistory, uniResources,
-  uniDelete, uniBudgets, uniBudget, uniPeriod, uniLinks;
+  uniGuide, uniPassword, uniGate, uniFilter, uniSQL, uniCounter, uniScheduler,
+  uniRecycleBin, uniImport, uniHistory, uniResources, uniTemplates, uniSQLResults,
+  uniDelete, uniBudgets, uniBudget, uniPeriod, uniLinks, uniImage, uniPlan, uniShortCut,
+  uniWriting, uniSplash;
 
   { TfrmMain }
+
+function ReadColumnsWidth(Sender: TLazVirtualStringTree): string;
+var
+  B: byte;
+begin
+  Result := '';
+  for B := 1 to (Sender as TLazVirtualStringTree).Header.Columns.Count - 1 do
+    Result := Result + IfThen(B = 1, '', separ) + IntToStr(
+      (Sender as TLazVirtualStringTree).Header.Columns[B].Width);
+end;
+
+procedure SetColumnsWidth(Sender: TLazVirtualStringTree; Text: string);
+var
+  A, Position: word;
+begin
+  Position := 1;
+  A := 1;
+  try
+    while Position > 0 do
+    begin
+      (Sender as TLazVirtualStringTree).Header.Columns[A].Width :=
+        StrToInt(Field(Separ, Text, A));
+      Position := Pos(separ, Text, Position + 1);
+      Inc(A);
+    end;
+  except
+  end;
+end;
+
+function ExtendedScreenWidth: longint;
+var
+  Width, lastRight: longint;
+  i: integer;
+begin
+  Width := 0;
+  lastRight := -1;
+  for i := 0 to Screen.MonitorCount - 1 do
+    if Screen.Monitors[i].Left > lastRight then
+    begin
+      Width := Width + Screen.Monitors[i].Width;
+      lastRight := Screen.Monitors[i].Left;
+    end;
+  Result := Width;
+end;
+
+function CountCharacterInText(const Text: string; CharToCount: char): integer;
+var
+  i: integer;
+begin
+  Result := 0;
+  for i := 1 to Length(Text) do
+  begin
+    if Text[i] = CharToCount then
+      Inc(Result);
+  end;
+end;
+
+{procedure SaveFormPosition(Sender: TForm; const args: array of integer);
+var
+  INI: TINIFile;
+  Temp, S1, S2: string;
+  I: integer;
+begin
+  if frmSettings.chkLastFormsSize.Checked = False then
+    Exit;
+
+  try
+    Temp := ChangeFileExt(ParamStr(0), '.ini');
+    INI := TINIFile.Create(Temp);
+
+    S2 := INI.ReadString('MONITOR_' + IntToStr(ExtendedScreenWidth) +
+      '_' + IntToStr(workarea.Height) + '_' + IntToStr(ScreenRatio),
+      (Sender as TForm).Name, '');
+
+    S1 := '';
+    if Length(args) > 0 then
+      for I := 0 to Length(args) - 1 do
+        S1 := S1 + separ + IntToStr(args[I]);
+    S1 := IntToStr((Sender as TForm).Left) + separ + // from left position
+      IntToStr((Sender as TForm).Top) + separ + // from top position
+      IntToStr((Sender as TForm).Width) + separ + // from width
+      IntToStr((Sender as TForm).Height) + S1;
+
+    if S1 <> S2 then
+      INI.WriteString(
+        'MONITOR_' + IntToStr(ExtendedScreenWidth) + '_' +
+        IntToStr(workarea.Height) + '_' + IntToStr(ScreenRatio),
+        (Sender as TForm).Name, // form name as
+        S1);
+
+  finally
+    INI.Free;
+  end;
+end;}
+
+{procedure ReadFormPosition(Sender: TForm);
+var
+  INI: TINIFile;
+  Temp: string;
+  I: integer;
+begin
+  if frmSettings.chkLastFormsSize.Checked = False then
+  begin
+    try
+      (Sender as TForm).Position := poScreenCenter;
+      (Sender as TForm).SetBounds(
+        (Screen.Width - (Sender as TForm).Width) div 2,
+        (Screen.Height - (Sender as TForm).Height) div 2,
+        (Sender as TForm).Width,
+        (Sender as TForm).Height);
+      Exit;
+    except
+    end;
+  end;
+
+  (Sender as TForm).Position := poDesigned;
+
+
+  try
+    Temp := ChangeFileExt(ParamStr(0), '.ini');
+    INI := TINIFile.Create(Temp);
+
+    Temp := INI.ReadString('MONITOR_' + IntToStr(ExtendedScreenWidth) +
+      '_' + IntToStr(workarea.Height) + '_' + IntToStr(ScreenRatio),
+      (Sender as TForm).Name, ''); // form name as
+  finally
+    INI.Free;
+  end;
+
+  if Temp = '' then
+  begin
+    try
+      (Sender as TForm).Position := poScreenCenter;
+      (Sender as TForm).SetBounds(
+        (Screen.Width - (Sender as TForm).Width) div 2,
+        (Screen.Height - (Sender as TForm).Height) div 2,
+        (Sender as TForm).Width,
+        (Sender as TForm).Height);
+      Exit;
+    except
+    end;
+  end;
+
+  try
+    // ================================================
+    // BASIC FORM PARAMETERS (width, height, left, top)
+    // ================================================
+
+    // form width
+    TryStrToInt(Field(Separ, Temp, 3), I);
+    //    if (I > 1) and (I <= Workarea.Width) then
+    if (I > 1) then
+      (Sender as TForm).Width := I;
+
+    // form height
+    TryStrToInt(Field(Separ, Temp, 4), I);
+    if (I > 1) and (I <= Workarea.Height) then
+      (Sender as TForm).Height := I;
+
+    // form left
+    TryStrToInt(Field(Separ, Temp, 1), I);
+    if (I >= 0) and (I <= ExtendedScreenWidth - 100) then
+      (Sender as TForm).Left := I;
+
+    // form top
+    TryStrToInt(Field(Separ, Temp, 2), I);
+    if (I >= 0) and (I <= Workarea.Height - (Sender as TForm).Height) then
+      (Sender as TForm).Top := I;
+
+  except
+  end;
+
+  // ===================================================
+  // ADDITIONAL FORM PARAMETERS (panels width or hegith)
+  // ===================================================
+
+  // first parameter
+  try
+    if CountCharacterInText(Temp, separ[1]) < 4 then Exit;
+    TryStrToInt(Field(Separ, Temp, 5), I);
+    if I > 0 then
+    begin
+      if ((Sender as TForm).Name = 'frmAccounts') then
+        frmAccounts.pnlDetail.Width := I
+      else if (Sender as TForm).Name = 'frmBudget' then
+        frmBudget.pnlLeft.Width := I
+      else if (Sender as TForm).Name = 'frmBudgets' then
+        frmBudgets.tabLeft.Width := I
+      else if (Sender as TForm).Name = 'frmCalendar' then
+        frmCalendar.pnlLeft.Width := I
+      else if ((Sender as TForm).Name = 'frmCategories') then
+        frmCategories.pnlDetail.Width := I
+      else if ((Sender as TForm).Name = 'frmComments') then
+        frmComments.pnlDetail.Width := I
+      else if ((Sender as TForm).Name = 'frmCurrencies') then
+        frmCurrencies.pnlDetail.Width := I
+      else if ((Sender as TForm).Name = 'frmDetail') then
+      begin
+        frmDetail.pnlSimple.Tag := I;
+        frmDetail.Width := I;
+      end
+      else if ((Sender as TForm).Name = 'frmEdit') then
+        frmEdit.pnlRight.Width := I
+      else if ((Sender as TForm).Name = 'frmEdits') then
+        frmEdits.pnlTag.Width := I
+      else if ((Sender as TForm).Name = 'frmHistory') then
+        frmHistory.pnlTop.Height := I
+      else if ((Sender as TForm).Name = 'frmHolidays') then
+        frmHolidays.pnlDetail.Width := I
+      else if ((Sender as TForm).Name = 'frmLinks') then
+        frmLinks.pnlDetail.Width := I
+      else if (Sender as TForm).Name = 'frmMain' then
+        frmMain.pnlFilter.Width := I
+      else if ((Sender as TForm).Name = 'frmPayees') then
+        frmPayees.pnlDetail.Width := I
+      else if ((Sender as TForm).Name = 'frmPeriod') then
+        frmPeriod.pnlLeft.Width := I
+      else if ((Sender as TForm).Name = 'frmPersons') then
+        frmPersons.pnlDetail.Width := I
+      else if ((Sender as TForm).Name = 'frmScheduler') then
+        frmScheduler.pnlRight.Width := I
+      else if ((Sender as TForm).Name = 'frmSchedulers') then
+        frmSchedulers.pnlRight.Width := I
+      else if ((Sender as TForm).Name = 'frmTags') then
+        frmTags.pnlDetail.Width := I
+      else if ((Sender as TForm).Name = 'frmTemplates') then
+        frmTemplates.pnlLeft.Width := I
+      else if ((Sender as TForm).Name = 'frmValues') then
+        frmValues.pnlDetail.Width := I;
+    end;
+  except
+  end;
+
+  // second parameter
+  try
+    if CountCharacterInText(Temp, separ[1]) < 5 then Exit;
+    TryStrToInt(Field(Separ, Temp, 6), I);
+    if I > 0 then
+    begin
+      if (Sender as TForm).Name = 'frmMain' then
+        frmMain.pnlSummary.Height := I
+      else if (Sender as TForm).Name = 'frmDetail' then
+        frmDetail.pnlMultiple.Tag := I;
+    end;
+  except
+  end;
+
+  // thirst parameter
+  try
+    if CountCharacterInText(Temp, separ[1]) < 6 then Exit;
+    TryStrToInt(Field(Separ, Temp, 7), I);
+    if I > 0 then
+    begin
+      if (Sender as TForm).Name = 'frmDetail' then
+        frmDetail.pnlRight.Width := I;
+    end;
+  except
+  end;
+
+  // fourth parameter
+  try
+    if CountCharacterInText(Temp, separ[1]) < 7 then Exit;
+    TryStrToInt(Field(Separ, Temp, 8), I);
+    if I > 0 then
+    begin
+      if (Sender as TForm).Name = 'frmDetail' then
+        frmDetail.pnlLeft.Width := I;
+    end;
+  except
+  end;
+
+  // fifth parameter
+  try
+    if CountCharacterInText(Temp, separ[1]) < 8 then Exit;
+    TryStrToInt(Field(Separ, Temp, 9), I);
+    if I > 0 then
+    begin
+      if (Sender as TForm).Name = 'frmDetail' then
+        frmDetail.pnlDetail.Width := I;
+    end;
+  except
+  end;
+end;}
 
 function Eval(Text: string): string;
 var
@@ -980,6 +1277,7 @@ begin
   // UPDATE LIST OF CATEGORIES
   // *************************
   Component.Clear;
+  Component.Sorted := False;
   try
     // GET SUBCATEGORIES ===========================================================================
     Q.SQL.Text := // query
@@ -1005,6 +1303,8 @@ begin
     Q.Close;
     Q.Free;
   end;
+  Component.Sorted := True;
+  Component.Sorted := False;
   if Component.Items.Count > 0 then
     Component.ItemIndex := 0;
 end;
@@ -1049,6 +1349,7 @@ begin
     Qy.Close;
     Qy.Free;
   end;
+  slSort.Sorted := False;
   slSort.Insert(0, '*');
 
   Component.Items := slSort;
@@ -1092,17 +1393,43 @@ begin
     for Col := 1 to Cols do
       R := R + (Sender as TLazVirtualStringTree).Header.Columns[Col].Text +
         IfThen(Col < Cols, chr(9), '');
+    if Sender = frmMain.VST then
+      R := R + chr(9) + Caption_340 + ' (' + Caption_337 + ')' +
+        chr(9) + Caption_340 + ' (' + Caption_338 + ')' + chr(9) +
+        Caption_340 + ' (' + Caption_339 + ')';
     slCopy.Add(R);
 
     // create body
-    for Node in (Sender as TLazVirtualStringTree).Nodes(False) do
+    for Node in (Sender as TLazVirtualStringTree).Nodes() do
     begin
       R := '';
       for Col := 1 to Cols do
         R := R + (Sender as TLazVirtualStringTree).Text[Node, Col] +
           IfThen(Col < Cols, chr(9), '');
+
+      // get energies (to the frmMain.VST data)
+      if Sender = frmMain.VST then
+      begin
+        frmMain.QRY.SQL.Text :=
+          'SELECT ene_reading1, ene_reading2 FROM energies WHERE ene_d_id = :ID';
+        frmMain.QRY.Params.ParamByName('ID').AsString :=
+          (Sender as TLazVirtualStringTree).Text[Node, 10];
+        frmMain.QRY.Prepare;
+        frmMain.QRY.Open;
+        while not frmMain.QRY.EOF do
+        begin
+          R := R + chr(9) + FloatToStr(frmMain.QRY.Fields[0].AsFloat) +
+            chr(9) + FloatToStr(frmMain.QRY.Fields[1].AsFloat) +
+            chr(9) + FloatToStr(frmMain.QRY.Fields[1].AsFloat -
+            frmMain.QRY.Fields[0].AsFloat);
+          frmMain.QRY.Next;
+        end;
+        frmMain.QRY.Close;
+      end;
+
       slCopy.Add(R);
     end;
+
 
     // send to the clipboard
     cb.AsText := slCopy.Text;
@@ -1184,8 +1511,33 @@ var
   {$ENDIF}
 begin
   Application.Title := 'RQ MONEY';
+  frmSplash.lblSplash.Caption := Application.Title;
+  frmSplash.Update;
 
-  // check the SQLite library in Linux
+  // =================================================================================
+  // WORK AREA
+  // =================================================================================
+  //see MoveToDefaultPosition
+  {workarea := default(TRect);
+  if Application.MainForm <> nil then mon := Application.MainForm.Monitor
+  else
+    mon := Monitor;
+  if mon <> nil then workarea := mon.WorkareaRect;
+  if (workarea.Width <= 0) or (workarea.Height <= 0) then
+    workarea := screen.WorkAreaRect;
+  if (workarea.Width <= 0) or (workarea.Height <= 0) then
+    workarea := screen.DesktopRect;
+  if ((workarea.Width <= 0) or (workarea.Height <= 0)) and (mon <> nil) then
+    workarea := mon.BoundsRect;
+  if (workarea.Width <= 0) or (workarea.Height <= 0) then
+  begin
+    workarea.Width := screen.Width;
+    workarea.Height := screen.Height;
+  end;}
+
+  // =================================================================================
+  // CHECK THE SQLITE LIBRARY IN LINUX
+  // =================================================================================
   {$IFDEF LINUX}
   try
     ScreenIndex := 1;
@@ -1220,6 +1572,7 @@ begin
     end;
   end;
   {$ENDIF}
+
 
   try
     frmMain.Caption := Application.Title;
@@ -2375,6 +2728,11 @@ begin
   end;
 end;
 
+procedure TfrmMain.tabCurrencyChange(Sender: TObject);
+begin
+  UpdateSummary;
+end;
+
 procedure TfrmMain.tabReportsChange(Sender: TObject);
 begin
   try
@@ -2386,11 +2744,6 @@ begin
   finally
     VSTSummaries.Visible := False;
   end;
-end;
-
-procedure TfrmMain.tabCurrencyChange(Sender: TObject);
-begin
-  UpdateSummary;
 end;
 
 procedure TfrmMain.tmrFirstRunTimer(Sender: TObject);
@@ -3705,7 +4058,7 @@ begin
   // there is a bug in chart component, when shows 50% to 50% parts (in Window OS only!)
   // application crashes (on exit), when these data are visualised
 
-  if (VSTSummary.RootNodeCount = 0) or (Conn.Connected = False) or
+  if (VSTSummary.RootNodeCount <= 1) or (Conn.Connected = False) or
     (chkShowPieChart.Checked = False) then
     exit;
 
@@ -3726,7 +4079,7 @@ begin
           // set chart
           chaPie.Title.Text.Text :=
             VSTSummary.Text[NewNode, 1] + ' (' +
-            tabCurrency.Tabs[tabCurrency.TabIndex] + ')';
+            tabCurrency.Tabs[tabCurrency.TabIndex].Text + ')';
 
           Summary := Sender.GetNodeData(NewNode);
 
@@ -3865,7 +4218,7 @@ begin
       chaPie.Visible := True;
       chaPie.Title.Text.Text :=
         VSTSummary.Header.Columns[VSTSummary.Tag].CaptionText + ' (' +
-        tabCurrency.Tabs[tabCurrency.TabIndex] + ')';
+        tabCurrency.Tabs[tabCurrency.TabIndex].Text + ')';
       P := VSTSummary.GetFirst();
       P := VSTSummary.GetNext(P);
 
@@ -4139,7 +4492,8 @@ begin
       'DELETE FROM data_tags WHERE dt_data = old.d_id;' +  // tags
       'DELETE FROM history WHERE his_d_id = old.d_id;' +   // history
       'DELETE FROM attachments WHERE att_d_id = old.d_id;' +  // attachments
-      'DELETE FROM transfers WHERE (tra_data1 = old.d_id) OR (tra_data2 = old.d_id); END;';
+      'DELETE FROM transfers WHERE (tra_data1 = old.d_id) OR (tra_data2 = old.d_id); END;'
+      + 'DELETE FROM energies WHERE ene_d_id = old.d_id;';  // energies
     QRY.ExecSQL;
 
     // **************************************************************************
@@ -4275,6 +4629,7 @@ begin
       'cat_comment TEXT, ' + // comment
       'cat_type INTEGER, ' + // type (0=all, 1=credit, 2=debit, 3=transfer)
       'cat_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, ' + // time stamp
+      'cat_energy INTEGER, ' + // energies
       'cat_id INTEGER PRIMARY KEY, ' + // ID
       'UNIQUE (cat_name, cat_parent_name, cat_parent_id));';
     QRY.ExecSQL;
@@ -4511,11 +4866,15 @@ begin
     QRY.SQL.Text := 'CREATE TRIGGER after_insert_payments ' + // create
       'AFTER INSERT ON payments ' + // after insert
       'BEGIN ' + // after
-      'UPDATE OR IGNORE scheduler SET sch_date_to = (' + // update
+      'UPDATE OR IGNORE scheduler SET ' + // update
+      'sch_date_from = (' + // sch_date_from
       'SELECT pay_date_plan FROM payments ' + // SELECT
       'WHERE scheduler.sch_id = payments.pay_sch_id ' +
-      'ORDER BY pay_date_plan DESC LIMIT 1) ' +
-      // higher date
+      'ORDER BY pay_date_plan ASC LIMIT 1), ' + // order
+      'sch_date_to = (' + // sch_date_to
+      'SELECT pay_date_plan FROM payments ' + // SELECT
+      'WHERE scheduler.sch_id = payments.pay_sch_id ' +
+      'ORDER BY pay_date_plan DESC LIMIT 1) ' +  // higher date
       'WHERE scheduler.sch_id = new.pay_sch_id; END;'; // where
     QRY.ExecSQL;
 
@@ -4523,7 +4882,12 @@ begin
     QRY.SQL.Text := 'CREATE TRIGGER after_update_payments ' + // create
       'AFTER UPDATE ON payments ' + // after insert
       'BEGIN ' + // after
-      'UPDATE OR IGNORE scheduler SET sch_date_to = (' + // update
+      'UPDATE OR IGNORE scheduler SET ' +   // update
+      'sch_date_from = (' + // sch_date_from
+      'SELECT pay_date_plan FROM payments ' + // SELECT
+      'WHERE scheduler.sch_id = payments.pay_sch_id ' +
+      'ORDER BY pay_date_plan ASC LIMIT 1), ' +  // order
+      'sch_date_to = (' + // sch_date_to
       'SELECT pay_date_plan FROM payments ' + // SELECT
       'WHERE scheduler.sch_id = payments.pay_sch_id ' +
       'ORDER BY pay_date_plan DESC LIMIT 1) ' +
@@ -4543,9 +4907,14 @@ begin
       'WHEN (SELECT COUNT(*) FROM payments ' +
       'WHERE payments.pay_sch_id = old.pay_sch_id) > 0 ' + // WHEN
       'BEGIN ' + // after
-      'UPDATE OR IGNORE scheduler SET sch_date_to = (' + // update
+      'UPDATE OR IGNORE scheduler SET ' + // update
+      'sch_date_from = (' + // sch_date_from
       'SELECT pay_date_plan FROM payments ' + // SELECT
-      'WHERE scheduler.sch_id = old.pay_sch_id ORDER BY pay_date_plan DESC LIMIT 1) ' +
+      'WHERE pay_sch_id = old.pay_sch_id ' +
+      'ORDER BY pay_date_plan ASC LIMIT 1), ' + // order
+      'sch_date_to = (' + // sch_date_to
+      'SELECT pay_date_plan FROM payments ' + // SELECT
+      'WHERE pay_sch_id = old.pay_sch_id ' + 'ORDER BY pay_date_plan DESC LIMIT 1) ' +
       // higher date
       'WHERE scheduler.sch_id = old.pay_sch_id; END;'; // where
     QRY.ExecSQL;
@@ -4643,7 +5012,7 @@ begin
     QRY.SQL.Text :=
       'INSERT OR IGNORE INTO settings (set_parameter, set_value) VALUES ' + // INSERT
       '("program", "RQ3"), ' + // program
-      '("version", "3"), ' + // version
+      '("version", "4"), ' + // version
       '("password", NULL), ' + // password
       '("sort_column", "1"), ' + // sorting column
       '("sort_order", "0"), ' + // sorting order
@@ -4661,6 +5030,7 @@ begin
       '("filter_comment_type", "00"), ' + // comment type
       '("filter_comment_text", NULL), ' + // comment text
       '("filter_category", "0•0"), ' + // category
+      '("filter_subcategory", 0),' + // subcategory
       '("filter_person", "0•0"), ' + // person
       '("filter_payee", "0•0"), ' + // payee
       '("filter_tag", "0•0"),' + // tag
@@ -4726,6 +5096,20 @@ begin
       'not_text TEXT, ' + // text
       'not_id INTEGER PRIMARY KEY);';
     QRY.ExecSQL;
+
+    // CREATE NEW TABLE ENERGIES
+    frmMain.QRY.SQL.Text :=
+      'CREATE TABLE energies (' + // new table
+      'ene_reading1 REAL, ' + // meter status at the beginning of the period
+      'ene_reading2 REAL, ' + // meter status at the end of the period
+      'ene_unit TEXT, ' + // unit
+      'ene_price REAL, ' + // price per unit
+      'ene_comment TEXT, ' + // comment
+      'ene_d_id INTEGER, ' + // ID of the transaction
+      'ene_meter1 TEXT, ' + // free field to use it later
+      'ene_meter2 TEXT, ' + // free field to use it later
+      'ene_id INTEGER PRIMARY KEY NOT NULL);';  // ID
+    frmMain.QRY.ExecSQL;
 
     // **************************************************************************
     Tran.Commit;
@@ -4805,35 +5189,53 @@ var
   DoBackup: boolean;
 begin
   try
+    Conn.Tag := 0;
     if Conn.Connected = True then
     begin
       if frmSettings.chkCloseDbWarning.Checked = True then
         if MessageDlg(Application.Title, Question_00 + sLineBreak +
           conn.DatabaseName, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+        begin
+          Conn.Tag := 1;
           Exit;
+        end;
+
+      frmMain.Visible := False;
 
       // =====================================================================
       // SAVE SETTINGS TO INI FILE
       // =====================================================================
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
 
       // save last used file
-      if frmSettings.chkLastUsedFile.Checked = True then
-        INI.WriteString('ON_START', 'LastFile', frmMain.Conn.DatabaseName)
+      if (frmSettings.chkLastUsedFile.Checked = False) then
+      begin
+        if (frmMain.pnlBottomClient.Tag = 1) then
+        begin
+          INIFile := ChangeFileExt(ParamStr(0), '.ini');
+          INI := TINIFile.Create(INIFile);
+          INI.WriteString('ON_START', 'LastFile', '');
+          INI.UpdateFile;
+          INI.Free;
+        end;
+      end
       else
-        INI.WriteString('ON_START', 'LastFile', '');
+      if (frmMain.pnlBottomClient.Hint <> frmMain.conn.DatabaseName) then
+      begin
+        INIFile := ChangeFileExt(ParamStr(0), '.ini');
+        INI := TINIFile.Create(INIFile);
+        INI.WriteString('ON_START', 'LastFile', frmMain.Conn.DatabaseName);
+        INI.UpdateFile;
+        INI.Free;
+      end;
 
-      INI.UpdateFile;
-      INI.Free;
       INIFile := frmMain.conn.DatabaseName;
 
       // =====================================================================
       // SAVE ALL DATABASE SETTINGS
       // =====================================================================
 
-      frmMain.Tran.EndTransaction;
       try
+        frmMain.Tran.EndTransaction;
         frmMain.Tran.StartTransaction;
 
         // save sorted column
@@ -4990,16 +5392,26 @@ begin
         frmMain.QRY.ExecSQL;
 
         // Category
+        cbxCategoryExit(cbxCategory);
         frmMain.QRY.SQL.Text :=
           'UPDATE OR IGNORE settings SET set_value = :VALUE WHERE set_parameter = "filter_category";';
         frmMain.QRY.Params.ParamByName('VALUE').AsString :=
-          IntToStr(frmMain.pnlCategoryCaption.Tag) + separ +
-          IntToStr(frmMain.cbxCategory.ItemIndex) +
-          IfThen(frmMain.cbxCategory.ItemIndex = -1, separ + separ +
-          separ + frmMain.cbxCategory.Hint, separ +
-          IfThen(frmMain.cbxSubcategory.ItemIndex = -1, '-1' + separ +
-          separ + separ + frmMain.cbxSubcategory.Hint,
-          IntToStr(frmMain.cbxSubcategory.ItemIndex)));
+          IntToStr(frmMain.pnlCategoryCaption.Tag) + separ +  // status
+          IntToStr(frmMain.cbxCategory.ItemIndex) + // category itemindex
+          IfThen(frmMain.cbxCategory.ItemIndex = -1, separ + separ + // multiple choice
+          separ + frmMain.cbxCategory.Hint, '');
+        frmMain.QRY.Prepare;
+        frmMain.QRY.ExecSQL;
+
+        // Subcategory
+        cbxCategoryExit(cbxSubcategory);
+        frmMain.QRY.SQL.Text :=
+          'UPDATE OR IGNORE settings SET set_value = :VALUE WHERE set_parameter = "filter_subcategory";';
+        frmMain.QRY.Params.ParamByName('VALUE').AsString :=
+          IntToStr(frmMain.cbxSubcategory.ItemIndex) + // Subcategory itemindex
+          IfThen(frmMain.cbxSubcategory.ItemIndex = -1, separ + separ +
+          // multiple choice
+          separ + frmMain.cbxSubcategory.Hint, '');
         frmMain.QRY.Prepare;
         frmMain.QRY.ExecSQL;
 
@@ -5134,22 +5546,26 @@ begin
           'UPDATE OR IGNORE settings SET set_value = 0 WHERE set_parameter = "last_transaction_used";';
         frmMain.QRY.ExecSQL;
 
-      finally
         frmMain.Tran.Commit;
+      except
       end;
 
-      if pnlReport.Visible = True then
-        btnReportExitClick(btnReportExit);
+      try
+        if pnlReport.Visible = True then
+          btnReportExitClick(btnReportExit);
 
-      tabBalanceHeader.TabIndex := 0;
-      tabBalanceHeaderChange(tabBalanceHeader);
-      tabChronoHeader.TabIndex := 0;
-      tabChronoHeaderChange(tabChronoHeader);
-      tabCrossTop.TabIndex := 0;
-      tabCrossLeft.TabIndex := 0;
-      tabCrossLeftChange(tabCrossLeft);
-      tabReports.TabIndex := 0;
-      tabReportsChange(tabReports);
+        tabBalanceHeader.TabIndex := 0;
+        tabBalanceHeaderChange(tabBalanceHeader);
+        tabChronoHeader.TabIndex := 0;
+        tabChronoHeaderChange(tabChronoHeader);
+        tabCrossTop.TabIndex := 0;
+        tabCrossLeft.TabIndex := 0;
+        tabCrossLeftChange(tabCrossLeft);
+        tabReports.TabIndex := 0;
+        tabReportsChange(tabReports);
+
+      except
+      end;
 
       // ================================================================
       // get encrypted password, then decrypt it
@@ -5173,27 +5589,30 @@ begin
         end;
       finally
         // close connected database
-        frmMain.Conn.Close;
+        frmMain.Conn.Close(True);
       end;
 
       // =====================================================================
       // ENCRYPTING THE DATABASE !!! =========================================
       // =====================================================================
 
-      if (frmSettings.chkEncryptDatabase.Checked = True) and (Temp = '') then
-        ShowMessage(Caption_326)
-      else if (frmSettings.chkEncryptDatabase.Checked = True) and (Temp <> '') then
-      begin
-        Temp := XorDecode('5!9x4', Temp);
-        s1 := TStringStream.Create('');
-        s1.LoadFromFile(INIFile);
-        s2 := TStringStream.Create('');  //make sure destination stream is blank
-        En := TBlowfishEncryptStream.Create(ReverseString(Temp) + Temp, s2);
-        En.copyfrom(s1, s1.size);
-        s2.SaveToFile(INIFile);
-        En.Free;
-        s2.Free;
-        s1.Free;
+      try
+        if (frmSettings.chkEncryptDatabase.Checked = True) and (Temp = '') then
+          ShowMessage(Caption_326)
+        else if (frmSettings.chkEncryptDatabase.Checked = True) and (Temp <> '') then
+        begin
+          Temp := XorDecode('5!9x4', Temp);
+          s1 := TStringStream.Create('');
+          s1.LoadFromFile(INIFile);
+          s2 := TStringStream.Create('');  //make sure destination stream is blank
+          En := TBlowfishEncryptStream.Create(ReverseString(Temp) + Temp, s2);
+          En.copyfrom(s1, s1.size);
+          s2.SaveToFile(INIFile);
+          En.Free;
+          s2.Free;
+          s1.Free;
+        end;
+      except
       end;
 
       // =====================================================================
@@ -5256,133 +5675,181 @@ begin
       end;
     end;
 
-    Temp := ChangeFileExt(INIFILE, '.~tmp');
-    if FileExistsUTF8(Temp) then
-      DeleteFileUTF8(Temp);
+    try
+      Temp := ChangeFileExt(INIFILE, '.~tmp');
+      if FileExistsUTF8(Temp) then
+        DeleteFileUTF8(Temp);
+    except
+    end;
 
     // =====================================================================
     // OTHER PROGRAM SETTINGS ==============================================
     // =====================================================================
 
-    lblItems.Caption := '';
+    try
+      lblItems.Caption := '';
 
-    // frmMain clear
-    frmMain.VST.RootNodeCount := 0;
-    UpdateSummary;
-    tabCurrency.Tabs.Clear;
+      // frmMain clear
+      frmMain.VST.RootNodeCount := 0;
+      UpdateSummary;
+      tabCurrency.Tabs.Clear;
 
-    // close panel Filter
-    popFilterClear.Tag := 1;
-    popFilterClearClick(popFilterClear); // include update transactions
+      // close panel Filter
+      popFilterClear.Tag := 1;
+      popFilterClearClick(popFilterClear); // include update transactions
 
-    popFilterClear.Enabled := False;
-    popFilterExpand.Enabled := False;
-    popFilterCollapse.Enabled := False;
-    actFilterClear.Enabled := False;
-    actFilterExpand.Enabled := False;
-    actFilterCollapse.Enabled := False;
+      popFilterClear.Enabled := False;
+      popFilterExpand.Enabled := False;
+      popFilterCollapse.Enabled := False;
+      actFilterClear.Enabled := False;
+      actFilterExpand.Enabled := False;
+      actFilterCollapse.Enabled := False;
 
-    frmMain.pnlFilter.Enabled := False;
-    frmMain.Caption := Application.Title;
-    frmMain.chkShowPieChart.Enabled := False;
+      frmMain.pnlFilter.Enabled := False;
+      frmMain.Caption := Application.Title;
+      frmMain.chkShowPieChart.Enabled := False;
 
-    // update main menu
-    mnuClose.Enabled := False;
-    mnuExport.Enabled := False;
-    mnuImport.Enabled := False;
+      // update main menu
+      mnuClose.Enabled := False;
+      mnuExport.Enabled := False;
+      mnuImport.Enabled := False;
 
-    mnuGuide.Enabled := False;
-    mnuPassword.Enabled := False;
-    mnuSQL.Enabled := False;
-    mnuProperties.Enabled := False;
-    mnuRecycle.Enabled := False;
+      mnuGuide.Enabled := False;
+      mnuPassword.Enabled := False;
+      mnuSQL.Enabled := False;
+      mnuProperties.Enabled := False;
+      mnuRecycle.Enabled := False;
 
-    // update toolbar
-    btnClose.Enabled := False;
-    btnImport.Enabled := False;
-    btnExport.Enabled := False;
+      // update toolbar
+      btnClose.Enabled := False;
+      btnImport.Enabled := False;
+      btnExport.Enabled := False;
 
-    btnPassword.Enabled := False;
-    btnGuide.Enabled := False;
-    btnSQL.Enabled := False;
-    btnProperties.Enabled := False;
-    btnRecycle.Enabled := False;
-    btnHistory.Enabled := False;
+      btnPassword.Enabled := False;
+      btnGuide.Enabled := False;
+      btnSQL.Enabled := False;
+      btnProperties.Enabled := False;
+      btnRecycle.Enabled := False;
+      btnHistory.Enabled := False;
 
-    // update transactions popup menu
-    popAddSimple.Enabled := False;
-    popAddMulitple.Enabled := False;
-    popEdit.Enabled := False;
-    popDuplicate.Enabled := False;
-    popDelete.Enabled := False;
-    popPrint.Enabled := False;
-    popCopy.Enabled := False;
-    popSelect.Enabled := False;
-    popHistory.Enabled := False;
+      // update transactions popup menu
+      popAdd.Enabled := False;
+      popAddMulti.Enabled := False;
+      popEdit.Enabled := False;
+      popDuplicate.Enabled := False;
+      popDelete.Enabled := False;
+      popPrint.Enabled := False;
+      popCopy.Enabled := False;
+      popSelect.Enabled := False;
+      popHistory.Enabled := False;
 
-    // update transactions buttons
-    pnlButtons.Enabled := False;
+      // update transactions buttons
+      pnlButtons.Enabled := False;
 
-    btnAdd.Enabled := False;
-    btnEdit.Enabled := False;
-    btnDuplicate.Enabled := False;
-    btnDelete.Enabled := False;
-    btnPrint.Enabled := False;
-    btnCopy.Enabled := False;
-    btnSelect.Enabled := False;
-    btnHistory.Enabled := False;
+      btnAdd.Enabled := False;
+      btnEdit.Enabled := False;
+      btnDuplicate.Enabled := False;
+      btnDelete.Enabled := False;
+      btnPrint.Enabled := False;
+      btnCopy.Enabled := False;
+      btnSelect.Enabled := False;
+      btnHistory.Enabled := False;
 
-    pnlBottomClient.Visible := False;
+      pnlBottomClient.Visible := False;
 
-    FormResize(frmMain);
+      FormResize(frmMain);
 
-    frmMain.VSTSummary.Enabled := False;
+      frmMain.VSTSummary.Enabled := False;
+
+    except
+    end;
 
     // frmCurrencies
-    UpdateCurrencies;
+    try
+      UpdateCurrencies;
+
+    except
+    end;
 
     // frmAccounts
-    UpdateAccounts;
+    try
+      UpdateAccounts;
+    except
+    end;
 
     // frmCategories
-    UpdateCategories;
+    try
+      UpdateCategories;
+    except
+    end;
 
     // frmPersons
-    UpdatePersons;
+    try
+      UpdatePersons;
+    except
+    end;
 
     // frmPayee
-    UpdatePayees;
+    try
+      UpdatePayees;
+    except
+    end;
 
     // frmHolidays
-    UpdateHolidays;
+    try
+      UpdateHolidays;
+    except
+    end;
 
     // frmComments
-    UpdateComments;
+    try
+      UpdateComments;
+    except
+    end;
 
     // frmTags
-    UpdateTags;
+    try
+      UpdateTags;
+    except
+    end;
 
     // frmCashCounter
-    frmCounter.cbxCurrency.ItemIndex := -1;
-    frmCounter.cbxCurrencyChange(frmCounter.cbxCurrency);
+    try
+      frmCounter.cbxCurrency.ItemIndex := -1;
+      frmCounter.cbxCurrencyChange(frmCounter.cbxCurrency);
+    except
+    end;
 
     // frmSchedulers
-    UpdateScheduler;
+    try
+      UpdateScheduler;
+    except
+    end;
 
     // frmWrite
-    UpdatePayments;
+    try
+      UpdatePayments;
+    except
+    end;
 
     // frmBudgets
-    UpdateBudgets;
+    try
+      UpdateBudgets;
+    except
+    end;
 
     // frmLinks
-    UpdateLinks;
+    try
+      UpdateLinks;
+    except
+    end;
 
-    // chart
-    // chaBalance.ClearSeries;
+    // chart chaBalance.ClearSeries;
     souBalanceCredits.Clear;
     souBalanceDebits.Clear;
 
+    if mnuClose.Tag = 0 then
+      frmMain.Visible := True;
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -5536,8 +6003,9 @@ end;
 procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var
   INI: TINIFile;
-  INIFile: string;
+  INIFile, Temp: string;
   I: integer;
+  ForceUpdate: boolean;
 begin
   if pnlReport.Visible = True then
   begin
@@ -5546,339 +6014,842 @@ begin
     Exit;
   end;
 
+  if conn.Connected = True then
+  begin
+    mnuClose.Tag := 1;
+    mnuCloseClick(mnuClose);
+    mnuClose.Tag := 0;
+  end;
+
+  if Conn.Tag = 1 then
+  begin
+    Conn.Tag := 0;
+    CloseAction := caNone;
+    Exit;
+  end;
+
+  if (conn.Connected = True) and (frmMain.Tag = 1) then
+  begin
+    frmMain.Visible := False;
+    Conn.Destroy;
+  end
+  else if (conn.Connected = True) and (frmMain.Tag = 0) then
+  begin
+    CloseAction := caNone;
+    Exit;
+  end;
+
+  // ====================================
+  // SAVE OTHER FORM DATA TO THE INI FILE
+  // ====================================
   try
-    if conn.Connected = True then
-      mnuCloseClick(mnuClose);
+    ForceUpdate := False;
+    INIFile := ChangeFileExt(ParamStr(0), '.ini');
+    INI := TINIFile.Create(INIFile);
 
-    if (conn.Connected = True) and (frmMain.Tag = 1) then
-      Conn.Destroy
-    else if (conn.Connected = True) and (frmMain.Tag = 0) then
+    // save summary pie chart visibility
+    I := IfThen(chkShowPieChart.Checked = True, 1, 0);
+    if I <> chkShowPieChart.Tag then
     begin
-      CloseAction := caNone;
-      Exit;
-    end;
-
-    try
-      frmMain.Visible := False;
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-
-      // save summary pie chart visibility
       INI.WriteBool('VISUAL_SETTINGS', 'SummaryPieChartVisible',
         frmMain.chkShowPieChart.Checked);
+      ForceUpdate := True;
+    end;
 
-      if frmSettings.chkLastFormsSize.Checked = True then
-      begin
-        // frmMain
-        if INI.ReadString('POSITION', frmMain.Name, '') <> IntToStr(frmMain.Left) +
-        separ + // form left
-        IntToStr(frmMain.Top) + separ + // form top
-        IntToStr(frmMain.Width) + separ + // form width
-        IntToStr(frmMain.Height) + separ + // form height
-        IntToStr(pnlFilter.Width) + separ + // filter width
-        IntToStr(pnlSummary.Height) then
-          INI.WriteString('POSITION', frmMain.Name,
-            IntToStr(frmMain.Left) + separ + // form left
-            IntToStr(frmMain.Top) + separ + // form top
-            IntToStr(frmMain.Width) + separ + // form width
-            IntToStr(frmMain.Height) + separ + // form height
-            IntToStr(pnlFilter.Width) + separ + // filter width
-            IntToStr(pnlSummary.Height)); // summary height
-      end
-      else
-        INI.EraseSection('POSITION');
-
-      // font size
+    // font size
+    if frmSettings.spiGridFontSize.Tag <> frmMain.VST.Font.Size then
+    begin
       I := INI.ReadInteger('VISUAL_SETTINGS', 'FontSize', 10);
       if frmMain.VST.Font.Size <> I then
+      begin
         INI.WriteInteger('VISUAL_SETTINGS', 'FontSize',
           frmSettings.spiGridFontSize.Value);
+        ForceUpdate := True;
+      end;
+    end;
 
-      if frmSettings.chkAutoColumnWidth.Checked = True then
+    // ====================================
+    // SAVE WINDOWS POSITION
+    // ====================================
+
+    if frmSettings.chkLastFormsSize.Checked = True then
+    begin
+      // frmAccounts
+      if frmAccounts.Hint <> IntToStr(frmAccounts.Width) +
+      IntToStr(frmAccounts.Height) + IntToStr(frmAccounts.Left) +
+      IntToStr(frmAccounts.Top) + IntToStr(frmAccounts.pnlDetail.Width) then
       begin
-        // table Transactions
-        for I := 1 to frmMain.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmMain', 'TransColumn_' + RightStr('0' + IntToStr(I), 2));
-
-        // table Summary
-        for I := 1 to frmMain.VSTSummary.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmMain', 'SumColumn_' + RightStr('0' + IntToStr(I), 2));
-
-        // table Balance
-        for I := 1 to frmMain.VSTBalance.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmMain', 'BalanceCol_' + RightStr('0' + IntToStr(I), 2));
-
-        // table Chrono
-        for I := 1 to frmMain.VSTChrono.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmMain', 'ChronoCol_' + RightStr('0' + IntToStr(I), 2));
-
-        // table Write
-        for I := 1 to frmWrite.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmWrite', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table Schedulers 1
-        for I := 1 to frmSchedulers.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmSchedulers', 'Col1_' + RightStr('0' + IntToStr(I), 2));
-
-        // table Schedulers 2
-        for I := 1 to frmSchedulers.VST1.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmSchedulers', 'Col2_' + RightStr('0' + IntToStr(I), 2));
-
-        // table Accounts
-        for I := 1 to frmAccounts.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmAccounts', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmCategories
-        for I := 1 to frmCategories.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmCategories', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmPersons
-        for I := 1 to frmPersons.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmPersons', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmPayees
-        for I := 1 to frmPayees.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmPayees', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmCurrencies
-        for I := 1 to frmCurrencies.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmCurrencies', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmComments
-        for I := 1 to frmComments.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmComments', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmTags
-        for I := 1 to frmTags.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmTags', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmValues
-        for I := 1 to frmValues.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmValues', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmHistory
-        for I := 1 to frmHistory.VST1.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmHistory', 'Col1_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmHistory
-        for I := 1 to frmHistory.VST2.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmHistory', 'Col2_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmDelete
-        for I := 1 to frmDelete.VST1.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmDelete', 'Col1_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmDelete
-        for I := 1 to frmDelete.VST2.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmDelete', 'Col2_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmDelete
-        for I := 1 to frmDelete.VST3.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmDelete', 'Col3_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmRecycleBin
-        for I := 1 to frmRecycleBin.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmRecycleBin', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmDetail
-        for I := 1 to frmDetail.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmDetail', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmHolidays
-        for I := 1 to frmHolidays.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmHolidays', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmBudgets
-        for I := 1 to frmBudgets.VSTPeriods.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmBudgets', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmBudgets
-        for I := 1 to frmBudgets.VSTBudgets.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmBudgets', 'ColB_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmBudget
-        for I := 1 to frmBudget.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmBudget', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmPeriod
-        for I := 1 to frmPeriod.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmPeriod', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmSettings
-        for I := 1 to frmSettings.VSTKeys.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmSettings', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmLinks
-        for I := 1 to frmLinks.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmLinks', 'Col_' + RightStr('0' + IntToStr(I), 2));
-
-        // table frmCalendar
-        for I := 1 to frmCalendar.VST.Header.Columns.Count - 1 do
-          INI.DeleteKey('frmCalendar', 'Col_' + RightStr('0' + IntToStr(I), 2));
-      end
-      else
-      begin
-        // table Transactions
-        for I := 1 to frmMain.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmMain', 'TransColumn_' + RightStr('0' + IntToStr(I), 2),
-            frmMain.VST.Header.Columns[I].Width);
-
-        // table Summary
-        for I := 1 to frmMain.VSTSummary.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmMain', 'SumColumn_' + RightStr('0' + IntToStr(I), 2),
-            frmMain.VSTSummary.Header.Columns[I].Width);
-
-        // table Report - Balance
-        for I := 1 to frmMain.VSTBalance.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmMain', 'BalanceCol_' + RightStr('0' + IntToStr(I), 2),
-            frmMain.VSTBalance.Header.Columns[I].Width);
-
-        // table Report - Chronologie
-        for I := 1 to frmMain.VSTChrono.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmMain', 'ChronoCol_' + RightStr('0' + IntToStr(I), 2),
-            frmMain.VSTChrono.Header.Columns[I].Width);
-
-        // table Report - Cross tables
-        for I := 1 to frmMain.VSTCross.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmMain', 'CrossTableCol_' + RightStr('0' + IntToStr(I), 2),
-            frmMain.VSTCross.Header.Columns[I].Width);
-
-        // table Write
-        for I := 1 to frmWrite.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmWrite', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmWrite.VST.Header.Columns[I].Width);
-
-        // table Schedulers 1
-        for I := 1 to frmSchedulers.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmSchedulers', 'Col1_' + RightStr('0' + IntToStr(I), 2),
-            frmSchedulers.VST.Header.Columns[I].Width);
-
-        // table Schedulers 2
-        for I := 1 to frmSchedulers.VST1.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmSchedulers', 'Col2_' + RightStr('0' + IntToStr(I), 2),
-            frmSchedulers.VST1.Header.Columns[I].Width);
-
-        // table Accounts
-        for I := 1 to frmAccounts.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmAccounts', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmAccounts.VST.Header.Columns[I].Width);
-
-        // table frmCategories
-        for I := 1 to frmCategories.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmCategories', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmCategories.VST.Header.Columns[I].Width);
-
-        // table frmPersons
-        for I := 1 to frmPersons.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmPersons', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmPersons.VST.Header.Columns[I].Width);
-
-        // table frmPayees
-        for I := 1 to frmPayees.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmPayees', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmPayees.VST.Header.Columns[I].Width);
-
-        // table frmCurrencies
-        for I := 1 to frmCurrencies.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmCurrencies', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmCurrencies.VST.Header.Columns[I].Width);
-
-        // table frmComments
-        for I := 1 to frmComments.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmComments', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmComments.VST.Header.Columns[I].Width);
-
-        // table frmTags
-        for I := 1 to frmTags.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmTags', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmTags.VST.Header.Columns[I].Width);
-
-        // table frmValues
-        for I := 1 to frmValues.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmValues', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmValues.VST.Header.Columns[I].Width);
-
-        // table frmHistory
-        for I := 1 to frmHistory.VST1.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmHistory', 'Col1_' + RightStr('0' + IntToStr(I), 2),
-            frmHistory.VST1.Header.Columns[I].Width);
-
-        // table frmHistory
-        for I := 1 to frmHistory.VST2.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmHistory', 'Col2_' + RightStr('0' + IntToStr(I), 2),
-            frmHistory.VST2.Header.Columns[I].Width);
-
-        // table frmDelete
-        for I := 1 to frmDelete.VST1.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmDelete', 'Col1_' + RightStr('0' + IntToStr(I), 2),
-            frmDelete.VST1.Header.Columns[I].Width);
-
-        // table frmDelete
-        for I := 1 to frmDelete.VST2.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmDelete', 'Col2_' + RightStr('0' + IntToStr(I), 2),
-            frmDelete.VST2.Header.Columns[I].Width);
-
-        // table frmDelete
-        for I := 1 to frmDelete.VST3.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmDelete', 'Col3_' + RightStr('0' + IntToStr(I), 2),
-            frmDelete.VST3.Header.Columns[I].Width);
-
-        // table frmRecycleBin
-        for I := 1 to frmRecycleBin.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmRecycleBin', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmRecycleBin.VST.Header.Columns[I].Width);
-
-        // table frmDetail
-        for I := 1 to frmDetail.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmDetail', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmDetail.VST.Header.Columns[I].Width);
-
-        // table frmHolidays
-        for I := 1 to frmHolidays.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmHolidays', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmHolidays.VST.Header.Columns[I].Width);
-
-        // table frmBudgets
-        for I := 1 to frmBudgets.VSTPeriods.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmBudgets', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmBudgets.VSTPeriods.Header.Columns[I].Width);
-
-        // table frmBudgets
-        for I := 1 to frmBudgets.VSTBudgets.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmBudgets', 'ColB_' + RightStr('0' + IntToStr(I), 2),
-            frmBudgets.VSTBudgets.Header.Columns[I].Width);
-
-        // table frmBudget
-        for I := 1 to frmBudget.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmBudget', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmBudget.VST.Header.Columns[I].Width);
-
-        // table frmPeriod
-        for I := 1 to frmPeriod.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmPeriod', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmPeriod.VST.Header.Columns[I].Width);
-
-        // table frmSettings
-        for I := 1 to frmSettings.VSTKeys.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmSettings', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmSettings.VSTKeys.Header.Columns[I].Width);
-
-        // table frmLinks
-        for I := 1 to frmLinks.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmLinks', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmLinks.VST.Header.Columns[I].Width);
-
-        // table frmCalendar
-        for I := 1 to frmCalendar.VST.Header.Columns.Count - 1 do
-          INI.WriteInteger('frmCalendar', 'Col_' + RightStr('0' + IntToStr(I), 2),
-            frmCalendar.VST.Header.Columns[I].Width);
+        Temp := frmAccounts.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmAccounts.Left);
+        INI.WriteInteger(Temp, 'Top', frmAccounts.Top);
+        INI.WriteInteger(Temp, 'Width', frmAccounts.Width);
+        INI.WriteInteger(Temp, 'Height', frmAccounts.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmAccounts.pnlDetail.Width);
+        ForceUpdate := True;
       end;
 
-      INI.UpdateFile;
-    finally
-      INI.Free;
+      // frmBudgets
+      if frmBudgets.Hint <> IntToStr(frmBudgets.Width) +
+      IntToStr(frmBudgets.Height) + IntToStr(frmBudgets.Left) +
+      IntToStr(frmBudgets.Top) + IntToStr(frmBudgets.tabLeft.Width) +
+      IntToStr(frmBudgets.pnlPeriods.Width) then
+      begin
+        Temp := frmBudgets.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmBudgets.Left);
+        INI.WriteInteger(Temp, 'Top', frmBudgets.Top);
+        INI.WriteInteger(Temp, 'Width', frmBudgets.Width);
+        INI.WriteInteger(Temp, 'Height', frmBudgets.Height);
+        INI.WriteInteger(Temp, 'pnlLeft', frmBudgets.tabLeft.Width);
+        INI.WriteInteger(Temp, 'pnlPeriods', frmBudgets.pnlPeriods.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmBudget
+      if frmBudget.Hint <> IntToStr(frmBudget.Width) + IntToStr(frmBudget.Height) +
+      IntToStr(frmBudget.Left) + IntToStr(frmBudget.Top) +
+      IntToStr(frmBudget.pnlLeft.Width) then
+      begin
+        Temp := frmBudget.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmBudget.Left);
+        INI.WriteInteger(Temp, 'Top', frmBudget.Top);
+        INI.WriteInteger(Temp, 'Width', frmBudget.Width);
+        INI.WriteInteger(Temp, 'Height', frmBudget.Height);
+        INI.WriteInteger(Temp, 'pnlLeft', frmBudget.pnlLeft.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmCalendar
+      if frmCalendar.Hint <> IntToStr(frmCalendar.Width) +
+      IntToStr(frmCalendar.Height) + IntToStr(frmCalendar.Left) +
+      IntToStr(frmCalendar.Top) + IntToStr(frmCalendar.pnlLeft.Width) then
+      begin
+        Temp := frmCalendar.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmCalendar.Left);
+        INI.WriteInteger(Temp, 'Top', frmCalendar.Top);
+        INI.WriteInteger(Temp, 'Width', frmCalendar.Width);
+        INI.WriteInteger(Temp, 'Height', frmCalendar.Height);
+        INI.WriteInteger(Temp, 'pnlLeft', frmCalendar.pnlLeft.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmCategories
+      if frmCategories.Hint <> IntToStr(frmCategories.Width) +
+      IntToStr(frmCategories.Height) + IntToStr(frmCategories.Left) +
+      IntToStr(frmCategories.Top) + IntToStr(frmCategories.pnlDetail.Width) then
+      begin
+        Temp := frmCategories.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmCategories.Left);
+        INI.WriteInteger(Temp, 'Top', frmCategories.Top);
+        INI.WriteInteger(Temp, 'Width', frmCategories.Width);
+        INI.WriteInteger(Temp, 'Height', frmCategories.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmCategories.pnlDetail.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmComments
+      if frmComments.Hint <> IntToStr(frmComments.Width) +
+      IntToStr(frmComments.Height) + IntToStr(frmComments.Left) +
+      IntToStr(frmComments.Top) + IntToStr(frmComments.pnlDetail.Width) then
+      begin
+        Temp := frmComments.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmComments.Left);
+        INI.WriteInteger(Temp, 'Top', frmComments.Top);
+        INI.WriteInteger(Temp, 'Width', frmComments.Width);
+        INI.WriteInteger(Temp, 'Height', frmComments.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmComments.pnlDetail.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmCounter
+      if frmCounter.Hint <> IntToStr(frmCounter.Width) +
+      IntToStr(frmCounter.Height) + IntToStr(frmCounter.Left) +
+      IntToStr(frmCounter.Top) then
+      begin
+        Temp := frmCounter.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmCounter.Left);
+        INI.WriteInteger(Temp, 'Top', frmCounter.Top);
+        INI.WriteInteger(Temp, 'Width', frmCounter.Width);
+        INI.WriteInteger(Temp, 'Height', frmCounter.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmCurrencies
+      if frmCurrencies.Hint <> IntToStr(frmCurrencies.Width) +
+      IntToStr(frmCurrencies.Height) + IntToStr(frmCurrencies.Left) +
+      IntToStr(frmCurrencies.Top) + IntToStr(frmCurrencies.pnlRight.Width) then
+      begin
+        Temp := frmCurrencies.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmCurrencies.Left);
+        INI.WriteInteger(Temp, 'Top', frmCurrencies.Top);
+        INI.WriteInteger(Temp, 'Width', frmCurrencies.Width);
+        INI.WriteInteger(Temp, 'Height', frmCurrencies.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmCurrencies.pnlRight.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmDelete
+      if frmDelete.pnlBottom.Hint <> IntToStr(frmDelete.Width) +
+      IntToStr(frmDelete.Height) + IntToStr(frmDelete.Left) +
+      IntToStr(frmDelete.Top) then
+      begin
+        Temp := frmDelete.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmDelete.Left);
+        INI.WriteInteger(Temp, 'Top', frmDelete.Top);
+        INI.WriteInteger(Temp, 'Width', frmDelete.Width);
+        INI.WriteInteger(Temp, 'Height', frmDelete.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmDetail
+      if frmDetail.Hint <> IntToStr(frmDetail.Width) + IntToStr(frmDetail.Height) +
+      IntToStr(frmDetail.Left) + IntToStr(frmDetail.Top) +
+      IntToStr(frmDetail.pnlSimple.Tag) + IntToStr(frmDetail.pnlMultiple.Tag) +
+      IntToStr(frmDetail.pnlRight.Width) + IntToStr(frmDetail.pnlLeft.Width) +
+      IntToStr(frmDetail.pnlDetail.Width) then
+      begin
+        Temp := frmDetail.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmDetail.Left);
+        INI.WriteInteger(Temp, 'Top', frmDetail.Top);
+        INI.WriteInteger(Temp, 'Width', frmDetail.Width);
+        INI.WriteInteger(Temp, 'Height', frmDetail.Height);
+        INI.WriteInteger(Temp, 'Simple', frmDetail.pnlSimple.Tag);
+        INI.WriteInteger(Temp, 'Multi', frmDetail.pnlMultiple.Tag);
+        INI.WriteInteger(Temp, 'pnlRight', frmDetail.pnlRight.Width);
+        INI.WriteInteger(Temp, 'pnlLeft', frmDetail.pnlLeft.Width);
+        INI.WriteInteger(Temp, 'pnlDetail', frmDetail.pnlDetail.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmEdit
+      if frmEdit.Hint <> IntToStr(frmEdit.Width) + IntToStr(frmEdit.Height) +
+      IntToStr(frmEdit.Left) + IntToStr(frmEdit.Top) +
+      IntToStr(frmEdit.pnlRight.Width) then
+      begin
+        Temp := frmEdit.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmEdit.Left);
+        INI.WriteInteger(Temp, 'Top', frmEdit.Top);
+        INI.WriteInteger(Temp, 'Width', frmEdit.Width);
+        INI.WriteInteger(Temp, 'Height', frmEdit.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmEdit.pnlRight.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmEdits
+      if frmEdits.Hint <> IntToStr(frmEdits.Width) + IntToStr(frmEdits.Height) +
+      IntToStr(frmEdits.Left) + IntToStr(frmEdits.Top) +
+      IntToStr(frmEdits.pnlTag.Width) then
+      begin
+        Temp := frmEdits.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmEdits.Left);
+        INI.WriteInteger(Temp, 'Top', frmEdits.Top);
+        INI.WriteInteger(Temp, 'Width', frmEdits.Width);
+        INI.WriteInteger(Temp, 'Height', frmEdits.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmEdits.pnlTag.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmGate
+      if frmGate.Hint <> IntToStr(frmGate.Width) + IntToStr(frmGate.Height) +
+      IntToStr(frmGate.Left) + IntToStr(frmGate.Top) then
+      begin
+        Temp := frmGate.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmGate.Left);
+        INI.WriteInteger(Temp, 'Top', frmGate.Top);
+        INI.WriteInteger(Temp, 'Width', frmGate.Width);
+        INI.WriteInteger(Temp, 'Height', frmGate.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmGuide
+      if frmGuide.Hint <> IntToStr(frmGuide.Width) + IntToStr(frmGuide.Height) +
+      IntToStr(frmGuide.Left) + IntToStr(frmGuide.Top) then
+      begin
+        Temp := frmGuide.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmGuide.Left);
+        INI.WriteInteger(Temp, 'Top', frmGuide.Top);
+        INI.WriteInteger(Temp, 'Width', frmGuide.Width);
+        INI.WriteInteger(Temp, 'Height', frmGuide.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmHistory
+      if frmHistory.Hint <> IntToStr(frmHistory.Width) +
+      IntToStr(frmHistory.Height) + IntToStr(frmHistory.Left) +
+      IntToStr(frmHistory.Top) then
+      begin
+        Temp := frmHistory.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmHistory.Left);
+        INI.WriteInteger(Temp, 'Top', frmHistory.Top);
+        INI.WriteInteger(Temp, 'Width', frmHistory.Width);
+        INI.WriteInteger(Temp, 'Height', frmHistory.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmHolidays
+      if frmHolidays.Hint <> IntToStr(frmHolidays.Width) +
+      IntToStr(frmHolidays.Height) + IntToStr(frmHolidays.Left) +
+      IntToStr(frmHolidays.Top) + IntToStr(frmHolidays.pnlDetail.Width) then
+      begin
+        Temp := frmHolidays.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmHolidays.Left);
+        INI.WriteInteger(Temp, 'Top', frmHolidays.Top);
+        INI.WriteInteger(Temp, 'Width', frmHolidays.Width);
+        INI.WriteInteger(Temp, 'Height', frmHolidays.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmHolidays.pnlDetail.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmImage
+      if frmImage.Hint <> IntToStr(frmImage.Width) + IntToStr(frmImage.Height) +
+      IntToStr(frmImage.Left) + IntToStr(frmImage.Top) then
+      begin
+        Temp := frmImage.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmImage.Left);
+        INI.WriteInteger(Temp, 'Top', frmImage.Top);
+        INI.WriteInteger(Temp, 'Width', frmImage.Width);
+        INI.WriteInteger(Temp, 'Height', frmImage.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmImport
+      if frmImport.Hint <> IntToStr(frmImport.Width) + IntToStr(frmImport.Height) +
+      IntToStr(frmImport.Left) + IntToStr(frmImport.Top) then
+      begin
+        Temp := frmImport.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmImport.Left);
+        INI.WriteInteger(Temp, 'Top', frmImport.Top);
+        INI.WriteInteger(Temp, 'Width', frmImport.Width);
+        INI.WriteInteger(Temp, 'Height', frmImport.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmLinks
+      if frmLinks.Hint <> IntToStr(frmLinks.Width) + IntToStr(frmLinks.Height) +
+      IntToStr(frmLinks.Left) + IntToStr(frmLinks.Top) +
+      IntToStr(frmLinks.pnlDetail.Width) then
+      begin
+        Temp := frmLinks.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmLinks.Left);
+        INI.WriteInteger(Temp, 'Top', frmLinks.Top);
+        INI.WriteInteger(Temp, 'Width', frmLinks.Width);
+        INI.WriteInteger(Temp, 'Height', frmLinks.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmLinks.pnlDetail.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmMain
+      if frmMain.Hint <> IntToStr(frmMain.Width) + IntToStr(frmMain.Height) +
+      IntToStr(frmMain.Left) + IntToStr(frmMain.Top) +
+      IntToStr(frmMain.pnlFilter.Width) + IntToStr(frmMain.pnlSummary.Height) +
+      IntToStr(frmMain.VSTBalance.Height) then
+      begin
+        Temp := frmMain.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmMain.Left);
+        INI.WriteInteger(Temp, 'Top', frmMain.Top);
+        INI.WriteInteger(Temp, 'Width', frmMain.Width);
+        INI.WriteInteger(Temp, 'Height', frmMain.Height);
+        INI.WriteInteger(Temp, 'pnlFilter', pnlFilter.Width);
+        INI.WriteInteger(Temp, 'pnlSummary', pnlSummary.Height);
+        INI.WriteInteger(Temp, 'ChartBalance', VSTBalance.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmPassword
+      if frmPassword.Hint <> IntToStr(frmPassword.Width) +
+      IntToStr(frmPassword.Height) + IntToStr(frmPassword.Left) +
+      IntToStr(frmPassword.Top) then
+      begin
+        Temp := frmPassword.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmPassword.Left);
+        INI.WriteInteger(Temp, 'Top', frmPassword.Top);
+        INI.WriteInteger(Temp, 'Width', frmPassword.Width);
+        INI.WriteInteger(Temp, 'Height', frmPassword.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmPayees
+      if frmPayees.Hint <> IntToStr(frmPayees.Width) + IntToStr(frmPayees.Height) +
+      IntToStr(frmPayees.Left) + IntToStr(frmPayees.Top) +
+      IntToStr(frmPayees.pnlDetail.Width) then
+      begin
+        Temp := frmPayees.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmPayees.Left);
+        INI.WriteInteger(Temp, 'Top', frmPayees.Top);
+        INI.WriteInteger(Temp, 'Width', frmPayees.Width);
+        INI.WriteInteger(Temp, 'Height', frmPayees.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmPayees.pnlDetail.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmPeriod
+      if frmPeriod.Hint <> IntToStr(frmPeriod.Width) + IntToStr(frmPeriod.Height) +
+      IntToStr(frmPeriod.Left) + IntToStr(frmPeriod.Top) +
+      IntToStr(frmPeriod.pnlLeft.Width) then
+      begin
+        Temp := frmPeriod.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmPeriod.Left);
+        INI.WriteInteger(Temp, 'Top', frmPeriod.Top);
+        INI.WriteInteger(Temp, 'Width', frmPeriod.Width);
+        INI.WriteInteger(Temp, 'Height', frmPeriod.Height);
+        INI.WriteInteger(Temp, 'pnlLeft', frmPeriod.pnlLeft.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmPersons
+      if frmPersons.Hint <> IntToStr(frmPersons.Width) +
+      IntToStr(frmPersons.Height) + IntToStr(frmPersons.Left) +
+      IntToStr(frmPersons.Top) + IntToStr(frmPersons.pnlDetail.Width) then
+      begin
+        Temp := frmPersons.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmPersons.Left);
+        INI.WriteInteger(Temp, 'Top', frmPersons.Top);
+        INI.WriteInteger(Temp, 'Width', frmPersons.Width);
+        INI.WriteInteger(Temp, 'Height', frmPersons.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmPersons.pnlDetail.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmPlan
+      if frmPlan.Hint <> IntToStr(frmPlan.Width) + IntToStr(frmPlan.Height) +
+      IntToStr(frmPlan.Left) + IntToStr(frmPlan.Top) then
+      begin
+        Temp := frmPlan.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmPlan.Left);
+        INI.WriteInteger(Temp, 'Top', frmPlan.Top);
+        INI.WriteInteger(Temp, 'Width', frmPlan.Width);
+        INI.WriteInteger(Temp, 'Height', frmPlan.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmProperties
+      if frmProperties.Hint <> IntToStr(frmProperties.Width) +
+      IntToStr(frmProperties.Height) + IntToStr(frmProperties.Left) +
+      IntToStr(frmProperties.Top) then
+      begin
+        Temp := frmProperties.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmProperties.Left);
+        INI.WriteInteger(Temp, 'Top', frmProperties.Top);
+        INI.WriteInteger(Temp, 'Width', frmProperties.Width);
+        INI.WriteInteger(Temp, 'Height', frmProperties.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmRecycleBin
+      if frmRecycleBin.Hint <> IntToStr(frmRecycleBin.Width) +
+      IntToStr(frmRecycleBin.Height) + IntToStr(frmRecycleBin.Left) +
+      IntToStr(frmRecycleBin.Top) then
+      begin
+        Temp := frmRecycleBin.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmRecycleBin.Left);
+        INI.WriteInteger(Temp, 'Top', frmRecycleBin.Top);
+        INI.WriteInteger(Temp, 'Width', frmRecycleBin.Width);
+        INI.WriteInteger(Temp, 'Height', frmRecycleBin.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmSQL
+      if frmSQL.Hint <> IntToStr(frmSQL.Width) + IntToStr(frmSQL.Height) +
+      IntToStr(frmSQL.Left) + IntToStr(frmSQL.Top) then
+      begin
+        Temp := frmSQL.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmSQL.Left);
+        INI.WriteInteger(Temp, 'Top', frmSQL.Top);
+        INI.WriteInteger(Temp, 'Width', frmSQL.Width);
+        INI.WriteInteger(Temp, 'Height', frmSQL.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmSQLResult
+      if frmSQLResult.Hint <> IntToStr(frmSQLResult.Width) +
+      IntToStr(frmSQLResult.Height) + IntToStr(frmSQLResult.Left) +
+      IntToStr(frmSQLResult.Top) then
+      begin
+        Temp := frmSQLResult.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmSQLResult.Left);
+        INI.WriteInteger(Temp, 'Top', frmSQLResult.Top);
+        INI.WriteInteger(Temp, 'Width', frmSQLResult.Width);
+        INI.WriteInteger(Temp, 'Height', frmSQLResult.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmShortCut
+      if frmShortCut.Hint <> IntToStr(frmShortCut.Width) +
+      IntToStr(frmShortCut.Height) + IntToStr(frmShortCut.Left) +
+      IntToStr(frmShortCut.Top) then
+      begin
+        Temp := frmShortCut.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmShortCut.Left);
+        INI.WriteInteger(Temp, 'Top', frmShortCut.Top);
+        INI.WriteInteger(Temp, 'Width', frmShortCut.Width);
+        INI.WriteInteger(Temp, 'Height', frmShortCut.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmSchedulers
+      if frmSchedulers.Hint <> IntToStr(frmSchedulers.Width) +
+      IntToStr(frmSchedulers.Height) + IntToStr(frmSchedulers.Left) +
+      IntToStr(frmSchedulers.Top) + IntToStr(frmSchedulers.pnlRight.Width) then
+      begin
+        Temp := frmSchedulers.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmSchedulers.Left);
+        INI.WriteInteger(Temp, 'Top', frmSchedulers.Top);
+        INI.WriteInteger(Temp, 'Width', frmSchedulers.Width);
+        INI.WriteInteger(Temp, 'Height', frmSchedulers.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmSchedulers.pnlRight.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmScheduler
+      if frmScheduler.Hint <> IntToStr(frmScheduler.Width) +
+      IntToStr(frmScheduler.Height) + IntToStr(frmScheduler.Left) +
+      IntToStr(frmScheduler.Top) + IntToStr(frmScheduler.pnlRight.Width) then
+      begin
+        Temp := frmScheduler.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmScheduler.Left);
+        INI.WriteInteger(Temp, 'Top', frmScheduler.Top);
+        INI.WriteInteger(Temp, 'Width', frmScheduler.Width);
+        INI.WriteInteger(Temp, 'Height', frmScheduler.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmScheduler.pnlRight.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmSuccess
+      if frmSuccess.Hint <> IntToStr(frmSuccess.Width) +
+      IntToStr(frmSuccess.Height) + IntToStr(frmSuccess.Left) +
+      IntToStr(frmSuccess.Top) then
+      begin
+        Temp := frmSuccess.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmSuccess.Left);
+        INI.WriteInteger(Temp, 'Top', frmSuccess.Top);
+        INI.WriteInteger(Temp, 'Width', frmSuccess.Width);
+        INI.WriteInteger(Temp, 'Height', frmSuccess.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmSettings
+      if frmSettings.Hint <> IntToStr(frmSettings.Width) +
+      IntToStr(frmSettings.Height) + IntToStr(frmSettings.Left) +
+      IntToStr(frmSettings.Top) + IntToStr(frmSettings.treSettings.Width) then
+      begin
+        Temp := frmSettings.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmSettings.Left);
+        INI.WriteInteger(Temp, 'Top', frmSettings.Top);
+        INI.WriteInteger(Temp, 'Width', frmSettings.Width);
+        INI.WriteInteger(Temp, 'Height', frmSettings.Height);
+        INI.WriteInteger(Temp, 'pnlLeft', frmSettings.treSettings.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmTags
+      if frmTags.Hint <> IntToStr(frmTags.Width) + IntToStr(frmTags.Height) +
+      IntToStr(frmTags.Left) + IntToStr(frmTags.Top) +
+      IntToStr(frmTags.pnlDetail.Width) then
+      begin
+        Temp := frmTags.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmTags.Left);
+        INI.WriteInteger(Temp, 'Top', frmTags.Top);
+        INI.WriteInteger(Temp, 'Width', frmTags.Width);
+        INI.WriteInteger(Temp, 'Height', frmTags.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmTags.pnlDetail.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmTemplates (for import)
+      if frmTemplates.Hint <> IntToStr(frmTemplates.Width) +
+      IntToStr(frmTemplates.Height) + IntToStr(frmTemplates.Left) +
+      IntToStr(frmTemplates.Top) + IntToStr(frmTemplates.pnlLeft.Width) then
+      begin
+        Temp := frmTemplates.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmTemplates.Left);
+        INI.WriteInteger(Temp, 'Top', frmTemplates.Top);
+        INI.WriteInteger(Temp, 'Width', frmTemplates.Width);
+        INI.WriteInteger(Temp, 'Height', frmTemplates.Height);
+        INI.WriteInteger(Temp, 'pnlLeft', frmTemplates.pnlLeft.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmValues
+      if frmValues.Hint <> IntToStr(frmValues.Width) + IntToStr(frmValues.Height) +
+      IntToStr(frmValues.Left) + IntToStr(frmValues.Top) +
+      IntToStr(frmValues.pnlDetail.Width) then
+      begin
+        Temp := frmValues.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmValues.Left);
+        INI.WriteInteger(Temp, 'Top', frmValues.Top);
+        INI.WriteInteger(Temp, 'Width', frmValues.Width);
+        INI.WriteInteger(Temp, 'Height', frmValues.Height);
+        INI.WriteInteger(Temp, 'pnlRight', frmValues.pnlDetail.Width);
+        ForceUpdate := True;
+      end;
+
+      // frmWrite
+      if frmWrite.Hint <> IntToStr(frmWrite.Width) + IntToStr(frmWrite.Height) +
+      IntToStr(frmWrite.Left) + IntToStr(frmWrite.Top) then
+      begin
+        Temp := frmWrite.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmWrite.Left);
+        INI.WriteInteger(Temp, 'Top', frmWrite.Top);
+        INI.WriteInteger(Temp, 'Width', frmWrite.Width);
+        INI.WriteInteger(Temp, 'Height', frmWrite.Height);
+        ForceUpdate := True;
+      end;
+
+      // frmWriting
+      if frmWriting.Hint <> IntToStr(frmWriting.Width) +
+      IntToStr(frmWriting.Height) + IntToStr(frmWriting.Left) +
+      IntToStr(frmWriting.Top) then
+      begin
+        Temp := frmWriting.Name + '_' + IntToStr(ExtendedScreenWidth);
+        INI.WriteInteger(Temp, 'Left', frmWriting.Left);
+        INI.WriteInteger(Temp, 'Top', frmWriting.Top);
+        INI.WriteInteger(Temp, 'Width', frmWriting.Width);
+        INI.WriteInteger(Temp, 'Height', frmWriting.Height);
+        ForceUpdate := True;
+      end;
     end;
-  except
+
+    // ---------------------------------------------------------------------
+    // SET COLUMNS WIDTH
+    // ---------------------------------------------------------------------
+    if frmSettings.chkAutoColumnWidth.Checked = False then
+    begin
+      // frmAccounts
+      if frmAccounts.VST.Parent.Hint <> ReadColumnsWidth(frmAccounts.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Accounts', ReadColumnsWidth(frmAccounts.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmBudget
+      if frmBudget.VST.Parent.Hint <> ReadColumnsWidth(frmBudget.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Budget', ReadColumnsWidth(frmBudget.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmBudgets 1
+      if frmBudgets.VSTBudgets.Parent.Hint <>
+        ReadColumnsWidth(frmBudgets.VSTBudgets) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Budgets_1',
+          ReadColumnsWidth(frmBudgets.VSTBudgets));
+        ForceUpdate := True;
+      end;
+
+      // frmBudgets 2
+      if frmBudgets.VSTPeriods.Parent.Hint <>
+        ReadColumnsWidth(frmBudgets.VSTPeriods) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Budgets_2',
+          ReadColumnsWidth(frmBudgets.VSTPeriods));
+        ForceUpdate := True;
+      end;
+
+      // frmCalendar
+      if frmCalendar.VST.Parent.Hint <> ReadColumnsWidth(frmCalendar.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Calendar', ReadColumnsWidth(frmCalendar.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmCategories
+      if frmCategories.VST.Parent.Hint <> ReadColumnsWidth(frmCategories.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Categories',
+          ReadColumnsWidth(frmCategories.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmComments
+      if frmComments.VST.Parent.Hint <> ReadColumnsWidth(frmComments.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Comments', ReadColumnsWidth(frmComments.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmCurrencies
+      if frmCurrencies.VST.Parent.Hint <> ReadColumnsWidth(frmCurrencies.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Currencies',
+          ReadColumnsWidth(frmCurrencies.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmDelete
+      if frmDelete.VST1.Parent.Hint <> ReadColumnsWidth(frmDelete.VST1) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Delete_1', ReadColumnsWidth(frmDelete.VST1));
+        ForceUpdate := True;
+      end;
+
+      // frmDelete
+      if frmDelete.VST2.Parent.Hint <> ReadColumnsWidth(frmDelete.VST2) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Delete_2', ReadColumnsWidth(frmDelete.VST2));
+        ForceUpdate := True;
+      end;
+
+      // frmDelete
+      if frmDelete.VST3.Parent.Hint <> ReadColumnsWidth(frmDelete.VST3) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Delete_3', ReadColumnsWidth(frmDelete.VST3));
+        ForceUpdate := True;
+      end;
+
+      // frmDetail
+      if frmDetail.VST.Parent.Hint <> ReadColumnsWidth(frmDetail.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Detail', ReadColumnsWidth(frmDetail.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmHistory
+      if frmHistory.VST1.Parent.Hint <> ReadColumnsWidth(frmHistory.VST1) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'History_1', ReadColumnsWidth(frmHistory.VST1));
+        ForceUpdate := True;
+      end;
+
+      // frmHistory
+      if frmHistory.VST2.Parent.Hint <> ReadColumnsWidth(frmHistory.VST2) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'History_2', ReadColumnsWidth(frmHistory.VST2));
+        ForceUpdate := True;
+      end;
+
+      // frmHolidays
+      if frmHolidays.VST.Parent.Hint <> ReadColumnsWidth(frmHolidays.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Holidays', ReadColumnsWidth(frmHolidays.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmlinks
+      if frmlinks.VST.Parent.Hint <> ReadColumnsWidth(frmlinks.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Links', ReadColumnsWidth(frmlinks.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmMain VST
+      if frmMain.VST.Parent.Hint <> ReadColumnsWidth(frmMain.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Transactions', ReadColumnsWidth(frmMain.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmMain Balance
+      if frmMain.VSTBalance.Parent.Hint <> ReadColumnsWidth(frmMain.VSTBalance) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Balance',
+          ReadColumnsWidth(frmMain.VSTBalance));
+        ForceUpdate := True;
+      end;
+
+      // frmMain Chronology
+      if frmMain.VSTChrono.Parent.Hint <> ReadColumnsWidth(frmMain.VSTChrono) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Chronology',
+          ReadColumnsWidth(frmMain.VSTChrono));
+        ForceUpdate := True;
+      end;
+
+      // frmMain Cross table
+      if frmMain.VSTCross.Parent.Hint <> ReadColumnsWidth(frmMain.VSTCross) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'CrossTable',
+          ReadColumnsWidth(frmMain.VSTCross));
+        ForceUpdate := True;
+      end;
+
+      // frmMain Summary
+      if frmMain.VSTSummary.Parent.Hint <> ReadColumnsWidth(frmMain.VSTSummary) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Summary',
+          ReadColumnsWidth(frmMain.VSTSummary));
+        ForceUpdate := True;
+      end;
+
+      // frmPayees
+      if frmPayees.VST.Parent.Hint <> ReadColumnsWidth(frmPayees.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Payees', ReadColumnsWidth(frmPayees.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmPeriod
+      if frmPeriod.VST.Parent.Hint <> ReadColumnsWidth(frmPeriod.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Period', ReadColumnsWidth(frmPeriod.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmPersons
+      if frmPersons.VST.Parent.Hint <> ReadColumnsWidth(frmPersons.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Persons', ReadColumnsWidth(frmPersons.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmRecycleBin
+      if frmRecycleBin.VST.Parent.Hint <> ReadColumnsWidth(frmRecycleBin.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'RecycleBin',
+          ReadColumnsWidth(frmRecycleBin.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmSchedulers
+      if frmSchedulers.VST.Parent.Hint <> ReadColumnsWidth(frmSchedulers.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Schedulers_1',
+          ReadColumnsWidth(frmSchedulers.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmSchedulers
+      if frmSchedulers.VST1.Parent.Hint <> ReadColumnsWidth(frmSchedulers.VST1) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Schedulers_2',
+          ReadColumnsWidth(frmSchedulers.VST1));
+        ForceUpdate := True;
+      end;
+
+      // frmSettings
+      if frmSettings.VSTKeys.Parent.Hint <> ReadColumnsWidth(frmSettings.VSTKeys) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Settings',
+          ReadColumnsWidth(frmSettings.VSTKeys));
+        ForceUpdate := True;
+      end;
+
+      // frmTags
+      if frmTags.VST.Parent.Hint <> ReadColumnsWidth(frmTags.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Tags', ReadColumnsWidth(frmTags.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmValues
+      if frmValues.VST.Parent.Hint <> ReadColumnsWidth(frmValues.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Values', ReadColumnsWidth(frmValues.VST));
+        ForceUpdate := True;
+      end;
+
+      // frmWrite
+      if frmWrite.VST.Parent.Hint <> ReadColumnsWidth(frmWrite.VST) then
+      begin
+        INI.WriteString('COLUMNS_WIDTH', 'Write', ReadColumnsWidth(frmWrite.VST));
+        ForceUpdate := True;
+      end;
+    end;
+
+    if ForceUpdate = True then
+      INI.UpdateFile;
+
+  finally
+    INI.Free;
   end;
 
   try
@@ -5890,38 +6861,12 @@ end;
 
 procedure TfrmMain.cbxPersonChange(Sender: TObject);
 begin
-  if Conn.Connected = False then
+  if (Conn.Connected = False) or (cbxPerson.ItemIndex > -1) then
     Exit;
 
-  try
-    case cbxPerson.ItemIndex of
-      -1:
-      begin
-        pnlPersonCaption.Font.Color := clYellow;
-        pnlPersonCaption.Font.Style := [fsBold];
-      end;
-      0:
-      begin
-        f_person := 'AND per_status = 0 ';
-        pnlPerson.Hint := '';
-        pnlPerson.Color := clDefault;
-        pnlPersonCaption.Font.Style := [];
-        pnlPersonCaption.Font.Color := clWhite;
-        cbxPerson.Hint := '';
-      end
-      else
-      begin
-        f_person := 'AND per_name = "' + AnsiReplaceStr(
-          cbxPerson.Items[cbxPerson.ItemIndex], '"', '""') + '" ';
-        pnlPerson.Hint := separ_1 + cbxPerson.Items[cbxPerson.ItemIndex];
-        pnlPersonCaption.Font.Color := clYellow;
-        pnlPersonCaption.Font.Style := [fsBold];
-        cbxPerson.Hint := cbxPerson.Items[cbxPerson.ItemIndex];
-      end;
-    end;
-  finally
-    UpdateTransactions;
-  end;
+  pnlPersonCaption.Font.Color := clYellow;
+  pnlPersonCaption.Font.Style := [fsBold];
+  UpdateTransactions;
 end;
 
 procedure TfrmMain.cbxTagChange(Sender: TObject);
@@ -5998,7 +6943,6 @@ end;
 procedure TfrmMain.datDateFromChange(Sender: TObject);
 begin
   try
-    //frmMain.Caption := InttoStr(pnlFilter.Width);
     if pnlFilter.Width > 200 then
     begin
       lblDateFrom.Caption := FS_own.LongDayNames[DayOfTheWeek(datDateFrom.Date + 1)];
@@ -6166,8 +7110,6 @@ var
   Amount: double;
   N: PVirtualNode;
   Transactions: PTransactions;
-  UsedLastImage: boolean;
-  // if was used the last image of new transactions image (used items)
 begin
   try
     if (Conn.Connected = False) or (pnlReport.Visible = True) then
@@ -6183,7 +7125,7 @@ begin
     frmDetail.tabKindChange(frmDetail.tabKind);
     frmDetail.btnSave.Enabled := frmDetail.tabKind.TabIndex = 0;
 
-    if frmMain.VST.Tag = 0 then
+    if VST.Tag = 0 then
       frmDetail.tabKind.Tabs[1].Options :=
         frmDetail.tabKind.Tabs[1].Options + [etoVisible]
     else
@@ -6195,132 +7137,10 @@ begin
     // ===========================================================================
     if frmDetail.tabKind.TabIndex = 0 then
     begin
-      if VST.Tag = 0 then
+      if VST.Tag = 0 then // without duplication
       begin
         // enabled buttons
         frmDetail.btnSave.Tag := 0;
-
-        try
-          if frmSettings.chkRememberNewTransactionsForm.Checked = True then
-          begin
-            frmMain.QRY.SQL.Text :=
-              'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_used"';
-            frmMain.QRY.Open;
-            UsedLastImage := frmMain.QRY.Fields[0].AsString <> '0';
-            frmMain.QRY.Close;
-
-            if UsedLastImage = False then
-            begin
-              // set type
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_type"';
-              frmMain.QRY.Open;
-              frmDetail.cbxType.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
-              frmDetail.cbxTypeChange(frmDetail.cbxType);
-              frmMain.QRY.Close;
-
-              // set date from
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_date_from"';
-              frmMain.QRY.Open;
-              if Length(frmMain.QRY.Fields[0].AsString) = 10 then
-                frmDetail.datDateFrom.Date :=
-                  StrToDate(frmMain.QRY.Fields[0].AsString, 'YYYY-MM-DD', '-')
-              else
-                frmDetail.datDateFrom.Date := Now();
-              frmMain.QRY.Close;
-
-              // set date to
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_date_to"';
-              frmMain.QRY.Open;
-              if Length(frmMain.QRY.Fields[0].AsString) = 10 then
-                frmDetail.datDateTo.Date :=
-                  StrToDate(frmMain.QRY.Fields[0].AsString, 'YYYY-MM-DD', '-')
-              else
-                frmDetail.datDateTo.Date := Now();
-              frmMain.QRY.Close;
-
-              // set account from
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_account_from"';
-              frmMain.QRY.Open;
-              frmDetail.cbxAccountFrom.ItemIndex :=
-                StrToInt(frmMain.QRY.Fields[0].AsString);
-              frmMain.QRY.Close;
-
-              // set account to
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_account_to"';
-              frmMain.QRY.Open;
-              frmDetail.cbxAccountTo.ItemIndex :=
-                StrToInt(frmMain.QRY.Fields[0].AsString);
-              frmMain.QRY.Close;
-
-              // set amount from
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_amount_from"';
-              frmMain.QRY.Open;
-              frmDetail.spiAmountFrom.Text :=
-                ReplaceStr(frmMain.QRY.Fields[0].AsString, '.', FS_own.DecimalSeparator);
-              frmMain.QRY.Close;
-
-              // set amount to
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_amount_to"';
-              frmMain.QRY.Open;
-              frmDetail.spiAmountTo.Text :=
-                ReplaceStr(frmMain.QRY.Fields[0].AsString, '.', FS_own.DecimalSeparator);
-              frmMain.QRY.Close;
-
-              // set comment
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_comment"';
-              frmMain.QRY.Open;
-              frmDetail.cbxComment.Text := frmMain.QRY.Fields[0].AsString;
-              frmMain.QRY.Close;
-
-              // set category
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_category"';
-              frmMain.QRY.Open;
-              frmDetail.cbxCategory.ItemIndex :=
-                StrToInt(frmMain.QRY.Fields[0].AsString);
-              frmDetail.cbxCategoryChange(frmDetail.cbxCategory);
-              frmMain.QRY.Close;
-
-              // set subcategory
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_subcategory"';
-              frmMain.QRY.Open;
-              frmDetail.cbxSubcategory.ItemIndex :=
-                StrToInt(frmMain.QRY.Fields[0].AsString);
-              frmMain.QRY.Close;
-
-              // set person
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_person"';
-              frmMain.QRY.Open;
-              frmDetail.cbxPerson.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
-              frmMain.QRY.Close;
-
-              // set payee
-              frmMain.QRY.SQL.Text :=
-                'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_payee"';
-              frmMain.QRY.Open;
-              frmDetail.cbxPayee.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
-              frmMain.QRY.Close;
-
-              // set last used transaction to true
-              frmMain.QRY.SQL.Text :=
-                'UPDATE settings SET set_value = 1 WHERE set_parameter = "last_transaction_used";';
-              frmMain.QRY.ExecSQL;
-              frmMain.Tran.Commit;
-            end;
-          end;
-        except
-          frmMain.QRY.Close;
-        end;
 
         try
           // panel Detail
@@ -6359,9 +7179,19 @@ begin
           if (frmDetail.cbxCategory.ItemIndex = -1) and
             (frmDetail.cbxCategory.Items.Count > 0) then
             frmDetail.cbxCategory.ItemIndex := 0;
+          frmDetail.cbxTypeChange(frmDetail.cbxType);
           frmDetail.cbxCategoryChange(frmDetail.cbxCategory);
+          frmDetail.cbxSubcategoryChange(frmDetail.cbxSubcategory);
           // tag
           frmDetail.lbxTag.CheckAll(cbUnchecked, False, False);
+          // tab Simple
+          frmDetail.tabSimple.TabIndex := 0;
+          frmDetail.pnlTags.Visible := frmDetail.tabSimple.TabIndex = 0;
+          frmDetail.pnlAttachments.Visible := frmDetail.tabSimple.TabIndex = 1;
+          frmDetail.pnlEnergies.Visible := frmDetail.tabSimple.TabIndex = 2;
+
+          frmDetail.spiMeterStart.Value := 0;
+          frmDetail.spiMeterEnd.Value := 0;
         except
         end;
 
@@ -6461,7 +7291,7 @@ begin
           end;
         except
         end;
-
+        frmDetail.cbxSubcategoryChange(frmDetail.cbxSubcategory);
         // person
         frmDetail.cbxPerson.ItemIndex :=
           frmDetail.cbxPerson.Items.IndexOf(Transactions.Person);
@@ -6488,7 +7318,9 @@ begin
         frmMain.QRY.Close;
         frmDetail.ShowModal;
       end;
-    end;
+    end
+    else if frmDetail.tabKind.TabIndex = 1 then
+      frmDetail.ShowModal;
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -6859,12 +7691,16 @@ begin
       for I := 0 to frmFilter.chkFilter.Count - 1 do
       begin
         if frmFilter.chkFilter.Checked[I] = True then
+        begin
           cbxAccount.ItemIndex := I + 1;
+          cbxAccountSelect(cbxAccount);
+        end;
       end;
     end
     else if frmFilter.chkFilter.Tag = frmFilter.chkFilter.Items.Count then
     begin
       cbxAccount.ItemIndex := 0;
+      cbxAccountSelect(cbxAccount);
     end
     else
     begin
@@ -6888,8 +7724,8 @@ begin
       f_account := UTF8Copy(f_account, 1, UTF8Length(f_account) - 4) + ') ';
       (cbx as TComboBox).Hint :=
         UTF8Copy((cbx as TComboBox).Hint, 1, UTF8Length((cbx as TComboBox).Hint) - 2);
+      cbxAccountChange(cbxAccount);
     end;
-    cbxAccountChange(cbxAccount);
   end
   // end ACCOUNT =======================================================
 
@@ -6901,12 +7737,16 @@ begin
       for I := 0 to frmFilter.chkFilter.Count - 1 do
       begin
         if frmFilter.chkFilter.Checked[I] = True then
+        begin
           cbxCategory.ItemIndex := I + 1;
+          cbxCategorySelect(cbxCategory);
+        end;
       end;
     end
     else if frmFilter.chkFilter.Tag = frmFilter.chkFilter.Items.Count then
     begin
       cbxCategory.ItemIndex := 0;
+      cbxCategorySelect(cbxCategory);
     end
     else
     begin
@@ -6921,7 +7761,7 @@ begin
         if frmFilter.chkFilter.Checked[I] = True then
         begin
           Str1 := Field(separ_1, frmFilter.chkFilter.Items[I], 1);
-          Str2 := Field(separ_1, frmFilter.chkFilter.Items[I], 2);
+
           (cbx as TComboBox).Hint :=
             (cbx as TComboBox).Hint + AnsiReplaceStr(frmFilter.chkFilter.Items[I],
             separ_1, separ) + separ + separ;
@@ -6935,8 +7775,8 @@ begin
               AnsiReplaceStr(Str2, '"', '""') + '" AND cat_parent_name = "' +
               AnsiUpperCase(AnsiReplaceStr(Str1, '"', '""')) + '") OR ';
 
-          pnlCategory.Hint := pnlCategory.Hint + separ_1 + AnsiUpperCase(Str1) +
-            ' (' + IfThen(Str2 = '', '*', AnsiLowerCase(Str2)) + ') ';
+          pnlCategory.Hint := pnlCategory.Hint +
+            IfThen(pnlCategory.Hint = '', separ_1, ' + ') + str1;
         end;
 
       f_category := UTF8Copy(f_category, 1, UTF8Length(f_category) - 4) + ') ';
@@ -6944,8 +7784,8 @@ begin
         UTF8Copy((cbx as TComboBox).Hint, 1, UTF8Length((cbx as TComboBox).Hint) - 2);
 
       cbxCategory.ItemIndex := -1;
+      cbxCategoryChange(cbxCategory);
     end;
-    cbxCategoryChange(cbxCategory);
   end
   // end CATEGORY =======================================================
 
@@ -6957,17 +7797,20 @@ begin
       for I := 0 to frmFilter.chkFilter.Count - 1 do
       begin
         if frmFilter.chkFilter.Checked[I] = True then
+        begin
           cbxSubcategory.ItemIndex := I + 1;
+          cbxSubcategorySelect(cbxSubcategory);
+        end;
       end;
     end
     else if frmFilter.chkFilter.Tag = frmFilter.chkFilter.Items.Count then
     begin
       cbxSubcategory.ItemIndex := 0;
+      cbxSubcategorySelect(cbxSubcategory);
     end
     else
     begin
-      Str1 := cbxCategory.Items[cbxCategory.ItemIndex];
-      pnlCategory.Hint := Str1 + ' (';
+      pnlSubcategory.Hint := '';
       pnlCategoryCaption.Font.Color := clYellow;
       pnlCategoryCaption.Font.Style := [fsBold];
       (cbx as TComboBox).Hint := '';
@@ -6983,21 +7826,24 @@ begin
             separ_1, separ) + separ + separ;
           f_subcategory := f_subcategory + '"' + AnsiReplaceStr(Str2, '"', '""') + '",';
 
-          pnlCategory.Hint := pnlCategory.Hint +
-            IfThen(pnlCategory.Hint = Str1 + ' (', '', separ_1) + AnsiLowerCase(Str2);
+          pnlSubcategory.Hint :=
+            pnlSubcategory.Hint + IfThen(pnlSubcategory.Hint = '', ' (', ' + ') +
+            AnsiLowerCase(Str2);
         end;
       f_subcategory := UTF8Copy(f_subcategory, 1, UTF8Length(f_subcategory) - 1);
       f_subcategory := 'AND (cat_parent_id > 0 ' + sLineBreak +
-        'AND cat_parent_name = "' + AnsiUpperCase(AnsiReplaceStr(Str1, '"', '""')) +
-        '" ' + sLineBreak + 'AND cat_name IN (' + AnsiLowerCase(f_subcategory) + ')) ';
+        'AND cat_name IN (' + AnsiLowerCase(f_subcategory) + ')) ';
 
-      pnlCategory.Hint := separ_1 + IfThen(frmSettings.chkDisplaySubCatCapital.Checked =
-        True, AnsiUpperCase(pnlCategory.Hint), AnsiLowerCase(pnlCategory.Hint)) + ')';
+      pnlSubcategory.Hint := IfThen(pnlCategory.Hint = '', separ_1, '') +
+        IfThen(frmSettings.chkDisplaySubCatCapital.Checked = True,
+        AnsiUpperCase(pnlSubcategory.Hint), AnsiLowerCase(pnlSubcategory.Hint)) + ')';
+
       (cbx as TComboBox).Hint :=
         UTF8Copy((cbx as TComboBox).Hint, 1, UTF8Length((cbx as TComboBox).Hint) - 2);
       cbxSubcategory.ItemIndex := -1;
+      cbxSubcategoryChange(cbxSubcategory);
     end;
-    cbxSubcategoryChange(cbxSubcategory);
+
   end
   // end subcategory =======================================================
 
@@ -7009,16 +7855,20 @@ begin
       for I := 0 to frmFilter.chkFilter.Count - 1 do
       begin
         if frmFilter.chkFilter.Checked[I] = True then
+        begin
           cbxPerson.ItemIndex := I + 1;
+          cbxPersonSelect(cbxPerson);
+        end;
       end;
     end
     else if frmFilter.chkFilter.Tag = frmFilter.chkFilter.Items.Count then
     begin
       cbxPerson.ItemIndex := 0;
+      cbxPersonSelect(cbxPerson);
     end
     else
     begin
-      pnlPerson.Hint := '';
+      pnlPerson.Hint := separ_1;
       pnlPersonCaption.Font.Color := clYellow;
       pnlPersonCaption.Font.Style := [fsBold];
       (cbx as TComboBox).Hint := '';
@@ -7026,8 +7876,8 @@ begin
       for I := 0 to frmFilter.chkFilter.Items.Count - 1 do
         if frmFilter.chkFilter.Checked[I] = True then
         begin
-          pnlPerson.Hint := pnlPerson.Hint + separ_1 + AnsiUpperCase(
-            frmFilter.chkFilter.Items[I]);
+          pnlPerson.Hint := pnlPerson.Hint + IfThen(pnlPerson.Hint =
+            separ_1, '', ' + ') + AnsiUpperCase(frmFilter.chkFilter.Items[I]);
           (cbx as TComboBox).Hint :=
             (cbx as TComboBox).Hint + frmFilter.chkFilter.Items[I] + separ;
           temp := Temp + '"' + AnsiReplaceStr(frmFilter.chkFilter.Items[I],
@@ -7039,8 +7889,8 @@ begin
       (cbx as TComboBox).Hint :=
         UTF8Copy((cbx as TComboBox).Hint, 1, UTF8Length((cbx as TComboBox).Hint) - 1);
       (cbx as TComboBox).ItemIndex := -1;
+      cbxPersonChange((cbx as TComboBox));
     end;
-    cbxPersonChange((cbx as TComboBox));
   end
   // End PERSON ==========================================================
 
@@ -7052,12 +7902,16 @@ begin
       for I := 0 to frmFilter.chkFilter.Count - 1 do
       begin
         if frmFilter.chkFilter.Checked[I] = True then
+        begin
           cbxPayee.ItemIndex := I + 1;
+          cbxPayeeSelect(cbxPayee);
+        end;
       end;
     end
     else if frmFilter.chkFilter.Tag = frmFilter.chkFilter.Items.Count then
     begin
       cbxPayee.ItemIndex := 0;
+      cbxPayeeSelect(cbxPayee);
     end
     else
     begin
@@ -7082,8 +7936,8 @@ begin
       (cbx as TComboBox).Hint :=
         UTF8Copy((cbx as TComboBox).Hint, 1, UTF8Length((cbx as TComboBox).Hint) - 1);
       (cbx as TComboBox).ItemIndex := -1;
+      cbxPayeeChange((cbx as TComboBox));
     end;
-    cbxPayeeChange((cbx as TComboBox));
   end
   // End Payee ==========================================================
 
@@ -7182,7 +8036,8 @@ begin
       pnlFilterCaption.Caption + ': ' + AnsiUpperCase(frmMain.pnlType.Hint +
       frmMain.pnlCurrency.Hint + frmMain.pnlAccount.Hint + frmMain.pnlDate.Hint +
       frmMain.pnlAmount.Hint + frmMain.pnlComment.Hint + frmMain.pnlCategory.Hint +
-      frmMain.pnlPerson.Hint + frmMain.pnlPayee.Hint + frmMain.pnlTag.Hint);
+      frmMain.pnlSubCategory.Hint + frmMain.pnlPerson.Hint +
+      frmMain.pnlPayee.Hint + frmMain.pnlTag.Hint);
 
     // transactions captions
     frmMain.Report.FindObject('lblDate').Memo.Text :=
@@ -7219,7 +8074,7 @@ begin
     frmMain.Report.FindObject('Total').Memo.Text :=
       frmMain.VSTSummary.Header.Columns[8].CaptionText;
     frmMain.Report.FindObject('Currency').Memo.Text :=
-      tabCurrency.Tabs[tabCurrency.TabIndex] + ' - ' + AnsiUpperCase(Caption_15);
+      tabCurrency.Tabs[tabCurrency.TabIndex].Text + ' - ' + AnsiUpperCase(Caption_15);
 
     // footer
     frmMain.Report.FindObject('lblFooter').Memo.Text :=
@@ -7449,29 +8304,287 @@ begin
   {$ENDIF}
 end;
 
-procedure TfrmMain.cbxSubcategoryChange(Sender: TObject);
+procedure TfrmMain.cbxAccountSelect(Sender: TObject);
+var
+  Account, currency: string;
+begin
+  if conn.Connected = False then
+    exit;
+
+  case cbxAccount.ItemIndex of
+    -1: Exit;
+    0: begin
+      f_account := 'AND acc_status = 0 ';
+      pnlAccount.Hint := '';
+      pnlAccount.Color := clDefault;
+      pnlAccountCaption.Font.Style := [];
+      pnlAccountCaption.Font.Color := clWhite;
+      cbxAccount.Hint := '';
+    end
+    else
+    begin
+      Account := Field(separ_1, cbxAccount.Items[cbxAccount.ItemIndex], 1);
+      currency := Field(separ_1, cbxAccount.Items[cbxAccount.ItemIndex], 2);
+      f_account := 'AND acc_name = "' + AnsiReplaceStr(Account, '"', '""') +
+        '" AND acc_currency = "' + AnsiReplaceStr(currency, '"', '""') + '" ';
+      pnlAccount.Hint := separ_1 + Account + ' (' + currency + ')';
+      pnlAccountCaption.Font.Color := clYellow;
+      pnlAccountCaption.Font.Style := [fsBold];
+      cbxAccount.Hint := Account + separ + currency;
+    end;
+  end;
+
+  // =============================================================================================
+  // update transactions
+  UpdateTransactions;
+end;
+
+procedure TfrmMain.cbxCategoryEnter(Sender: TObject);
+begin
+  if (Sender as TComboBox).Style = csDropDown then
+  begin
+    actDelete.Enabled := False;
+    popDelete.Enabled := False;
+    actEdit.Enabled := False;
+    popEdit.Enabled := False;
+    actDuplicate.Enabled := False;
+    popDuplicate.Enabled := False;
+  end;
+end;
+
+procedure TfrmMain.cbxCategoryExit(Sender: TObject);
+begin
+  if (Sender as TComboBox).Style = csDropDown then
+  begin
+    actDelete.Enabled := VST.SelectedCount > 0;
+    popDelete.Enabled := VST.SelectedCount > 0;
+    actEdit.Enabled := VST.SelectedCount > 0;
+    popEdit.Enabled := VST.SelectedCount > 0;
+    actDuplicate.Enabled := VST.SelectedCount = 1;
+    popDuplicate.Enabled := VST.SelectedCount = 1;
+  end;
+
+  if ((Sender as TComboBox).ItemIndex = -1) and ((Sender as TComboBox).Text <> '') or
+    ((Sender as TComboBox).ItemIndex = -1) and ((Sender as TComboBox).Hint = '') then
+  begin
+    (Sender as TComboBox).ItemIndex := 0;
+
+    if (Sender as TComboBox).Name = 'cbxCategory' then
+      cbxCategorySelect(Sender as TComboBox)
+    else if (Sender as TComboBox).Name = 'cbxSubcategory' then
+      cbxSubcategorySelect(Sender as TComboBox)
+    else if (Sender as TComboBox).Name = 'cbxPerson' then
+      cbxPersonSelect(Sender as TComboBox)
+    else if (Sender as TComboBox).Name = 'cbxPayee' then
+      cbxPayeeSelect(Sender as TComboBox)
+    else if (Sender as TComboBox).Name = 'cbxAccount' then
+      cbxAccountSelect(Sender as TComboBox);
+  end
+  else if ((Sender as TComboBox).ItemIndex = -1) and
+    ((Sender as TComboBox).Text = '') and ((Sender as TCombobox).Parent.Hint <> '') then
+  begin
+    try
+      if (Sender as TComboBox).Name = 'cbxAccount' then
+        (Sender as TComboBox).ItemIndex :=
+          (Sender as TComboBox).Items.IndexOf(AnsiReplaceStr(
+          (Sender as TCombobox).Hint, separ, separ_1))
+      else
+        (Sender as TComboBox).ItemIndex :=
+          (Sender as TComboBox).Items.IndexOf((Sender as TCombobox).Hint);
+
+      if (Sender as TComboBox).ItemIndex > -1 then
+      begin
+        if (Sender as TComboBox).Name = 'cbxCategory' then
+          cbxCategorySelect(Sender as TComboBox)
+        else if (Sender as TComboBox).Name = 'cbxSubcategory' then
+          cbxSubcategorySelect(Sender as TComboBox)
+        else if (Sender as TComboBox).Name = 'cbxPerson' then
+          cbxPersonSelect(Sender as TComboBox)
+        else if (Sender as TComboBox).Name = 'cbxPayee' then
+          cbxPayeeSelect(Sender as TComboBox)
+        else if (Sender as TComboBox).Name = 'cbxAccount' then
+          cbxAccountSelect(Sender as TComboBox);
+      end;
+    except
+    end;
+  end;
+
+end;
+
+procedure TfrmMain.cbxCategorySelect(Sender: TObject);
+var
+  S: string;
+begin
+  try
+    case cbxCategory.ItemIndex of
+      -1: Exit;
+      0: begin
+        f_category := ' AND cat_status = 0 ';
+        pnlCategory.Hint := '';
+        pnlCategories.Color := clDefault;
+        pnlCategoryCaption.Font.Style := [];
+        pnlCategoryCaption.Font.Color := clWhite;
+        cbxCategory.Hint := '';
+
+        f_subcategory := '';
+        cbxSubcategory.Hint := '';
+        pnlSubcategory.Hint := '';
+        cbxSubcategory.Clear;
+        cbxSubcategory.Sorted := False;
+        // GET CATEGORIES ===========================================================================
+        frmMain.QRY.SQL.Text := // query
+          'SELECT DISTINCT ' + // select
+          'cat_name ' + // category name
+          'FROM categories ' + // from
+          'WHERE cat_parent_id > 0;';
+        frmMain.QRY.Open;
+
+        while not frmMain.QRY.EOF do
+        begin
+          if frmSettings.chkDisplaySubCatCapital.Checked = True then
+            cbxSubcategory.Items.Add(AnsiUpperCase(frmMain.QRY.Fields[0].AsString))
+          else
+            cbxSubcategory.Items.Add(frmMain.QRY.Fields[0].AsString);
+          frmMain.QRY.Next;
+        end;
+        frmMain.QRY.Close;
+        cbxSubcategory.Sorted := True;
+        cbxSubcategory.Sorted := False;
+        cbxSubcategory.Items.Insert(0, '*');
+        cbxSubcategory.ItemIndex := 0;
+      end
+      else
+      begin
+        S := cbxCategory.Items[cbxCategory.ItemIndex];
+        f_category := 'AND (cat_parent_name = "' + AnsiReplaceStr(S, '"', '""') + '") ';
+        pnlCategory.Hint := separ_1 + S;
+        cbxCategory.Hint := S;
+        pnlCategoryCaption.Font.Color := clYellow;
+        pnlCategoryCaption.Font.Style := [fsBold];
+        FillSubcategory(S, cbxSubcategory);
+
+        cbxSubcategory.Hint := '';
+        pnlSubcategory.Hint := '';
+        f_subcategory := '';
+      end;
+    end;
+  except
+    begin
+      f_category := '';
+      cbxCategory.Hint := '';
+      pnlCategory.Hint := '';
+      f_subcategory := '';
+      cbxSubcategory.Hint := '';
+      pnlSubcategory.Hint := '';
+    end
+  end;
+  UpdateTransactions;
+end;
+
+procedure TfrmMain.cbxPayeeSelect(Sender: TObject);
 begin
   if Conn.Connected = False then
     Exit;
 
-  case cbxSubcategory.ItemIndex of
-    -1: begin
-      f_category := '';
-    end;
+  case cbxPayee.ItemIndex of
+    -1: Exit;
     0: begin
-      cbxCategoryChange(cbxCategory);
+      f_Payee := 'AND pee_status = 0 ';
+      pnlPayee.Hint := '';
+      pnlPayee.Color := clDefault;
+      pnlPayeeCaption.Font.Style := [];
+      pnlPayeeCaption.Font.Color := clWhite;
+      cbxPayee.Hint := '';
     end
     else
     begin
-      f_category := '';
-      f_subcategory := 'AND (cat_parent_id > 0 ' + sLineBreak +
-        'AND cat_parent_name = "' + AnsiUpperCase(
-        AnsiReplaceStr(cbxCategory.Items[cbxCategory.ItemIndex], '"', '""')) +
-        '" ' + sLineBreak + 'AND cat_name = "' + AnsiLowerCase(
-        cbxSubcategory.Items[cbxSubcategory.ItemIndex]) + '") ';
-      pnlCategory.Hint := separ_1 + AnsiUpperCase(
-        cbxCategory.Items[cbxCategory.ItemIndex]) + ' (' +
-        cbxSubcategory.Items[cbxSubcategory.ItemIndex] + ')';
+      f_Payee := 'AND pee_name = "' + AnsiReplaceStr(
+        cbxPayee.Items[cbxPayee.ItemIndex], '"', '""') + '" ';
+      pnlPayee.Hint := separ_1 + cbxPayee.Items[cbxPayee.ItemIndex];
+      pnlPayeeCaption.Font.Color := clYellow;
+      pnlPayeeCaption.Font.Style := [fsBold];
+      cbxPayee.Hint := cbxPayee.Items[cbxPayee.ItemIndex];
+    end;
+  end;
+
+  UpdateTransactions;
+end;
+
+procedure TfrmMain.cbxPersonSelect(Sender: TObject);
+begin
+  if Conn.Connected = False then
+    Exit;
+
+  try
+    case cbxPerson.ItemIndex of
+      -1: Exit;
+      0: begin
+        f_person := 'AND per_status = 0 ';
+        pnlPerson.Hint := '';
+        pnlPerson.Color := clDefault;
+        pnlPersonCaption.Font.Style := [];
+        pnlPersonCaption.Font.Color := clWhite;
+        cbxPerson.Hint := '';
+      end
+      else
+      begin
+        f_person := 'AND per_name = "' + AnsiReplaceStr(
+          cbxPerson.Items[cbxPerson.ItemIndex], '"', '""') + '" ';
+        pnlPerson.Hint := separ_1 + cbxPerson.Items[cbxPerson.ItemIndex];
+        pnlPersonCaption.Font.Color := clYellow;
+        pnlPersonCaption.Font.Style := [fsBold];
+        cbxPerson.Hint := cbxPerson.Items[cbxPerson.ItemIndex];
+      end;
+    end;
+  except
+    begin
+      f_person := '';
+      pnlPerson.Hint := '';
+      cbxPerson.Hint := '';
+    end;
+  end;
+
+  UpdateTransactions;
+end;
+
+procedure TfrmMain.cbxSubcategoryChange(Sender: TObject);
+begin
+  if (Conn.Connected = False) or (cbxSubcategory.ItemIndex > -1) then
+    Exit;
+
+  if cbxSubcategory.Text <> '' then
+  begin
+    f_subcategory := 'AND cat_parent_id > 0 AND cat_name = "' +
+      AnsiReplaceStr(cbxSubcategory.Text, '"', '""') + '"';
+    pnlSubcategory.Hint := '';
+    cbxSubcategory.Hint := '';
+    UpdateTransactions;
+  end;
+end;
+
+procedure TfrmMain.cbxSubcategorySelect(Sender: TObject);
+begin
+  if (Conn.Connected = False) or (cbxSubcategory.ItemIndex = -1) then
+    Exit;
+
+  cbxSubcategory.Hint := '';
+  case cbxSubcategory.ItemIndex of
+    0: begin
+      f_subcategory := '';
+      pnlSubcategory.Hint := '';
+      cbxSubcategory.Hint := '';
+    end;
+    else
+    begin
+      f_subcategory := 'AND (cat_parent_id > 0 AND cat_name = "' +
+        AnsiLowerCase(AnsiReplaceStr(cbxSubcategory.Items[cbxSubcategory.ItemIndex],
+        '"', '""')) + '") ';
+      pnlSubcategory.Hint := IfThen(pnlCategory.Hint = '', separ_1, ' (') +
+        IfThen(frmSettings.chkDisplaySubCatCapital.Checked = True,
+        AnsiUpperCase(cbxSubcategory.Items[cbxSubcategory.ItemIndex]),
+        cbxSubcategory.Items[cbxSubcategory.ItemIndex]) +
+        IfThen(pnlCategory.Hint = '', '', ')');
+      cbxSubcategory.Hint := cbxSubcategory.Items[cbxSubcategory.ItemIndex];
     end;
   end;
   UpdateTransactions;
@@ -7618,6 +8731,11 @@ procedure TfrmMain.ediCommentExit(Sender: TObject);
 begin
   actDelete.Enabled := True;
   actEdit.Enabled := True;
+end;
+
+procedure TfrmMain.FormDestroy(Sender: TObject);
+begin
+  frmSplash.Free;
 end;
 
 procedure TfrmMain.lblDateFromClick(Sender: TObject);
@@ -7803,12 +8921,13 @@ begin
     // header
     frmMain.Report.FindObject('HeaderCaption').Memo.Text :=
       AnsiUpperCase(Caption_15) + ' (' + AnsiUpperCase(
-      tabCurrency.Tabs[tabCurrency.TabIndex] + ')');
+      tabCurrency.Tabs[tabCurrency.TabIndex].Text + ')');
     frmMain.Report.FindObject('FilterX').Memo.Text :=
       pnlFilterCaption.Caption + ': ' + AnsiUpperCase(frmMain.pnlType.Hint +
       frmMain.pnlCurrency.Hint + frmMain.pnlAccount.Hint + frmMain.pnlDate.Hint +
       frmMain.pnlAmount.Hint + frmMain.pnlComment.Hint + frmMain.pnlCategory.Hint +
-      frmMain.pnlPerson.Hint + frmMain.pnlPayee.Hint + frmMain.pnlTag.Hint);
+      frmMain.pnlSubcategory.Hint + frmMain.pnlPerson.Hint +
+      frmMain.pnlPayee.Hint + frmMain.pnlTag.Hint);
 
     frmMain.Report.FindObject('Account').Memo.Text :=
       frmMain.VSTSummary.Header.Columns[1].CaptionText;
@@ -7967,72 +9086,7 @@ begin
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
-var
-  INI: TIniFile;
-  INIFile, TempStr: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    INIFile := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(INIFile) = True then
-    begin
-      INI := TINIFile.Create(INIFile);
-      frmMain.Position := poDesigned;
-      TempStr := INI.ReadString('POSITION', frmMain.Name, '-1•-1•0•0•200•200');
-
-      // width
-      TryStrToInt(Field(Separ, TempStr, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmMain.Width := Screen.Width - 100 - (200 - ScreenRatio)
-      else
-        frmMain.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, TempStr, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmMain.Height := Screen.Height - 150 - (200 - ScreenRatio)
-      else
-        frmMain.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, TempStr, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmMain.left := (Screen.Width - frmMain.Width) div 2
-      else
-        frmMain.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, TempStr, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmMain.Top := ((Screen.Height - frmMain.Height) div 2) - 75
-      else
-        frmMain.Top := I;
-
-      // filter panel
-      TryStrToInt(Field(Separ, TempStr, 5), I);
-      if (I < 1) or (I > 500) then
-        frmMain.pnlFilter.Width := 250
-      else
-        frmMain.pnlFilter.Width := I;
-
-      // summary panel
-      TryStrToInt(Field(Separ, TempStr, 6), I);
-      if (I < 1) or (I > 600) then
-        frmMain.pnlSummary.Height := 250
-      else
-        frmMain.pnlSummary.Height := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   SetNodeHeight(frmMain.VST);
   SetNodeHeight(frmMain.VSTSummary);
   VST.SetFocus;
@@ -8164,7 +9218,7 @@ begin
   // clear category
   f_Category := '';
   pnlCategory.Hint := '';
-  pnlCategory.Color := clDefault;
+  pnlCategories.Color := clDefault;
   pnlCategoryCaption.Font.Style := [];
   pnlCategoryCaption.Font.Color := clWhite;
   if Conn.Connected = False then
@@ -8280,91 +9334,59 @@ begin
 end;
 
 procedure TfrmMain.cbxAccountChange(Sender: TObject);
-var
-  Account, currency: string;
 begin
-  if conn.Connected = False then
+  if (conn.Connected = False) or (cbxAccount.ItemIndex > -1) then
     exit;
 
-  case cbxAccount.ItemIndex of
-    -1:
-    begin
-      pnlAccountCaption.Font.Color := clYellow;
-      pnlAccountCaption.Font.Style := [fsBold];
-    end;
-    0:
-    begin
-      f_account := 'AND acc_status = 0 ';
-      pnlAccount.Hint := '';
-      pnlAccount.Color := clDefault;
-      pnlAccountCaption.Font.Style := [];
-      pnlAccountCaption.Font.Color := clWhite;
-      cbxAccount.Hint := '';
-    end
-    else
-    begin
-      Account := Field(separ_1, cbxAccount.Items[cbxAccount.ItemIndex], 1);
-      currency := Field(separ_1, cbxAccount.Items[cbxAccount.ItemIndex], 2);
-      f_account := 'AND acc_name = "' + AnsiReplaceStr(Account, '"', '""') +
-        '" AND acc_currency = "' + AnsiReplaceStr(currency, '"', '""') + '" ';
-      pnlAccount.Hint := separ_1 + Account + ' (' + currency + ')';
-      pnlAccountCaption.Font.Color := clYellow;
-      pnlAccountCaption.Font.Style := [fsBold];
-      cbxAccount.Hint := Account + separ + currency;
-    end;
-  end;
-
-  // =============================================================================================
-  // update transactions
+  pnlAccountCaption.Font.Color := clYellow;
+  pnlAccountCaption.Font.Style := [fsBold];
   UpdateTransactions;
 end;
 
 procedure TfrmMain.cbxCategoryChange(Sender: TObject);
-var
-  S: string;
 begin
-  if Conn.Connected = False then
+  if (Conn.Connected = False) or (cbxCategory.ItemIndex > -1) then
     Exit;
 
   f_subcategory := '';
+  cbxSubcategory.Clear;
+  cbxSubcategory.Hint := '';
+  pnlSubcategory.Hint := '';
 
-  case cbxCategory.ItemIndex of
-    -1:
-    begin
-      pnlCategoryCaption.Font.Color := clYellow;
-      pnlCategoryCaption.Font.Style := [fsBold];
-      cbxSubcategory.Clear;
-      cbxSubcategory.Items.Add('*');
-      cbxSubcategory.ItemIndex := 0;
-      cbxSubcategory.Enabled := False;
-    end;
-    0:
-    begin
-      f_category := ' AND cat_status = 0 ';
-      pnlCategory.Hint := '';
-      pnlCategory.Color := clDefault;
-      pnlCategoryCaption.Font.Style := [];
-      pnlCategoryCaption.Font.Color := clWhite;
-      cbxCategory.Hint := '';
-      cbxSubcategory.Clear;
-      cbxSubcategory.Items.Add('*');
-      cbxSubcategory.ItemIndex := 0;
-      cbxSubcategory.Enabled := False;
-    end
-    else
-    begin
-      S := cbxCategory.Items[cbxCategory.ItemIndex];
-      f_category := 'AND (cat_parent_name = "' + AnsiReplaceStr(S, '"', '""') + '") ';
-      pnlCategory.Hint := separ_1 + S + ' (*)';
-      cbxCategory.Hint := S;
-      pnlCategoryCaption.Font.Color := clYellow;
-      pnlCategoryCaption.Font.Style := [fsBold];
-      FillSubcategory(S, cbxSubcategory);
-      cbxSubcategory.Enabled := True;
-    end;
+  if (cbxCategory.Text <> '') then
+  begin
+    f_category := 'AND cat_name = "' + AnsiReplaceStr(cbxCategory.Text, '"', '""') + '"';
+    pnlCategory.Hint := '';
+    cbxCategory.Hint := '';
   end;
 
-  UpdateTransactions;
+  try
+    pnlCategoryCaption.Font.Color := clYellow;
+    pnlCategoryCaption.Font.Style := [fsBold];
+    cbxSubcategory.Sorted := False;
+    frmMain.QRY.SQL.Text :=
+      'SELECT DISTINCT cat_name FROM categories ' + // select
+      'WHERE cat_parent_id > 0 ' + f_category;
+
+    frmMain.QRY.Open;
+
+    while not (frmMain.QRY.EOF) do
+    begin
+      if frmSettings.chkDisplaySubCatCapital.Checked = True then
+        cbxSubcategory.Items.Add(AnsiUpperCase(frmMain.QRY.Fields[0].AsString))
+      else
+        cbxSubcategory.Items.Add(frmMain.QRY.Fields[0].AsString);
+      frmMain.QRY.Next;
+    end;
+
+    frmMain.QRY.Close;
+    cbxSubcategory.Sorted := True;
+    cbxSubcategory.Sorted := False;
+  finally
+    cbxSubcategory.Items.Insert(0, '*');
+    cbxSubcategory.ItemIndex := 0;
+    UpdateTransactions;
+  end;
 end;
 
 procedure TfrmMain.cbxCurrencyChange(Sender: TObject);
@@ -8384,7 +9406,12 @@ begin
       begin
         pnlCurrencyCaption.Font.Color := clYellow;
         pnlCurrencyCaption.Font.Style := [fsBold];
-        tabCurrency.Tabs.Text := AnsiReplaceStr(cbxCurrency.Hint, separ, sLineBreak);
+        if CountCharacterInText(cbxCurrency.Hint, separ[1]) > 0 then
+          for I := 0 to CountCharacterInText(cbxCurrency.Hint, separ[1]) do
+          begin
+            tabCurrency.Tabs.Add;
+            tabCurrency.Tabs[I].Text := Field(separ, cbxCurrency.Hint, I + 1);
+          end;
       end;
       0: // selected all currencies
       begin
@@ -8396,7 +9423,10 @@ begin
         pnlCurrencyCaption.Font.Color := clWhite;
         if cbxCurrency.Items.Count > 1 then
           for I := 1 to cbxCurrency.Items.Count - 1 do
-            tabCurrency.Tabs.Add(Field(separ_1, cbxCurrency.Items[I], 1));
+          begin
+            tabCurrency.Tabs.Add;
+            tabCurrency.Tabs[I - 1].Text := Field(separ_1, cbxCurrency.Items[I], 1);
+          end;
 
       end
       else // selected one currency
@@ -8406,10 +9436,11 @@ begin
           AnsiReplaceStr(cbxCurrency.Hint, '"', '""') + '" ';
         pnlCurrencyCaption.Font.Color := clYellow;
         pnlCurrencyCaption.Font.Style := [fsBold];
-        pnlCurrency.Hint := separ_1 + Field(separ_1,
-          cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
-        tabCurrency.Tabs.Add(Field(separ_1,
-          cbxCurrency.Items[cbxCurrency.ItemIndex], 1));
+        pnlCurrency.Hint := separ_1 +
+          Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
+        tabCurrency.Tabs.Add;
+        tabCurrency.Tabs[0].Text :=
+          Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
       end;
     end;
   finally
@@ -8469,7 +9500,16 @@ begin
     // find main currency
     tabCurrency.Visible := tabCurrency.Tabs.Count > 0;
     if tabCurrency.Tabs.Count > 0 then
-      tabCurrency.Tabs.IndexOf(GetMainCurrency);
+    begin
+      for I := 0 to tabCurrency.Tabs.Count - 1 do
+        if tabCurrency.Tabs[I].Text = GetMainCurrency then
+        begin
+          tabCurrency.TabIndex := I;
+          break;
+        end;
+      if tabCurrency.TabIndex = -1 then
+        tabCurrency.TabIndex := 0;
+    end;
   finally;
     frmMain.QRY.Close;
   end;
@@ -8535,34 +9575,11 @@ end;
 
 procedure TfrmMain.cbxPayeeChange(Sender: TObject);
 begin
-  if Conn.Connected = False then
+  if (Conn.Connected = False) or (cbxPayee.ItemIndex > -1) then
     Exit;
 
-  case cbxPayee.ItemIndex of
-    -1:
-    begin
-      pnlPayeeCaption.Font.Color := clYellow;
-      pnlPayeeCaption.Font.Style := [fsBold];
-    end;
-    0:
-    begin
-      f_Payee := 'AND pee_status = 0 ';
-      pnlPayee.Hint := '';
-      pnlPayee.Color := clDefault;
-      pnlPayeeCaption.Font.Style := [];
-      pnlPayeeCaption.Font.Color := clWhite;
-      cbxPayee.Hint := '';
-    end
-    else
-    begin
-      f_Payee := 'AND pee_name = "' + AnsiReplaceStr(
-        cbxPayee.Items[cbxPayee.ItemIndex], '"', '""') + '" ';
-      pnlPayee.Hint := separ_1 + cbxPayee.Items[cbxPayee.ItemIndex];
-      pnlPayeeCaption.Font.Color := clYellow;
-      pnlPayeeCaption.Font.Style := [fsBold];
-      cbxPayee.Hint := cbxPayee.Items[cbxPayee.ItemIndex];
-    end;
-  end;
+  pnlPayeeCaption.Font.Color := clYellow;
+  pnlPayeeCaption.Font.Style := [fsBold];
 
   UpdateTransactions;
 end;
@@ -9348,8 +10365,8 @@ begin
       end;
 
       if ParName = 'casCurrency' then
-        ParValue := Field(separ_1, frmCounter.cbxCurrency.Items[
-          frmCounter.cbxCurrency.ItemIndex], 1);
+        ParValue := Field(separ_1,
+          frmCounter.cbxCurrency.Items[frmCounter.cbxCurrency.ItemIndex], 1);
     end;
   except
   end;
@@ -9372,13 +10389,15 @@ end;
 
 procedure OpenFileX(FileName: string);
 var
-  Temp, T1, T2: string;
+  Temp: string;
   s1, s2: TStringStream;
   bf: TBlowfishDecryptStream;
   ExistsCorruptedRecord: boolean;
   I: integer;
   slTemp: TStringList;
   D: double;
+  UsedLastImage: boolean;
+  // if was used the last image of new transactions image (used items)
 begin
   try
     // check zero size of the database
@@ -9394,9 +10413,10 @@ begin
     frmGate.ediGate.Clear;
     s1 := TStringStream.Create(''); //used as your source string
     s1.LoadFromFile(FileName);
+    frmGate.lblFileName2.Caption := FileName;
+
     if LeftStr(s1.DataString, 6) <> 'SQLite' then
     begin
-      frmGate.lblFileName2.Caption := FileName;
       if frmGate.ShowModal <> mrOk then
         Exit;
 
@@ -9420,7 +10440,7 @@ begin
       frmProperties.lblEncryptionProtection.Tag := 1; // yes (protected by encryption)
     end
     else
-     frmProperties.lblEncryptionProtection.Tag := 0; // no (protected by encryption)
+      frmProperties.lblEncryptionProtection.Tag := 0; // no (protected by encryption)
   except
     Exit;
   end;
@@ -9739,6 +10759,136 @@ begin
   end;
 
   // **************************************************************************
+  // ==========
+  // VERSION 03
+  // ==========
+  // **************************************************************************
+
+  // check version of database
+  frmMain.QRY.SQL.Text :=
+    'SELECT set_value FROM settings WHERE set_parameter = "version"';
+  frmMain.QRY.Open;
+  Temp := frmMain.QRY.Fields[0].AsString;
+  frmMain.QRY.Close;
+
+  if Temp = '3' then
+  begin
+    frmMain.Tran.Commit;
+    frmMain.Tran.StartTransaction;
+
+    // **************************************************************************
+    // CREATE SUBCATEGORY FILTER
+    frmMain.QRY.SQL.Text :=
+      'INSERT OR IGNORE INTO settings (set_parameter, set_value) VALUES ' +
+      '("filter_subcategory", "0");';
+    // subcategory parameter
+    frmMain.QRY.ExecSQL;
+
+    // CREATE NEW TABLE ENERGIES
+    frmMain.QRY.SQL.Text :=
+      'CREATE TABLE energies (' + // new table
+      'ene_reading1 REAL, ' + // meter status at the beginning of the period
+      'ene_reading2 REAL, ' + // meter status at the end of the period
+      'ene_unit TEXT, ' + // unit
+      'ene_price REAL, ' + // price per unit
+      'ene_comment TEXT, ' + // comment
+      'ene_meter1 TEXT, ' + // free field to use it later
+      'ene_meter2 REAL, ' + // free field to use it later
+      'ene_d_id INTEGER, ' + // ID of the transaction
+      'ene_id INTEGER PRIMARY KEY NOT NULL);';  // ID
+    frmMain.QRY.ExecSQL;
+
+    // CREATE TRIGGER AFTER DELETE DATA
+    frmMain.QRY.SQL.Text := 'DROP TRIGGER after_delete_data;';
+    frmMain.QRY.ExecSQL;
+
+    // CREATE TRIGGER AFTER DELETE DATA
+    frmMain.QRY.SQL.Text := 'CREATE TRIGGER after_delete_data ' + // 1
+      'AFTER DELETE ON data FOR EACH ROW BEGIN ' +     // 2
+      'UPDATE OR IGNORE data_tags SET dt_att = 1 WHERE dt_data = old.d_id;' +
+      // set attribute to delete
+      'DELETE FROM data_tags WHERE dt_data = old.d_id;' +  // tags
+      'DELETE FROM history WHERE his_d_id = old.d_id;' +   // history
+      'DELETE FROM attachments WHERE att_d_id = old.d_id;' +  // attachments
+      'DELETE FROM transfers WHERE (tra_data1 = old.d_id) OR (tra_data2 = old.d_id); END;'
+      + 'DELETE FROM energies WHERE ene_d_id = old.d_id;';  // energies
+    frmMain.QRY.ExecSQL;
+
+    // ADD COLUMN TO THE TABLE CATEGORIES
+    frmMain.QRY.SQL.Text := 'ALTER TABLE categories ' +  // energies
+      'ADD COLUMN cat_energy INTEGER DEFAULT 1;';
+    frmMain.QRY.ExecSQL;
+
+    // CREATE TRIGGER AFTER DELETE DATA
+    frmMain.QRY.SQL.Text := 'DROP TRIGGER after_insert_payments;';
+    frmMain.QRY.ExecSQL;
+
+    // CREATE TRIGGER AFTER INSERT PAYMENTS
+    frmMain.QRY.SQL.Text := 'CREATE TRIGGER after_insert_payments ' + // create
+      'AFTER INSERT ON payments ' + // after insert
+      'BEGIN ' + // after
+      'UPDATE OR IGNORE scheduler SET ' + // update
+      'sch_date_from = (' + // sch_date_from
+      'SELECT pay_date_plan FROM payments ' + // SELECT
+      'WHERE scheduler.sch_id = payments.pay_sch_id ' +
+      'ORDER BY pay_date_plan ASC LIMIT 1), ' + // order
+      'sch_date_to = (' + // sch_date_to
+      'SELECT pay_date_plan FROM payments ' + // SELECT
+      'WHERE scheduler.sch_id = payments.pay_sch_id ' +
+      'ORDER BY pay_date_plan DESC LIMIT 1) ' + // higher date
+      'WHERE scheduler.sch_id = new.pay_sch_id; END;'; // where
+    frmMain.QRY.ExecSQL;
+
+    // CREATE TRIGGER AFTER DELETE DATA
+    frmMain.QRY.SQL.Text := 'DROP TRIGGER after_update_payments;';
+    frmMain.QRY.ExecSQL;
+
+    // CREATE TRIGGER AFTER UPDATE PAYMENTS
+    frmMain.QRY.SQL.Text := 'CREATE TRIGGER after_update_payments ' + // create
+      'AFTER UPDATE ON payments ' + // after insert
+      'BEGIN ' + // after
+      'UPDATE OR IGNORE scheduler SET ' +  // update
+      'sch_date_from = (' + // sch_date_from
+      'SELECT pay_date_plan FROM payments ' + // SELECT
+      'WHERE scheduler.sch_id = payments.pay_sch_id ' +
+      'ORDER BY pay_date_plan ASC LIMIT 1), ' +  // order
+      'sch_date_to = (' + // sch_date_to
+      'SELECT pay_date_plan FROM payments ' + // SELECT
+      'WHERE scheduler.sch_id = payments.pay_sch_id ' +
+      'ORDER BY pay_date_plan DESC LIMIT 1) ' +  // higher date
+      'WHERE scheduler.sch_id = new.pay_sch_id; END;'; // where
+    frmMain.QRY.ExecSQL;
+
+    // CREATE TRIGGER AFTER DELETE DATA
+    frmMain.QRY.SQL.Text := 'DROP TRIGGER after_delete_payments;';
+    frmMain.QRY.ExecSQL;
+
+    // CREATE TRIGGER AFTER DELETE PAYMENTS
+    frmMain.QRY.SQL.Text := 'CREATE TRIGGER after_delete_payments ' + // create
+      'AFTER DELETE ON payments ' + // after insert
+      'WHEN (SELECT COUNT(*) FROM payments ' +
+      'WHERE payments.pay_sch_id = old.pay_sch_id) > 0 ' + // WHEN
+      'BEGIN ' + // after
+      'UPDATE OR IGNORE scheduler SET ' + // update
+      'sch_date_from = (' + // sch_date_from
+      'SELECT pay_date_plan FROM payments ' + // SELECT
+      'WHERE pay_sch_id = old.pay_sch_id ORDER BY pay_date_plan ASC LIMIT 1), ' +
+      'sch_date_to = (' +
+      // sch_date_to
+      'SELECT pay_date_plan FROM payments ' + // SELECT
+      'WHERE pay_sch_id = old.pay_sch_id ' + 'ORDER BY pay_date_plan DESC LIMIT 1) ' +
+      // higher date
+      'WHERE scheduler.sch_id = old.pay_sch_id; END;'; // where
+    frmMain.QRY.ExecSQL;
+
+    // UPDATE VERSON TO 4
+    frmMain.QRY.SQL.Text :=
+      'UPDATE settings SET set_value = 4 WHERE set_parameter = "version";';
+    frmMain.QRY.ExecSQL;
+    frmMain.Tran.Commit;
+  end;
+
+  // **************************************************************************
   // ========================================
   // CHECK CORRUPTED RECORDS IN DATABASE FIRST
   // ========================================
@@ -9746,7 +10896,8 @@ begin
   ExistsCorruptedRecord := False;
   frmMain.QRY.SQL.Text :=
     'SELECT COUNT(d_date) FROM data ' + // 0
-    'WHERE d_account IS NULL or d_category IS NULL or d_person IS NULL or d_payee IS NULL;';
+    'WHERE d_account IS NULL or d_category IS NULL or d_person IS NULL or d_payee IS NULL or '
+    + 'd_account = 0 or d_category = 0 or d_person = 0 or d_payee = 0;';
   frmMain.QRY.Open;
   I := frmMain.QRY.Fields[0].AsInteger;
   frmMain.QRY.Close;
@@ -9773,7 +10924,8 @@ begin
       begin
         frmMain.QRY.SQL.Text :=
           'DELETE FROM data ' + // 0
-          'WHERE d_account IS NULL or d_category IS NULL or d_person IS NULL or d_payee IS NULL;';
+          'WHERE d_account IS NULL or d_category IS NULL or d_person IS NULL or d_payee IS NULL or '
+          + 'd_account = 0 or d_category = 0 or d_person = 0 or d_payee = 0;';
         frmMain.QRY.ExecSQL;
         frmMain.Tran.Commit;
       end;
@@ -9790,6 +10942,7 @@ begin
   end;
 
   screen.Cursor := crHourGlass;
+
   try
     // frmMain
     frmMain.Caption := Application.Title + ' [ ' + FileName + ' ]';
@@ -9805,8 +10958,8 @@ begin
     frmMain.actFilterCollapse.Enabled := True;
 
     frmMain.btnAdd.Enabled := True;
-    frmMain.popAddSimple.Enabled := True;
-    frmMain.popAddMulitple.Enabled := True;
+    frmMain.popAdd.Enabled := True;
+    frmMain.popAddMulti.Enabled := True;
 
     // update menu
     frmMain.mnuClose.Enabled := True;
@@ -9830,18 +10983,89 @@ begin
 
     frmMain.VSTSummary.Enabled := True;
 
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     // Lists updates
     UpdatePersons;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     UpdateCategories;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     UpdateCurrencies;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     UpdateAccounts;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     UpdatePayees;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     UpdateHolidays;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     UpdateComments;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     UpdateTags;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     UpdateScheduler;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     UpdateBudgets;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     UpdateLinks;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
 
     // =========================================================================
     // LOAD SORTING PARAMETERS
@@ -10082,14 +11306,11 @@ begin
               Field(separ, slTemp.Strings[I], 2), '"', '""') + '") OR ';
           end;
           f_account := UTF8Copy(f_account, 1, UTF8Length(f_account) - 4) + ') ';
+          frmMain.cbxAccountChange(frmMain.cbxAccount);
         end;
-        0: frmMain.cbxAccount.Hint := ''
         else
-          frmMain.cbxAccount.Hint :=
-            AnsiReplaceStr(frmMain.cbxAccount.Items[frmMain.cbxAccount.ItemIndex],
-            separ_1, '˙');
+          frmMain.cbxAccountSelect(frmMain.cbxAccount);
       end;
-      frmMain.cbxAccountChange(frmMain.cbxAccount);
 
       // ==============================================================================
       // filter Amount
@@ -10151,74 +11372,70 @@ begin
       frmMain.QRY.Close;
 
       frmMain.pnlCategoryCaption.Tag := 1 - StrToInt(Field(separ, Temp, 1));
+      frmMain.pnlCategoryCaptionClick(frmMain.pnlCategoryCaption);
       frmMain.cbxCategory.ItemIndex := StrToInt(Field(separ, Temp, 2));
 
       case frmMain.cbxCategory.ItemIndex of
-        0: frmMain.cbxCategory.Hint := '';
+        0: begin
+          frmMain.cbxCategory.Hint := '';
+          frmMain.cbxCategorySelect(frmMain.cbxCategory);
+        end;
         -1:
         begin
           frmMain.cbxCategory.Hint := Field(separ + separ + separ, Temp, 2);
-
-          slTemp.Text := ReplaceStr(frmMain.cbxCategory.Hint, separ + separ, sLineBreak);
-          frmMain.pnlCategory.Hint := '';
-          f_category := 'AND (';
-
-          for I := 0 to slTemp.Count - 1 do
-          begin
-            T1 := Field(separ, slTemp.Strings[I], 1);
-            T2 := Field(separ, slTemp.Strings[I], 2);
-
-            if UTF8Pos(separ, slTemp.Strings[I]) = 0 then
-              f_category := f_category + '(cat_parent_name = "' +
-                AnsiUpperCase(AnsiReplaceStr(T1, '"', '""')) + '") OR '
-            else
-              f_category := f_category + '(cat_parent_id <> 0 AND cat_name = "' +
-                AnsiReplaceStr(T2, '"', '""') + '" AND cat_parent_name = "' +
-                AnsiUpperCase(AnsiReplaceStr(T1, '"', '""')) + '") OR ';
-
-            frmMain.pnlCategory.Hint :=
-              frmMain.pnlCategory.Hint + separ_1 + AnsiUpperCase(T1) +
-              ' (' + IfThen(T2 = '', '*', AnsiLowerCase(T2)) + ') ';
-          end;
-          f_category := UTF8Copy(f_category, 1, UTF8Length(f_category) - 4) + ') ';
+          frmMain.pnlCategory.Hint :=
+            separ_1 + AnsiReplaceStr(frmMain.cbxCategory.Hint, separ + separ, ' + ');
+          f_category := 'AND cat_parent_name IN ("' + AnsiUpperCase(
+            AnsiReplaceStr(AnsiReplaceStr(frmMain.cbxCategory.Hint, '"', '""'),
+            separ + separ, '", "')) + '") ';
+          frmMain.cbxCategoryChange(frmMain.cbxCategory);
         end
         else
         begin
           frmMain.cbxCategory.Hint := Field('˙', Temp, 1) + '˙' + Field('˙', Temp, 2);
+          frmMain.cbxCategorySelect(frmMain.cbxCategory);
         end;
       end;
-
-      frmMain.pnlCategoryCaptionClick(frmMain.pnlCategoryCaption);
-      frmMain.cbxCategoryChange(frmMain.cbxCategory);
 
       // ==============================================================================
       // filter Subcategory
-      if frmMain.cbxCategory.ItemIndex > 0 then
-      begin
-        frmMain.cbxSubcategory.ItemIndex := StrToInt(Field(separ, Temp, 3));
-        if frmMain.cbxSubcategory.ItemIndex > 0 then
-          frmMain.cbxSubcategoryChange(frmMain.cbxSubcategory)
-        else if frmMain.cbxSubcategory.ItemIndex = -1 then
-        begin
-          Temp := Field(separ + separ + separ, Temp, 2);
-          frmMain.cbxSubcategory.Hint := Temp;
-          slTemp.Text := ReplaceStr(frmMain.cbxSubcategory.Hint,
-            separ + separ, sLineBreak);
-          frmMain.pnlCategory.Hint := '';
-          f_subcategory := '';
 
-          for I := 0 to slTemp.Count - 1 do
-            f_subcategory := f_subcategory + IntToStr(
-              GetCategoryID(frmMain.cbxCategory.Items[frmMain.cbxCategory.ItemIndex] +
-              separ_1 + slTemp.Strings[I])) + IfThen(I < slTemp.Count - 1, ',', '');
-          f_subcategory := 'AND cat_id IN (' + f_subcategory + ') ';
-          frmMain.pnlCategory.Hint :=
-            separ_1 + frmMain.cbxCategory.Items[frmMain.cbxCategory.ItemIndex] +
-            ' (' + AnsiReplaceStr(frmMain.cbxSubcategory.Hint, separ +
-            separ, separ_1) + ')';
-          frmMain.cbxSubcategoryChange(frmMain.cbxSubcategory);
+      frmMain.QRY.SQL.Text :=
+        'SELECT set_value FROM settings WHERE set_parameter = "filter_subcategory"';
+      frmMain.QRY.Open;
+      Temp := frmMain.QRY.Fields[0].AsString;
+      frmMain.QRY.Close;
+      frmMain.cbxSubcategory.ItemIndex := StrToInt(Field(separ, Temp, 1));
+
+      case frmMain.cbxSubcategory.ItemIndex of
+        0: begin
+          frmMain.cbxSubcategory.Hint := '';
+          frmMain.pnlSubcategory.Hint := '';
+          f_subcategory := '';
+        end;
+        -1:
+        begin
+          frmMain.cbxSubcategory.Hint := Field(separ + separ + separ, Temp, 2);
+          f_subcategory := 'AND cat_parent_id > 0 AND cat_name IN ("' +
+            AnsiLowerCase(AnsiReplaceStr(AnsiReplaceStr(frmMain.cbxSubcategory.Hint,
+            '"', '""'), separ + separ, '", "')) + '") ';
+
+          frmMain.pnlSubcategory.Hint :=
+            ' (' + ReplaceStr(frmMain.cbxSubcategory.Hint, separ + separ, ' + ') + ')';
+
+          frmMain.pnlSubcategory.Hint :=
+            IfThen(frmMain.pnlCategory.Hint = '', separ_1, '') +
+            IfThen(frmSettings.chkDisplaySubCatCapital.Checked = True,
+            AnsiUpperCase(frmMain.pnlSubcategory.Hint),
+            AnsiLowerCase(frmMain.pnlSubcategory.Hint));
+        end
+        else
+        begin
+          frmMain.cbxSubcategory.Hint :=
+            Field('˙', Temp, 1) + '˙' + Field('˙', Temp, 2);
         end;
       end;
+      frmMain.cbxSubcategorySelect(frmMain.cbxSubcategory);
 
       // ==============================================================================
       // filter Person
@@ -10234,30 +11451,18 @@ begin
       frmMain.cbxPerson.ItemIndex := StrToInt(Field(separ, Temp, 2));
 
       case frmMain.cbxPerson.ItemIndex of
-        0: frmMain.cbxPerson.Hint := '';
         -1:
         begin
           frmMain.cbxPerson.Hint := Field(separ + separ, Temp, 2);
-          slTemp.Text := ReplaceStr(frmMain.cbxPerson.Hint, separ, sLineBreak);
-          Temp := '';
-
-          frmMain.pnlPerson.Hint := '';
-          for I := 0 to slTemp.Count - 1 do
-          begin
-            Temp := Temp + '"' + AnsiReplaceStr(slTemp.Strings[I], '"', '""') + '",';
-            frmMain.pnlPerson.Hint :=
-              frmMain.pnlPerson.Hint + separ_1 +
-              Trim(AnsiReplaceStr(slTemp.Strings[I], '''', '"'));
-          end;
-          temp := UTF8Copy(Temp, 1, UTF8Length(Temp) - 1);
-          f_person := 'AND per_name IN (' + Temp + ') ';
+          frmMain.pnlPerson.Hint :=
+            separ_1 + AnsiReplaceStr(frmMain.cbxPerson.Hint, separ, ' + ');
+          f_person := 'AND per_name IN ("' + AnsiReplaceStr(
+            AnsiReplaceStr(frmMain.cbxPerson.Hint, '"', '""'), separ, '","') + '") ';
+          frmMain.cbxPersonChange(frmMain.cbxPerson);
         end
         else
-          frmMain.cbxPerson.Hint :=
-            Trim(AnsiReplaceStr(Field(separ + separ, Temp, 2), '''', '"'));
+          frmMain.cbxPersonSelect(frmMain.cbxPerson);
       end;
-
-      frmMain.cbxPersonChange(frmMain.cbxPerson);
 
       // ==============================================================================
       // filter Payee
@@ -10273,30 +11478,18 @@ begin
       frmMain.cbxPayee.ItemIndex := StrToInt(Field(separ, Temp, 2));
 
       case frmMain.cbxPayee.ItemIndex of
-        0: frmMain.cbxPayee.Hint := '';
         -1:
         begin
           frmMain.cbxPayee.Hint := Field(separ + separ, Temp, 2);
-          slTemp.Text := ReplaceStr(frmMain.cbxPayee.Hint, separ, sLineBreak);
-          Temp := '';
-
-          frmMain.pnlPayee.Hint := '';
-          for I := 0 to slTemp.Count - 1 do
-          begin
-            Temp := Temp + '"' + AnsiReplaceStr(slTemp.Strings[I], '"', '""') + '",';
-            frmMain.pnlPayee.Hint :=
-              frmMain.pnlPayee.Hint + separ_1 +
-              Trim(AnsiReplaceStr(slTemp.Strings[I], '''', '"'));
-          end;
-          temp := UTF8Copy(Temp, 1, UTF8Length(Temp) - 1);
-          f_Payee := 'AND pee_name IN (' + Temp + ') ';
+          f_Payee := 'AND pee_name IN ("' + AnsiReplaceStr(
+            AnsiReplaceStr(frmMain.cbxPayee.Hint, '"', '""'), separ, '","') + '") ';
+          frmMain.pnlPayee.Hint :=
+            separ_1 + AnsiReplaceStr(frmMain.cbxPayee.Hint, separ, ' + ');
+          frmMain.cbxPayeeChange(frmMain.cbxPayee);
         end
         else
-          frmMain.cbxPayee.Hint :=
-            Trim(AnsiReplaceStr(Field(separ + separ, Temp, 2), '''', '"'));
+          frmMain.cbxPayeeSelect(frmMain.cbxPayee);
       end;
-
-      frmMain.cbxPayeeChange(frmMain.cbxPayee);
 
       // ==============================================================================
       // filter Tag
@@ -10341,6 +11534,143 @@ begin
       slTemp.Free;
     end;
 
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
+    // ===============================================================================
+    // SET LAST USED TRANSACTION
+    // ===============================================================================
+    try
+      if frmSettings.chkRememberNewTransactionsForm.Checked = True then
+      begin
+        frmMain.QRY.SQL.Text :=
+          'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_used"';
+        frmMain.QRY.Open;
+        UsedLastImage := frmMain.QRY.Fields[0].AsString <> '0';
+        frmMain.QRY.Close;
+
+        if UsedLastImage = False then
+        begin
+          // set type
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_type"';
+          frmMain.QRY.Open;
+          frmDetail.cbxType.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
+          frmDetail.cbxTypeChange(frmDetail.cbxType);
+          frmMain.QRY.Close;
+
+          // set date from
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_date_from"';
+          frmMain.QRY.Open;
+          if Length(frmMain.QRY.Fields[0].AsString) = 10 then
+            frmDetail.datDateFrom.Date :=
+              StrToDate(frmMain.QRY.Fields[0].AsString, 'YYYY-MM-DD', '-')
+          else
+            frmDetail.datDateFrom.Date := Now();
+          frmMain.QRY.Close;
+
+          // set date to
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_date_to"';
+          frmMain.QRY.Open;
+          if Length(frmMain.QRY.Fields[0].AsString) = 10 then
+            frmDetail.datDateTo.Date :=
+              StrToDate(frmMain.QRY.Fields[0].AsString, 'YYYY-MM-DD', '-')
+          else
+            frmDetail.datDateTo.Date := Now();
+          frmMain.QRY.Close;
+
+          // set account from
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_account_from"';
+          frmMain.QRY.Open;
+          frmDetail.cbxAccountFrom.ItemIndex :=
+            StrToInt(frmMain.QRY.Fields[0].AsString);
+          frmMain.QRY.Close;
+
+          // set account to
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_account_to"';
+          frmMain.QRY.Open;
+          frmDetail.cbxAccountTo.ItemIndex :=
+            StrToInt(frmMain.QRY.Fields[0].AsString);
+          frmMain.QRY.Close;
+
+          // set amount from
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_amount_from"';
+          frmMain.QRY.Open;
+          frmDetail.spiAmountFrom.Text :=
+            ReplaceStr(frmMain.QRY.Fields[0].AsString, '.', FS_own.DecimalSeparator);
+          frmMain.QRY.Close;
+
+          // set amount to
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_amount_to"';
+          frmMain.QRY.Open;
+          frmDetail.spiAmountTo.Text :=
+            ReplaceStr(frmMain.QRY.Fields[0].AsString, '.', FS_own.DecimalSeparator);
+          frmMain.QRY.Close;
+
+          // set comment
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_comment"';
+          frmMain.QRY.Open;
+          frmDetail.cbxComment.Text := frmMain.QRY.Fields[0].AsString;
+          frmMain.QRY.Close;
+
+          // set category
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_category"';
+          frmMain.QRY.Open;
+          frmDetail.cbxCategory.ItemIndex :=
+            StrToInt(frmMain.QRY.Fields[0].AsString);
+          frmDetail.cbxCategoryChange(frmDetail.cbxCategory);
+          frmMain.QRY.Close;
+
+          // set subcategory
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_subcategory"';
+          frmMain.QRY.Open;
+          frmDetail.cbxSubcategory.ItemIndex :=
+            StrToInt(frmMain.QRY.Fields[0].AsString);
+          frmMain.QRY.Close;
+
+          // set person
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_person"';
+          frmMain.QRY.Open;
+          frmDetail.cbxPerson.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
+          frmMain.QRY.Close;
+
+          // set payee
+          frmMain.QRY.SQL.Text :=
+            'SELECT set_value FROM settings WHERE set_parameter = "last_transaction_payee"';
+          frmMain.QRY.Open;
+          frmDetail.cbxPayee.ItemIndex := StrToInt(frmMain.QRY.Fields[0].AsString);
+          frmMain.QRY.Close;
+
+          // set last used transaction to true
+          frmMain.QRY.SQL.Text :=
+            'UPDATE settings SET set_value = 1 WHERE set_parameter = "last_transaction_used";';
+          frmMain.QRY.ExecSQL;
+          frmMain.Tran.Commit;
+        end;
+      end;
+    except
+      frmMain.QRY.Close;
+    end;
+
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     // main currency in calendar
     if frmMain.tabCurrency.TabIndex > -1 then
     begin
@@ -10356,10 +11686,18 @@ begin
     AllowUpdateTransactions := True;
     UpdateTransactions;
 
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+    end;
+
     frmMain.pnlButtons.Enabled := True;
     frmMain.chkShowPieChart.Enabled := True;
     screen.Cursor := crDefault;
     frmMain.tmr.Enabled := True;
+
+    sleep(25);
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -10486,13 +11824,16 @@ begin
       f_account + sLineBreak + // account filter
       f_amount + sLineBreak +  // amount filter
       f_comment + sLineBreak + // comment filter
-      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', ' AND cat_status < 2 ') + sLineBreak + // category filter
+      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', ' AND cat_status < 2 ') +
+      sLineBreak + // category filter
       f_subcategory + sLineBreak + // subcategory filter
-      AnsiReplaceStr(f_person, 'AND per_status = 0 ', 'AND per_status < 2 ') + sLineBreak + // person filter
-      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', 'AND pee_status < 2 ') + sLineBreak + // payee filter
+      AnsiReplaceStr(f_person, 'AND per_status = 0 ', 'AND per_status < 2 ') +
+      sLineBreak + // person filter
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', 'AND pee_status < 2 ') +
+      sLineBreak + // payee filter
       f_tag; // tag filter
 
-    // ShowMessage (frmMain.QRY.SQL.Text);
+    // ShowMessage(frmMain.QRY.SQL.Text);
 
     frmMain.QRY.Open;
 
@@ -10501,20 +11842,23 @@ begin
       frmMain.VST.RootNodeCount := frmMain.VST.RootNodeCount + 1;
       P := frmMain.VST.GetLast();
       Transactions := frmMain.VST.GetNodeData(P);
-      Transactions.Date := frmMain.QRY.Fields[0].AsString;
-      Transactions.Comment := frmMain.QRY.Fields[1].AsString;
-      TryStrToFloat(frmMain.QRY.Fields[2].AsString, Transactions.Amount);
-      Transactions.currency := frmMain.QRY.Fields[3].AsString;
-      Transactions.Account := frmMain.QRY.Fields[4].AsString;
-      Transactions.Category := frmMain.QRY.Fields[5].AsString;
-      Transactions.SubCategory :=
-        IfThen(frmMain.QRY.Fields[11].AsInteger = 0, '', frmMain.QRY.Fields[6].AsString);
-      Transactions.Person := frmMain.QRY.Fields[7].AsString;
-      Transactions.Payee := frmMain.QRY.Fields[8].AsString;
-      Transactions.ID := frmMain.QRY.Fields[9].AsInteger;
-      Transactions.Kind := frmMain.QRY.Fields[10].AsInteger;
-      Transactions.Order := frmMain.QRY.Fields[12].AsInteger;
-      frmMain.QRY.Next;
+      try
+        Transactions.ID := frmMain.QRY.Fields[9].AsInteger;
+        Transactions.Date := frmMain.QRY.Fields[0].AsString;
+        Transactions.Comment := frmMain.QRY.Fields[1].AsString;
+        Transactions.currency := frmMain.QRY.Fields[3].AsString;
+        Transactions.Account := frmMain.QRY.Fields[4].AsString;
+        Transactions.Category := frmMain.QRY.Fields[5].AsString;
+        Transactions.SubCategory :=
+          IfThen(frmMain.QRY.Fields[11].AsInteger = 0, '', frmMain.QRY.Fields[6].AsString);
+        Transactions.Person := frmMain.QRY.Fields[7].AsString;
+        Transactions.Payee := frmMain.QRY.Fields[8].AsString;
+        Transactions.Kind := frmMain.QRY.Fields[10].AsInteger;
+        Transactions.Order := frmMain.QRY.Fields[12].AsInteger;
+        TryStrToFloat(frmMain.QRY.Fields[2].AsString, Transactions.Amount);
+      finally
+        frmMain.QRY.Next;
+      end;
     end;
 
     frmMain.QRY.Close;
@@ -10524,15 +11868,15 @@ begin
       AnsiUpperCase(Caption_25) + frmMain.pnlType.Hint + frmMain.pnlDate.Hint +
       frmMain.pnlCurrency.Hint + frmMain.pnlAccount.Hint + frmMain.pnlAmount.Hint +
       frmMain.pnlComment.Hint + frmMain.pnlCategory.Hint +
-      AnsiUpperCase(frmMain.pnlPerson.Hint) + AnsiUpperCase(frmMain.pnlPayee.Hint) +
-      frmMain.pnlTag.Hint;
+      frmMain.pnlSubcategory.Hint + AnsiUpperCase(frmMain.pnlPerson.Hint) +
+      AnsiUpperCase(frmMain.pnlPayee.Hint) + frmMain.pnlTag.Hint;
 
     frmMain.pnlReportCaption.Caption :=
       AnsiUpperCase(AnsiReplaceStr(Menu_45, '&', '')) + frmMain.pnlType.Hint +
       frmMain.pnlDate.Hint + frmMain.pnlCurrency.Hint + frmMain.pnlAccount.Hint +
       frmMain.pnlAmount.Hint + frmMain.pnlComment.Hint + frmMain.pnlCategory.Hint +
-      AnsiUpperCase(frmMain.pnlPerson.Hint) + AnsiUpperCase(frmMain.pnlPayee.Hint) +
-      frmMain.pnlTag.Hint;
+      frmMain.pnlSubcategory.Hint + AnsiUpperCase(frmMain.pnlPerson.Hint) +
+      AnsiUpperCase(frmMain.pnlPayee.Hint) + frmMain.pnlTag.Hint;
 
     // =====================================================================
     // items icon
@@ -10633,7 +11977,7 @@ begin
     frmMain.VSTSummary.BeginUpdate;
     Screen.Cursor := crHourGlass;
 
-    Temp := frmMain.tabCurrency.Tabs[frmMain.tabCurrency.TabIndex];
+    Temp := frmMain.tabCurrency.Tabs[frmMain.tabCurrency.TabIndex].Text;
     DateFrom := '1900-01-01';
     DateTo := '2222-12-31';
 
@@ -10693,11 +12037,10 @@ begin
       'persons ON (per_id = d_person), ' + // categories
       'payees ON (pee_id = d_payee) ' + // categories
       'WHERE d_account = acc_id AND d_date < "' + DateFrom + '"' +
-      f_amount + f_comment +
-      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') + f_subcategory +
-      AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
-      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') +
-      f_tag + ') as start_sum, ' + sLineBreak +
+      f_amount + f_comment + AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') +
+      f_subcategory + AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') + f_tag +
+      ') as start_sum, ' + sLineBreak +
 
       // CREDIT ========================================================
       '(SELECT TOTAL(d_sum) FROM data ' + // select
@@ -10706,11 +12049,10 @@ begin
       'persons ON (per_id = d_person), ' + // categories
       'payees ON (pee_id = d_payee) ' + // categories
       'WHERE d_account = acc_id AND d_type = 0 ' + f_date + f_amount +
-      f_comment +
-      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') + f_subcategory +
-      AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
-      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') +
-      f_tag + ') as credit, ' + sLineBreak +
+      f_comment + AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') +
+      f_subcategory + AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') + f_tag +
+      ') as credit, ' + sLineBreak +
 
       // DEBIT =========================================================
       '(SELECT TOTAL(d_sum) FROM data ' + 'LEFT JOIN ' + // JOIN
@@ -10718,11 +12060,10 @@ begin
       'persons ON (per_id = d_person), ' + // categories
       'payees ON (pee_id = d_payee) ' + // categories
       'WHERE d_account = acc_id AND d_type = 1 ' + f_date + f_amount +
-      f_comment +
-      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') + f_subcategory +
-      AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
-      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') +
-      f_tag + ') as debit, ' + sLineBreak +
+      f_comment + AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') +
+      f_subcategory + AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') + f_tag +
+      ') as debit, ' + sLineBreak +
 
       // TRANSFER + ====================================================
       '(SELECT TOTAL(d_sum) FROM data ' + 'LEFT JOIN ' + // JOIN
@@ -10730,12 +12071,10 @@ begin
       'persons ON (per_id = d_person), ' + // categories
       'payees ON (pee_id = d_payee) ' + // categories
       'WHERE d_account = acc_id AND d_type = 2 ' + f_date + f_amount +
-      f_comment +
-      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') + f_subcategory +
-      AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
-      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') +
-
-      f_tag + ') as transfer_plus, ' + sLineBreak +
+      f_comment + AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') +
+      f_subcategory + AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') + f_tag +
+      ') as transfer_plus, ' + sLineBreak +
 
       // TRANSFER - ====================================================
       '(SELECT TOTAL(d_sum) FROM data ' + 'LEFT JOIN ' + // JOIN
@@ -10743,11 +12082,10 @@ begin
       'persons ON (per_id = d_person), ' + // categories
       'payees ON (pee_id = d_payee) ' + // categories
       'WHERE d_account = acc_id AND d_type = 3 ' + f_date + f_amount +
-      f_comment +
-      AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') + f_subcategory +
-      AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
-      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') +
-      f_tag + ') as transfer_minus ' + sLineBreak +
+      f_comment + AnsiReplaceStr(f_category, ' AND cat_status = 0 ', '') +
+      f_subcategory + AnsiReplaceStr(f_person, 'AND per_status = 0 ', '') +
+      AnsiReplaceStr(f_payee, 'AND pee_status = 0 ', '') + f_tag +
+      ') as transfer_minus ' + sLineBreak +
 
       // FROM ==========================================================
       'FROM accounts ' + sLineBreak + // FROM tables

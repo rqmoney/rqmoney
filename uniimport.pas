@@ -6,8 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Buttons, ComCtrls, ActnList, sqldb, sqlite3conn, BCMDButtonFocus, BCPanel,
-  StrUtils, IniFiles;
+  Buttons, ComCtrls, ActnList, sqldb, sqlite3conn, BCMDButtonFocus, BCPanel, StrUtils;
 
 type
 
@@ -39,7 +38,6 @@ type
     procedure btnFileClick(Sender: TObject);
     procedure btnImport1Click(Sender: TObject);
     procedure btnImportClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -60,7 +58,7 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniResources, uniTemplates, uniCurrencies, uniAccounts, uniSettings,
+  uniMain, uniResources, uniTemplates, uniCurrencies, uniAccounts,
   uniCategories, uniComments, uniPersons, uniPayees, uniHolidays;
 
   { TfrmImport }
@@ -74,39 +72,6 @@ begin
     0: ImportRQM
     else
       frmTemplates.ShowModal;
-  end;
-end;
-
-procedure TfrmImport.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-
-begin
-  try
-   // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmImport.Name, '') <>
-          IntToStr(frmImport.Left) + separ + // form left
-        IntToStr(frmImport.Top) + separ + // form top
-        IntToStr(frmImport.Width) + separ + // form width
-        IntToStr(frmImport.Height) then
-          INI.WriteString('POSITION', frmImport.Name,
-            IntToStr(frmImport.Left) + separ + // form left
-            IntToStr(frmImport.Top) + separ + // form top
-            IntToStr(frmImport.Width) + separ + // form width
-            IntToStr(frmImport.Height));
-      finally
-        INI.Free;
-      end;
-    end;
-  except
-    on E: Exception do
-      ShowErrorMessage(E);
   end;
 end;
 
@@ -223,8 +188,8 @@ begin
       begin
         frmMain.QRY.SQL.Text :=
           'INSERT OR IGNORE INTO categories (' +
-          'cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment) ' +
-          'VALUES (:CATEGORY1, 0, :CATEGORY2, 0, NULL);';
+          'cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment, cat_energy) ' +
+          'VALUES (:CATEGORY1, 0, :CATEGORY2, 0, NULL, 1);';
         frmMain.QRY.Params.ParamByName('CATEGORY1').AsString :=
           AnsiUpperCase(Trim(Q1.Fields[0].AsString));
         frmMain.QRY.Params.ParamByName('CATEGORY2').AsString :=
@@ -242,12 +207,12 @@ begin
       begin
         frmMain.QRY.SQL.Text :=
           'INSERT OR IGNORE INTO categories (' +
-          'cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment) ' +
+          'cat_name, cat_parent_ID, cat_parent_name, cat_status, cat_comment, cat_energy) ' +
           // select
           'VALUES (:SUBCATEGORY, ' +  // category
           '(SELECT cat_id FROM categories WHERE cat_name = :CATEGORY and cat_parent_ID = 0), '
           + // parent ID
-          ':CATEGORY, 0, NULL);';
+          ':CATEGORY, 0, NULL, 1);';
 
         frmMain.QRY.Params.ParamByName('CATEGORY').AsString :=
           AnsiUpperCase(Q1.Fields[0].AsString);
@@ -839,58 +804,7 @@ begin
 end;
 
 procedure TfrmImport.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmImport.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmImport.Name, '-1•-1•0•0');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmImport.Width := Round(500 * (ScreenRatio / 100))
-      else
-        frmImport.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmImport.Height := Round(200 * (ScreenRatio / 100))
-      else
-        frmImport.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmImport.left := (Screen.Width - frmImport.Width) div 2
-      else
-        frmImport.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmImport.Top := ((Screen.Height - frmImport.Height) div 2) - 75
-      else
-        frmImport.Top := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   tabImport.TabIndex := 0;
   tabImportChange(tabImport);
   btnFile.SetFocus;

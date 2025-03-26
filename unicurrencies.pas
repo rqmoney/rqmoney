@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   Clipbrd, ExtCtrls, ComCtrls, Buttons, Menus, ActnList, Spin, BCPanel,
-  BCMDButtonFocus, LazUTF8, laz.VirtualTrees, Math, StrUtils, IniFiles;
+  BCMDButtonFocus, LazUTF8, laz.VirtualTrees, Math, StrUtils;
 
 type
   TCurrency = record
@@ -520,7 +520,8 @@ begin
   try
     if MessageDlg(Message_00, Question_01 + sLineBreak +
       VST.Text[VST.GetFirstSelected(False), 1] + ' [' +
-      VST.Text[VST.GetFirstSelected(False), 2] + ']', mtConfirmation, mbYesNo, 0) <> 6 then
+      VST.Text[VST.GetFirstSelected(False), 2] + ']', mtConfirmation,
+      mbYesNo, 0) <> 6 then
     begin
       VST.SetFocus;
       Exit;
@@ -726,16 +727,19 @@ var
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
 
-  (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
-    round(Screen.PixelsPerInch div 96 * 25);
-  X := (VST.Width - VST.Header.Columns[0].Width) div 100;
-  VST.Header.Columns[1].Width := 13 * X; // code
-  VST.Header.Columns[2].Width :=
-    VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (70 * X); // name
-  VST.Header.Columns[3].Width := 14 * X; // default
-  VST.Header.Columns[4].Width := 19 * X; // rate
-  VST.Header.Columns[5].Width := 17 * X; // status
-  VST.Header.Columns[6].Width := 7 * X; // ID
+  try
+    (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+      round(Screen.PixelsPerInch div 96 * 25);
+    X := (VST.Width - VST.Header.Columns[0].Width) div 100;
+    VST.Header.Columns[1].Width := 13 * X; // code
+    VST.Header.Columns[2].Width :=
+      VST.Width - VST.Header.Columns[0].Width - ScrollBarWidth - (70 * X); // name
+    VST.Header.Columns[3].Width := 14 * X; // default
+    VST.Header.Columns[4].Width := 19 * X; // rate
+    VST.Header.Columns[5].Width := 17 * X; // status
+    VST.Header.Columns[6].Width := 7 * X; // ID
+  except
+  end;
 end;
 
 procedure TfrmCurrencies.btnExitClick(Sender: TObject);
@@ -764,10 +768,6 @@ begin
 end;
 
 procedure TfrmCurrencies.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-
 begin
   try
     if pnlButton.Visible = True then
@@ -776,30 +776,6 @@ begin
       CloseAction := Forms.caNone;
       Exit;
     end;
-
-    // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmCurrencies.Name, '') <>
-          IntToStr(frmCurrencies.Left) + separ + // form left
-          IntToStr(frmCurrencies.Top) + separ + // form top
-          IntToStr(frmCurrencies.Width) + separ + // form width
-          IntToStr(frmCurrencies.Height) + separ + // form height
-          IntToStr(frmCurrencies.pnlRight.Width) then
-          INI.WriteString('POSITION', frmCurrencies.Name,
-          IntToStr(frmCurrencies.Left) + separ + // form left
-          IntToStr(frmCurrencies.Top) + separ + // form top
-          IntToStr(frmCurrencies.Width) + separ + // form width
-          IntToStr(frmCurrencies.Height) + separ + // form height
-          IntToStr(frmCurrencies.pnlRight.Width));
-      finally
-        INI.Free;
-      end;
-    end;
-
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -826,65 +802,7 @@ begin
 end;
 
 procedure TfrmCurrencies.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmCurrencies.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmCurrencies.Name, '-1•-1•0•0•200');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmCurrencies.Width := Screen.Width - 500 - (200 - ScreenRatio)
-      else
-        frmCurrencies.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmCurrencies.Height := Screen.Height - 500 - (200 - ScreenRatio)
-      else
-        frmCurrencies.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmCurrencies.left := (Screen.Width - frmCurrencies.Width) div 2
-      else
-        frmCurrencies.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmCurrencies.Top := ((Screen.Height - frmCurrencies.Height) div 2) - 75
-      else
-        frmCurrencies.Top := I;
-
-      // detail panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 100) or (I > 300) then
-        frmCurrencies.pnlDetail.Width := 220
-      else
-        frmCurrencies.pnlDetail.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   // btnAdd
   btnAdd.Enabled := frmMain.Conn.Connected = True;
   popAdd.Enabled := frmMain.Conn.Connected = True;

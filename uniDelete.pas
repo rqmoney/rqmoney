@@ -8,7 +8,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls, StdCtrls,
   ActnList, Buttons, BCPanel, BCMDButtonFocus, LazUTF8, Math, laz.VirtualTrees,
-  StrUtils, IniFiles;
+  StrUtils;
 
 type // main grid (Delete1)
   TDelete1 = record
@@ -81,7 +81,6 @@ type
     VST2: TLazVirtualStringTree;
     procedure btnCancelClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -150,34 +149,6 @@ begin
   frmDelete.ModalResult := mrOk;
 end;
 
-procedure TfrmDelete.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-
-begin
-  // write position and window size
-  if frmSettings.chkLastFormsSize.Checked = True then
-  begin
-    try
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmDelete.Name, '') <>
-        IntToStr(frmDelete.Left) + separ + // form left
-      IntToStr(frmDelete.Top) + separ + // form top
-      IntToStr(frmDelete.Width) + separ + // form width
-      IntToStr(frmDelete.Height) then
-        INI.WriteString('POSITION', frmDelete.Name,
-          IntToStr(frmDelete.Left) + separ + // form left
-          IntToStr(frmDelete.Top) + separ + // form top
-          IntToStr(frmDelete.Width) + separ + // form width
-          IntToStr(frmDelete.Height)); // form height
-    finally
-      INI.Free;
-    end;
-  end;
-end;
-
 procedure TfrmDelete.FormResize(Sender: TObject);
 begin
   frmMain.imgSize.GetBitmap(0, imgWidth.Picture.Bitmap);
@@ -190,61 +161,11 @@ end;
 
 procedure TfrmDelete.FormShow(Sender: TObject);
 var
-  INI: TINIFile;
-  S: string;
-  I: integer;
   Delete1: PDelete1;
   Delete2: PDelete2;
   Delete3: PDelete3;
   P: PVirtualNode;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmDelete.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmDelete.Name, '-1•-1•0•0');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmDelete.Width := Screen.Width - 200 - (200 - ScreenRatio)
-      else
-        frmDelete.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmDelete.Height := Screen.Height - 200 - (200 - ScreenRatio)
-      else
-        frmDelete.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmDelete.left := (Screen.Width - frmDelete.Width) div 2
-      else
-        frmDelete.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmDelete.Top := ((Screen.Height - frmDelete.Height) div 2) - 75
-      else
-        frmDelete.Top := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   frmDelete.tabDelete.TabIndex := 0;
 
   // =======================================================================================

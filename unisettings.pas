@@ -48,6 +48,7 @@ type
     btnSave: TBCMDButtonFocus;
     cbxFirstWeekDay: TComboBox;
     cbxReportFont: TComboBox;
+    chkFilterComboboxStyle: TCheckBox;
     chkButtonsVisibility: TCheckListBox;
     chkBackupQuestion: TCheckBox;
     chkChartRotateLabels: TCheckBox;
@@ -88,6 +89,7 @@ type
     lblTransactionsDeleteDate: TLabel;
     lblTransactionsEditDays: TLabel;
     lblTransactionsDeleteDays: TLabel;
+    tabFilter: TTabSheet;
     tabTransactions: TPageControl;
     pnlButtonVisibilityTop: TPanel;
     pnlButtonsVisibility: TPanel;
@@ -281,6 +283,7 @@ type
     procedure chkDisplayFontBoldChange(Sender: TObject);
     procedure chkDisplaySubCatCapitalChange(Sender: TObject);
     procedure chkEncryptDatabaseChange(Sender: TObject);
+    procedure chkFilterComboboxStyleChange(Sender: TObject);
     procedure chkSelectAllChange(Sender: TObject);
     procedure datTransactionsAddDateChange(Sender: TObject);
     procedure datTransactionsDeleteDateChange(Sender: TObject);
@@ -375,7 +378,7 @@ uses
   uniGuide, uniPassword, uniSQLResults, uniHistory, uniWrite, uniManyCurrencies,
   uniSuccess, uniGate, uniSQL, uniRecycleBin, uniFilter, uniImport, uniDetail,
   uniCalendar, uniResources, uniwriting, uniEdits, uniPeriod, uniPlan, uniTemplates,
-  uniBudget, uniLinks;
+  uniBudget, uniLinks, uniSplash;
 
   { TfrmSettings }
 
@@ -383,7 +386,7 @@ procedure TfrmSettings.FormCreate(Sender: TObject);
 var
   I: integer;
   INI: TINIFile;
-  INIFile, TempStr, File1: string;
+  INIFile, Temp, File1: string;
   SystemFS: boolean;
   Key: PKey;
   Lang: PLang;
@@ -432,6 +435,9 @@ begin
       ShowErrorMessage(E);
   end;
 
+  frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+  frmSplash.Update;
+
   // =================================================================================
   // FONT NAMES AND SIZES
   // =================================================================================
@@ -464,6 +470,9 @@ begin
     chkButtonsVisibility.Items.Add('');
     chkButtonsVisibility.CheckAll(cbChecked, False, False);
   end;
+
+  frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+  frmSplash.Update;
 
   // =================================================================================
   // LANGUAGE
@@ -563,6 +572,7 @@ begin
         INI.WriteBool('VISUAL_SETTINGS', 'RedColoredButtonDelete', True);
         INI.WriteInteger('VISUAL_SETTINGS', 'ButtonsSize', 24);
         INI.WriteString('VISUAL_SETTINGS', 'ButtonsVisibility', StringOfChar('1', 28));
+        INI.WriteBool('VISUAL_SETTINGS', 'FilterComboboxStyle', False);
 
         // ---------------------------------------------------
         INI.WriteBool('ON_START', 'OpenLastFile', chkLastUsedFile.Checked);
@@ -704,6 +714,7 @@ begin
   if FileExists(INIFile) = True then
   begin
     INI := TINIFile.Create(INIFile);
+    INI.EraseSection('POSITION');
 
     try
       // update to version 2
@@ -733,40 +744,292 @@ begin
         INI.WriteString('KEYS', 'new_transaction_simple', 'F1');
         INI.WriteString('KEYS', 'new_transaction_multiple', 'F2');
 
-        // delete old sections with forms size, position, ...
-        INI.EraseSection(frmAccounts.Name);
-        INI.EraseSection(frmBudget.Name);
-        INI.EraseSection(frmBudgets.Name);
-        INI.EraseSection(frmCalendar.Name);
-        INI.EraseSection(frmCategories.Name);
-        INI.EraseSection(frmComments.Name);
-        INI.EraseSection(frmCounter.Name);
-        INI.EraseSection(frmCurrencies.Name);
-        INI.EraseSection(frmDelete.Name);
-        INI.EraseSection(frmDetail.Name);
-        INI.EraseSection(frmEdit.Name);
-        INI.EraseSection(frmEdits.Name);
-        INI.EraseSection(frmHistory.Name);
-        INI.EraseSection(frmHolidays.Name);
-        INI.EraseSection(frmLinks.Name);
-        INI.EraseSection(frmMain.Name);
-        INI.EraseSection(frmPayees.Name);
-        INI.EraseSection(frmPeriod.Name);
-        INI.EraseSection(frmPersons.Name);
-        INI.EraseSection(frmRecycleBin.Name);
-        INI.EraseSection(frmScheduler.Name);
-        INI.EraseSection(frmSchedulers.Name);
-        INI.EraseSection(frmSettings.Name);
-        INI.EraseSection(frmSQL.Name);
-        INI.EraseSection(frmSQLResult.Name);
-        INI.EraseSection(frmTags.Name);
-        INI.EraseSection(frmTemplates.Name);
-        INI.EraseSection(frmValues.Name);
-        INI.EraseSection(frmWrite.Name);
-        INI.EraseSection('frmMultiple');
-
         // update version
         INI.WriteInteger('GLOBAL', 'Version', 3);
+      end;
+    except
+    end;
+
+    try
+      // update to version 4
+      // =========================================================
+      if INI.ReadInteger('GLOBAL', 'Version', 3) < 4 then
+      begin
+
+        // optimize the columns width writing
+        if INI.ReadBool('ON_START', 'TablesColumnsAutoWidth', True) = False then
+        begin
+
+          // table frmAccounts
+          Temp := '';
+          for I := 1 to frmAccounts.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmAccounts', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Accounts', Temp);
+          INI.EraseSection('frmAccounts');
+
+          // table Report - Balance
+          Temp := '';
+          for I := 1 to frmMain.VSTBalance.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmMain', 'BalanceCol_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Balance', Temp);
+
+          // table frmBudget
+          Temp := '';
+          for I := 1 to frmBudget.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmBudget', 'Col_' + RightStr('0' +
+              IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Budget', Temp);
+          INI.EraseSection('frmBudget');
+
+          // table frmBudgets - budgets
+          Temp := '';
+          for I := 1 to frmBudgets.VSTBudgets.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmBudgets', 'ColB_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Budgets_1', Temp);
+
+          // table frmBudgets - periods
+          Temp := '';
+          for I := 1 to frmBudgets.VSTPeriods.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmBudgets', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Budgets_2', Temp);
+          INI.EraseSection('frmBudgets');
+
+          // table frmCalendar
+          Temp := '';
+          for I := 1 to frmCalendar.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmCalendar', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Calendar', Temp);
+          INI.EraseSection('frmCalendar');
+
+          // table frmCategories
+          Temp := '';
+          for I := 1 to frmCategories.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmCategories', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Categories', Temp);
+          INI.EraseSection('frmCategories');
+
+          // table Report - Chrono
+          Temp := '';
+          for I := 1 to frmMain.VSTChrono.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmMain', 'ChronoCol_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Chronology', Temp);
+
+          // table frmComments
+          Temp := '';
+          for I := 1 to frmComments.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmComments', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Comments', Temp);
+          INI.EraseSection('frmComments');
+
+          // table Report - Cross
+          Temp := '';
+          for I := 1 to frmMain.VSTCross.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmMain', 'CrossTableCol_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'CrossTable', Temp);
+
+          // table frmCurrencies
+          Temp := '';
+          for I := 1 to frmCurrencies.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmCurrencies', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Currencies', Temp);
+          INI.EraseSection('frmCurrencies');
+
+          // table frmDelete 1
+          Temp := '';
+          for I := 1 to frmDelete.VST1.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmDelete', 'Col1_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Delete_1', Temp);
+
+          // table frmDelete 2
+          Temp := '';
+          for I := 1 to frmDelete.VST2.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmDelete', 'Col2_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Delete_2', Temp);
+
+          // table frmDelete 3
+          Temp := '';
+          for I := 1 to frmDelete.VST3.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmDelete', 'Col3_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Delete_3', Temp);
+          INI.EraseSection('frmDelete');
+
+          // table frmDetail
+          Temp := '';
+          for I := 1 to frmDetail.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmDetail', 'Col_' + RightStr('0' +
+              IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Detail', Temp);
+          INI.EraseSection('frmDetail');
+
+          // table frmHistory 1
+          Temp := '';
+          for I := 1 to frmHistory.VST1.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmHistory', 'Col1_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'History_1', Temp);
+
+          // table frmHistory 2
+          Temp := '';
+          for I := 1 to frmHistory.VST2.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmHistory', 'Col2_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'History_2', Temp);
+          INI.EraseSection('frmHistory');
+
+          // table frmHolidays
+          Temp := '';
+          for I := 1 to frmHolidays.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmHolidays', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Holidays', Temp);
+          INI.EraseSection('frmHolidays');
+
+          // table frmLinks
+          Temp := '';
+          for I := 1 to frmLinks.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmLinks', 'Col_' + RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Links', Temp);
+          INI.EraseSection('frmLinks');
+
+          // table frmPayees
+          Temp := '';
+          for I := 1 to frmPayees.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmPayees', 'Col_' + RightStr('0' +
+              IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Payees', Temp);
+          INI.EraseSection('frmPayees');
+
+          // table frmPeriod
+          Temp := '';
+          for I := 1 to frmPeriod.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmPeriod', 'Col_' + RightStr('0' +
+              IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Period', Temp);
+          INI.EraseSection('frmPeriod');
+
+          // table frmPersons
+          Temp := '';
+          for I := 1 to frmPersons.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmPersons', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Persons', Temp);
+          INI.EraseSection('frmPersons');
+
+          // table frmRecycleBin
+          Temp := '';
+          for I := 1 to frmRecycleBin.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmRecycleBin', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'RecycleBin', Temp);
+          INI.EraseSection('frmRecycleBin');
+
+          // table frmSchedulers  1
+          Temp := '';
+          for I := 1 to frmSchedulers.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmSchedulers', 'Col1_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Schedulers_1', Temp);
+
+          // table frmSchedulers  1
+          Temp := '';
+          for I := 1 to frmSchedulers.VST1.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmSchedulers', 'Col2_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Schedulers_2', Temp);
+          INI.EraseSection('frmSchedulers');
+
+          // table frmSettings
+          Temp := '';
+          for I := 1 to frmSettings.VSTKeys.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmSettings', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Settings', Temp);
+          INI.EraseSection('frmSettings');
+
+          // table Summary
+          Temp := '';
+          for I := 1 to frmMain.VSTSummary.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmMain', 'SumColumn_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Summary', Temp);
+
+          // table frmTags
+          Temp := '';
+          for I := 1 to frmTags.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmTags', 'Col_' + RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Tags', Temp);
+          INI.EraseSection('frmTags');
+
+          // table Transactions
+          Temp := '';
+          for I := 1 to frmMain.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmMain', 'TransColumn_' +
+              RightStr('0' + IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Transactions', Temp);
+          INI.EraseSection('frmMain');
+
+          // table frmValues
+          Temp := '';
+          for I := 1 to frmValues.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmValues', 'Col_' + RightStr('0' +
+              IntToStr(I), 2), '100');
+          INI.WriteString('COLUMNS_WIDTH', 'Values', Temp);
+          INI.EraseSection('frmValues');
+
+          // table frmWrite
+          Temp := '';
+          for I := 1 to frmWrite.VST.Header.Columns.Count - 1 do
+            Temp := Temp + IfThen(I = 1, '', separ) +
+              INI.ReadString('frmWrite', 'Col_' + RightStr('0' + IntToStr(I), 2), '100');
+          INI.DeleteKey('frmWrite', 'Col_' + RightStr('0' + IntToStr(I), 2));
+          INI.EraseSection('frmWrite');
+
+        end;
+        // update version
+        INI.WriteInteger('GLOBAL', 'Version', 4);
       end;
     except
     end;
@@ -775,19 +1038,22 @@ begin
       // =========================================================
       // reading values from the INI file.
       // set language
-      TempStr := INI.ReadString('GLOBAL', 'Language',
+      Temp := INI.ReadString('GLOBAL', 'Language',
         AnsiLowerCase(LeftStr(GetLang, 2)) + '.po');
-      VSTLang.Hint := LeftStr(TempStr, 2);
+      VSTLang.Hint := LeftStr(Temp, 2);
 
       SetDefaultLang(
         VSTLang.Hint,
         ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Languages',
-        TempStr,
+        Temp,
         True);
     except
     end;
 
-    try
+  frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+  frmSplash.Update;
+
+  try
       // ---------------------------------------------------
       // SET GLOBAL SETTINGS
       // ---------------------------------------------------
@@ -896,10 +1162,15 @@ begin
 
       // grid font size
       spiGridFontSize.Value := INI.ReadInteger('VISUAL_SETTINGS', 'FontSize', 10);
+      spiGridFontSize.Tag := spiGridFontSize.Value;
 
       // summary pie chart visibility
-      frmMain.chkShowPieChart.Checked :=
-        INI.ReadBool('VISUAL_SETTINGS', 'SummaryPieChartVisible', True);
+      I := INI.ReadInteger('VISUAL_SETTINGS', 'SummaryPieChartVisible', 0);
+      frmMain.chkShowPieChart.Tag := I;
+      if I = 1 then
+        frmMain.chkShowPieChart.Checked := True
+      else
+        frmMain.chkShowPieChart.Checked := False;
     except
     end;
 
@@ -907,23 +1178,37 @@ begin
       // Button size (24 px or 32 px) in frmMain
       I := INI.ReadInteger('VISUAL_SETTINGS', 'ButtonsSize', 24);
       if I = 24 then
-        rbtButtonsSize24.Checked := True
+      begin
+        rbtButtonsSize24.Checked := True;
+        rbtButtonsSize24Change(rbtButtonsSize24);
+      end
       else
+      begin
         rbtButtonsSize32.Checked := True;
+        rbtButtonsSize24Change(rbtButtonsSize32);
+      end;
 
       // Button visibility (in frmMain)
       SystemFS := False;
-      TempStr := INI.ReadString('VISUAL_SETTINGS', 'ButtonsVisibility',
+      Temp := INI.ReadString('VISUAL_SETTINGS', 'ButtonsVisibility',
         StringOfChar('1', 28));
       for I := 0 to chkButtonsVisibility.Items.Count - 1 do
       begin
-        chkButtonsVisibility.Checked[I] := StrToBool(MidStr(TempStr, I + 1, 1));
+        chkButtonsVisibility.Checked[I] := StrToBool(MidStr(Temp, I + 1, 1));
         frmMain.tooMenu.Controls[I].Visible := chkButtonsVisibility.Checked[I];
         if chkButtonsVisibility.Checked[I] = True then
           SystemFS := True;
       end;
       frmMain.tooMenu.Visible := SystemFS;
       chkSelectAll.Checked := SystemFS;
+    except
+    end;
+
+    try
+      // Filter combobox style (Dropdown or DropdownList
+      chkFilterComboboxStyle.Checked :=
+        INI.ReadBool('VISUAL_SETTINGS', 'FilterComboboxStyle', False);
+      chkFilterComboboxStyleChange(chkFilterComboboxStyle);
     except
     end;
 
@@ -964,45 +1249,45 @@ begin
       chkRememberNewTransactionsForm.Checked :=
         INI.ReadBool('TRANSACTIONS', 'RememberNewTransactionsForm', False);
 
-      TempStr := INI.ReadString('TRANSACTIONS', 'RestrictionsAdd', '');
-      case Length(TempStr) of
+      Temp := INI.ReadString('TRANSACTIONS', 'RestrictionsAdd', '');
+      case Length(Temp) of
         0: rbtTransactionsAddNo.Checked := True;
         10: begin
           rbtTransactionsAddDate.Checked := True;
-          datTransactionsAddDate.Date := StrToDate(TempStr, 'YYYY-MM-DD', '-');
+          datTransactionsAddDate.Date := StrToDate(Temp, 'YYYY-MM-DD', '-');
         end
         else
         begin
           rbtTransactionsAddDays.Checked := True;
-          spiTransactionsAddDays.Value := StrToInt(TempStr);
+          spiTransactionsAddDays.Value := StrToInt(Temp);
         end;
       end;
 
-      TempStr := INI.ReadString('TRANSACTIONS', 'RestrictionsEdit', '');
-      case Length(TempStr) of
+      Temp := INI.ReadString('TRANSACTIONS', 'RestrictionsEdit', '');
+      case Length(Temp) of
         0: rbtTransactionsEditNo.Checked := True;
         10: begin
           rbtTransactionsEditDate.Checked := True;
-          datTransactionsEditDate.Date := StrToDate(TempStr, 'YYYY-MM-DD', '-');
+          datTransactionsEditDate.Date := StrToDate(Temp, 'YYYY-MM-DD', '-');
         end
         else
         begin
           rbtTransactionsEditDays.Checked := True;
-          spiTransactionsEditDays.Value := StrToInt(TempStr);
+          spiTransactionsEditDays.Value := StrToInt(Temp);
         end;
       end;
 
-      TempStr := INI.ReadString('TRANSACTIONS', 'RestrictionsDelete', '');
-      case Length(TempStr) of
+      Temp := INI.ReadString('TRANSACTIONS', 'RestrictionsDelete', '');
+      case Length(Temp) of
         0: rbtTransactionsDeleteNo.Checked := True;
         10: begin
           rbtTransactionsDeleteDate.Checked := True;
-          datTransactionsDeleteDate.Date := StrToDate(TempStr, 'YYYY-MM-DD', '-');
+          datTransactionsDeleteDate.Date := StrToDate(Temp, 'YYYY-MM-DD', '-');
         end
         else
         begin
           rbtTransactionsDeleteDays.Checked := True;
-          spiTransactionsDeleteDays.Value := StrToInt(TempStr);
+          spiTransactionsDeleteDays.Value := StrToInt(Temp);
         end;
       end;
     except
@@ -1046,6 +1331,7 @@ begin
       if INI.ReadBool('ON_START', 'OpenLastFile', True) = True then
       begin
         chkLastUsedFile.Checked := True;
+        frmMain.pnlBottomClient.Tag := IfThen(chkLastUsedFile.Checked = True, 1, 0);
         File1 := INI.ReadString('ON_START', 'LastFile', '');
       end
       else
@@ -1053,6 +1339,10 @@ begin
         File1 := '';
         chkLastUsedFile.Checked := False;
       end;
+      if FileExists(File1) = True then
+        frmMain.pnlBottomClient.Hint := File1
+      else
+        frmMain.pnlBottomClient.Hint := '';
 
     except
     end;
@@ -1077,6 +1367,608 @@ begin
     except
     end;
 
+    frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+    frmSplash.Update;
+
+    // FORMS SIZE AND POSITION
+    if chkLastFormsSize.Checked = True then
+    begin
+      Temp := frmAccounts.Name + '_' + IntToStr(ExtendedScreenWidth);
+      // frmAccounts
+      frmAccounts.Position := poDesigned;
+      frmAccounts.Width :=
+        INI.ReadInteger(Temp, 'Width', frmAccounts.Width);
+      frmAccounts.Height :=
+        INI.ReadInteger(Temp, 'Height', frmAccounts.Height);
+      frmAccounts.pnlDetail.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmAccounts.pnlDetail.Width);
+      frmAccounts.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmAccounts.Width) div 2);
+      frmAccounts.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmAccounts.Height) div 2) - 75);
+
+      frmAccounts.Hint := IntToStr(frmAccounts.Width) +
+        IntToStr(frmAccounts.Height) + IntToStr(frmAccounts.Left) +
+        IntToStr(frmAccounts.Top) + IntToStr(frmAccounts.pnlDetail.Width);
+
+
+      // frmBudgets
+      Temp := frmBudgets.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmBudgets.Position := poDesigned;
+      frmBudgets.Width := INI.ReadInteger(Temp, 'Width', frmBudgets.Width);
+      frmBudgets.Height := INI.ReadInteger(Temp, 'Height', frmBudgets.Height);
+      frmBudgets.tabLeft.Width :=
+        INI.ReadInteger(Temp, 'pnlLeft', frmBudgets.tabLeft.Width);
+      frmBudgets.pnlPeriods.Width :=
+        INI.ReadInteger(Temp, 'pnlPeriods', frmBudgets.pnlPeriods.Width);
+      frmBudgets.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmBudgets.Width) div 2);
+      frmBudgets.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmBudgets.Height) div 2) - 75);
+
+      frmBudgets.Hint := IntToStr(frmBudgets.Width) + IntToStr(frmBudgets.Height) +
+        IntToStr(frmBudgets.Left) + IntToStr(frmBudgets.Top) +
+        IntToStr(frmBudgets.tabLeft.Width) + IntToStr(frmBudgets.pnlPeriods.Width);
+
+      // frmBudget
+      Temp := frmBudget.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmBudget.Position := poDesigned;
+      frmBudget.Width := INI.ReadInteger(Temp, 'Width', frmBudget.Width);
+      frmBudget.Height := INI.ReadInteger(Temp, 'Height', frmBudget.Height);
+      frmBudget.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmBudget.Width) div 2);
+      frmBudget.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmBudget.Height) div 2) - 75);
+      frmBudget.pnlLeft.Width :=
+        INI.ReadInteger(Temp, 'pnlLeft', frmBudget.pnlLeft.Width);
+
+      frmBudget.Hint := IntToStr(frmBudget.Width) + IntToStr(frmBudget.Height) +
+        IntToStr(frmBudget.Left) + IntToStr(frmBudget.Top) +
+        IntToStr(frmBudget.pnlLeft.Width);
+
+      // frmCalendar
+      Temp := frmCalendar.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmCalendar.Position := poDesigned;
+      frmCalendar.Width :=
+        INI.ReadInteger(Temp, 'Width', frmCalendar.Width);
+      frmCalendar.Height := INI.ReadInteger(Temp, 'Height', frmCalendar.Height);
+      frmCalendar.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmCalendar.Width) div 2);
+      frmCalendar.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmCalendar.Height) div 2) - 75);
+      frmCalendar.pnlLeft.Width :=
+        INI.ReadInteger(Temp, 'pnlLeft', frmCalendar.pnlLeft.Width);
+
+      frmCalendar.Hint := IntToStr(frmCalendar.Width) +
+        IntToStr(frmCalendar.Height) + IntToStr(frmCalendar.Left) +
+        IntToStr(frmCalendar.Top) + IntToStr(frmCalendar.pnlLeft.Width);
+
+      // frmCategories
+      Temp := frmCategories.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmCategories.Position := poDesigned;
+      frmCategories.Width :=
+        INI.ReadInteger(Temp, 'Width', frmCategories.Width);
+      frmCategories.Height :=
+        INI.ReadInteger(Temp, 'Height', frmCategories.Height);
+      frmCategories.Left :=
+        INI.ReadInteger(Temp, 'Left', (Screen.Width - frmCategories.Width) div 2);
+      frmCategories.Top :=
+        INI.ReadInteger(Temp, 'Top', ((Screen.Height - frmCategories.Height) div
+        2) - 75);
+      frmCategories.pnlDetail.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmCategories.pnlDetail.Width);
+
+      frmCategories.Hint := IntToStr(frmCategories.Width) +
+        IntToStr(frmCategories.Height) + IntToStr(frmCategories.Left) +
+        IntToStr(frmCategories.Top) + IntToStr(frmCategories.pnlDetail.Width);
+
+      // frmComments
+      Temp := frmComments.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmComments.Position := poDesigned;
+      frmComments.Width :=
+        INI.ReadInteger(Temp, 'Width', frmComments.Width);
+      frmComments.Height :=
+        INI.ReadInteger(Temp, 'Height', frmComments.Height);
+      frmComments.pnlDetail.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmComments.pnlDetail.Width);
+      frmComments.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmComments.Width) div 2);
+      frmComments.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmComments.Height) div 2) - 75);
+
+      frmComments.Hint := IntToStr(frmComments.Width) +
+        IntToStr(frmComments.Height) + IntToStr(frmComments.Left) +
+        IntToStr(frmComments.Top) + IntToStr(frmComments.pnlDetail.Width);
+
+      // frmCounter
+      Temp := frmCounter.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmCounter.Position := poDesigned;
+      frmCounter.Width := INI.ReadInteger(Temp, 'Width', frmCounter.Width);
+      frmCounter.Height :=
+        INI.ReadInteger(Temp, 'Height', frmCounter.Height);
+      frmCounter.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmCounter.Width) div 2);
+      frmCounter.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmCounter.Height) div 2) - 75);
+
+      frmCounter.Hint := IntToStr(frmCounter.Width) + IntToStr(frmCounter.Height) +
+        IntToStr(frmCounter.Left) + IntToStr(frmCounter.Top);
+
+      // frmCurrencies
+      Temp := frmCurrencies.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmCurrencies.Position := poDesigned;
+      frmCurrencies.Width :=
+        INI.ReadInteger(Temp, 'Width', frmCurrencies.Width);
+      frmCurrencies.Height :=
+        INI.ReadInteger(Temp, 'Height', frmCurrencies.Height);
+      frmCurrencies.Left :=
+        INI.ReadInteger(Temp, 'Left', (Screen.Width - frmCurrencies.Width) div 2);
+      frmCurrencies.Top :=
+        INI.ReadInteger(Temp, 'Top', ((Screen.Height - frmCurrencies.Height) div
+        2) - 75);
+      frmCurrencies.pnlRight.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmCurrencies.pnlRight.Width);
+
+      frmCurrencies.Hint := IntToStr(frmCurrencies.Width) +
+        IntToStr(frmCurrencies.Height) + IntToStr(frmCurrencies.Left) +
+        IntToStr(frmCurrencies.Top) + IntToStr(frmCurrencies.pnlRight.Width);
+
+      // frmDelete
+      Temp := frmDelete.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmDelete.Position := poDesigned;
+      frmDelete.Left := INI.ReadInteger(Temp, 'Left', frmDelete.Left);
+      frmDelete.Top := INI.ReadInteger(Temp, 'Top', frmDelete.Top);
+      frmDelete.Width := INI.ReadInteger(Temp, 'Width', frmDelete.Width);
+      frmDelete.Height := INI.ReadInteger(Temp, 'Height', frmDelete.Height);
+
+      frmDelete.pnlBottom.Hint :=
+        IntToStr(frmDelete.Width) + IntToStr(frmDelete.Height) +
+        IntToStr(frmDelete.Left) + IntToStr(frmDelete.Top);
+
+      // frmDetail
+      Temp := frmDetail.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmDetail.Position := poDesigned;
+      frmDetail.Width := INI.ReadInteger(Temp, 'Width', frmDetail.Width);
+      frmDetail.Height := INI.ReadInteger(Temp, 'Height', frmDetail.Height);
+      frmDetail.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmDetail.Width) div 2);
+      frmDetail.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmDetail.Height) div 2) - 75);
+      frmDetail.pnlSimple.Tag :=
+        INI.ReadInteger(Temp, 'Simple', frmDetail.pnlSimple.Tag);
+      frmDetail.pnlMultiple.Tag :=
+        INI.ReadInteger(Temp, 'Multi', frmDetail.pnlMultiple.Tag);
+      frmDetail.pnlRight.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmDetail.pnlRight.Width);
+      frmDetail.pnlLeft.Width :=
+        INI.ReadInteger(Temp, 'pnlLeft', frmDetail.pnlLeft.Width);
+      frmDetail.pnlDetail.Width :=
+        INI.ReadInteger(Temp, 'pnlDetail', frmDetail.pnlDetail.Width);
+      frmDetail.pnlRight.Tag := frmDetail.pnlRight.Width;
+
+      frmDetail.Hint := IntToStr(frmDetail.Width) + IntToStr(frmDetail.Height) +
+        IntToStr(frmDetail.Left) + IntToStr(frmDetail.Top) +
+        IntToStr(frmDetail.pnlSimple.Tag) + IntToStr(frmDetail.pnlMultiple.Tag) +
+        IntToStr(frmDetail.pnlRight.Width) + IntToStr(frmDetail.pnlLeft.Width) +
+        IntToStr(frmDetail.pnlDetail.Width);
+
+      // frmEdit
+      Temp := frmEdit.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmEdit.Position := poDesigned;
+      frmEdit.Width := INI.ReadInteger(Temp, 'Width', frmEdit.Width);
+      frmEdit.Height := INI.ReadInteger(Temp, 'Height', frmEdit.Height);
+      frmEdit.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmEdit.Width) div 2);
+      frmEdit.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmEdit.Height) div 2) - 75);
+      frmEdit.pnlRight.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmEdit.pnlRight.Width);
+
+      frmEdit.Hint := IntToStr(frmEdit.Width) + IntToStr(frmEdit.Height) +
+        IntToStr(frmEdit.Left) + IntToStr(frmEdit.Top) +
+        IntToStr(frmEdit.pnlRight.Width);
+
+      // frmEdits
+      Temp := frmEdits.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmEdits.Position := poDesigned;
+      frmEdits.Width := INI.ReadInteger(Temp, 'Width', frmEdits.Width);
+      frmEdits.Height := INI.ReadInteger(Temp, 'Height', frmEdits.Height);
+      frmEdits.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmEdits.Width) div 2);
+      frmEdits.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmEdits.Height) div 2) - 75);
+      frmEdits.pnlTag.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmEdits.pnlTag.Width);
+
+      frmEdits.Hint := IntToStr(frmEdits.Width) + IntToStr(frmEdits.Height) +
+        IntToStr(frmEdits.Left) + IntToStr(frmEdits.Top) +
+        IntToStr(frmEdits.pnlTag.Width);
+
+      // frmGate
+      Temp := frmGate.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmGate.Position := poDesigned;
+      frmGate.Left := INI.ReadInteger(Temp, 'Left', frmGate.Left);
+      frmGate.Top := INI.ReadInteger(Temp, 'Top', frmGate.Top);
+      frmGate.Width := INI.ReadInteger(Temp, 'Width', frmGate.Width);
+      frmGate.Height := INI.ReadInteger(Temp, 'Height', frmGate.Height);
+
+      frmGate.Hint := IntToStr(frmGate.Width) + IntToStr(frmGate.Height) +
+        IntToStr(frmGate.Left) + IntToStr(frmGate.Top);
+
+      // frmGuide
+      Temp := frmGuide.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmGuide.Position := poDesigned;
+      frmGuide.Left := INI.ReadInteger(Temp, 'Left', frmGuide.Left);
+      frmGuide.Top := INI.ReadInteger(Temp, 'Top', frmGuide.Top);
+      frmGuide.Width := INI.ReadInteger(Temp, 'Width', frmGuide.Width);
+      frmGuide.Height := INI.ReadInteger(Temp, 'Height', frmGuide.Height);
+
+      frmGuide.Hint := IntToStr(frmGuide.Width) + IntToStr(frmGuide.Height) +
+        IntToStr(frmGuide.Left) + IntToStr(frmGuide.Top);
+
+      // frmHistory
+      Temp := frmHistory.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmHistory.Position := poDesigned;
+      frmHistory.Left := INI.ReadInteger(Temp, 'Left', frmHistory.Left);
+      frmHistory.Top := INI.ReadInteger(Temp, 'Top', frmHistory.Top);
+      frmHistory.Width := INI.ReadInteger(Temp, 'Width', frmHistory.Width);
+      frmHistory.Height :=
+        INI.ReadInteger(Temp, 'Height', frmHistory.Height);
+
+      frmHistory.Hint := IntToStr(frmHistory.Width) + IntToStr(frmHistory.Height) +
+        IntToStr(frmHistory.Left) + IntToStr(frmHistory.Top);
+
+      // frmHolidays
+      Temp := frmHolidays.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmHolidays.Position := poDesigned;
+      frmHolidays.Width :=
+        INI.ReadInteger(Temp, 'Width', frmHolidays.Width);
+      frmHolidays.Height :=
+        INI.ReadInteger(Temp, 'Height', frmHolidays.Height);
+      frmHolidays.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmHolidays.Width) div 2);
+      frmHolidays.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmHolidays.Height) div 2) - 75);
+      frmHolidays.pnlDetail.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmHolidays.pnlDetail.Width);
+
+      frmHolidays.Hint := IntToStr(frmHolidays.Width) +
+        IntToStr(frmHolidays.Height) + IntToStr(frmHolidays.Left) +
+        IntToStr(frmHolidays.Top) + IntToStr(frmHolidays.pnlDetail.Width);
+
+      // frmImage
+      Temp := frmImage.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmImage.Position := poDesigned;
+      frmImage.Left := INI.ReadInteger(Temp, 'Left', frmImage.Left);
+      frmImage.Top := INI.ReadInteger(Temp, 'Top', frmImage.Top);
+      frmImage.Width := INI.ReadInteger(Temp, 'Width', frmImage.Width);
+      frmImage.Height := INI.ReadInteger(Temp, 'Height', frmImage.Height);
+
+      frmImage.Hint := IntToStr(frmImage.Width) + IntToStr(frmImage.Height) +
+        IntToStr(frmImage.Left) + IntToStr(frmImage.Top);
+
+      // frmImport
+      Temp := frmImport.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmImport.Position := poDesigned;
+      frmImport.Left := INI.ReadInteger(Temp, 'Left', frmImport.Left);
+      frmImport.Top := INI.ReadInteger(Temp, 'Top', frmImport.Top);
+      frmImport.Width := INI.ReadInteger(Temp, 'Width', frmImport.Width);
+      frmImport.Height := INI.ReadInteger(Temp, 'Height', frmImport.Height);
+
+      frmImport.Hint := IntToStr(frmImport.Width) + IntToStr(frmImport.Height) +
+        IntToStr(frmImport.Left) + IntToStr(frmImport.Top);
+
+      // frmLinks
+      Temp := frmLinks.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmLinks.Position := poDesigned;
+      frmLinks.Width := INI.ReadInteger(Temp, 'Width', frmLinks.Width);
+      frmLinks.Height := INI.ReadInteger(Temp, 'Height', frmLinks.Height);
+      frmLinks.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmLinks.Width) div 2);
+      frmLinks.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmLinks.Height) div 2) - 75);
+      frmLinks.pnlDetail.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmLinks.pnlDetail.Width);
+
+      frmLinks.Hint := IntToStr(frmLinks.Width) + IntToStr(frmLinks.Height) +
+        IntToStr(frmLinks.Left) + IntToStr(frmLinks.Top) +
+        IntToStr(frmLinks.pnlDetail.Width);
+
+      // frmMain
+      Temp := frmMain.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmMain.Position := poDesigned;
+      frmMain.Width := INI.ReadInteger(Temp, 'Width', frmMain.Width);
+      frmMain.Height := INI.ReadInteger(Temp, 'Height', frmMain.Height);
+      frmMain.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmMain.Width) div 2);
+      frmMain.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmMain.Height) div 2) - 75);
+      frmMain.pnlFilter.Width :=
+        INI.ReadInteger(Temp, 'pnlFilter', frmMain.pnlFilter.Width);
+      frmMain.pnlSummary.Height :=
+        INI.ReadInteger(Temp, 'pnlSummary', frmMain.pnlSummary.Height);
+      frmMain.vstBalance.Height := INI.ReadInteger(Temp, 'ChartBalance', 200);
+
+      frmMain.Hint := IntToStr(frmMain.Width) + IntToStr(frmMain.Height) +
+        IntToStr(frmMain.Left) + IntToStr(frmMain.Top) +
+        IntToStr(frmMain.pnlFilter.Width) + IntToStr(frmMain.pnlSummary.Height) +
+        IntToStr(frmMain.VSTBalance.Height);
+
+      // frmPassword
+      Temp := frmPassword.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmPassword.Position := poDesigned;
+      frmPassword.Left := INI.ReadInteger(Temp, 'Left', frmPassword.Left);
+      frmPassword.Top := INI.ReadInteger(Temp, 'Top', frmPassword.Top);
+      frmPassword.Width := INI.ReadInteger(Temp, 'Width', frmPassword.Width);
+      frmPassword.Height := INI.ReadInteger(Temp, 'Height', frmPassword.Height);
+
+      frmPassword.Hint := IntToStr(frmPassword.Width) +
+        IntToStr(frmPassword.Height) + IntToStr(frmPassword.Left) +
+        IntToStr(frmPassword.Top);
+
+      // frmPayees
+      Temp := frmPayees.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmPayees.Position := poDesigned;
+      frmPayees.Width := INI.ReadInteger(Temp, 'Width', frmPayees.Width);
+      frmPayees.Height := INI.ReadInteger(Temp, 'Height', frmPayees.Height);
+      frmPayees.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmPayees.Width) div 2);
+      frmPayees.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmPayees.Height) div 2) - 75);
+      frmPayees.pnlDetail.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmPayees.pnlDetail.Width);
+
+      frmPayees.Hint := IntToStr(frmPayees.Width) + IntToStr(frmPayees.Height) +
+        IntToStr(frmPayees.Left) + IntToStr(frmPayees.Top) +
+        IntToStr(frmPayees.pnlDetail.Width);
+
+      // frmPeriod
+      Temp := frmPeriod.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmPeriod.Position := poDesigned;
+      frmPeriod.Width := INI.ReadInteger(Temp, 'Width', frmPeriod.Width);
+      frmPeriod.Height := INI.ReadInteger(Temp, 'Height', frmPeriod.Height);
+      frmPeriod.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmPeriod.Width) div 2);
+      frmPeriod.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmPeriod.Height) div 2) - 75);
+      frmPeriod.pnlLeft.Width :=
+        INI.ReadInteger(Temp, 'pnlLeft', frmPeriod.pnlLeft.Width);
+
+      frmPeriod.Hint := IntToStr(frmPeriod.Width) + IntToStr(frmPeriod.Height) +
+        IntToStr(frmPeriod.Left) + IntToStr(frmPeriod.Top) +
+        IntToStr(frmPeriod.pnlLeft.Width);
+
+      // frmPersons
+      Temp := frmPersons.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmPersons.Position := poDesigned;
+      frmPersons.Width := INI.ReadInteger(Temp, 'Width', frmPersons.Width);
+      frmPersons.Height :=
+        INI.ReadInteger(Temp, 'Height', frmPersons.Height);
+      frmPersons.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmPersons.Width) div 2);
+      frmPersons.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmPersons.Height) div 2) - 75);
+      frmPersons.pnlDetail.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmPersons.pnlDetail.Width);
+
+      frmPersons.Hint := IntToStr(frmPersons.Width) + IntToStr(frmPersons.Height) +
+        IntToStr(frmPersons.Left) + IntToStr(frmPersons.Top) +
+        IntToStr(frmPersons.pnlDetail.Width);
+
+      // frmPlan
+      Temp := frmPlan.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmPlan.Position := poDesigned;
+      frmPlan.Left := INI.ReadInteger(Temp, 'Left', frmPlan.Left);
+      frmPlan.Top := INI.ReadInteger(Temp, 'Top', frmPlan.Top);
+      frmPlan.Width := INI.ReadInteger(Temp, 'Width', frmPlan.Width);
+      frmPlan.Height := INI.ReadInteger(Temp, 'Height', frmPlan.Height);
+
+      frmPlan.Hint := IntToStr(frmPlan.Width) + IntToStr(frmPlan.Height) +
+        IntToStr(frmPlan.Left) + IntToStr(frmPlan.Top);
+
+      // frmProperties
+      Temp := frmProperties.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmProperties.Position := poDesigned;
+      frmProperties.Left := INI.ReadInteger(Temp, 'Left', frmProperties.Left);
+      frmProperties.Top := INI.ReadInteger(Temp, 'Top', frmProperties.Top);
+      frmProperties.Width := INI.ReadInteger(Temp, 'Width', frmProperties.Width);
+      frmProperties.Height := INI.ReadInteger(Temp, 'Height', frmProperties.Height);
+
+      frmProperties.Hint := IntToStr(frmProperties.Width) +
+        IntToStr(frmProperties.Height) + IntToStr(frmProperties.Left) +
+        IntToStr(frmProperties.Top);
+
+      // frmRecycleBin
+      Temp := frmRecycleBin.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmRecycleBin.Position := poDesigned;
+      frmRecycleBin.Left := INI.ReadInteger(Temp, 'Left', frmRecycleBin.Left);
+      frmRecycleBin.Top := INI.ReadInteger(Temp, 'Top', frmRecycleBin.Top);
+      frmRecycleBin.Width := INI.ReadInteger(Temp, 'Width', frmRecycleBin.Width);
+      frmRecycleBin.Height := INI.ReadInteger(Temp, 'Height', frmRecycleBin.Height);
+
+      frmRecycleBin.Hint := IntToStr(frmRecycleBin.Width) +
+        IntToStr(frmRecycleBin.Height) + IntToStr(frmRecycleBin.Left) +
+        IntToStr(frmRecycleBin.Top);
+
+      // frmSQL
+      Temp := frmSQL.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmSQL.Position := poDesigned;
+      frmSQL.Left := INI.ReadInteger(Temp, 'Left', frmSQL.Left);
+      frmSQL.Top := INI.ReadInteger(Temp, 'Top', frmSQL.Top);
+      frmSQL.Width := INI.ReadInteger(Temp, 'Width', frmSQL.Width);
+      frmSQL.Height := INI.ReadInteger(Temp, 'Height', frmSQL.Height);
+
+      frmSQL.Hint := IntToStr(frmSQL.Width) + IntToStr(frmSQL.Height) +
+        IntToStr(frmSQL.Left) + IntToStr(frmSQL.Top);
+
+      // frmSQLResult
+      Temp := frmSQLResult.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmSQLResult.Position := poDesigned;
+      frmSQLResult.Left :=
+        INI.ReadInteger(Temp, 'Left', frmSQLResult.Left);
+      frmSQLResult.Top := INI.ReadInteger(Temp, 'Top', frmSQLResult.Top);
+      frmSQLResult.Width :=
+        INI.ReadInteger(Temp, 'Width', frmSQLResult.Width);
+      frmSQLResult.Height :=
+        INI.ReadInteger(Temp, 'Height', frmSQLResult.Height);
+
+      frmSQLResult.Hint := IntToStr(frmSQLResult.Width) +
+        IntToStr(frmSQLResult.Height) + IntToStr(frmSQLResult.Left) +
+        IntToStr(frmSQLResult.Top);
+
+      // frmShortCut
+      Temp := frmShortCut.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmShortCut.Position := poDesigned;
+      frmShortCut.Left := INI.ReadInteger(Temp, 'Left', frmShortCut.Left);
+      frmShortCut.Top := INI.ReadInteger(Temp, 'Top', frmShortCut.Top);
+      frmShortCut.Width := INI.ReadInteger(Temp, 'Width', frmShortCut.Width);
+      frmShortCut.Height := INI.ReadInteger(Temp, 'Height', frmShortCut.Height);
+
+      frmShortCut.Hint := IntToStr(frmShortCut.Width) +
+        IntToStr(frmShortCut.Height) + IntToStr(frmShortCut.Left) +
+        IntToStr(frmShortCut.Top);
+
+      // frmSchedulers
+      Temp := frmSchedulers.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmSchedulers.Width :=
+        INI.ReadInteger(Temp, 'Width', frmSchedulers.Width);
+      frmSchedulers.Height :=
+        INI.ReadInteger(Temp, 'Height', frmSchedulers.Height);
+      frmSchedulers.pnlRight.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmSchedulers.pnlRight.Width);
+      frmSchedulers.Position := poDesigned;
+      frmSchedulers.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmSchedulers.Width) div 2);
+      frmSchedulers.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmSchedulers.Height) div 2) - 75);
+
+      frmSchedulers.Hint := IntToStr(frmSchedulers.Width) +
+        IntToStr(frmSchedulers.Height) + IntToStr(frmSchedulers.Left) +
+        IntToStr(frmSchedulers.Top) + IntToStr(frmSchedulers.pnlRight.Width);
+
+      // frmScheduler
+      Temp := frmScheduler.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmScheduler.Position := poDesigned;
+      frmScheduler.Width := INI.ReadInteger(Temp, 'Width', frmScheduler.Width);
+      frmScheduler.Height :=
+        INI.ReadInteger(Temp, 'Height', frmScheduler.Height);
+      frmScheduler.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmScheduler.Width) div 2);
+      frmScheduler.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmScheduler.Height) div 2) - 75);
+      frmScheduler.pnlRight.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmScheduler.pnlRight.Width);
+
+      frmScheduler.Hint := IntToStr(frmScheduler.Width) +
+        IntToStr(frmScheduler.Height) + IntToStr(frmScheduler.Left) +
+        IntToStr(frmScheduler.Top) + IntToStr(frmScheduler.pnlRight.Width);
+
+      // frmSuccess
+      Temp := frmSuccess.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmSuccess.Position := poDesigned;
+      frmSuccess.Left := INI.ReadInteger(Temp, 'Left', frmSuccess.Left);
+      frmSuccess.Top := INI.ReadInteger(Temp, 'Top', frmSuccess.Top);
+      frmSuccess.Width := INI.ReadInteger(Temp, 'Width', frmSuccess.Width);
+      frmSuccess.Height := INI.ReadInteger(Temp, 'Height', frmSuccess.Height);
+
+      frmSuccess.Hint := IntToStr(frmSuccess.Width) + IntToStr(frmSuccess.Height) +
+        IntToStr(frmSuccess.Left) + IntToStr(frmSuccess.Top);
+
+      // frmSettings
+      Temp := frmSettings.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmSettings.Position := poDesigned;
+      frmSettings.Width := INI.ReadInteger(Temp, 'Width', frmSettings.Width);
+      frmSettings.Height := INI.ReadInteger(Temp, 'Height', frmSettings.Height);
+      frmSettings.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmSettings.Width) div 2);
+      frmSettings.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmSettings.Height) div 2) - 75);
+      frmSettings.treSettings.Width :=
+        INI.ReadInteger(Temp, 'pnlLeft', frmSettings.treSettings.Width);
+
+      frmSettings.Hint := IntToStr(frmSettings.Width) +
+        IntToStr(frmSettings.Height) + IntToStr(frmSettings.Left) +
+        IntToStr(frmSettings.Top) + IntToStr(frmSettings.treSettings.Width);
+
+      // frmTags
+      Temp := frmTags.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmTags.Position := poDesigned;
+      frmTags.Width := INI.ReadInteger(Temp, 'Width', frmTags.Width);
+      frmTags.Height := INI.ReadInteger(Temp, 'Height', frmTags.Height);
+      frmTags.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmTags.Width) div 2);
+      frmTags.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmTags.Height) div 2) - 75);
+      frmTags.pnlDetail.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmTags.pnlDetail.Width);
+
+      frmTags.Hint := IntToStr(frmTags.Width) + IntToStr(frmTags.Height) +
+        IntToStr(frmTags.Left) + IntToStr(frmTags.Top) +
+        IntToStr(frmTags.pnlDetail.Width);
+
+      // frmTemplates (for import)
+      Temp := frmTemplates.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmTemplates.Position := poDesigned;
+      frmTemplates.Left :=
+        INI.ReadInteger(frmTemplates.Name, 'Left', frmTemplates.Left);
+      frmTemplates.Top := INI.ReadInteger(frmTemplates.Name, 'Top', frmTemplates.Top);
+      frmTemplates.Width := INI.ReadInteger(frmTemplates.Name, 'Width',
+        frmTemplates.Width);
+      frmTemplates.Height :=
+        INI.ReadInteger(frmTemplates.Name, 'Height', frmTemplates.Height);
+      frmTemplates.pnlLeft.Width :=
+        INI.ReadInteger(frmTemplates.Name, 'pnlLeft', frmTemplates.pnlLeft.Width);
+
+      frmTemplates.Hint := IntToStr(frmTemplates.Width) +
+        IntToStr(frmTemplates.Height) + IntToStr(frmTemplates.Left) +
+        IntToStr(frmTemplates.Top) + IntToStr(frmTemplates.pnlLeft.Width);
+
+      // frmValues
+      Temp := frmValues.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmValues.Position := poDesigned;
+      frmValues.Width := INI.ReadInteger(Temp, 'Width', frmValues.Width);
+      frmValues.Height := INI.ReadInteger(Temp, 'Height', frmValues.Height);
+      frmValues.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmValues.Width) div 2);
+      frmValues.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmValues.Height) div 2) - 75);
+      frmValues.pnlDetail.Width :=
+        INI.ReadInteger(Temp, 'pnlRight', frmValues.pnlDetail.Width);
+
+      frmValues.Hint := IntToStr(frmValues.Width) + IntToStr(frmValues.Height) +
+        IntToStr(frmValues.Left) + IntToStr(frmValues.Top) +
+        IntToStr(frmValues.pnlDetail.Width);
+
+      // frmWrite
+      Temp := frmWrite.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmWrite.Position := poDesigned;
+      frmWrite.Width := INI.ReadInteger(Temp, 'Width', frmWrite.Width);
+      frmWrite.Height := INI.ReadInteger(Temp, 'Height', frmWrite.Height);
+      frmWrite.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmWrite.Width) div 2);
+      frmWrite.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmWrite.Height) div 2) - 75);
+
+      frmWrite.Hint := IntToStr(frmWrite.Width) + IntToStr(frmWrite.Height) +
+        IntToStr(frmWrite.Left) + IntToStr(frmWrite.Top);
+
+      // frmWriting
+      Temp := frmWriting.Name + '_' + IntToStr(ExtendedScreenWidth);
+      frmWriting.Position := poDesigned;
+      frmWriting.Width := INI.ReadInteger(Temp, 'Width', frmWriting.Width);
+      frmWriting.Height := INI.ReadInteger(Temp, 'Height', frmWriting.Height);
+      frmWriting.Left := INI.ReadInteger(Temp, 'Left',
+        (Screen.Width - frmWriting.Width) div 2);
+      frmWriting.Top := INI.ReadInteger(Temp, 'Top',
+        ((Screen.Height - frmWriting.Height) div 2) - 75);
+
+      frmWriting.Hint := IntToStr(frmWriting.Width) + IntToStr(frmWriting.Height) +
+        IntToStr(frmWriting.Left) + IntToStr(frmWriting.Top);
+    end;
+
+    frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+    frmSplash.Update;
+
     // set columns width on all tables (manually or automatic) - THIS IS AFTER FORMS RESIZING !!!
     chkAutoColumnWidth.Checked :=
       INI.ReadBool('ON_START', 'TablesColumnsAutoWidth', True);
@@ -1085,6 +1977,7 @@ begin
       try
         frmAccounts.VSTResize(frmAccounts.VST);
         frmBudget.VSTResize(frmBudget.VST);
+        frmBudgets.VSTBudgetsResize(frmBudgets.VSTBudgets);
         frmBudgets.VSTPeriodsResize(frmBudgets.VSTPeriods);
         frmCalendar.VSTResize(frmCalendar.VST);
         frmCategories.VSTResize(frmCategories.VST);
@@ -1093,16 +1986,16 @@ begin
         frmDelete.VST1Resize(frmDelete.VST1);
         frmDelete.VST2Resize(frmDelete.VST2);
         frmDelete.VST3Resize(frmDelete.VST3);
+        frmDetail.VSTResize(frmDetail.VST);
         frmHistory.VST1Resize(frmHistory.VST1);
         frmHistory.VST1Resize(frmHistory.VST2);
         frmHolidays.VSTResize(frmHolidays.VST);
         frmLinks.VSTResize(frmLinks.VST);
-        frmMain.VSTResize(frmMain.VST);
-        frmMain.VSTSummaryResize(frmMain.VSTSummary);
         frmMain.VSTBalanceResize(frmMain.VSTBalance);
         frmMain.VSTChronoResize(frmMain.VSTChrono);
         frmMain.VSTCrossResize(frmMain.VSTCross);
-        frmDetail.VSTResize(frmDetail.VST);
+        frmMain.VSTResize(frmMain.VST);
+        frmMain.VSTSummaryResize(frmMain.VSTSummary);
         frmPayees.VSTResize(frmPayees.VST);
         frmPeriod.VSTResize(frmPeriod.VST);
         frmPersons.VSTResize(frmPersons.VST);
@@ -1120,173 +2013,155 @@ begin
     else
     begin
       try
-        // table Transactions
-        for I := 1 to frmMain.VST.Header.Columns.Count - 1 do
-          frmMain.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmMain', 'TransColumn_' +
-            RightStr('0' + IntToStr(I), 2), 100);
+        // frmAccount
+        SetColumnsWidth(frmAccounts.VST,
+          INI.ReadString('COLUMNS_WIDTH', 'Accounts', ''));
+        frmAccounts.VST.Parent.Hint := ReadColumnsWidth(frmAccounts.VST);
 
-        // table Summary
-        for I := 1 to frmMain.VSTSummary.Header.Columns.Count - 1 do
-          frmMain.VSTSummary.Header.Columns[I].Width :=
-            INI.ReadInteger('frmMain', 'SumColumn_' +
-            RightStr('0' + IntToStr(I), 2), 100);
+        // frmBudget
+        SetColumnsWidth(frmBudget.VST, INI.ReadString('COLUMNS_WIDTH', 'Budget', ''));
+        frmBudget.VST.Parent.Hint := ReadColumnsWidth(frmBudget.VST);
 
-        // table Report - Balance
-        for I := 1 to frmMain.VSTBalance.Header.Columns.Count - 1 do
-          frmMain.VSTBalance.Header.Columns[I].Width :=
-            INI.ReadInteger('frmMain', 'BalanceCol_' +
-            RightStr('0' + IntToStr(I), 2), 100);
+        // frmBudgets 1
+        SetColumnsWidth(frmBudgets.VSTBudgets,
+          INI.ReadString('COLUMNS_WIDTH', 'Budgets_1', ''));
+        frmBudgets.VSTBudgets.Parent.Hint := ReadColumnsWidth(frmBudgets.VSTBudgets);
 
-        // table Report - Chrono
-        for I := 1 to frmMain.VSTChrono.Header.Columns.Count - 1 do
-          frmMain.VSTChrono.Header.Columns[I].Width :=
-            INI.ReadInteger('frmMain', 'ChronoCol_' +
-            RightStr('0' + IntToStr(I), 2), 100);
+        // frmBudgets 2
+        SetColumnsWidth(frmBudgets.VSTPeriods,
+          INI.ReadString('COLUMNS_WIDTH', 'Budgets_2', ''));
+        frmBudgets.VSTPeriods.Parent.Hint := ReadColumnsWidth(frmBudgets.VSTPeriods);
 
-        // table Report - Cross
-        for I := 1 to frmMain.VSTCross.Header.Columns.Count - 1 do
-          frmMain.VSTCross.Header.Columns[I].Width :=
-            INI.ReadInteger('frmMain', 'CrossTableCol_' +
-            RightStr('0' + IntToStr(I), 2), 100);
+        // frmCalendar
+        SetColumnsWidth(frmCalendar.VST, INI.ReadString('COLUMNS_WIDTH',
+          'Calendar', ''));
+        frmCalendar.VST.Parent.Hint := ReadColumnsWidth(frmCalendar.VST);
 
-        // table frmWrite
-        for I := 1 to frmWrite.VST.Header.Columns.Count - 1 do
-          frmWrite.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmWrite', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmCategories
+        SetColumnsWidth(frmCategories.VST, INI.ReadString('COLUMNS_WIDTH',
+          'Categories', ''));
+        frmCategories.VST.Parent.Hint := ReadColumnsWidth(frmCategories.VST);
 
-        // table frmSchedulers
-        for I := 1 to frmSchedulers.VST.Header.Columns.Count - 1 do
-          frmSchedulers.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmSchedulers', 'Col1_' +
-            RightStr('0' + IntToStr(I), 2), 100);
+        // frmComments
+        SetColumnsWidth(frmComments.VST, INI.ReadString('COLUMNS_WIDTH',
+          'Comments', ''));
+        frmComments.VST.Parent.Hint := ReadColumnsWidth(frmComments.VST);
 
-        // table frmSchedulers
-        for I := 1 to frmSchedulers.VST1.Header.Columns.Count - 1 do
-          frmSchedulers.VST1.Header.Columns[I].Width :=
-            INI.ReadInteger('frmSchedulers', 'Col2_' +
-            RightStr('0' + IntToStr(I), 2), 100);
+        // frmCurrencies
+        SetColumnsWidth(frmCurrencies.VST, INI.ReadString('COLUMNS_WIDTH',
+          'Currencies', ''));
+        frmCurrencies.VST.Parent.Hint := ReadColumnsWidth(frmCurrencies.VST);
 
-        // table frmAccounts
-        for I := 1 to frmAccounts.VST.Header.Columns.Count - 1 do
-          frmAccounts.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmAccounts', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmDelete 1
+        SetColumnsWidth(frmDelete.VST1, INI.ReadString('COLUMNS_WIDTH', 'Delete_1', ''));
+        frmDelete.VST1.Parent.Hint := ReadColumnsWidth(frmDelete.VST1);
 
-        // table frmCategories
-        for I := 1 to frmCategories.VST.Header.Columns.Count - 1 do
-          frmCategories.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmCategories', 'Col_' +
-            RightStr('0' + IntToStr(I), 2), 100);
+        // frmDelete 2
+        SetColumnsWidth(frmDelete.VST2, INI.ReadString('COLUMNS_WIDTH', 'Delete_2', ''));
+        frmDelete.VST2.Parent.Hint := ReadColumnsWidth(frmDelete.VST2);
 
-        // table frmPersons
-        for I := 1 to frmPersons.VST.Header.Columns.Count - 1 do
-          frmPersons.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmPersons', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmDelete 3
+        SetColumnsWidth(frmDelete.VST3, INI.ReadString('COLUMNS_WIDTH', 'Delete_3', ''));
+        frmDelete.VST3.Parent.Hint := ReadColumnsWidth(frmDelete.VST3);
 
-        // table frmPayees
-        for I := 1 to frmPayees.VST.Header.Columns.Count - 1 do
-          frmPayees.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmPayees', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmDetail
+        SetColumnsWidth(frmDetail.VST, INI.ReadString('COLUMNS_WIDTH', 'Detail', ''));
+        frmDetail.VST.Parent.Hint := ReadColumnsWidth(frmDetail.VST);
 
-        // table frmCurrencies
-        for I := 1 to frmCurrencies.VST.Header.Columns.Count - 1 do
-          frmCurrencies.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmCurrencies', 'Col_' +
-            RightStr('0' + IntToStr(I), 2), 100);
+        // frmHistory 1
+        SetColumnsWidth(frmHistory.VST1, INI.ReadString('COLUMNS_WIDTH',
+          'History_1', ''));
+        frmHistory.VST1.Parent.Hint := ReadColumnsWidth(frmHistory.VST1);
 
-        // table frmComments
-        for I := 1 to frmComments.VST.Header.Columns.Count - 1 do
-          frmComments.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmComments', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmHistory 2
+        SetColumnsWidth(frmHistory.VST2, INI.ReadString('COLUMNS_WIDTH',
+          'History_2', ''));
+        frmHistory.VST2.Parent.Hint := ReadColumnsWidth(frmHistory.VST2);
 
-        // table frmTags
-        for I := 1 to frmTags.VST.Header.Columns.Count - 1 do
-          frmTags.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmTags', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmHolidays
+        SetColumnsWidth(frmHolidays.VST, INI.ReadString('COLUMNS_WIDTH',
+          'Holidays', ''));
+        frmHolidays.VST.Parent.Hint := ReadColumnsWidth(frmHolidays.VST);
 
-        // table frmValues
-        for I := 1 to frmValues.VST.Header.Columns.Count - 1 do
-          frmValues.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmValues', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmLinks
+        SetColumnsWidth(frmLinks.VST, INI.ReadString('COLUMNS_WIDTH', 'Links', ''));
+        frmLinks.VST.Parent.Hint := ReadColumnsWidth(frmLinks.VST);
 
-        // table frmHistory
-        for I := 1 to frmHistory.VST1.Header.Columns.Count - 1 do
-          frmHistory.VST1.Header.Columns[I].Width :=
-            INI.ReadInteger('frmHistory', 'Col1_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmMain Transactions
+        SetColumnsWidth(frmMain.VST, INI.ReadString('COLUMNS_WIDTH',
+          'Transactions', ''));
+        frmMain.VST.Parent.Hint := ReadColumnsWidth(frmMain.VST);
 
-        // table frmHistory
-        for I := 1 to frmHistory.VST2.Header.Columns.Count - 1 do
-          frmHistory.VST2.Header.Columns[I].Width :=
-            INI.ReadInteger('frmHistory', 'Col2_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmMain Balance
+        SetColumnsWidth(frmMain.VSTBalance, INI.ReadString('COLUMNS_WIDTH',
+          'Balance', ''));
+        frmMain.VSTBalance.Parent.Hint := ReadColumnsWidth(frmMain.VSTBalance);
 
-        // table frmDelete
-        for I := 1 to frmDelete.VST1.Header.Columns.Count - 1 do
-          frmDelete.VST1.Header.Columns[I].Width :=
-            INI.ReadInteger('frmDelete', 'Col1_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmMain Chronology
+        SetColumnsWidth(frmMain.VSTChrono, INI.ReadString('COLUMNS_WIDTH',
+          'Chronology', ''));
+        frmMain.VSTChrono.Parent.Hint := ReadColumnsWidth(frmMain.VSTChrono);
 
-        // table frmDelete
-        for I := 1 to frmDelete.VST2.Header.Columns.Count - 1 do
-          frmDelete.VST2.Header.Columns[I].Width :=
-            INI.ReadInteger('frmDelete', 'Col2_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmMain Cross table
+        SetColumnsWidth(frmMain.VSTCross, INI.ReadString('COLUMNS_WIDTH',
+          'CrossTable', ''));
+        frmMain.VSTCross.Parent.Hint := ReadColumnsWidth(frmMain.VSTCross);
 
-        // table frmDelete
-        for I := 1 to frmDelete.VST3.Header.Columns.Count - 1 do
-          frmDelete.VST3.Header.Columns[I].Width :=
-            INI.ReadInteger('frmDelete', 'Col3_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmMain Summary
+        SetColumnsWidth(frmMain.VSTSummary, INI.ReadString('COLUMNS_WIDTH',
+          'Summary', ''));
+        frmMain.VSTSummary.Parent.Hint := ReadColumnsWidth(frmMain.VSTSummary);
 
-        // table frmRecycleBin
-        for I := 1 to frmRecycleBin.VST.Header.Columns.Count - 1 do
-          frmRecycleBin.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmRecycleBin', 'Col_' +
-            RightStr('0' + IntToStr(I), 2), 100);
+        // frmPayees
+        SetColumnsWidth(frmPayees.VST, INI.ReadString('COLUMNS_WIDTH', 'Payees', ''));
+        frmPayees.VST.Parent.Hint := ReadColumnsWidth(frmPayees.VST);
 
-        // table frmDetail
-        for I := 1 to frmDetail.VST.Header.Columns.Count - 1 do
-          frmDetail.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmDetail', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmPeriod
+        SetColumnsWidth(frmPeriod.VST, INI.ReadString('COLUMNS_WIDTH', 'Period', ''));
+        frmPeriod.VST.Parent.Hint := ReadColumnsWidth(frmPeriod.VST);
 
-        // table frmHolidays
-        for I := 1 to frmHolidays.VST.Header.Columns.Count - 1 do
-          frmHolidays.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmHolidays', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmPersons
+        SetColumnsWidth(frmPersons.VST, INI.ReadString('COLUMNS_WIDTH', 'Persons', ''));
+        frmPersons.VST.Parent.Hint := ReadColumnsWidth(frmPersons.VST);
 
-        // table frmBudgets
-        for I := 1 to frmBudgets.VSTBudgets.Header.Columns.Count - 1 do
-          frmBudgets.VSTBudgets.Header.Columns[I].Width :=
-            INI.ReadInteger('frmBudgets', 'ColB_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmRecycleBin
+        SetColumnsWidth(frmRecycleBin.VST, INI.ReadString('COLUMNS_WIDTH',
+          'RecycleBin', ''));
+        frmRecycleBin.VST.Parent.Hint := ReadColumnsWidth(frmRecycleBin.VST);
 
-        // table frmBudgets
-        for I := 1 to frmBudgets.VSTPeriods.Header.Columns.Count - 1 do
-          frmBudgets.VSTPeriods.Header.Columns[I].Width :=
-            INI.ReadInteger('frmBudgets', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmScheduler 1
+        SetColumnsWidth(frmSchedulers.VST, INI.ReadString('COLUMNS_WIDTH',
+          'Schedulers_1', ''));
+        frmSchedulers.VST.Parent.Hint := ReadColumnsWidth(frmSchedulers.VST);
 
-        // table frmBudget
-        for I := 1 to frmBudget.VST.Header.Columns.Count - 1 do
-          frmBudget.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmBudget', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmScheduler 1
+        SetColumnsWidth(frmSchedulers.VST1, INI.ReadString('COLUMNS_WIDTH',
+          'Schedulers_2', ''));
+        frmSchedulers.VST1.Parent.Hint := ReadColumnsWidth(frmSchedulers.VST1);
 
-        // table frmPeriod
-        for I := 1 to frmPeriod.VST.Header.Columns.Count - 1 do
-          frmPeriod.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmPeriod', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmSettings
+        SetColumnsWidth(frmSettings.VSTKeys, INI.ReadString('COLUMNS_WIDTH',
+          'Settings', ''));
+        frmSettings.VSTKeys.Parent.Hint := ReadColumnsWidth(frmSettings.VSTKeys);
 
-        // table frmSettings
-        for I := 1 to frmSettings.VSTKeys.Header.Columns.Count - 1 do
-          frmSettings.VSTKeys.Header.Columns[I].Width :=
-            INI.ReadInteger('frmSettings', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmTags
+        SetColumnsWidth(frmTags.VST, INI.ReadString('COLUMNS_WIDTH', 'Tags', ''));
+        frmTags.VST.Parent.Hint := ReadColumnsWidth(frmTags.VST);
 
-        // table frmLinks
-        for I := 1 to frmLinks.VST.Header.Columns.Count - 1 do
-          frmLinks.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmLinks', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmValues
+        SetColumnsWidth(frmValues.VST, INI.ReadString('COLUMNS_WIDTH', 'Values', ''));
+        frmValues.VST.Parent.Hint := ReadColumnsWidth(frmValues.VST);
 
-        // table frmCalendar
-        for I := 1 to frmCalendar.VST.Header.Columns.Count - 1 do
-          frmCalendar.VST.Header.Columns[I].Width :=
-            INI.ReadInteger('frmCalendar', 'Col_' + RightStr('0' + IntToStr(I), 2), 100);
+        // frmWrite
+        SetColumnsWidth(frmWrite.VST, INI.ReadString('COLUMNS_WIDTH', 'Write', ''));
+        frmWrite.VST.Parent.Hint := ReadColumnsWidth(frmWrite.VST);
+
       except
       end;
     end;
+
+    frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+    frmSplash.Update;
 
     try
       // ---------------------------------------------------------------------------
@@ -1652,6 +2527,9 @@ begin
     frmSettings.Tag := 2;
   end;
 
+  frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+  frmSplash.Update;
+
   // INI file END procedure ======================================================
   try
     frmSettings.Tag := 0;
@@ -1675,7 +2553,7 @@ begin
       ShowErrorMessage(E);
   end;
 
-  try
+ try
     case Application.ParamCount of
       0: // open last used file
       begin
@@ -1795,6 +2673,9 @@ begin
     for B := 0 to chkButtonsVisibility.Items.Count - 1 do
       S := S + IfThen(chkButtonsVisibility.Checked[B] = True, '1', '0');
     INI.WriteString('VISUAL_SETTINGS', 'ButtonsVisibility', S);
+    INI.WriteBool('VISUAL_SETTINGS', 'FilterComboboxStyle',
+      chkFilterComboboxStyle.Checked);
+
 
     // Reports
     // ---------------------------------------------------
@@ -2023,6 +2904,28 @@ begin
   end;
 end;
 
+procedure TfrmSettings.chkFilterComboboxStyleChange(Sender: TObject);
+begin
+  if chkFilterComboboxStyle.Checked = True then
+  begin
+    frmMain.cbxPerson.Style := csDropDown;
+    frmMain.cbxPayee.Style := csDropDown;
+    frmMain.cbxAccount.Style := csDropDown;
+    frmMain.cbxCategory.Style := csDropDown;
+    frmMain.cbxSubcategory.Style := csDropDown;
+    //    frmMain.cbxCurrency.Style := csDropDown;
+  end
+  else
+  begin
+    frmMain.cbxPerson.Style := csDropDownList;
+    frmMain.cbxPayee.Style := csDropDownList;
+    frmMain.cbxAccount.Style := csDropDownList;
+    frmMain.cbxCategory.Style := csDropDownList;
+    frmMain.cbxSubcategory.Style := csDropDownList;
+    //    frmMain.cbxCurrency.Style := csDropDownList;
+  end;
+end;
+
 procedure TfrmSettings.chkSelectAllChange(Sender: TObject);
 var
   I: byte;
@@ -2091,7 +2994,8 @@ begin
   if TRadioButton(Sender).Checked = False then
     Exit;
 
-  frmMain.tooMenu.Height := Round(TRadioButton(Sender).Tag * 1.5);
+  frmMain.tooMenu.Height := Round(TRadioButton(Sender).Tag * 1.5 * (ScreenRatio / 100));
+
 
   if TRadioButton(Sender).Tag = 24 then
     Img := frmMain.img24
@@ -2187,63 +3091,7 @@ var
   I: integer;
   N: PVirtualNode;
   Lang: PLang;
-  INI: TIniFile;
-  INIFile, TempStr: string;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    INIFile := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(INIFile) = True then
-    begin
-      INI := TINIFile.Create(INIFile);
-      TempStr := INI.ReadString('POSITION', frmSettings.Name, '-1•-1•0•0•0');
-
-      frmSettings.Position := poDesigned;
-      // width
-      TryStrToInt(Field(Separ, TempStr, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmSettings.Width := Round(800 * (ScreenRatio / 100))
-      else
-        frmSettings.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, TempStr, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmSettings.Height := Round(400 * (ScreenRatio / 100))
-      else
-        frmSettings.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, TempStr, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmSettings.left := (Screen.Width - frmSettings.Width) div 2
-      else
-        frmSettings.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, TempStr, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmSettings.Top := ((Screen.Height - frmSettings.Height) div 2) - 75
-      else
-        frmSettings.Top := I;
-
-      // panels
-      TryStrToInt(Field(Separ, TempStr, 5), I);
-      if (I < 100) or (I > 400) then
-        frmSettings.treSettings.Width := Round(200 * (ScreenRatio / 100))
-      else
-        frmSettings.treSettings.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   Screen.Cursor := crHourGlass;
 
   try
@@ -2287,6 +3135,7 @@ begin
       chkButtonsVisibility.Hint :=
         chkButtonsVisibility.Hint + IfThen(chkButtonsVisibility.Checked[I] =
         True, '1', '0');
+    chkFilterComboboxStyle.Tag := IfThen(chkFilterComboboxStyle.Checked = True, 1, 0);
 
     // reports
     cbxReportFont.Tag := cbxReportFont.ItemIndex;
@@ -2311,7 +3160,8 @@ begin
     chkDisplayFontBold.Tag := IfThen(chkDisplayFontBold.Checked = True, 1, 0);
     chkDisplaySubCatCapital.Tag := IfThen(chkDisplaySubCatCapital.Checked = True, 1, 0);
     chkEnableSelfTransfer.Tag := IfThen(chkEnableSelfTransfer.Checked = True, 1, 0);
-    chkRememberNewTransactionsForm.Tag := IfThen(chkRememberNewTransactionsForm.Checked = True, 1, 0);
+    chkRememberNewTransactionsForm.Tag :=
+      IfThen(chkRememberNewTransactionsForm.Checked = True, 1, 0);
     datTransactionsAddDateChange(datTransactionsAddDate);
     datTransactionsEditDateChange(datTransactionsEditDate);
     datTransactionsDeleteDateChange(datTransactionsDeleteDate);
@@ -2475,29 +3325,9 @@ begin
 end;
 
 procedure TfrmSettings.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
 begin
   if btnSave.Tag = 0 then
     btnCancelClick(btnCancel);
-
-  try
-    INIFile := ChangeFileExt(ParamStr(0), '.ini');
-    INI := TINIFile.Create(INIFile);
-    if frmSettings.chkLastFormsSize.Checked = True then
-      // save main window position
-      INI.WriteString('POSITION', frmSettings.Name,
-        IntToStr(frmSettings.Left) + separ + // form left
-        IntToStr(frmSettings.Top) + separ + // form top
-        IntToStr(frmSettings.Width) + separ + // form width
-        IntToStr(frmSettings.Height) + separ + // form height
-        IntToStr(frmSettings.treSettings.Width)) // left panel width
-    else
-      INI.DeleteKey('POSITION', frmSettings.Name);
-  finally
-    INI.Free;
-  end;
 end;
 
 procedure TfrmSettings.cbxReportFontChange(Sender: TObject);
@@ -2788,6 +3618,8 @@ begin
     // global settings
     // ----------------------------------------------------------------------------
 
+
+    If VSTLang.SelectedCount > 0 then
     if (VSTLang.Hint <> VSTLang.Text[VSTLang.GetFirstSelected(), 1]) then
     begin
       SetDefaultLang(
@@ -2940,6 +3772,11 @@ begin
       chkSelectAll.Checked := ShowToolBar;
     end;
 
+    // chkFilterComboboxStyle
+    if BoolToStr(chkFilterComboboxStyle.Checked) <>
+      IntToStr(chkFilterComboboxStyle.Tag) then
+      chkFilterComboboxStyle.Checked := StrToBool(IntToStr(chkFilterComboboxStyle.Tag));
+
     // ----------------------------------------------------------------------------
     // on start settings
     // ----------------------------------------------------------------------------
@@ -3018,7 +3855,8 @@ begin
     // chkRememberNewTransactionsForm
     if BoolToStr(chkRememberNewTransactionsForm.Checked) <>
       IntToStr(chkRememberNewTransactionsForm.Tag) then
-      chkRememberNewTransactionsForm.Checked := StrToBool(IntToStr(chkRememberNewTransactionsForm.Tag));
+      chkRememberNewTransactionsForm.Checked :=
+        StrToBool(IntToStr(chkRememberNewTransactionsForm.Tag));
 
     // restrictions
     case gbxTransactionsAdd.Tag of
@@ -3447,14 +4285,17 @@ procedure TfrmSettings.VSTLangResize(Sender: TObject);
 var
   X: integer;
 begin
-  VSTLang.Header.Columns[0].Width := round(ScreenRatio / 100 * 32);
-  X := (VSTLang.Width - VSTLang.Header.Columns[0].Width) div 100;
-  VSTLang.Header.Columns[1].Width := 12 * X; // code
-  VSTLang.Header.Columns[2].Width := 25 * X; // language
-  VSTLang.Header.Columns[3].Width := 30 * X; // author
-  VSTLang.Header.Columns[4].Width :=
-    VSTLang.Width - VSTLang.Header.Columns[0].Width - ScrollBarWidth - (67 * X);
-  // comment
+  try
+    VSTLang.Header.Columns[0].Width := round(ScreenRatio / 100 * 32);
+    X := (VSTLang.Width - VSTLang.Header.Columns[0].Width) div 100;
+    VSTLang.Header.Columns[1].Width := 12 * X; // code
+    VSTLang.Header.Columns[2].Width := 25 * X; // language
+    VSTLang.Header.Columns[3].Width := 30 * X; // author
+    VSTLang.Header.Columns[4].Width :=
+      VSTLang.Width - VSTLang.Header.Columns[0].Width - ScrollBarWidth - (67 * X);
+    // comment
+  except
+  end;
 end;
 
 procedure UpdateSettings;
@@ -3540,6 +4381,10 @@ begin
     // ===============================================================================
     SetBtnProperty(frmEdit.btnSave);
     SetBtnProperty(frmEdit.btnCancel);
+    SetBtnProperty(frmEdit.btnAttachmentAdd);
+    SetBtnProperty(frmEdit.btnAttachmentEdit);
+    SetBtnProperty(frmEdit.btnAttachmentDelete);
+    SetBtnProperty(frmEdit.btnAttachmentOpen);
 
     // ===============================================================================
     // frmEdits
@@ -3575,6 +4420,10 @@ begin
       SetBtnProperty(frmDetail.btnDelete);
     SetBtnProperty(frmDetail.btnSelect);
     SetBtnProperty(frmDetail.btnDuplicate);
+    SetBtnProperty(frmDetail.btnAttachmentAdd);
+    SetBtnProperty(frmDetail.btnAttachmentEdit);
+    SetBtnProperty(frmDetail.btnAttachmentDelete);
+    SetBtnProperty(frmDetail.btnAttachmentOpen);
 
     // ===============================================================================
     // frmCounter buttons
@@ -4035,6 +4884,7 @@ begin
     end
     else
       SetBtnProperty(frmSchedulers.btnDelete1);
+    SetBtnProperty(frmSchedulers.btnPopPrint);
 
     // ===============================================================================
     // frmWrite
@@ -4267,10 +5117,10 @@ begin
     if Action = 'record_add' then
     begin
       frmMain.actAddSimple.ShortCut := S;
-      frmMain.popAddSimple.ShortCut := S;
+      frmMain.popAdd.ShortCut := S;
       frmMain.btnAdd.Hint := Hint_01 + ':' + sLineBreak + Caption_319 +
-        ' [' + ShortCutToText(frmMain.popAddSimple.ShortCut) + ']' +
-        sLineBreak + Caption_320 + ' [' + frmMain.pnlButtons.Hint + ']';
+        ' [' + ShortCutToText(frmMain.popAdd.ShortCut) + ']' + sLineBreak +
+        Caption_320 + ' [' + frmMain.pnlButtons.Hint + ']';
       frmHolidays.actAdd.ShortCut := S;
       frmHolidays.popAdd.ShortCut := S;
       frmHolidays.btnAdd.Hint := Hint_01 + sLineBreak + '[' + ShortCutToText(S) + ']';
@@ -4313,7 +5163,7 @@ begin
       frmLinks.btnAdd.Hint := frmHolidays.btnAdd.Hint;
     end
     // ------------------------------------------------------------------------
-    else if Action = 'record_add_multiple' then
+{    else if Action = 'record_add_multiple' then
     begin
       frmMain.actAddMultiple.ShortCut := S;
       frmMain.popAddMulitple.ShortCut := S;
@@ -4321,7 +5171,7 @@ begin
       frmMain.btnAdd.Hint := Hint_01 + ':' + sLineBreak + Caption_319 +
         ' [' + ShortCutToText(frmMain.popAddSimple.ShortCut) + ']' +
         sLineBreak + Caption_320 + ' [' + frmMain.pnlButtons.Hint + ']';
-    end
+    end}
     // ------------------------------------------------------------------------
     else if Action = 'record_edit' then
     begin

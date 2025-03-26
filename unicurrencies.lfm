@@ -1,7 +1,7 @@
 object frmCurrencies: TfrmCurrencies
-  Left = 400
+  Left = 423
   Height = 501
-  Top = 152
+  Top = 262
   Width = 800
   ClientHeight = 501
   ClientWidth = 800
@@ -12,7 +12,7 @@ object frmCurrencies: TfrmCurrencies
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object splList: TSplitter
     Left = 587
@@ -343,14 +343,14 @@ object frmCurrencies: TfrmCurrencies
       TabOrder = 0
       object pnlCode: TPanel
         Left = 3
-        Height = 32
+        Height = 37
         Top = 23
         Width = 192
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 32
+        ClientHeight = 37
         ClientWidth = 192
         TabOrder = 0
         object lblCode: TLabel
@@ -369,7 +369,7 @@ object frmCurrencies: TfrmCurrencies
         end
         object ediCode: TEdit
           Left = 3
-          Height = 23
+          Height = 28
           Top = 6
           Width = 186
           Align = alTop
@@ -387,14 +387,14 @@ object frmCurrencies: TfrmCurrencies
       end
       object pnlName: TPanel
         Left = 3
-        Height = 32
-        Top = 61
+        Height = 37
+        Top = 66
         Width = 192
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 32
+        ClientHeight = 37
         ClientWidth = 192
         TabOrder = 1
         object lblName: TLabel
@@ -413,7 +413,7 @@ object frmCurrencies: TfrmCurrencies
         end
         object ediName: TEdit
           Left = 3
-          Height = 23
+          Height = 28
           Top = 6
           Width = 186
           Align = alTop
@@ -428,14 +428,14 @@ object frmCurrencies: TfrmCurrencies
       end
       object pnlDefault: TPanel
         Left = 3
-        Height = 32
-        Top = 99
+        Height = 39
+        Top = 109
         Width = 192
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 32
+        ClientHeight = 39
         ClientWidth = 192
         TabOrder = 2
         object lblDefault: TLabel
@@ -454,14 +454,14 @@ object frmCurrencies: TfrmCurrencies
         end
         object cbxDefault: TComboBox
           Left = 3
-          Height = 23
+          Height = 30
           Top = 6
           Width = 186
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
-          ItemHeight = 15
+          ItemHeight = 0
           Style = csDropDownList
           TabOrder = 0
           OnChange = cbxDefaultChange
@@ -472,14 +472,14 @@ object frmCurrencies: TfrmCurrencies
       end
       object pnlRate: TPanel
         Left = 3
-        Height = 32
-        Top = 137
+        Height = 37
+        Top = 154
         Width = 192
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 32
+        ClientHeight = 37
         ClientWidth = 192
         Enabled = False
         TabOrder = 3
@@ -497,7 +497,7 @@ object frmCurrencies: TfrmCurrencies
         end
         object ediRate: TFloatSpinEdit
           Left = 3
-          Height = 23
+          Height = 28
           Top = 6
           Width = 186
           Align = alTop
@@ -515,26 +515,26 @@ object frmCurrencies: TfrmCurrencies
       end
       object pnlStatus: TPanel
         Left = 3
-        Height = 46
-        Top = 175
+        Height = 53
+        Top = 197
         Width = 192
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 46
+        ClientHeight = 53
         ClientWidth = 192
         TabOrder = 4
         object cbxStatus: TComboBox
           Left = 3
-          Height = 23
+          Height = 30
           Top = 20
           Width = 186
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
-          ItemHeight = 15
+          ItemHeight = 0
           Style = csDropDownList
           TabOrder = 0
           OnEnter = ediCodeEnter

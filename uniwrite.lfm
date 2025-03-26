@@ -1,19 +1,18 @@
 object frmWrite: TfrmWrite
-  Left = 440
+  Left = 463
   Height = 500
-  Top = 246
+  Top = 356
   Width = 1000
   ActiveControl = pnlList
   ClientHeight = 500
   ClientWidth = 1000
   Constraints.MinHeight = 400
   Constraints.MinWidth = 600
-  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlButtons: TPanel
     Left = 5

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ActnList, BCPanel, BCMDButtonFocus, StrUtils, IniFiles;
+  ActnList, BCPanel, BCMDButtonFocus, StrUtils;
 
 type
 
@@ -35,7 +35,6 @@ type
     procedure cbxCurrencyExit(Sender: TObject);
     procedure cbxCurrencyKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -53,7 +52,7 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniCurrencies, uniSettings;
+  uniMain, uniCurrencies;
 
 { TfrmManyCurrencies }
 
@@ -79,40 +78,6 @@ begin
     Key := 0;
     If cbxCurrency.ItemIndex > -1 then
       btnSave.SetFocus;
-  end;
-end;
-
-procedure TfrmManyCurrencies.FormClose(Sender: TObject;
-  var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-
-begin
-  try
-    // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmManyCurrencies.Name, '') <>
-          IntToStr(frmManyCurrencies.Left) + separ + // form left
-        IntToStr(frmManyCurrencies.Top) + separ + // form top
-        IntToStr(frmManyCurrencies.Width) + separ + // form width
-        IntToStr(frmManyCurrencies.Height) then
-          INI.WriteString('POSITION', frmManyCurrencies.Name,
-            IntToStr(frmManyCurrencies.Left) + separ + // form left
-            IntToStr(frmManyCurrencies.Top) + separ + // form top
-            IntToStr(frmManyCurrencies.Width) + separ + // form width
-            IntToStr(frmManyCurrencies.Height));
-      finally
-        INI.Free;
-      end;
-    end;
-  except
-    on E: Exception do
-      ShowErrorMessage(E);
   end;
 end;
 
@@ -146,15 +111,15 @@ begin
 end;
 
 procedure TfrmManyCurrencies.FormShow(Sender: TObject);
-var
+{var
   INI: TINIFile;
   S: string;
-  I: integer;
+  I: integer;}
 begin
   // ********************************************************************
   // FORM SIZE START
   // ********************************************************************
-  try
+{  try
     S := ChangeFileExt(ParamStr(0), '.ini');
     // INI file READ procedure (if file exists) =========================
     if FileExists(S) = True then
@@ -193,7 +158,7 @@ begin
     end;
   finally
     INI.Free
-  end;
+  end;}
   // ********************************************************************
   // FORM SIZE END
   // ********************************************************************

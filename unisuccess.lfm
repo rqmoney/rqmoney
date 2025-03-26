@@ -1,7 +1,7 @@
 object frmSuccess: TfrmSuccess
-  Left = 752
+  Left = 775
   Height = 330
-  Top = 255
+  Top = 364
   Width = 500
   BorderIcons = [biSystemMenu]
   ClientHeight = 330
@@ -9,12 +9,10 @@ object frmSuccess: TfrmSuccess
   Color = 14606046
   Constraints.MinHeight = 330
   Constraints.MinWidth = 500
-  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
-  OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.1'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlSuccess: TPanel
     Left = 10

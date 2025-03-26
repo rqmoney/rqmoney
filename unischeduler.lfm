@@ -1,25 +1,24 @@
 object frmScheduler: TfrmScheduler
-  Left = 585
+  Left = 607
   Height = 500
-  Top = 208
-  Width = 800
+  Top = 318
+  Width = 600
   ActiveControl = pnlDetailCaption
   ClientHeight = 500
-  ClientWidth = 800
-  Constraints.MinHeight = 500
-  Constraints.MinWidth = 800
-  OnClose = FormClose
+  ClientWidth = 600
+  Constraints.MinHeight = 400
+  Constraints.MinWidth = 600
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.2.0.0'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlBottom: TPanel
     Left = 5
     Height = 26
     Top = 472
-    Width = 790
+    Width = 590
     Align = alBottom
     BorderSpacing.Left = 5
     BorderSpacing.Top = 2
@@ -27,11 +26,11 @@ object frmScheduler: TfrmScheduler
     BorderSpacing.Bottom = 2
     BevelOuter = bvNone
     ClientHeight = 26
-    ClientWidth = 790
+    ClientWidth = 590
     Constraints.MaxHeight = 52
     TabOrder = 1
     object pnlHeight: TPanel
-      Left = 639
+      Left = 439
       Height = 24
       Top = 1
       Width = 150
@@ -70,7 +69,7 @@ object frmScheduler: TfrmScheduler
       end
     end
     object pnlWidth: TPanel
-      Left = 488
+      Left = 288
       Height = 24
       Top = 1
       Width = 150
@@ -112,18 +111,18 @@ object frmScheduler: TfrmScheduler
       Left = 1
       Height = 24
       Top = 1
-      Width = 486
+      Width = 286
       Align = alClient
       AutoSize = True
       BorderSpacing.Around = 1
       BevelOuter = bvNone
       ClientHeight = 24
-      ClientWidth = 486
+      ClientWidth = 286
       TabOrder = 2
       OnResize = pnlButtonsResize
       object btnSave: TBCMDButtonFocus
         Cursor = crHandPoint
-        Left = 334
+        Left = 134
         Height = 22
         Top = 1
         Width = 150
@@ -185,7 +184,7 @@ object frmScheduler: TfrmScheduler
       end
       object btnSettings: TBCMDButtonFocus
         Cursor = crHandPoint
-        Left = 182
+        Left = 3
         Height = 22
         Top = 1
         Width = 150
@@ -218,49 +217,49 @@ object frmScheduler: TfrmScheduler
   end
   object pnlLeft: TPanel
     Left = 5
-    Height = 421
+    Height = 415
     Top = 27
-    Width = 559
+    Width = 359
     Align = alClient
     AutoSize = True
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 421
-    ClientWidth = 559
+    ClientHeight = 415
+    ClientWidth = 359
     Constraints.MinWidth = 300
     TabOrder = 0
     object pnlClientLeft: TScrollBox
       Left = 1
-      Height = 419
+      Height = 413
       Top = 1
-      Width = 557
+      Width = 357
       HorzScrollBar.Page = 1
       HorzScrollBar.Visible = False
-      VertScrollBar.Page = 333
+      VertScrollBar.Page = 372
       Align = alClient
       AutoSize = True
       BorderStyle = bsNone
-      ClientHeight = 419
-      ClientWidth = 557
+      ClientHeight = 413
+      ClientWidth = 357
       Constraints.MinWidth = 300
       TabOrder = 0
       object pnlPeriodicity: TPanel
         Left = 2
-        Height = 31
+        Height = 38
         Top = 2
-        Width = 553
+        Width = 353
         Align = alTop
         AutoSize = True
         BorderSpacing.Around = 2
-        ClientHeight = 31
-        ClientWidth = 553
+        ClientHeight = 38
+        ClientWidth = 353
         TabOrder = 0
         object cbxPeriodicity: TComboBox
           Tag = 2
           Left = 3
-          Height = 23
+          Height = 30
           Top = 5
-          Width = 474
+          Width = 274
           Align = alClient
           AutoComplete = True
           AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
@@ -269,7 +268,7 @@ object frmScheduler: TfrmScheduler
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
           DropDownCount = 10
-          ItemHeight = 15
+          ItemHeight = 0
           Style = csDropDownList
           TabOrder = 0
           OnChange = cbxPeriodicityChange
@@ -281,18 +280,18 @@ object frmScheduler: TfrmScheduler
           Left = 1
           Height = 2
           Top = 1
-          Width = 551
+          Width = 351
           Align = alTop
           AutoSize = True
           BevelOuter = bvNone
           ClientHeight = 2
-          ClientWidth = 551
+          ClientWidth = 351
           TabOrder = 1
           object lblPeriodicity: TLabel
             Left = 2
             Height = 1
             Top = 1
-            Width = 531
+            Width = 331
             Align = alClient
             BorderSpacing.Left = 2
             BorderSpacing.Top = 1
@@ -302,7 +301,7 @@ object frmScheduler: TfrmScheduler
             ParentFont = False
           end
           object lblSpecial: TLabel
-            Left = 535
+            Left = 335
             Height = 1
             Top = 1
             Width = 1
@@ -315,8 +314,8 @@ object frmScheduler: TfrmScheduler
           end
         end
         object spiSpecial: TSpinEdit
-          Left = 482
-          Height = 23
+          Left = 282
+          Height = 30
           Top = 5
           Width = 70
           Align = alRight
@@ -336,22 +335,22 @@ object frmScheduler: TfrmScheduler
       end
       object pnlType: TPanel
         Left = 2
-        Height = 30
-        Top = 87
-        Width = 553
+        Height = 37
+        Top = 94
+        Width = 353
         Align = alTop
         AutoSize = True
         BorderSpacing.Around = 2
-        ClientHeight = 30
-        ClientWidth = 553
+        ClientHeight = 37
+        ClientWidth = 353
         ParentFont = False
         TabOrder = 2
         object cbxType: TComboBox
           Tag = 7
           Left = 4
-          Height = 23
+          Height = 30
           Top = 4
-          Width = 546
+          Width = 346
           Align = alClient
           AutoComplete = True
           AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
@@ -359,7 +358,7 @@ object frmScheduler: TfrmScheduler
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
           DropDownCount = 20
-          ItemHeight = 15
+          ItemHeight = 0
           ParentFont = False
           Style = csDropDownList
           TabOrder = 0
@@ -372,7 +371,7 @@ object frmScheduler: TfrmScheduler
           Left = 3
           Height = 1
           Top = 2
-          Width = 548
+          Width = 348
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Top = 1
@@ -385,23 +384,23 @@ object frmScheduler: TfrmScheduler
       end
       object pnlComment: TPanel
         Left = 2
-        Height = 29
-        Top = 184
-        Width = 553
+        Height = 34
+        Top = 208
+        Width = 353
         Align = alTop
         AutoSize = True
         BorderSpacing.Around = 2
-        ClientHeight = 29
-        ClientWidth = 553
+        ClientHeight = 34
+        ClientWidth = 353
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 4
         object cbxComment: TComboBox
           Tag = 3
           Left = 3
-          Height = 23
+          Height = 28
           Top = 3
-          Width = 525
+          Width = 325
           Align = alClient
           AutoComplete = True
           AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactRetainPrefixCase, cbactSearchAscending]
@@ -410,7 +409,7 @@ object frmScheduler: TfrmScheduler
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 2
           DropDownCount = 20
-          ItemHeight = 15
+          ItemHeight = 0
           ParentFont = False
           TabOrder = 0
           OnDropDown = cbxAccountFromDropDown
@@ -422,7 +421,7 @@ object frmScheduler: TfrmScheduler
           Left = 3
           Height = 1
           Top = 2
-          Width = 547
+          Width = 347
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Top = 1
@@ -433,8 +432,8 @@ object frmScheduler: TfrmScheduler
         end
         object btnComment: TSpeedButton
           Cursor = crHandPoint
-          Left = 531
-          Height = 23
+          Left = 331
+          Height = 28
           Top = 4
           Width = 20
           Align = alRight
@@ -451,22 +450,22 @@ object frmScheduler: TfrmScheduler
       end
       object pnlPayee: TPanel
         Left = 2
-        Height = 29
-        Top = 302
-        Width = 553
+        Height = 34
+        Top = 336
+        Width = 353
         Align = alTop
         AutoSize = True
         BorderSpacing.Around = 2
-        ClientHeight = 29
-        ClientWidth = 553
+        ClientHeight = 34
+        ClientWidth = 353
         ParentFont = False
         TabOrder = 7
         object cbxPayee: TComboBox
           Tag = 7
           Left = 3
-          Height = 23
+          Height = 28
           Top = 3
-          Width = 525
+          Width = 325
           Align = alClient
           AutoComplete = True
           AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
@@ -474,7 +473,7 @@ object frmScheduler: TfrmScheduler
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 2
           DropDownCount = 20
-          ItemHeight = 15
+          ItemHeight = 0
           ParentFont = False
           TabOrder = 0
           OnDropDown = cbxAccountFromDropDown
@@ -484,8 +483,8 @@ object frmScheduler: TfrmScheduler
         end
         object btnPayee: TSpeedButton
           Cursor = crHandPoint
-          Left = 531
-          Height = 23
+          Left = 331
+          Height = 28
           Top = 4
           Width = 20
           Align = alRight
@@ -503,7 +502,7 @@ object frmScheduler: TfrmScheduler
           Left = 3
           Height = 1
           Top = 2
-          Width = 547
+          Width = 347
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Top = 1
@@ -515,22 +514,22 @@ object frmScheduler: TfrmScheduler
       end
       object pnlPerson: TPanel
         Left = 2
-        Height = 29
-        Top = 271
-        Width = 553
+        Height = 34
+        Top = 300
+        Width = 353
         Align = alTop
         AutoSize = True
         BorderSpacing.Around = 2
-        ClientHeight = 29
-        ClientWidth = 553
+        ClientHeight = 34
+        ClientWidth = 353
         ParentFont = False
         TabOrder = 6
         object cbxPerson: TComboBox
           Tag = 7
           Left = 3
-          Height = 23
+          Height = 28
           Top = 3
-          Width = 525
+          Width = 325
           Align = alClient
           AutoComplete = True
           AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
@@ -538,7 +537,7 @@ object frmScheduler: TfrmScheduler
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 2
           DropDownCount = 20
-          ItemHeight = 15
+          ItemHeight = 0
           ParentFont = False
           TabOrder = 0
           OnDropDown = cbxAccountFromDropDown
@@ -548,8 +547,8 @@ object frmScheduler: TfrmScheduler
         end
         object btnPerson: TSpeedButton
           Cursor = crHandPoint
-          Left = 531
-          Height = 23
+          Left = 331
+          Height = 28
           Top = 4
           Width = 20
           Align = alRight
@@ -567,7 +566,7 @@ object frmScheduler: TfrmScheduler
           Left = 3
           Height = 1
           Top = 2
-          Width = 547
+          Width = 347
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Top = 1
@@ -580,13 +579,13 @@ object frmScheduler: TfrmScheduler
       object pnlCategory: TPanel
         Left = 2
         Height = 54
-        Top = 215
-        Width = 553
+        Top = 244
+        Width = 353
         Align = alTop
         AutoSize = True
         BorderSpacing.Around = 2
         ClientHeight = 54
-        ClientWidth = 553
+        ClientWidth = 353
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 5
@@ -594,7 +593,7 @@ object frmScheduler: TfrmScheduler
           Left = 3
           Height = 1
           Top = 2
-          Width = 547
+          Width = 347
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Top = 1
@@ -607,19 +606,19 @@ object frmScheduler: TfrmScheduler
           Left = 1
           Height = 50
           Top = 3
-          Width = 529
+          Width = 329
           Align = alClient
           AutoSize = True
           BevelOuter = bvNone
           ClientHeight = 50
-          ClientWidth = 529
+          ClientWidth = 329
           TabOrder = 0
           object cbxSubcategory: TComboBox
             Tag = 1
             Left = 2
             Height = 23
             Top = 25
-            Width = 524
+            Width = 324
             Align = alTop
             AutoComplete = True
             AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
@@ -628,7 +627,7 @@ object frmScheduler: TfrmScheduler
             BorderSpacing.Right = 3
             BorderSpacing.Bottom = 2
             DropDownCount = 20
-            ItemHeight = 15
+            ItemHeight = 0
             ParentFont = False
             TabOrder = 1
             OnDropDown = cbxAccountFromDropDown
@@ -641,7 +640,7 @@ object frmScheduler: TfrmScheduler
             Left = 2
             Height = 23
             Top = 0
-            Width = 524
+            Width = 324
             Align = alTop
             AutoComplete = True
             AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
@@ -650,7 +649,7 @@ object frmScheduler: TfrmScheduler
             BorderSpacing.Right = 3
             BorderSpacing.Bottom = 2
             DropDownCount = 20
-            ItemHeight = 15
+            ItemHeight = 0
             ParentFont = False
             TabOrder = 0
             OnChange = cbxCategoryChange
@@ -663,7 +662,7 @@ object frmScheduler: TfrmScheduler
         end
         object btnCategory: TSpeedButton
           Cursor = crHandPoint
-          Left = 531
+          Left = 331
           Height = 48
           Top = 4
           Width = 20
@@ -681,43 +680,43 @@ object frmScheduler: TfrmScheduler
       end
       object pnlAccounts: TPanel
         Left = 0
-        Height = 63
-        Top = 119
-        Width = 557
+        Height = 73
+        Top = 133
+        Width = 357
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
-        ClientHeight = 63
-        ClientWidth = 557
+        ClientHeight = 73
+        ClientWidth = 357
         TabOrder = 3
         OnResize = pnlAccountsResize
         object pnlFrom: TPanel
           Left = 0
-          Height = 63
+          Height = 73
           Top = 0
-          Width = 423
+          Width = 223
           Align = alClient
           BevelOuter = bvNone
-          ClientHeight = 63
-          ClientWidth = 423
+          ClientHeight = 73
+          ClientWidth = 223
           TabOrder = 0
           object pnlAmountFrom: TPanel
             Left = 2
-            Height = 27
-            Top = 34
-            Width = 419
+            Height = 32
+            Top = 39
+            Width = 219
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 2
-            ClientHeight = 27
-            ClientWidth = 419
+            ClientHeight = 32
+            ClientWidth = 219
             ParentFont = False
             TabOrder = 1
             object lblAmountFrom: TLabel
               Left = 3
               Height = 1
               Top = 2
-              Width = 413
+              Width = 213
               Align = alTop
               BorderSpacing.Left = 2
               BorderSpacing.Top = 1
@@ -728,8 +727,8 @@ object frmScheduler: TfrmScheduler
             end
             object btnAmountFrom: TSpeedButton
               Cursor = crHandPoint
-              Left = 397
-              Height = 21
+              Left = 197
+              Height = 26
               Top = 4
               Width = 20
               Align = alRight
@@ -745,9 +744,9 @@ object frmScheduler: TfrmScheduler
             end
             object spiAmountFrom: TEdit
               Left = 3
-              Height = 23
+              Height = 28
               Top = 3
-              Width = 391
+              Width = 191
               Align = alClient
               Alignment = taRightJustify
               BorderSpacing.Left = 2
@@ -762,22 +761,22 @@ object frmScheduler: TfrmScheduler
           end
           object pnlAccountFrom: TPanel
             Left = 2
-            Height = 30
+            Height = 35
             Top = 2
-            Width = 419
+            Width = 219
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 2
-            ClientHeight = 30
-            ClientWidth = 419
+            ClientHeight = 35
+            ClientWidth = 219
             ParentFont = False
             TabOrder = 0
             object cbxAccountFrom: TComboBox
               Tag = 7
               Left = 3
-              Height = 23
+              Height = 28
               Top = 4
-              Width = 391
+              Width = 191
               Align = alClient
               AutoComplete = True
               AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
@@ -785,7 +784,7 @@ object frmScheduler: TfrmScheduler
               BorderSpacing.Right = 3
               BorderSpacing.Bottom = 2
               DropDownCount = 20
-              ItemHeight = 15
+              ItemHeight = 0
               ParentFont = False
               TabOrder = 0
               OnDropDown = cbxAccountFromDropDown
@@ -795,8 +794,8 @@ object frmScheduler: TfrmScheduler
             end
             object btnAccountFrom: TSpeedButton
               Cursor = crHandPoint
-              Left = 397
-              Height = 24
+              Left = 197
+              Height = 29
               Top = 4
               Width = 20
               Align = alRight
@@ -814,7 +813,7 @@ object frmScheduler: TfrmScheduler
               Left = 3
               Height = 1
               Top = 2
-              Width = 413
+              Width = 213
               Align = alTop
               BorderSpacing.Left = 2
               BorderSpacing.Top = 1
@@ -827,31 +826,31 @@ object frmScheduler: TfrmScheduler
           end
         end
         object pnlTo: TPanel
-          Left = 423
-          Height = 63
+          Left = 223
+          Height = 73
           Top = 0
           Width = 134
           Align = alRight
           BevelOuter = bvNone
-          ClientHeight = 63
+          ClientHeight = 73
           ClientWidth = 134
           TabOrder = 1
           object pnlAccountTo: TPanel
             Left = 2
-            Height = 30
+            Height = 35
             Top = 2
             Width = 130
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 2
-            ClientHeight = 30
+            ClientHeight = 35
             ClientWidth = 130
             ParentFont = False
             TabOrder = 0
             object cbxAccountTo: TComboBox
               Tag = 7
               Left = 3
-              Height = 23
+              Height = 28
               Top = 4
               Width = 102
               Align = alClient
@@ -861,7 +860,7 @@ object frmScheduler: TfrmScheduler
               BorderSpacing.Right = 3
               BorderSpacing.Bottom = 2
               DropDownCount = 20
-              ItemHeight = 15
+              ItemHeight = 0
               ParentFont = False
               TabOrder = 0
               OnDropDown = cbxAccountFromDropDown
@@ -873,7 +872,7 @@ object frmScheduler: TfrmScheduler
               Tag = 1
               Cursor = crHandPoint
               Left = 108
-              Height = 24
+              Height = 29
               Top = 4
               Width = 20
               Align = alRight
@@ -904,13 +903,13 @@ object frmScheduler: TfrmScheduler
           end
           object pnlAmountTo: TPanel
             Left = 2
-            Height = 27
-            Top = 34
+            Height = 32
+            Top = 39
             Width = 130
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 2
-            ClientHeight = 27
+            ClientHeight = 32
             ClientWidth = 130
             ParentFont = False
             TabOrder = 1
@@ -931,7 +930,7 @@ object frmScheduler: TfrmScheduler
               Tag = 1
               Cursor = crHandPoint
               Left = 108
-              Height = 21
+              Height = 26
               Top = 4
               Width = 20
               Align = alRight
@@ -947,7 +946,7 @@ object frmScheduler: TfrmScheduler
             end
             object spiAmountTo: TEdit
               Left = 3
-              Height = 23
+              Height = 28
               Top = 3
               Width = 102
               Align = alClient
@@ -967,12 +966,12 @@ object frmScheduler: TfrmScheduler
       object pnlDate: TPanel
         Left = 0
         Height = 50
-        Top = 35
-        Width = 557
+        Top = 42
+        Width = 357
         Align = alTop
         BevelOuter = bvNone
         ClientHeight = 50
-        ClientWidth = 557
+        ClientWidth = 357
         Constraints.MinHeight = 50
         TabOrder = 1
         OnResize = pnlDateResize
@@ -1011,18 +1010,18 @@ object frmScheduler: TfrmScheduler
             BorderSpacing.Right = 3
             BevelOuter = bvNone
             BorderStyle = bsSingle
-            ClientHeight = 22
-            ClientWidth = 227
+            ClientHeight = 24
+            ClientWidth = 229
             Color = clWhite
             ParentBackground = False
             ParentColor = False
             TabOrder = 0
             object datDateFrom: TDateTimePicker
               Cursor = crHandPoint
-              Left = 106
-              Height = 20
+              Left = 85
+              Height = 22
               Top = 1
-              Width = 120
+              Width = 143
               CenturyFrom = 2000
               MaxDate = 117974
               MinDate = 2
@@ -1060,9 +1059,9 @@ object frmScheduler: TfrmScheduler
             end
             object lblDateFrom1: TLabel
               Left = 1
-              Height = 18
+              Height = 20
               Top = 2
-              Width = 102
+              Width = 81
               Align = alClient
               Alignment = taRightJustify
               AutoSize = False
@@ -1081,19 +1080,19 @@ object frmScheduler: TfrmScheduler
           Left = 243
           Height = 46
           Top = 2
-          Width = 312
+          Width = 112
           Align = alClient
           BorderSpacing.Left = 1
           BorderSpacing.Around = 2
           ClientHeight = 46
-          ClientWidth = 312
+          ClientWidth = 112
           ParentFont = False
           TabOrder = 1
           object lblDateTo: TLabel
             Left = 3
             Height = 17
             Top = 2
-            Width = 306
+            Width = 106
             Align = alTop
             BorderSpacing.Left = 2
             BorderSpacing.Top = 1
@@ -1107,24 +1106,24 @@ object frmScheduler: TfrmScheduler
             Left = 2
             Height = 26
             Top = 19
-            Width = 306
+            Width = 106
             Align = alClient
             BorderSpacing.Left = 1
             BorderSpacing.Right = 3
             BevelOuter = bvNone
             BorderStyle = bsSingle
-            ClientHeight = 22
-            ClientWidth = 302
+            ClientHeight = 24
+            ClientWidth = 104
             Color = clWhite
             ParentBackground = False
             ParentColor = False
             TabOrder = 0
             object datDateTo: TDateTimePicker
               Cursor = crHandPoint
-              Left = 181
-              Height = 20
+              Left = -40
+              Height = 22
               Top = 1
-              Width = 120
+              Width = 143
               CenturyFrom = 1965
               MaxDate = 117974
               MinDate = 2
@@ -1161,10 +1160,10 @@ object frmScheduler: TfrmScheduler
               OnKeyUp = datDateToKeyUp
             end
             object lblDateTo1: TLabel
-              Left = 1
-              Height = 18
+              Left = -1
+              Height = 20
               Top = 2
-              Width = 177
+              Width = 0
               Align = alClient
               Alignment = taRightJustify
               AutoSize = False
@@ -1186,7 +1185,7 @@ object frmScheduler: TfrmScheduler
     Left = 5
     Height = 20
     Top = 2
-    Width = 790
+    Width = 590
     Align = alTop
     BorderSpacing.Left = 3
     BorderSpacing.Right = 3
@@ -1226,13 +1225,13 @@ object frmScheduler: TfrmScheduler
     TabOrder = 2
   end
   object pnlRight: TPanel
-    Left = 577
-    Height = 425
+    Left = 377
+    Height = 419
     Top = 25
     Width = 220
     Align = alRight
     BorderSpacing.Around = 3
-    ClientHeight = 425
+    ClientHeight = 419
     ClientWidth = 220
     Constraints.MinWidth = 150
     Font.Style = [fsBold]
@@ -1240,7 +1239,7 @@ object frmScheduler: TfrmScheduler
     TabOrder = 3
     object lbxTag: TCheckListBox
       Left = 3
-      Height = 395
+      Height = 389
       Top = 27
       Width = 213
       Align = alClient
@@ -1251,6 +1250,7 @@ object frmScheduler: TfrmScheduler
       ItemHeight = 0
       ParentFont = False
       TabOrder = 0
+      TopIndex = -1
       OnEnter = lbxTagEnter
       OnExit = lbxTagExit
       OnKeyUp = lbxTagKeyUp
@@ -1300,8 +1300,8 @@ object frmScheduler: TfrmScheduler
     end
   end
   object splList: TSplitter
-    Left = 569
-    Height = 427
+    Left = 369
+    Height = 421
     Top = 24
     Width = 5
     Align = alRight
@@ -1310,9 +1310,9 @@ object frmScheduler: TfrmScheduler
   end
   object chkUseDateShift: TCheckBox
     Left = 5
-    Height = 17
-    Top = 453
-    Width = 790
+    Height = 23
+    Top = 447
+    Width = 590
     Align = alBottom
     BorderSpacing.Left = 3
     BorderSpacing.Right = 3

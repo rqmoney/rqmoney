@@ -6,8 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
-  Buttons, StdCtrls, LazUTF8, ActnList, BCPanel, BCMDButtonFocus, StrUtils,
-  IniFiles;
+  Buttons, StdCtrls, LazUTF8, ActnList, BCPanel, BCMDButtonFocus, StrUtils;
 
 type
 
@@ -43,7 +42,6 @@ type
     procedure btnExecuteClick(Sender: TObject);
     procedure btnExecuteEnter(Sender: TObject);
     procedure btnExecuteExit(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -66,7 +64,7 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniSQLResults, uniResources, uniImage, uniSettings;
+  uniMain, uniSQLResults, uniResources, uniImage;
 
   { TfrmSQL }
 
@@ -102,58 +100,7 @@ begin
 end;
 
 procedure TfrmSQL.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmSQL.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmSQL.Name, '-1•-1•0•0');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmSQL.Width := Screen.Width - 500 - (200 - ScreenRatio)
-      else
-        frmSQL.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmSQL.Height := Screen.Height - 300 - (200 - ScreenRatio)
-      else
-        frmSQL.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmSQL.left := (Screen.Width - frmSQL.Width) div 2
-      else
-        frmSQL.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmSQL.Top := ((Screen.Height - frmSQL.Height) div 2) - 75
-      else
-        frmSQL.Top := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   if (memSQL.Enabled = True) and (rbtOwn.Checked = True) then
   begin
     memSQL.SetFocus;
@@ -245,38 +192,6 @@ end;
 procedure TfrmSQL.btnExecuteExit(Sender: TObject);
 begin
   (Sender as TBitBtn).Font.Style := [];
-end;
-
-procedure TfrmSQL.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-begin
-  try
-    // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmSQL.Name, '') <>
-          IntToStr(frmSQL.Left) + separ + // form left
-        IntToStr(frmSQL.Top) + separ + // form top
-        IntToStr(frmSQL.Width) + separ + // form width
-        IntToStr(frmSQL.Height) then
-          INI.WriteString('POSITION', frmSQL.Name,
-            IntToStr(frmSQL.Left) + separ + // form left
-            IntToStr(frmSQL.Top) + separ + // form top
-            IntToStr(frmSQL.Width) + separ + // form width
-            IntToStr(frmSQL.Height));
-      finally
-        INI.Free;
-      end;
-    end;
-  except
-    on E: Exception do
-      ShowErrorMessage(E);
-  end;
 end;
 
 procedure TfrmSQL.rbtDataChange(Sender: TObject);

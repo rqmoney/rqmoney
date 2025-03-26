@@ -1,7 +1,7 @@
 object frmWriting: TfrmWriting
-  Left = 450
+  Left = 473
   Height = 220
-  Top = 159
+  Top = 268
   Width = 350
   BorderIcons = [biSystemMenu]
   ClientHeight = 220
@@ -9,13 +9,12 @@ object frmWriting: TfrmWriting
   Constraints.MinHeight = 220
   Constraints.MinWidth = 350
   KeyPreview = True
-  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object lblWrite: TLabel
     Left = 10
@@ -98,18 +97,18 @@ object frmWriting: TfrmWriting
   end
   object pnlWrite: TPanel
     Left = 10
-    Height = 51
+    Height = 63
     Top = 21
     Width = 330
     Align = alTop
     AutoSize = True
     BorderSpacing.Around = 10
-    ClientHeight = 51
+    ClientHeight = 63
     ClientWidth = 330
     TabOrder = 0
     object rbtWriteAtOnce: TRadioButton
       Left = 16
-      Height = 17
+      Height = 23
       Top = 6
       Width = 308
       Align = alTop
@@ -121,8 +120,8 @@ object frmWriting: TfrmWriting
     end
     object rbtWriteGradually: TRadioButton
       Left = 16
-      Height = 17
-      Top = 28
+      Height = 23
+      Top = 34
       Width = 308
       Align = alTop
       BorderSpacing.Left = 10

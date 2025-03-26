@@ -6,8 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Buttons, ComCtrls, ActnList, BCPanel, BCMDButtonFocus, StrUtils, Clipbrd,
-  LazUTF8, IniFiles;
+  Buttons, ComCtrls, ActnList, BCPanel, BCMDButtonFocus, StrUtils, Clipbrd, LazUTF8;
 
 type
 
@@ -55,7 +54,6 @@ type
     procedure btnValuesClick(Sender: TObject);
     procedure cbxCurrencyChange(Sender: TObject);
     procedure cbxCurrencyDropDown(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -85,7 +83,7 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain, uniValues, uniCurrencies, uniResources, uniSettings;
+  uniMain, uniValues, uniCurrencies, uniResources;
 
   { TfrmCounter }
 
@@ -116,58 +114,7 @@ begin
 end;
 
 procedure TfrmCounter.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmCounter.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmCounter.Name, '-1•-1•0•0');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmCounter.Width := 500
-      else
-        frmCounter.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmCounter.Height := 650
-      else
-        frmCounter.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmCounter.left := (Screen.Width - frmCounter.Width) div 2
-      else
-        frmCounter.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmCounter.Top := ((Screen.Height - frmCounter.Height) div 2) - 75
-      else
-        frmCounter.Top := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   if cbxCurrency.ItemIndex > -1 then
     frmCounter.cbxCurrencyChange(frmCounter.cbxCurrency);
 
@@ -536,33 +483,6 @@ begin
   {$IFDEF WINDOWS}
     ComboDDWidth(TComboBox(Sender));
   {$ENDIF}
-end;
-
-procedure TfrmCounter.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-begin
-  // write position and window size
-  if frmSettings.chkLastFormsSize.Checked = True then
-  begin
-    try
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmCounter.Name, '') <>
-        IntToStr(frmCounter.Left) + separ + // form left
-      IntToStr(frmCounter.Top) + separ + // form top
-      IntToStr(frmCounter.Width) + separ + // form width
-      IntToStr(frmCounter.Height) then
-        INI.WriteString('POSITION', frmCounter.Name,
-          IntToStr(frmCounter.Left) + separ + // form left
-          IntToStr(frmCounter.Top) + separ + // form top
-          IntToStr(frmCounter.Width) + separ + // form width
-          IntToStr(frmCounter.Height)); // form height
-    finally
-      INI.Free;
-    end;
-  end;
 end;
 
 procedure TfrmCounter.ediExit(Sender: TObject);

@@ -1,7 +1,7 @@
 object frmLinks: TfrmLinks
-  Left = 611
+  Left = 633
   Height = 400
-  Top = 253
+  Top = 362
   Width = 1000
   ClientHeight = 400
   ClientWidth = 1000
@@ -12,7 +12,7 @@ object frmLinks: TfrmLinks
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlBottom: TPanel
     Left = 0
@@ -669,14 +669,14 @@ object frmLinks: TfrmLinks
       TabOrder = 1
       object pnlName: TPanel
         Left = 3
-        Height = 30
+        Height = 35
         Top = 3
         Width = 212
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 30
+        ClientHeight = 35
         ClientWidth = 212
         ParentFont = False
         TabOrder = 0
@@ -695,7 +695,7 @@ object frmLinks: TfrmLinks
         end
         object ediName: TEdit
           Left = 3
-          Height = 23
+          Height = 28
           Top = 4
           Width = 206
           Align = alTop
@@ -708,13 +708,13 @@ object frmLinks: TfrmLinks
       end
       object pnlComment: TPanel
         Left = 3
-        Height = 117
-        Top = 167
+        Height = 82
+        Top = 202
         Width = 212
         Align = alClient
         AutoSize = True
         BorderSpacing.Around = 3
-        ClientHeight = 117
+        ClientHeight = 82
         ClientWidth = 212
         ParentFont = False
         TabOrder = 3
@@ -732,7 +732,7 @@ object frmLinks: TfrmLinks
         end
         object memComment: TMemo
           Left = 3
-          Height = 110
+          Height = 75
           Top = 4
           Width = 206
           Align = alClient
@@ -745,14 +745,14 @@ object frmLinks: TfrmLinks
       end
       object pnlLink: TPanel
         Left = 3
-        Height = 30
-        Top = 39
+        Height = 35
+        Top = 44
         Width = 212
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 30
+        ClientHeight = 35
         ClientWidth = 212
         ParentFont = False
         TabOrder = 1
@@ -771,7 +771,7 @@ object frmLinks: TfrmLinks
         end
         object ediLink: TEdit
           Left = 3
-          Height = 23
+          Height = 28
           Top = 4
           Width = 206
           Align = alTop
@@ -784,20 +784,20 @@ object frmLinks: TfrmLinks
       end
       object pnlshortcut: TPanel
         Left = 3
-        Height = 86
-        Top = 75
+        Height = 111
+        Top = 85
         Width = 212
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 86
+        ClientHeight = 111
         ClientWidth = 212
         ParentFont = False
         TabOrder = 2
         object chkCtrl: TCheckBox
           Left = 4
-          Height = 17
+          Height = 23
           Top = 5
           Width = 204
           Align = alTop
@@ -823,8 +823,8 @@ object frmLinks: TfrmLinks
         end
         object chkShift: TCheckBox
           Left = 4
-          Height = 17
-          Top = 23
+          Height = 23
+          Top = 29
           Width = 204
           Align = alTop
           BorderSpacing.Left = 2
@@ -836,8 +836,8 @@ object frmLinks: TfrmLinks
         end
         object chkAlt: TCheckBox
           Left = 4
-          Height = 17
-          Top = 41
+          Height = 23
+          Top = 53
           Width = 204
           Align = alTop
           BorderSpacing.Left = 2
@@ -849,15 +849,15 @@ object frmLinks: TfrmLinks
         end
         object cbxShortCut: TComboBox
           Left = 4
-          Height = 23
-          Top = 59
+          Height = 30
+          Top = 77
           Width = 204
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
           BorderSpacing.Around = 1
-          ItemHeight = 15
+          ItemHeight = 0
           Style = csDropDownList
           TabOrder = 3
           OnChange = ediNameChange

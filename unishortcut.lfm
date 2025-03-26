@@ -1,7 +1,7 @@
 object frmShortCut: TfrmShortCut
-  Left = 725
+  Left = 747
   Height = 250
-  Top = 194
+  Top = 304
   Width = 400
   BorderIcons = [biSystemMenu]
   ClientHeight = 250
@@ -9,12 +9,10 @@ object frmShortCut: TfrmShortCut
   Color = 14606046
   Constraints.MinHeight = 250
   Constraints.MinWidth = 400
-  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
-  OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlAction: TPanel
     Left = 5

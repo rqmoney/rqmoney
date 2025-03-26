@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, Buttons, BCPanel, BCMDButtonFocus, IniFiles;
+  StdCtrls, Buttons, BCPanel, BCMDButtonFocus;
 
 type
 
@@ -59,7 +59,6 @@ type
     procedure btnPayeeClick(Sender: TObject);
     procedure btnPersonClick(Sender: TObject);
     procedure btnTransactionClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
@@ -78,7 +77,7 @@ implementation
 {$R *.lfm}
 
 uses
-  uniPersons, uniAccounts, uniCategories, uniPayees, uniMain, uniSettings;
+  uniPersons, uniAccounts, uniCategories, uniPayees, uniMain;
 
   { TfrmGuide }
 
@@ -96,58 +95,7 @@ begin
 end;
 
 procedure TfrmGuide.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmGuide.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmGuide.Name, '-1•-1•0•0');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmGuide.Width := Round(700 * (ScreenRatio / 100))
-      else
-        frmGuide.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmGuide.Height := Round(400 * (ScreenRatio / 100))
-      else
-        frmGuide.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmGuide.left := (Screen.Width - frmGuide.Width) div 2
-      else
-        frmGuide.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmGuide.Top := ((Screen.Height - frmGuide.Height) div 2) - 75
-      else
-        frmGuide.Top := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   if pnlButtons.Tag = 0 then
   begin
     frmGuide.Tag := 0;
@@ -189,33 +137,6 @@ end;
 procedure TfrmGuide.btnTransactionClick(Sender: TObject);
 begin
   frmMain.btnAddClick(frmMain.btnAdd);
-end;
-
-procedure TfrmGuide.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-begin
-  // write position and window size
-  if frmSettings.chkLastFormsSize.Checked = True then
-  begin
-    try
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmGuide.Name, '') <>
-        IntToStr(frmGuide.Left) + separ + // form left
-      IntToStr(frmGuide.Top) + separ + // form top
-      IntToStr(frmGuide.Width) + separ + // form width
-      IntToStr(frmGuide.Height) then
-        INI.WriteString('POSITION', frmGuide.Name,
-          IntToStr(frmGuide.Left) + separ + // form left
-          IntToStr(frmGuide.Top) + separ + // form top
-          IntToStr(frmGuide.Width) + separ + // form width
-          IntToStr(frmGuide.Height));
-    finally
-      INI.Free;
-    end;
-  end;
 end;
 
 procedure TfrmGuide.FormCreate(Sender: TObject);

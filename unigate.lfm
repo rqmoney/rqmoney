@@ -1,43 +1,42 @@
 object frmGate: TfrmGate
-  Left = 404
-  Height = 300
-  Top = 182
+  Left = 427
+  Height = 350
+  Top = 292
   Width = 500
   BorderIcons = [biSystemMenu]
-  ClientHeight = 300
+  ClientHeight = 350
   ClientWidth = 500
-  Constraints.MinHeight = 300
+  Constraints.MinHeight = 350
   Constraints.MinWidth = 500
   KeyPreview = True
-  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
   OnResize = FormResize
   OnShow = FormShow
-  Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  Position = poDefault
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object Panel2: TPanel
     Left = 5
-    Height = 226
-    Top = 44
+    Height = 242
+    Top = 78
     Width = 490
     Align = alClient
     AutoSize = True
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 226
+    ClientHeight = 242
     ClientWidth = 490
     TabOrder = 0
     object pnlNumeric: TPanel
       Left = 6
-      Height = 214
+      Height = 230
       Top = 6
       Width = 160
       Align = alLeft
       BorderSpacing.Around = 5
       BevelOuter = bvLowered
-      ClientHeight = 214
+      ClientHeight = 230
       ClientWidth = 160
       Constraints.MinWidth = 160
       TabOrder = 1
@@ -332,19 +331,19 @@ object frmGate: TfrmGate
       end
       object Panel13: TPanel
         Left = 4
-        Height = 86
+        Height = 102
         Top = 124
         Width = 152
         Align = alClient
         BorderSpacing.Around = 3
         BevelOuter = bvNone
-        ClientHeight = 86
+        ClientHeight = 102
         ClientWidth = 152
         TabOrder = 0
         object btn0: TBCMDButtonFocus
           Cursor = crHandPoint
           Left = 3
-          Height = 84
+          Height = 100
           Top = 1
           Width = 37
           Animation = True
@@ -371,7 +370,7 @@ object frmGate: TfrmGate
         object btnBack: TBCMDButtonFocus
           Cursor = crHandPoint
           Left = 43
-          Height = 84
+          Height = 100
           Top = 1
           Width = 106
           Animation = True
@@ -399,14 +398,14 @@ object frmGate: TfrmGate
     end
     object Panel3: TPanel
       Left = 171
-      Height = 214
+      Height = 230
       Top = 6
       Width = 313
       Align = alClient
       AutoSize = True
       BorderSpacing.Around = 5
       BevelOuter = bvLowered
-      ClientHeight = 214
+      ClientHeight = 230
       ClientWidth = 313
       TabOrder = 0
       object lblGate: TLabel
@@ -425,7 +424,7 @@ object frmGate: TfrmGate
       end
       object ediGate: TEdit
         Left = 36
-        Height = 23
+        Height = 28
         Top = 22
         Width = 241
         Align = alTop
@@ -447,7 +446,7 @@ object frmGate: TfrmGate
         Cursor = crHandPoint
         Left = 36
         Height = 25
-        Top = 60
+        Top = 65
         Width = 241
         Animation = True
         StyleNormal.Color = clWhite
@@ -478,7 +477,7 @@ object frmGate: TfrmGate
   end
   object pnlFileName: TPanel
     Left = 5
-    Height = 29
+    Height = 63
     Top = 5
     Width = 490
     Align = alTop
@@ -486,12 +485,12 @@ object frmGate: TfrmGate
     BorderSpacing.Bottom = 5
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 29
+    ClientHeight = 63
     ClientWidth = 490
     TabOrder = 1
     object lblFileName1: TStaticText
       Left = 4
-      Height = 1
+      Height = 18
       Top = 22
       Width = 482
       Align = alTop
@@ -508,8 +507,8 @@ object frmGate: TfrmGate
     end
     object lblFileName2: TStaticText
       Left = 4
-      Height = 1
-      Top = 24
+      Height = 18
+      Top = 41
       Width = 482
       Align = alTop
       AutoSize = True
@@ -565,7 +564,7 @@ object frmGate: TfrmGate
   object pnlBottom: TPanel
     Left = 3
     Height = 22
-    Top = 275
+    Top = 325
     Width = 494
     Align = alBottom
     BorderSpacing.Around = 3

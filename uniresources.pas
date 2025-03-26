@@ -131,7 +131,7 @@ resourcestring
   Caption_15 = 'Summary';
   Caption_16 = 'Total';
   Caption_17 = 'Date and time';
-  Caption_18 = 'FILTER';
+  Caption_18 = 'Filter';
   Caption_19 = 'Month';
   Caption_20 = 'Year';
   Caption_21 = 'Reset';
@@ -443,7 +443,15 @@ resourcestring
   Caption_330 = 'Buttons visibility';
   Caption_331 = 'remember the last used transactions in the New transaction form (when you exit the program)';
   Caption_332 = 'Encryption protection';
-
+  Caption_333 = 'Attachments';
+  Caption_334 = 'Energies';
+  Caption_335 = 'Monitor energy consumption';
+  Caption_336 = 'Meter reading';
+  Caption_337 = 'at the beginning';
+  Caption_338 = 'at the end';
+  Caption_339 = 'consumption';
+  Caption_340 = 'Meter';
+  Caption_341 = 'Allow writing to the list of items';
 
   // ===============================================================================================
   // A BEGINNER'S GUIDE FORM
@@ -702,6 +710,7 @@ resourcestring
   Error_31 = 'You can not delete transactions older then';
   Error_32 =
     'The program cannot open your database % because another program is already using it.';
+  Error_33 = 'The program cannot find the selected file to open';
 
   // ===============================================================================================
   // Version
@@ -822,11 +831,12 @@ begin
     frmMain.btnCurrency.Hint := Hint_26;
     frmMain.btnAccount.Hint := Hint_26;
     frmMain.btnCategory.Hint := Hint_26;
+    frmMain.btnSubcategory.Hint := Hint_26;
     frmMain.btnPerson.Hint := Hint_26;
     frmMain.btnPayee.Hint := Hint_26;
     frmMain.btnTag.Hint := Hint_26;
 
-    frmMain.pnlFilterCaption.Caption := Caption_18;
+    frmMain.pnlFilterCaption.Caption := AnsiUpperCase(Caption_18);
     frmMain.pnlListCaption.Caption :=
       AnsiUpperCase(Caption_25) + frmMain.pnlType.Hint + frmMain.pnlDate.Hint +
       frmMain.pnlCurrency.Hint + frmMain.pnlAccount.Hint + frmMain.pnlAmount.Hint +
@@ -935,8 +945,8 @@ begin
     frmMain.btnHistory.Caption := Caption_67;
 
     // POPUPMENU CAPTION
-    frmMain.popAddSimple.Caption := Caption_00;
-    frmMain.popAddMulitple.Caption := Caption_01;
+    frmMain.popAdd.Caption := Caption_00;
+    frmMain.popAddMulti.Caption := Caption_01;
     frmMain.popEdit.Caption := Caption_02;
     frmMain.popDuplicate.Caption := Caption_10;
     frmMain.popDelete.Caption := Caption_03;
@@ -951,7 +961,7 @@ begin
 
     // BUTTONS HINT
     frmMain.btnAdd.Hint := Hint_01 + ':' + sLineBreak + Caption_319 +
-      ' [' + ShortCutToText(frmMain.popAddSimple.ShortCut) + ']' +
+      ' [' + ShortCutToText(frmMain.popAdd.ShortCut) + ']' +
       sLineBreak + Caption_320 + ' [' + frmMain.pnlButtons.Hint + ']';
     frmMain.btnEdit.Hint := Hint_02 + sLineBreak + '[' +
       ShortCutToText(frmMain.popEdit.ShortCut) + ']';
@@ -1183,6 +1193,10 @@ begin
       ' ' + Caption_320 + ' [' + ShortCutToText(frmDetail.actMultiple.ShortCut) +
       ']' + ' ';
 
+    frmDetail.tabSimple.Tabs[0].Text := AnsiReplaceStr(Menu_22, '&', '');
+    frmDetail.tabSimple.Tabs[1].Text := Caption_333;
+    frmDetail.tabSimple.Tabs[2].Text := Caption_334;
+
     frmDetail.btnSettings.Caption := AnsiReplaceStr(Menu_61, '&', '');
     frmDetail.btnSettings.Hint := frmMain.btnSettings.Hint;
     frmDetail.btnSaveX.Caption := Caption_04;
@@ -1203,7 +1217,20 @@ begin
     // Category / Subcategory
     frmDetail.gbxPerson.Caption := Caption_58; // Person
     frmDetail.gbxPayee.Caption := Caption_60; // Payee
-    frmDetail.gbxTag.Caption := Caption_62; // Tag
+    //frmDetail.gbxTags.Caption := AnsiReplaceStr(Menu_22, '&', ''); // Tag
+
+    //frmDetail.gbxAttachments.Caption := Caption_333; // Attachments
+    frmDetail.lviAttachments.Columns[0].Caption := Caption_96;
+    frmDetail.lviAttachments.Columns[1].Caption := Caption_97;
+    frmDetail.btnAttachmentAdd.Caption := Caption_00;
+    frmDetail.btnAttachmentEdit.Caption := Caption_02;
+    frmDetail.btnAttachmentDelete.Caption := Caption_03;
+    frmDetail.btnAttachmentOpen.Caption := AnsiReplaceStr(Menu_02, '&', '');
+
+    frmDetail.gbxMeter.Caption := Caption_336;
+    frmDetail.lblMeterStart.Caption := Caption_337;
+    frmDetail.lblMeterEnd.Caption := Caption_338;
+    frmDetail.lblConsumption.Caption := Caption_339;
 
     // hints
     frmDetail.btnComment.Hint := frmMain.btnComments.Hint;
@@ -1252,7 +1279,22 @@ begin
     frmEdit.gbxPerson.Caption := Caption_58; // Person
     frmEdit.gbxPayee.Caption := Caption_60; // Payee
     frmEdit.gbxAccount.Caption := Caption_50; // Account
-    frmEdit.gbxTag.Caption := Caption_62; // Tag
+
+    frmEdit.tabSimple.Tabs[0].Text := AnsiReplaceStr(Menu_22, '&', '');
+    frmEdit.tabSimple.Tabs[1].Text := Caption_333;
+    frmEdit.tabSimple.Tabs[2].Text := Caption_334;
+    frmEdit.btnAttachmentAdd.Caption := Caption_00;
+    frmEdit.btnAttachmentEdit.Caption := Caption_02;
+    frmEdit.btnAttachmentDelete.Caption := Caption_03;
+    frmEdit.btnAttachmentOpen.Caption := AnsiReplaceStr(Menu_02, '&', '');
+
+    frmEdit.lviAttachments.Columns[0].Caption := Caption_96;
+    frmEdit.lviAttachments.Columns[1].Caption := Caption_97;
+
+    frmEdit.gbxMeter.Caption := Caption_336;
+    frmEdit.lblMeterStart.Caption := Caption_337;
+    frmEdit.lblMeterEnd.Caption := Caption_338;
+    frmEdit.lblConsumption.Caption := Caption_339;
 
     // hints
     frmEdit.btnComment.Hint := frmMain.btnComments.Hint;
@@ -1479,6 +1521,7 @@ begin
     frmCategories.VST.Header.Columns[3].Text := Caption_51; // status
     frmCategories.VST.Header.Columns[4].Text := Caption_53; // ID
     frmCategories.VST.Header.Columns[7].Text := Caption_321; // Type
+    frmCategories.VST.Header.Columns[8].Text := Caption_334; // Energies
 
     frmCategories.cbxType.Clear;
     frmCategories.cbxType.Items.Add(AnsiUpperCase(AnsiReplaceStr(Caption_54, '&', '')));
@@ -1491,6 +1534,7 @@ begin
     frmCategories.lblKind.Caption := Caption_321;
     frmCategories.lblComment.Caption := Caption_56;  // comment
     frmCategories.lblStatus.Caption := Caption_51; // status
+    frmCategories.lblEnergy.Caption := Caption_335; // energies
 
     // cbxKind
     frmCategories.cbxKind.Clear;
@@ -1504,6 +1548,11 @@ begin
     frmCategories.cbxStatus.Items.Add(Caption_55); // active
     frmCategories.cbxStatus.Items.Add(Caption_57); // passive
     frmCategories.cbxStatus.Items.Add(Caption_59); // archive
+
+    // cbxEnergy
+    frmCategories.cbxEnergy.Clear;
+    frmCategories.cbxEnergy.Items.Add(Caption_108); // Yes
+    frmCategories.cbxEnergy.Items.Add(Caption_109); // No
 
     // =============================================================================================
     // FRMACCOUNTS FORM
@@ -2368,6 +2417,9 @@ begin
     frmSettings.lblOddRowColor.Caption := Caption_150;
     frmSettings.btnOddRowColorBack.Caption := Caption_147;
     frmSettings.lblGridFont.Caption := Caption_246;
+
+    frmSettings.tabFilter.Caption := Caption_18;
+    frmSettings.chkFilterComboboxStyle.Caption := Caption_341;
 
     frmSettings.tabButtons.Caption := Caption_328;
     frmSettings.lblButtonsSize.Caption := Caption_329;

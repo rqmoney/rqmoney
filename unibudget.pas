@@ -7,8 +7,9 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, Math, Buttons, LazUTF8, IniFiles,
-  ActnList, Menus, laz.VirtualTrees, BCPanel, BCMDButtonFocus, DateUtils, StrUtils;
+  StdCtrls, Math, Buttons,
+  LazUTF8, ActnList, Menus, laz.VirtualTrees, BCPanel, BCMDButtonFocus,
+  DateUtils, StrUtils;
 
 type // bottom grid (Budget)
   TBudget = record
@@ -116,64 +117,7 @@ var
   Budget: PBudget;
   BudCat: PBudcat;
   Budgets: PBudgets;
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
-  try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmBudget.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmBudget.Name, '-1•-1•0•0•200');
-
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmBudget.Width := Screen.Width - 500 - (200 - ScreenRatio)
-      else
-        frmBudget.Width := I;
-
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmBudget.Height := Screen.Height - 400 - (200 - ScreenRatio)
-      else
-        frmBudget.Height := I;
-
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmBudget.left := (Screen.Width - frmBudget.Width) div 2
-      else
-        frmBudget.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmBudget.Top := ((Screen.Height - frmBudget.Height) div 2) - 75
-      else
-        frmBudget.Top := I;
-
-      // left panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 150) or (I > 300) then
-        frmBudget.pnlLeft.Width := 200
-      else
-        frmBudget.pnlLeft.Width := I;
-    end;
-  finally
-    INI.Free
-  end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
   if ((frmBudget.Tag = 0) and (frmBudgets.popBudgetAdd.Tag = 1)) then   // duplicate mode
   begin
     Budgets := frmBudgets.VSTBudgets.GetNodeData(
@@ -332,10 +276,13 @@ var
   X: integer;
 begin
   if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
-  X := VST.Width div 100;
-  VST.Header.Columns[0].Width := VST.Width - ScrollBarWidth - (54 * X); // category
-  VST.Header.Columns[1].Width := 44 * X; // subcategory
-  VST.Header.Columns[2].Width := 10 * x; // ID
+  try
+    X := VST.Width div 100;
+    VST.Header.Columns[0].Width := VST.Width - ScrollBarWidth - (54 * X); // category
+    VST.Header.Columns[1].Width := 44 * X; // subcategory
+    VST.Header.Columns[2].Width := 10 * x; // ID
+  except
+  end;
 end;
 
 procedure TfrmBudget.ediNameKeyPress(Sender: TObject; var Key: char);
@@ -345,10 +292,6 @@ begin
 end;
 
 procedure TfrmBudget.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
-
 begin
   if (btnSave.Tag = 0) and (VST.CheckedCount > 0) then
     if MessageDlg(Application.Title, Question_19, mtConfirmation, [mbYes, mbNo], 0) <>
@@ -358,28 +301,6 @@ begin
       Exit;
     end;
   btnSave.Tag := 0;
-  // write position and window size
-  try
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      INIFile := ChangeFileExt(ParamStr(0), '.ini');
-      INI := TINIFile.Create(INIFile);
-      if INI.ReadString('POSITION', frmBudget.Name, '') <>
-        IntToStr(frmBudget.Left) + separ + // form left
-      IntToStr(frmBudget.Top) + separ + // form top
-      IntToStr(frmBudget.Width) + separ + // form width
-      IntToStr(frmBudget.Height) + separ + // form height
-      IntToStr(frmBudget.pnlLeft.Width) then
-        INI.WriteString('POSITION', frmBudget.Name,
-          IntToStr(frmBudget.Left) + separ + // form left
-          IntToStr(frmBudget.Top) + separ + // form top
-          IntToStr(frmBudget.Width) + separ + // form width
-          IntToStr(frmBudget.Height) + separ + // form height
-          IntToStr(frmBudget.pnlLeft.Width));
-    end;
-  finally
-    INI.Free;
-  end;
 end;
 
 procedure TfrmBudget.FormCreate(Sender: TObject);

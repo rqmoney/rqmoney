@@ -1,41 +1,40 @@
 object frmSchedulers: TfrmSchedulers
-  Left = 642
-  Height = 400
-  Top = 264
-  Width = 950
-  ClientHeight = 400
-  ClientWidth = 950
+  Left = 568
+  Height = 592
+  Top = 242
+  Width = 985
+  ClientHeight = 592
+  ClientWidth = 985
   Constraints.MinHeight = 400
   Constraints.MinWidth = 600
-  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.2.0.0'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlList: TPanel
     Left = 5
-    Height = 390
+    Height = 582
     Top = 5
-    Width = 545
+    Width = 580
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 390
-    ClientWidth = 545
+    ClientHeight = 582
+    ClientWidth = 580
     Constraints.MinWidth = 500
     TabOrder = 0
     object pnlButtons: TPanel
       Left = 2
       Height = 25
-      Top = 337
-      Width = 541
+      Top = 529
+      Width = 576
       Align = alBottom
       BorderSpacing.Around = 1
       BevelOuter = bvNone
       ClientHeight = 25
-      ClientWidth = 541
+      ClientWidth = 576
       Constraints.MinHeight = 25
       ParentColor = False
       ParentFont = False
@@ -129,7 +128,7 @@ object frmSchedulers: TfrmSchedulers
       end
       object btnExit: TBCMDButtonFocus
         Cursor = crHandPoint
-        Left = 388
+        Left = 423
         Height = 23
         Top = 1
         Width = 150
@@ -161,7 +160,7 @@ object frmSchedulers: TfrmSchedulers
       Left = 1
       Height = 20
       Top = 1
-      Width = 543
+      Width = 578
       Align = alTop
       Background.Color = clBtnFace
       Background.Gradient1.StartColor = 16744448
@@ -200,9 +199,9 @@ object frmSchedulers: TfrmSchedulers
     object VST: TLazVirtualStringTree
       Cursor = 63
       Left = 4
-      Height = 310
+      Height = 502
       Top = 24
-      Width = 537
+      Width = 572
       Align = alClient
       BorderSpacing.Around = 3
       Header.AutoSizeIndex = 0
@@ -291,16 +290,16 @@ object frmSchedulers: TfrmSchedulers
     object pnlBottom: TPanel
       Left = 1
       Height = 22
-      Top = 367
-      Width = 543
+      Top = 559
+      Width = 578
       Align = alBottom
       BorderSpacing.Top = 5
       BevelOuter = bvNone
       ClientHeight = 22
-      ClientWidth = 543
+      ClientWidth = 578
       TabOrder = 3
       object pnlHeight: TPanel
-        Left = 422
+        Left = 457
         Height = 20
         Top = 1
         Width = 120
@@ -337,7 +336,7 @@ object frmSchedulers: TfrmSchedulers
         end
       end
       object pnlWidth: TPanel
-        Left = 301
+        Left = 336
         Height = 20
         Top = 1
         Width = 120
@@ -451,7 +450,7 @@ object frmSchedulers: TfrmSchedulers
         Left = 243
         Height = 20
         Top = 1
-        Width = 57
+        Width = 92
         Align = alClient
         BorderSpacing.Around = 1
         BevelOuter = bvLowered
@@ -462,8 +461,8 @@ object frmSchedulers: TfrmSchedulers
     end
   end
   object splList: TSplitter
-    Left = 555
-    Height = 400
+    Left = 590
+    Height = 592
     Top = 0
     Width = 5
     Align = alRight
@@ -471,14 +470,14 @@ object frmSchedulers: TfrmSchedulers
     ResizeAnchor = akRight
   end
   object pnlRight: TPanel
-    Left = 565
-    Height = 390
+    Left = 600
+    Height = 582
     Top = 5
     Width = 380
     Align = alRight
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 390
+    ClientHeight = 582
     ClientWidth = 380
     Constraints.MaxWidth = 650
     Constraints.MinWidth = 1
@@ -526,7 +525,7 @@ object frmSchedulers: TfrmSchedulers
     object VST1: TLazVirtualStringTree
       Cursor = 63
       Left = 4
-      Height = 310
+      Height = 502
       Top = 24
       Width = 372
       Align = alClient
@@ -588,7 +587,7 @@ object frmSchedulers: TfrmSchedulers
     object pnlButton: TPanel
       Left = 2
       Height = 25
-      Top = 337
+      Top = 529
       Width = 376
       Align = alBottom
       BorderSpacing.Around = 1
@@ -605,7 +604,7 @@ object frmSchedulers: TfrmSchedulers
         Left = 3
         Height = 23
         Top = 1
-        Width = 64
+        Width = 31
         Animation = True
         StyleNormal.Color = clWhite
         StyleNormal.TextColor = clBlack
@@ -631,7 +630,7 @@ object frmSchedulers: TfrmSchedulers
       end
       object btnEdit1: TBCMDButtonFocus
         Cursor = crHandPoint
-        Left = 70
+        Left = 37
         Height = 23
         Top = 1
         Width = 150
@@ -660,7 +659,7 @@ object frmSchedulers: TfrmSchedulers
       end
       object btnDelete1: TBCMDButtonFocus
         Cursor = crHandPoint
-        Left = 223
+        Left = 190
         Height = 23
         Top = 1
         Width = 150
@@ -687,11 +686,41 @@ object frmSchedulers: TfrmSchedulers
         ParentShowHint = False
         ShowHint = True
       end
+      object btnPopPrint: TBCMDButtonFocus
+        Cursor = crHandPoint
+        Left = 343
+        Height = 23
+        Top = 1
+        Width = 30
+        Animation = True
+        StyleNormal.Color = clWhite
+        StyleNormal.TextColor = clBlack
+        StyleHover.Color = 14474460
+        StyleHover.TextColor = clBlack
+        StyleActive.Color = 13027014
+        StyleActive.TextColor = clBlack
+        StyleDisabled.Color = clWhite
+        StyleDisabled.TextColor = 10724259
+        TextAutoSize = True
+        TextProportional = False
+        TextProportionalRatio = 0.5
+        Align = alRight
+        BorderSpacing.Left = 2
+        BorderSpacing.Right = 2
+        BorderSpacing.Around = 1
+        Color = clNone
+        Enabled = False
+        Font.Style = [fsBold]
+        OnClick = btnPopPrintClick
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+      end
     end
     object pnlBottom1: TPanel
       Left = 1
       Height = 22
-      Top = 367
+      Top = 559
       Width = 378
       Align = alBottom
       BorderSpacing.Top = 5
@@ -1051,6 +1080,8 @@ object frmSchedulers: TfrmSchedulers
     Title = ''
     Date = 44773
     DisplaySettings = [dsShowHeadings, dsShowDayNames, dsShowWeekNumbers]
+    OKCaption = '&OK'
+    CancelCaption = 'Zrušiť'
     Left = 800
     Top = 144
   end

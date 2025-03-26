@@ -7,7 +7,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ActnList,
-  StdCtrls, Spin, Buttons, Menus, IniFiles, laz.VirtualTrees, SynEdit,
+  StdCtrls, Spin, Buttons, Menus, laz.VirtualTrees, SynEdit,
   BCPanel, BCMDButtonFocus, LazUTF8, StrUtils, Math, DateUtils;
 
 type
@@ -217,6 +217,8 @@ type
     procedure spiFirstEnter(Sender: TObject);
     procedure spiFirstExit(Sender: TObject);
     procedure spiTypeChange(Sender: TObject);
+    procedure splTemplatesCanResize(Sender: TObject; var NewSize: integer;
+      var Accept: boolean);
     procedure VSTBeforeCellPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas;
       Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode;
       CellRect: TRect; var ContentRect: TRect);
@@ -548,6 +550,16 @@ begin
     IfThen((Sender as TSpinEdit).Value = 0, clWhite, rgbToColor(222, 222, 222));
   if frmTemplates.Tag = 0 then
     FileToGrid;
+end;
+
+procedure TfrmTemplates.splTemplatesCanResize(Sender: TObject;
+  var NewSize: integer; var Accept: boolean);
+begin
+  imgHeight.ImageIndex := 2;
+  lblHeight.Caption := IntToStr(frmTemplates.Width - pnlLeft.Width);
+
+  imgWidth.ImageIndex := 3;
+  lblWidth.Caption := IntToStr(pnlLeft.Width);
 end;
 
 procedure TfrmTemplates.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
@@ -1319,41 +1331,11 @@ begin
 end;
 
 procedure TfrmTemplates.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-  INI: TINIFile;
-  INIFile: string;
 begin
   if tabTemplates.PageIndex = 1 then
   begin
     btnCancelClick(btnCancel);
     CloseAction := caNone;
-  end;
-  try
-    // write position and window size
-    if frmSettings.chkLastFormsSize.Checked = True then
-    begin
-      try
-        INIFile := ChangeFileExt(ParamStr(0), '.ini');
-        INI := TINIFile.Create(INIFile);
-        if INI.ReadString('POSITION', frmTemplates.Name, '') <>
-          IntToStr(frmTemplates.Left) + separ + // form left
-        IntToStr(frmTemplates.Top) + separ + // form top
-        IntToStr(frmTemplates.Width) + separ + // form width
-        IntToStr(frmTemplates.Height) + separ + // form height
-        IntToStr(frmTemplates.pnlLeft.Width) then
-          INI.WriteString('POSITION', frmTemplates.Name,
-            IntToStr(frmTemplates.Left) + separ + // form left
-            IntToStr(frmTemplates.Top) + separ + // form top
-            IntToStr(frmTemplates.Width) + separ + // form width
-            IntToStr(frmTemplates.Height) + separ + // form height
-            IntToStr(frmTemplates.pnlLeft.Width));
-      finally
-        INI.Free;
-      end;
-    end;
-  except
-    on E: Exception do
-      ShowErrorMessage(E);
   end;
 end;
 
@@ -1405,81 +1387,30 @@ end;
 
 procedure TfrmTemplates.FormResize(Sender: TObject);
 begin
+  imgWidth.ImageIndex := 0;
   lblWidth.Caption := IntToStr((Sender as TForm).Width);
+
+  imgHeight.ImageIndex := 1;
   lblHeight.Caption := IntToStr((Sender as TForm).Height);
 end;
 
 procedure TfrmTemplates.FormShow(Sender: TObject);
-var
-  INI: TINIFile;
-  S: string;
-  I: integer;
 begin
-  // ********************************************************************
-  // FORM SIZE START
-  // ********************************************************************
   try
-    S := ChangeFileExt(ParamStr(0), '.ini');
-    // INI file READ procedure (if file exists) =========================
-    if FileExists(S) = True then
-    begin
-      INI := TINIFile.Create(S);
-      frmTemplates.Position := poDesigned;
-      S := INI.ReadString('POSITION', frmTemplates.Name, '-1•-1•0•0•0');
+    // read origin file
+    memTop.Lines.LoadFromFile(frmImport.lblFileName.Caption);
 
-      // width
-      TryStrToInt(Field(Separ, S, 3), I);
-      if (I < 1) or (I > Screen.Width) then
-        frmTemplates.Width := Screen.Width - 300 - (200 - ScreenRatio)
-      else
-        frmTemplates.Width := I;
+    tabTemplates.PageIndex := 0;
+    cbxTemplates.ItemIndex := -1;
+    memTop.Font.Size := VST.Font.Size;
 
-      /// height
-      TryStrToInt(Field(Separ, S, 4), I);
-      if (I < 1) or (I > Screen.Height) then
-        frmTemplates.Height := Screen.Height - 400 - (200 - ScreenRatio)
-      else
-        frmTemplates.Height := I;
+    // update list of templates
+    UpdateTemplates;
+    cbxTemplates.ItemIndex := -1;
+    cbxTemplatesChange(cbxTemplates);
 
-      // left
-      TryStrToInt(Field(Separ, S, 1), I);
-      if (I < 0) or (I > Screen.Width) then
-        frmTemplates.left := (Screen.Width - frmTemplates.Width) div 2
-      else
-        frmTemplates.Left := I;
-
-      // top
-      TryStrToInt(Field(Separ, S, 2), I);
-      if (I < 0) or (I > Screen.Height) then
-        frmTemplates.Top := ((Screen.Height - frmTemplates.Height) div 2) - 75
-      else
-        frmTemplates.Top := I;
-
-      // detail panel
-      TryStrToInt(Field(Separ, S, 5), I);
-      if (I < 200) or (I > 400) then
-        frmTemplates.pnlLeft.Width := Round(200 * (ScreenRatio / 100))
-      else
-        frmTemplates.pnlLeft.Width := I;
-    end;
-  finally
-    INI.Free
+  except
   end;
-  // ********************************************************************
-  // FORM SIZE END
-  // ********************************************************************
-
-  // read origin file
-  memTop.Lines.LoadFromFile(frmImport.lblFileName.Caption);
-
-  tabTemplates.PageIndex := 0;
-  cbxTemplates.ItemIndex := -1;
-  memTop.Font.Size := VST.Font.Size;
-
-  // update list of templates
-  UpdateTemplates;
-  cbxTemplates.ItemIndex := -1;
-  cbxTemplatesChange(cbxTemplates);
 end;
 
 procedure TfrmTemplates.Page1BeforeShow(ASender: TObject; ANewPage: TPage;
@@ -1541,11 +1472,15 @@ procedure TfrmTemplates.VSTResize(Sender: TObject);
 var
   J: byte;
 begin
+  try
   (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
     round(Screen.PixelsPerInch div 96 * 25);
-  for J := 1 to frmTemplates.VST.Header.Columns.Count - 1 do
-    frmTemplates.VST.Header.Columns[J].Width :=
-      (frmTemplates.VST.Width - 50) div (frmTemplates.VST.Header.Columns.Count - 1);
+  if frmTemplates.VST.Header.Columns.Count > 0 then
+    for J := 1 to frmTemplates.VST.Header.Columns.Count - 1 do
+      frmTemplates.VST.Header.Columns[J].Width :=
+        (frmTemplates.VST.Width - 50) div (frmTemplates.VST.Header.Columns.Count - 1);
+  except
+  end;
 end;
 
 procedure FileToGrid;

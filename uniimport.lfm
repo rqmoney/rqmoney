@@ -1,19 +1,19 @@
 object frmImport: TfrmImport
-  Left = 624
+  Left = 647
   Height = 200
-  Top = 299
+  Top = 408
   Width = 500
+  ActiveControl = pnlImportCaption
   BorderIcons = [biSystemMenu]
   ClientHeight = 200
   ClientWidth = 500
   Constraints.MinHeight = 200
   Constraints.MinWidth = 500
-  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.0.0.3'
+  LCLVersion = '3.4.0.0'
   Scaled = False
   object pnlButtons: TPanel
     Left = 5
@@ -248,13 +248,13 @@ object frmImport: TfrmImport
     TabOrder = 3
     object pnlFile: TPanel
       Left = 2
-      Height = 101
-      Top = 3
+      Height = 76
+      Top = 28
       Width = 486
       Align = alClient
       AutoSize = True
       BevelOuter = bvLowered
-      ClientHeight = 101
+      ClientHeight = 76
       ClientWidth = 486
       TabOrder = 1
       object btnFile: TBitBtn
@@ -277,12 +277,12 @@ object frmImport: TfrmImport
       end
       object pnlFileName: TPanel
         Left = 71
-        Height = 99
+        Height = 74
         Top = 1
         Width = 414
         Align = alClient
         BevelOuter = bvNone
-        ClientHeight = 99
+        ClientHeight = 74
         ClientWidth = 414
         TabOrder = 1
         object lblFileName1: TLabel
@@ -299,7 +299,7 @@ object frmImport: TfrmImport
         end
         object lblFileName: TLabel
           Left = 3
-          Height = 92
+          Height = 67
           Top = 4
           Width = 408
           Align = alClient
