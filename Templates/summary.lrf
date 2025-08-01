@@ -7,7 +7,7 @@
     <KeyWords Value=""/>
     <Comments Value=""/>
     <ReportCreateDate Value="1899-12-30 00:00:00"/>
-    <ReportLastChange Value="2024-07-25 07:14:29"/>
+    <ReportLastChange Value="2023-10-06 12:02:14"/>
     <ReportVersionBuild Value=""/>
     <ReportVersionMajor Value=""/>
     <ReportVersionMinor Value=""/>
@@ -17,7 +17,7 @@
     <Pages>
       <PrintToDefault Value="False"/>
       <DoublePass Value="False"/>
-      <SelectedPrinter Value="PDF"/>
+      <SelectedPrinter Value="\\PRINTBB\SafeQ_BB"/>
       <PageCount Value="1"/>
       <Page1>
         <Name Value="Page1"/>
@@ -107,9 +107,9 @@
             <Width Value="1064"/>
             <Height Value="22"/>
           </Size>
-          <Flags Value="49"/>
+          <Flags Value="48"/>
           <Data>
-            <Script Value="Line3.Visible := [Line#] &gt; 1;&#xA;"/>
+            <Script Value="Line3.Visible := [Line#] &gt; 1;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
           </Data>
@@ -135,7 +135,7 @@
             <Width Value="1064"/>
             <Height Value="28"/>
           </Size>
-          <Flags Value="49"/>
+          <Flags Value="48"/>
           <Data>
             <Script Value=""/>
             <GapX Value="0"/>
@@ -201,8 +201,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[DATE] [TIME]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="[DATE] [TIME]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -257,8 +257,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="~ [PAGE#] ~&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="~ [PAGE#] ~&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -313,8 +313,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -357,7 +357,7 @@
             <Width Value="364"/>
             <Height Value="34"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -369,8 +369,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;End;&#xA;"/>
+            <Memo Value="&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -409,11 +409,11 @@
           <StreamMode Value="0"/>
           <Size>
             <Left Value="34"/>
-            <Top Value="93"/>
+            <Top Value="91"/>
             <Width Value="988"/>
             <Height Value="22"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="3"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -426,7 +426,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -469,7 +469,7 @@
             <Width Value="988"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="3"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -482,7 +482,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="If [Line#] = 1 then&#xA;  FillColor := clSilver&#xA;else&#xA;begin&#xA;  If [Line#] Mod 2 = 1 then&#xA;    FillColor := clBtnFace&#xA;  Else&#xA;    FillColor := clNone;&#xA;end;&#xA;"/>
+            <Script Value="If [Line#] = 1 then&#xD;&#xA;  FillColor := clSilver&#xD;&#xA;else&#xD;&#xA;begin&#xD;&#xA;  If [Line#] Mod 2 = 1 then&#xD;&#xA;    FillColor := clBtnFace&#xD;&#xA;  Else&#xD;&#xA;    FillColor := clNone;&#xD;&#xA;end;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -525,7 +525,7 @@
             <Width Value="110"/>
             <Height Value="19"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -537,8 +537,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[sumDebit]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If [Line#] = 1 then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;"/>
+            <Memo Value="[sumDebit]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If [Line#] = 1 then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -581,7 +581,7 @@
             <Width Value="115"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -593,8 +593,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[sumTotal]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If [Line#] = 1 then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;"/>
+            <Memo Value="[sumTotal]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If [Line#] = 1 then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -637,7 +637,7 @@
             <Width Value="110"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -649,8 +649,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[sumTraPlus]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If [Line#] = 1 then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;"/>
+            <Memo Value="[sumTraPlus]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If [Line#] = 1 then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -693,7 +693,7 @@
             <Width Value="110"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -705,8 +705,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[sumBalance]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If [Line#] = 1 then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;"/>
+            <Memo Value="[sumBalance]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If [Line#] = 1 then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -749,7 +749,7 @@
             <Width Value="110"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -761,8 +761,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[sumTraMinus]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If [Line#] = 1 then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;"/>
+            <Memo Value="[sumTraMinus]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If [Line#] = 1 then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -805,7 +805,7 @@
             <Width Value="175"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -817,8 +817,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[sumAccount]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If [Line#] = 1 then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;"/>
+            <Memo Value="[sumAccount]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If [Line#] = 1 then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -861,7 +861,7 @@
             <Width Value="110"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -873,8 +873,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[sumStart]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If [Line#] = 1 then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;"/>
+            <Memo Value="[sumStart]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If [Line#] = 1 then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -917,7 +917,7 @@
             <Width Value="110"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -929,8 +929,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[sumCredit]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If [Line#] = 1 then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;"/>
+            <Memo Value="[sumCredit]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If [Line#] = 1 then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -973,7 +973,7 @@
             <Width Value="175"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clSilver"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -986,7 +986,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1029,7 +1029,7 @@
             <Width Value="110"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clSilver"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -1042,7 +1042,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1085,7 +1085,7 @@
             <Width Value="110"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clSilver"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -1098,7 +1098,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1141,7 +1141,7 @@
             <Width Value="110"/>
             <Height Value="19"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clSilver"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -1154,7 +1154,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1197,7 +1197,7 @@
             <Width Value="110"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clSilver"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -1210,7 +1210,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1253,7 +1253,7 @@
             <Width Value="110"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clSilver"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -1266,7 +1266,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1309,7 +1309,7 @@
             <Width Value="110"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clSilver"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -1322,7 +1322,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1365,7 +1365,7 @@
             <Width Value="120"/>
             <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clSilver"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -1378,7 +1378,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1421,7 +1421,7 @@
             <Width Value="988"/>
             <Height Value="0"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <Frames>
             <FrameColor Value="clSilver"/>
             <FrameStyle Value="frsSolid"/>
@@ -1510,7 +1510,7 @@
           <Item Value="traID"/>
         </Objects10>
       </FVal>
-      <ParentVars Value="Transactions&#xA; traDate&#xA; traAmount&#xA; traCurrency&#xA; traComment&#xA; traAccount&#xA; traCategory&#xA; traPerson&#xA; traPayee&#xA; traTime&#xA; traID&#xA;"/>
+      <ParentVars Value="Transactions&#xD;&#xA; traDate&#xD;&#xA; traAmount&#xD;&#xA; traCurrency&#xD;&#xA; traComment&#xD;&#xA; traAccount&#xD;&#xA; traCategory&#xD;&#xA; traPerson&#xD;&#xA; traPayee&#xD;&#xA; traTime&#xD;&#xA; traID&#xD;&#xA;"/>
     </Pages>
     <DetailReports>
       <Count Value="0"/>

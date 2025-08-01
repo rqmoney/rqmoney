@@ -13,7 +13,7 @@ object frmTemplates: TfrmTemplates
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlClient: TPanel
     Left = 270
@@ -85,8 +85,9 @@ object frmTemplates: TfrmTemplates
         Width = 701
         Align = alClient
         BorderSpacing.Around = 5
+        Color = clDefault
         Font.Height = -13
-        Font.Name = 'Fixedsys'
+        Font.Name = 'DejaVu Sans Mono'
         Font.Pitch = fpFixed
         Font.Quality = fqNonAntialiased
         Font.Style = [fsBold]
@@ -867,13 +868,13 @@ object frmTemplates: TfrmTemplates
         OnBeforeShow = Page1BeforeShow
         object pnlTemplate: TPanel
           Left = 5
-          Height = 83
+          Height = 81
           Top = 5
           Width = 238
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 5
-          ClientHeight = 83
+          ClientHeight = 81
           ClientWidth = 238
           TabOrder = 0
           object lblTemplates: TLabel
@@ -889,34 +890,34 @@ object frmTemplates: TfrmTemplates
           end
           object cbxTemplates: TComboBox
             Left = 6
-            Height = 30
+            Height = 23
             Top = 12
             Width = 226
             Align = alTop
             BorderSpacing.Around = 5
             DropDownCount = 20
-            ItemHeight = 0
+            ItemHeight = 15
             Style = csDropDownList
             TabOrder = 0
             OnChange = cbxTemplatesChange
           end
           object pnlButtons: TPanel
             Left = 6
-            Height = 30
-            Top = 47
+            Height = 35
+            Top = 40
             Width = 226
             Align = alTop
             AutoSize = True
             BorderSpacing.Around = 5
             BevelOuter = bvLowered
-            ClientHeight = 30
+            ClientHeight = 35
             ClientWidth = 226
             TabOrder = 1
             OnResize = pnlButtonsResize
             object btnAdd: TBCMDButtonFocus
               Cursor = crHandPoint
               Left = 5
-              Height = 20
+              Height = 25
               Top = 5
               Width = 70
               Animation = True
@@ -933,7 +934,6 @@ object frmTemplates: TfrmTemplates
               TextProportionalRatio = 0.5
               Align = alLeft
               BorderSpacing.Around = 4
-              Color = clNone
               Constraints.MinHeight = 20
               Constraints.MinWidth = 50
               Font.Style = [fsBold]
@@ -945,7 +945,7 @@ object frmTemplates: TfrmTemplates
             object btnEdit: TBCMDButtonFocus
               Cursor = crHandPoint
               Left = 79
-              Height = 20
+              Height = 25
               Top = 5
               Width = 68
               Animation = True
@@ -962,7 +962,6 @@ object frmTemplates: TfrmTemplates
               TextProportionalRatio = 0.5
               Align = alClient
               BorderSpacing.Around = 4
-              Color = clNone
               Constraints.MinHeight = 20
               Enabled = False
               Font.Style = [fsBold]
@@ -972,9 +971,10 @@ object frmTemplates: TfrmTemplates
               ShowHint = True
             end
             object btnDelete: TBCMDButtonFocus
+              Tag = 12345
               Cursor = crHandPoint
               Left = 151
-              Height = 20
+              Height = 25
               Top = 5
               Width = 70
               Animation = True
@@ -991,7 +991,6 @@ object frmTemplates: TfrmTemplates
               TextProportionalRatio = 0.5
               Align = alRight
               BorderSpacing.Around = 4
-              Color = clNone
               Constraints.MinHeight = 20
               Constraints.MinWidth = 50
               Enabled = False
@@ -1035,7 +1034,6 @@ object frmTemplates: TfrmTemplates
             TextProportionalRatio = 0.5
             Align = alTop
             BorderSpacing.Around = 4
-            Color = clNone
             Enabled = False
             Font.Style = [fsBold]
             OnClick = btnImportClick
@@ -1063,7 +1061,6 @@ object frmTemplates: TfrmTemplates
             TextProportionalRatio = 0.5
             Align = alTop
             BorderSpacing.Around = 4
-            Color = clNone
             Font.Style = [fsBold]
             OnClick = btnExitClick
             ParentFont = False
@@ -1106,7 +1103,6 @@ object frmTemplates: TfrmTemplates
             TextProportionalRatio = 0.5
             Align = alTop
             BorderSpacing.Around = 4
-            Color = clNone
             Enabled = False
             Font.Style = [fsBold]
             OnClick = btnSaveClick
@@ -1134,7 +1130,6 @@ object frmTemplates: TfrmTemplates
             TextProportionalRatio = 0.5
             Align = alTop
             BorderSpacing.Around = 4
-            Color = clNone
             Font.Style = [fsBold]
             OnClick = btnCancelClick
             ParentFont = False

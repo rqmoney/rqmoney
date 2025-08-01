@@ -447,11 +447,22 @@ resourcestring
   Caption_334 = 'Energies';
   Caption_335 = 'Monitor energy consumption';
   Caption_336 = 'Meter reading';
-  Caption_337 = 'at the beginning';
-  Caption_338 = 'at the end';
-  Caption_339 = 'consumption';
+  Caption_337 = 'At the beginning';
+  Caption_338 = 'At the end';
+  Caption_339 = 'Consumption';
   Caption_340 = 'Meter';
   Caption_341 = 'Allow writing to the list of items';
+  Caption_342 = 'TimeStamp';
+  Caption_343 = 'Form name';
+  Caption_344 = 'Creation time (ms)';
+  Caption_345 = 'Duration (ms)';
+  Caption_346 = 'Dark mode';
+  Caption_347 = 'Always use items from filter in new transaction';
+  Caption_348 = 'New transaction';
+  Caption_349 = 'Price';
+  Caption_350 = 'Per unit';
+  Caption_351 = 'OS Windows only';
+  Caption_352 = 'OS Linux only';
 
   // ===============================================================================================
   // A BEGINNER'S GUIDE FORM
@@ -533,7 +544,8 @@ resourcestring
   Hint_06 = 'Exit this window';
   Hint_09 = 'Copy all item(s) to the clipboard';
   Hint_10 = 'Show all nominal values of selected currency';
-  //  Hint_12 = 'Take a photo of current form';
+  // Hint_11
+  Hint_12 = 'Open the attachment using the default program';
   Hint_13 = 'Print the list';
   Hint_14 = 'Active = visible in all modules';
   Hint_15 = 'Passive = visible in module Statistics only';
@@ -647,6 +659,8 @@ resourcestring
   Question_27 = 'Do you want to back up your database to the selected folder now?';
   Question_28 =
     'The encryption of your database requires password protection.% Do you want to set this password now?';
+  //Question_29 = 'SQLite3 library is missing. Do you want to install it by the following code ?%' +
+  //    'sudo apt install -y libsqlite3-dev';
 
   // ===============================================================================================
   // Messages
@@ -659,9 +673,11 @@ resourcestring
   Message_05 = 'SQL command was executed successful.';
   Message_06 = 'Import finished successful.';
   Message_07 = 'Selected picture was copied to the clipboard.%0:sSize: %1:s px x %2:s px.';
-  //  Message_08 = '';
+  Message_08 = 'Changing from dark to light mode and vice versa requires a program restart.';
   Message_09 = 'You are using the current version of the program.';
   Message_10 = 'This feature is not available in this operating system';
+  Message_11 = 'Try installing the LIBSQLITE3-DEV library manually eg.:%' +
+    'sudo apt install -y libsqlite3-dev';
 
   // ===============================================================================================
   // Errors
@@ -711,6 +727,7 @@ resourcestring
   Error_32 =
     'The program cannot open your database % because another program is already using it.';
   Error_33 = 'The program cannot find the selected file to open';
+  Error_34 = 'Missing LIBSQLITE3-DEV library.% Database can not be created or opened.';
 
   // ===============================================================================================
   // Version
@@ -754,7 +771,8 @@ uses
   uniTags, uniAbout, uniComments, uniDelete, uniEdit, uniGate, uniHistory, uniImage,
   uniPassword, uniPersons, uniRecycleBin, uniSettings, uniShortCut, uniSQL, uniLinks,
   uniSQLResults, uniValues, uniWrite, uniwriting, uniEdits, uniFilter, uniGuide,
-  uniImport, uniSuccess, uniPeriod, uniPlan, uniBudget, uniBudgets, uniTemplates;
+  uniImport, uniSuccess, uniPeriod, uniPlan, uniBudget, uniBudgets, uniTemplates,
+  uniTimeStamp;
 
 procedure UpdateLanguage;
 var
@@ -1091,6 +1109,22 @@ begin
       frmMain.tabCrossTop.Tabs[frmMain.tabCrossTop.TabIndex].Text +
       ' / ' + frmMain.tabCrossLeft.Tabs[frmMain.tabCrossLeft.TabIndex].Text;
 
+    // tab Energies
+    frmMain.tabEnergies.Caption := Caption_334;
+
+    frmMain.VSTEnergy.Header.Columns[1].Text := AnsiReplaceStr(Caption_54, '&', '');
+    frmMain.VSTEnergy.Header.Columns[2].Text := Caption_80;
+    frmMain.VSTEnergy.Header.Columns[3].Text := Caption_26;
+    frmMain.VSTEnergy.Header.Columns[4].Text := Caption_337;
+    frmMain.VSTEnergy.Header.Columns[5].Text := Caption_338;
+    frmMain.VSTEnergy.Header.Columns[6].Text := Caption_339;
+    frmMain.VSTEnergy.Header.Columns[7].Text := Caption_350;
+    frmMain.VSTEnergy.Header.Columns[8].Text := Caption_16;
+    frmMain.VSTEnergy.Header.Columns[9].Text := Caption_53;
+    frmMain.VSTEnergy.Header.Columns[10].Text := Caption_56;
+
+    frmMain.popEnergieDelete.Caption := Caption_03;
+
     // SUMMARY HEADER CAPTION
     frmMain.VSTChrono.Header.Columns[1].Text := Caption_311; // intervals
     frmMain.VSTChrono.Header.Columns[2].Text := Caption_37; // starting balance
@@ -1222,15 +1256,27 @@ begin
     //frmDetail.gbxAttachments.Caption := Caption_333; // Attachments
     frmDetail.lviAttachments.Columns[0].Caption := Caption_96;
     frmDetail.lviAttachments.Columns[1].Caption := Caption_97;
+
     frmDetail.btnAttachmentAdd.Caption := Caption_00;
     frmDetail.btnAttachmentEdit.Caption := Caption_02;
     frmDetail.btnAttachmentDelete.Caption := Caption_03;
     frmDetail.btnAttachmentOpen.Caption := AnsiReplaceStr(Menu_02, '&', '');
 
+    frmDetail.btnAttachmentAdd.Hint := Hint_01;
+    frmDetail.btnAttachmentEdit.Hint := Hint_02;
+    frmDetail.btnAttachmentDelete.Hint := Hint_03;
+    frmDetail.btnAttachmentOpen.Hint := Hint_12;
+
+
     frmDetail.gbxMeter.Caption := Caption_336;
-    frmDetail.lblMeterStart.Caption := Caption_337;
-    frmDetail.lblMeterEnd.Caption := Caption_338;
-    frmDetail.lblConsumption.Caption := Caption_339;
+    frmDetail.lblMeterStart.Caption := AnsiLowerCase(Caption_337);
+    frmDetail.lblMeterEnd.Caption := AnsiLowerCase(Caption_338);
+    frmDetail.lblConsumption.Caption := AnsiLowerCase(Caption_339);
+
+    frmDetail.gbxPrice.Caption := Caption_349;
+    frmDetail.lblUnitPrice.Caption := AnsiLowerCase(Caption_350);
+    frmDetail.lblTotalPrice.Caption := AnsiLowerCase(Caption_16);
+    frmDetail.gbxCommentEnergy.Caption := AnsiLowerCase(Caption_56);
 
     // hints
     frmDetail.btnComment.Hint := frmMain.btnComments.Hint;
@@ -1288,13 +1334,23 @@ begin
     frmEdit.btnAttachmentDelete.Caption := Caption_03;
     frmEdit.btnAttachmentOpen.Caption := AnsiReplaceStr(Menu_02, '&', '');
 
+    frmEdit.btnAttachmentAdd.Hint := Hint_01;
+    frmEdit.btnAttachmentEdit.Hint := Hint_02;
+    frmEdit.btnAttachmentDelete.Hint := Hint_03;
+    frmEdit.btnAttachmentOpen.Hint := Hint_12;
+
     frmEdit.lviAttachments.Columns[0].Caption := Caption_96;
     frmEdit.lviAttachments.Columns[1].Caption := Caption_97;
 
     frmEdit.gbxMeter.Caption := Caption_336;
-    frmEdit.lblMeterStart.Caption := Caption_337;
-    frmEdit.lblMeterEnd.Caption := Caption_338;
-    frmEdit.lblConsumption.Caption := Caption_339;
+    frmEdit.lblMeterStart.Caption := AnsiLowerCase(Caption_337);
+    frmEdit.lblMeterEnd.Caption := AnsiLowerCase(Caption_338);
+    frmEdit.lblConsumption.Caption := AnsiLowerCase(Caption_339);
+
+    frmEdit.gbxPrice.Caption := Caption_349;
+    frmEdit.lblUnitPrice.Caption := AnsiLowerCase(Caption_350);
+    frmEdit.lblTotalPrice.Caption := AnsiLowerCase(Caption_16);
+    frmEdit.gbxCommentEnergy.Caption := AnsiLowerCase(Caption_56);
 
     // hints
     frmEdit.btnComment.Hint := frmMain.btnComments.Hint;
@@ -2345,6 +2401,15 @@ begin
     // frmRecycleBin.VST.Header.Columns[11].Text := Caption_63; // Type
 
     // =============================================================================================
+    // FRMTIMESTAMP FORM
+    // =============================================================================================
+    frmTimeStamp.Caption := AnsiUpperCase(Caption_342);
+    frmTimeStamp.VST.Header.Columns[0].Text := Caption_343 + ' / ' + AnsiLowerCase(Caption_204);
+    frmTimeStamp.VST.Header.Columns[1].Text := Caption_344;
+    frmTimeStamp.VST.Header.Columns[2].Text := Caption_345;
+    frmTimeStamp.btnExit.Caption := AnsiReplaceStr(Menu_63, '&', ''); // Exit
+
+    // =============================================================================================
     // FRMSETTINGS FORM
     // =============================================================================================
     // buttons
@@ -2352,6 +2417,7 @@ begin
     frmSettings.btnCancel.Caption := Caption_05;
     frmSettings.btnSave.Caption := Caption_04;
     frmSettings.btnIniFile.Caption := Caption_22;
+    frmSettings.btnTimeStamp.Hint := Caption_342;
 
     // tree view
     frmSettings.treSettings.Items[0].Text := AnsiReplaceStr(Menu_60, '&', ''); // Program
@@ -2417,6 +2483,7 @@ begin
     frmSettings.lblOddRowColor.Caption := Caption_150;
     frmSettings.btnOddRowColorBack.Caption := Caption_147;
     frmSettings.lblGridFont.Caption := Caption_246;
+    frmSettings.chkDarkStyle.Caption := Caption_346 + ' (' + Caption_351 + ')';
 
     frmSettings.tabFilter.Caption := Caption_18;
     frmSettings.chkFilterComboboxStyle.Caption := Caption_341;
@@ -2431,6 +2498,7 @@ begin
     frmSettings.chkLastUsedFilterDate.Caption := Caption_316;
     frmSettings.chkAutoColumnWidth.Caption := Caption_162;
     frmSettings.chkNewVersion.Caption := Caption_279;
+    frmSettings.gbxNewTransaction.Caption := Caption_348;
 
     frmSettings.btnChange.Caption := Caption_02;
     frmSettings.btnDefault.Caption := Caption_278;
@@ -2459,6 +2527,7 @@ begin
     frmSettings.chkDisplayFontBold.Caption := Caption_299;
     frmSettings.chkDisplaySubCatCapital.Caption := Caption_300;
     frmSettings.chkEnableSelfTransfer.Caption := Caption_301;
+    frmSettings.chkItemsFromFilter.Caption := AnsiLowerCase(Caption_347);
 
     frmSettings.rbtCreditColorBlack.Caption := Caption_152;
     frmSettings.rbtCreditColorMixed.Caption := Caption_153;

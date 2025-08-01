@@ -119,6 +119,9 @@ type
     procedure VSTDblClick(Sender: TObject);
     procedure VSTFloatGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+    procedure VSTFloatPaintText(Sender: TBaseVirtualTree;
+      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      TextType: TVSTTextType);
     procedure VSTFloatResize(Sender: TObject);
     procedure VSTGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean;
@@ -172,9 +175,9 @@ begin
     Week_day[I].Top := 0;
     Week_day[I].Height := 20;
     Week_day[I].BevelOuter := bvRaised;
-    Week_day[I].Font.Color := clWhite;
+    Week_day[I].Font.Color := IfThen(Dark = False, clWhite, $0000B5BF);
     Week_day[I].Font.Bold := True;
-    Week_day[I].Color := clDkGray;
+    Week_day[I].Color := IfThen(Dark = False, clDkGray, rgbtocolor(44,44,44));
   end;
 
   for I := 0 to 5 do
@@ -184,9 +187,9 @@ begin
     Week_number[I].Left := 0;
     Week_number[I].Width := 25;
     Week_number[I].BevelOuter := bvRaised;
-    Week_number[I].Font.Color := clWhite;
+    Week_number[I].Font.Color := IfThen(Dark = False, clWhite, $0000B5BF);
     Week_number[I].Font.Bold := True;
-    Week_number[I].Color := clDkGray;
+    Week_number[I].Color := IfThen(Dark = False, clDkGray, rgbtocolor(44,44,44));
   end;
 
   for I := 0 to 41 do
@@ -237,6 +240,14 @@ begin
 
   // get form icon
   frmMain.img16.GetIcon(20, (Sender as TForm).Icon);
+
+  // colors
+  Calendar.Colors.BackgroundColor :=
+      IfThen(Dark = False, clWhite, rgbToColor(44, 44, 44));
+  calendar.Colors.TextColor :=
+    IfThen(Dark = False, clBlack, clWhite);
+  calendar.Colors.SelectedDateColor :=
+    IfThen(Dark = False, clMoneyGreen, clTeal);
 end;
 
 procedure TfrmCalendar.FormResize(Sender: TObject);
@@ -307,9 +318,11 @@ begin
     case (Sender as TPanel).Color of
       clWhite: (Sender as TPanel).Canvas.Font.Color := rgbToColor(220, 220, 220)
       else
-        (Sender as TPanel).Canvas.Font.Color := Brighten(BrightenColor, 190);
+        (Sender as TPanel).Canvas.Font.Color := IfThen(Dark = False,
+          Brighten(BrightenColor, 190), clDkGray);
     end;
     (Sender as TPanel).Canvas.Brush.Style := bsClear;
+
     (Sender as TPanel).Canvas.TextOut(5, 5, RightStr(slDay.Strings[0], 2));
 
     // AMOUNTS
@@ -320,7 +333,7 @@ begin
     case (Sender as TPanel).Color of
       clWhite: (Sender as TPanel).Canvas.Font.Color := rgbToColor(100, 100, 100);
       else
-        (Sender as TPanel).Canvas.Font.Color := clBlack;
+        (Sender as TPanel).Canvas.Font.Color := IfThen(Dark = False, clBlack, clSilver);
     end;
 
     for I := 1 to slDay.Count - 1 do
@@ -455,8 +468,11 @@ procedure TfrmCalendar.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clWhite,
-    frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -489,6 +505,13 @@ begin
     2: CellText := DailyPayment.currency; // currency
     3: CellText := DailyPayment.Comment; // comment
   end;
+end;
+
+procedure TfrmCalendar.VSTFloatPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSilver);
 end;
 
 procedure TfrmCalendar.VSTFloatResize(Sender: TObject);
@@ -558,57 +581,71 @@ begin
   case DP.Kind of
 
     // credit color
-    0: case frmSettings.pnlCreditTransactionsColor.Tag of
-        0: TargetCanvas.Font.Color := clDefault;
-        1: begin
-          if Column = 3 then
-            TargetCanvas.Font.Color := clBlue
+      0: case frmSettings.pnlCreditTransactionsColor.Tag of
+          0: TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clDefault, clSilver);
+          1: begin
+            if Column = 3 then
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clBlue, $00FFB852)
+            else
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
+          end
           else
-            TargetCanvas.Font.Color := clDefault;
-        end
-        else
-          TargetCanvas.Font.Color := clBlue;
-      end;
+            TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clBlue, $00FFB852)
+        end;
 
-    // debit color                                                                                                                   ´
-    1: case frmSettings.pnlDebitTransactionsColor.Tag of
-        0: TargetCanvas.Font.Color := clDefault;
-        1: begin
-          if Column = 3 then
-            TargetCanvas.Font.Color := clRed
+      // debit color
+      1: case frmSettings.pnlDebitTransactionsColor.Tag of
+          0: TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clDefault, clSilver);
+          1: begin
+            if Column = 3 then
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clRed, $006A64FF)
+            else
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
+          end
           else
-            TargetCanvas.Font.Color := clDefault;
-        end
-        else
-          TargetCanvas.Font.Color := clRed;
-      end;
+            TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clRed, $006A64FF)
+        end;
 
-    // transfer plus color
-    2: case frmSettings.pnlTransferPTransactionsColor.Tag of
-        0: TargetCanvas.Font.Color := clDefault;
-        1: begin
-          if Column = 3 then
-            TargetCanvas.Font.Color := clGreen
+      // transfer plus color
+      2: case frmSettings.pnlTransferPTransactionsColor.Tag of
+          0: TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clDefault, clSilver);
+          1: begin
+            if Column = 3 then
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clGreen, $0062FF52)
+            else
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
+          end
           else
-            TargetCanvas.Font.Color := clDefault;
-        end
-        else
-          TargetCanvas.Font.Color := clGreen;
-      end;
+            TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clGreen, $0062FF52);
+        end;
 
-      // transfer minus color
-    else
-      case frmSettings.pnlTransferMTransactionsColor.Tag of
-        0: TargetCanvas.Font.Color := clDefault;
-        1: begin
-          if Column = 3 then
-            TargetCanvas.Font.Color := rgbToColor(240, 160, 0)
+        // transfer minus color
+      else
+        case frmSettings.pnlTransferMTransactionsColor.Tag of
+          0: TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clDefault, clSilver);
+          1: begin
+            if Column = 3 then
+              TargetCanvas.Font.Color := rgbToColor(240, 160, 0)
+            else
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
+          end
           else
-            TargetCanvas.Font.Color := clDefault;
-        end
-        else
-          TargetCanvas.Font.Color := rgbToColor(240, 160, 0);
-      end;
+            TargetCanvas.Font.Color := rgbToColor(240, 160, 0);
+        end;
   end;
 end;
 
@@ -897,13 +934,12 @@ begin
     pnlDay[I].Hint := FormatDateTime('YYYY-MM-DD', D2);
 
     if MonthOf(D1 + I) = M then
-    begin
-      pnlDay[I].Color := BrightenColor;
-    end
+      pnlDay[I].Color := IfThen(Dark = False,
+        BrightenColor,
+        Brighten(frmSettings.btnCaptionColorBack.Tag, 20))
     else
-    begin
-      pnlDay[I].Color := clWhite;
-    end;
+      pnlDay[I].Color := IfThen(Dark = False, clWhite,
+        Brighten(frmSettings.btnCaptionColorBack.Tag, 35));
 
     if (frmMain.Conn.Connected = True) and (cbxCurrency.Items.Count > 0) then
     begin

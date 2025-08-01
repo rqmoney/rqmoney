@@ -12,11 +12,11 @@ object frmComments: TfrmComments
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object splList: TSplitter
     Left = 415
-    Height = 439
+    Height = 427
     Top = 0
     Width = 5
     Align = alRight
@@ -192,13 +192,13 @@ object frmComments: TfrmComments
   end
   object pnlDetail: TPanel
     Left = 425
-    Height = 430
+    Height = 418
     Top = 5
     Width = 220
     Align = alRight
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 430
+    ClientHeight = 418
     ClientWidth = 220
     Constraints.MaxWidth = 400
     Constraints.MinWidth = 150
@@ -206,13 +206,13 @@ object frmComments: TfrmComments
     TabOrder = 2
     object pnlComment: TPanel
       Left = 4
-      Height = 386
+      Height = 362
       Top = 24
       Width = 212
       Align = alClient
       AutoSize = True
       BorderSpacing.Around = 3
-      ClientHeight = 386
+      ClientHeight = 362
       ClientWidth = 212
       TabOrder = 0
       object lblComment: TLabel
@@ -230,7 +230,7 @@ object frmComments: TfrmComments
       object memComment: TMemo
         Tag = 1
         Left = 3
-        Height = 376
+        Height = 352
         Top = 7
         Width = 206
         Align = alClient
@@ -248,14 +248,14 @@ object frmComments: TfrmComments
     end
     object pnlButton: TPanel
       Left = 2
-      Height = 15
-      Top = 413
+      Height = 27
+      Top = 389
       Width = 216
       Align = alBottom
       AutoSize = True
       BorderSpacing.Around = 1
       BevelOuter = bvNone
-      ClientHeight = 15
+      ClientHeight = 27
       ClientWidth = 216
       Constraints.MinHeight = 15
       TabOrder = 1
@@ -264,7 +264,7 @@ object frmComments: TfrmComments
       object btnSave: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 115
-        Height = 13
+        Height = 25
         Top = 1
         Width = 98
         Animation = True
@@ -283,7 +283,6 @@ object frmComments: TfrmComments
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnSaveClick
         ParentFont = False
@@ -293,7 +292,7 @@ object frmComments: TfrmComments
       object btnCancel: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 3
-        Height = 13
+        Height = 25
         Top = 1
         Width = 109
         Animation = True
@@ -312,7 +311,6 @@ object frmComments: TfrmComments
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnCancelClick
         ParentFont = False
@@ -363,13 +361,13 @@ object frmComments: TfrmComments
   end
   object pnlList: TPanel
     Left = 5
-    Height = 430
+    Height = 418
     Top = 5
     Width = 405
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 430
+    ClientHeight = 418
     ClientWidth = 405
     TabOrder = 3
     object pnlListCaption: TBCPanel
@@ -415,7 +413,7 @@ object frmComments: TfrmComments
     object VST: TLazVirtualStringTree
       Cursor = 63
       Left = 4
-      Height = 402
+      Height = 390
       Top = 24
       Width = 397
       Align = alClient
@@ -463,6 +461,7 @@ object frmComments: TfrmComments
       OnCompareNodes = VSTCompareNodes
       OnDblClick = VSTDblClick
       OnGetText = VSTGetText
+      OnPaintText = VSTPaintText
       OnGetImageIndex = VSTGetImageIndex
       OnGetNodeDataSize = VSTGetNodeDataSize
       OnResize = VSTResize
@@ -470,14 +469,14 @@ object frmComments: TfrmComments
   end
   object pnlButtons: TPanel
     Left = 1
-    Height = 15
-    Top = 440
+    Height = 27
+    Top = 428
     Width = 648
     Align = alBottom
     AutoSize = True
     BorderSpacing.Around = 1
     BevelOuter = bvNone
-    ClientHeight = 15
+    ClientHeight = 27
     ClientWidth = 648
     Constraints.MinHeight = 15
     ParentColor = False
@@ -487,9 +486,9 @@ object frmComments: TfrmComments
     object btnAdd: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 0
-      Height = 13
+      Height = 25
       Top = 1
-      Width = 1
+      Width = 0
       Animation = True
       StyleNormal.Color = clWhite
       StyleNormal.TextColor = clBlack
@@ -506,7 +505,6 @@ object frmComments: TfrmComments
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnAddClick
       ParentFont = False
@@ -516,7 +514,7 @@ object frmComments: TfrmComments
     object btnEdit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = -20
-      Height = 13
+      Height = 25
       Top = 1
       Width = 110
       Animation = True
@@ -535,7 +533,6 @@ object frmComments: TfrmComments
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnEditClick
       ParentFont = False
@@ -543,9 +540,10 @@ object frmComments: TfrmComments
       ShowHint = True
     end
     object btnDelete: TBCMDButtonFocus
+      Tag = 12345
       Cursor = crHandPoint
       Left = 93
-      Height = 13
+      Height = 25
       Top = 1
       Width = 110
       Animation = True
@@ -564,7 +562,6 @@ object frmComments: TfrmComments
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnDeleteClick
       ParentFont = False
@@ -574,7 +571,7 @@ object frmComments: TfrmComments
     object btnCopy: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 206
-      Height = 13
+      Height = 25
       Top = 1
       Width = 110
       Animation = True
@@ -593,7 +590,6 @@ object frmComments: TfrmComments
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnCopyClick
       ParentFont = False
@@ -603,7 +599,7 @@ object frmComments: TfrmComments
     object btnSelect: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 319
-      Height = 13
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -622,7 +618,6 @@ object frmComments: TfrmComments
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnSelectClick
       ParentFont = False
@@ -632,7 +627,7 @@ object frmComments: TfrmComments
     object btnPrint: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 422
-      Height = 13
+      Height = 25
       Top = 1
       Width = 110
       Animation = True
@@ -651,7 +646,6 @@ object frmComments: TfrmComments
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnPrintClick
       OnMouseDown = btnPrintMouseDown
@@ -662,7 +656,7 @@ object frmComments: TfrmComments
     object btnExit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 535
-      Height = 13
+      Height = 25
       Top = 1
       Width = 110
       Animation = True
@@ -681,7 +675,6 @@ object frmComments: TfrmComments
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnExitClick
       ParentFont = False

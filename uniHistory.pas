@@ -47,6 +47,8 @@ type
       var ImageIndex: integer);
     procedure VST1GetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+    procedure VST1PaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas;
+      Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
     procedure VST1Resize(Sender: TObject);
     procedure VST2BeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
@@ -244,7 +246,9 @@ procedure TfrmHistory.VST1BeforeCellPaint(Sender: TBaseVirtualTree;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
   TargetCanvas.Brush.Color :=
-    IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
+    IfThen(Node.Index mod 2 = 0, IfThen(Dark = False,
+    clWhite, rgbtoColor(44, 44, 44)), IfThen(Dark = False,
+    frmSettings.pnlOddRowColor.Color, InvertColor(frmSettings.pnlOddRowColor.Color)));
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -308,6 +312,27 @@ begin
   end;
 end;
 
+procedure TfrmHistory.VST1PaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  if ((Sender as TLazVirtualStringTree).Tag = 1) and
+    (Column in [1..9]) and
+    (((Node.Index > 0) and (((VST2.Text[VST2.GetPrevious(Node), Column] <> VST2.Text[Node, Column])) or
+    ((Column = 0) and (VST2.Text[VST2.GetPrevious(Node), 11] <>
+    VST2.Text[Node, 11])))) or
+    ((Node.Index = 0) and ((VST1.Text[VST1.GetFirst(), Column] <>
+    VST2.Text[Node, Column]) or (Column = 0) and
+    (VST1.Text[VST1.GetFirst(), 11] <> VST2.Text[Node, 11])))) then
+    TargetCanvas.Font.Color :=
+    IfThen(vsSelected in node.States, clYellow,
+      IfThen(Dark = False, clDefault, clBlack))
+  else
+    TargetCanvas.Font.Color :=
+    IfThen(vsSelected in node.States, clWhite,
+      IfThen(Dark = False, clDefault, clSilver));
+end;
+
 procedure TfrmHistory.VST1Resize(Sender: TObject);
 var
   X: integer;
@@ -321,7 +346,8 @@ begin
   (Sender as TLazVirtualStringTree).Header.Columns[1].Width := 10 * X; // date
   (Sender as TLazVirtualStringTree).Header.Columns[2].Width :=
     (Sender as TLazVirtualStringTree).Width -
-    (Sender as TLazVirtualStringTree).Header.Columns[0].Width - ScrollBarWidth - (87 * X);
+    (Sender as TLazVirtualStringTree).Header.Columns[0].Width -
+    ScrollBarWidth - (87 * X);
   // comment
   (Sender as TLazVirtualStringTree).Header.Columns[3].Width := 10 * X; // amount
   (Sender as TLazVirtualStringTree).Header.Columns[4].Width := 5 * X; // currency
@@ -337,21 +363,24 @@ procedure TfrmHistory.VST2BeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  TargetCanvas.Brush.Color :=
-    IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
 
   if (Node.Index > 0) then
   begin
     if ((Column in [1..9]) and (VST2.Text[VST2.GetPrevious(Node), Column] <>
       VST2.Text[Node, Column])) or ((Column = 0) and
       (VST2.Text[VST2.GetPrevious(Node), 11] <> VST2.Text[Node, 11])) then
-      TargetCanvas.Brush.Color := clYellow;
+      TargetCanvas.Brush.Color := IfThen(Dark = False, clYellow, $0000B5BF);
   end
   else
   if (Column in [1..9]) and (VST1.Text[VST1.GetFirst(), Column] <>
     VST2.Text[Node, Column]) or (Column = 0) and
     (VST1.Text[VST1.GetFirst(), 11] <> VST2.Text[Node, 11]) then
-    TargetCanvas.Brush.Color := clYellow;
+    TargetCanvas.Brush.Color := IfThen(Dark = False, clYellow, $0000B5BF);
 
   TargetCanvas.FillRect(CellRect);
 end;

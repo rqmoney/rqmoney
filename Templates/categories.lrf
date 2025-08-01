@@ -7,7 +7,7 @@
     <KeyWords Value=""/>
     <Comments Value=""/>
     <ReportCreateDate Value="1899-12-30 00:00:00"/>
-    <ReportLastChange Value="2023-11-04 05:46:44"/>
+    <ReportLastChange Value="2025-02-22 14:42:58"/>
     <ReportVersionBuild Value=""/>
     <ReportVersionMajor Value=""/>
     <ReportVersionMinor Value=""/>
@@ -148,7 +148,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="If [catParentID] = 0 then&#xA;  FillColor := clBtnFace&#xA;Else&#xA;  FillColor := clNone;&#xA;"/>
+            <Script Value="If [catParentID] = 0 then&#xD;&#xA;  FillColor := clCream&#xD;&#xA;Else&#xD;&#xA;  FillColor := clNone;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -203,8 +203,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -260,7 +260,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -315,8 +315,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -371,8 +371,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[DATE] [TIME]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="[DATE] [TIME]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -427,8 +427,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="~ [PAGE#] ~&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="~ [PAGE#] ~&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -509,8 +509,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -565,8 +565,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -621,8 +621,8 @@
           <Data>
             <Format Value="46"/>
             <FormatStr Value=""/>
-            <Memo Value="[catName]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;  If [catParentID] = 0 then&#xA;begin&#xA;FontStyle := 2;&#xA;end&#xA;Else&#xA;begin&#xA;FontStyle := 0;&#xA;end;&#xA;End;&#xA;"/>
+            <Memo Value="[catName]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;  If [catParentID] = 0 then&#xD;&#xA;begin&#xD;&#xA;FontStyle := 2;&#xD;&#xA;end&#xD;&#xA;Else&#xD;&#xA;begin&#xD;&#xA;FontStyle := 0;&#xD;&#xA;end;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -677,8 +677,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[catComment]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="[catComment]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -733,8 +733,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[catID]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="[catID]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -789,8 +789,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[catStatus]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="[catStatus]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -868,7 +868,7 @@
           <Item Value="catParentID"/>
         </Objects6>
       </FVal>
-      <ParentVars Value="catVariables&#xA; catName&#xA; catComment&#xA; catStatus&#xA; catTime&#xA; catID&#xA; catParentID&#xA;"/>
+      <ParentVars Value="catVariables&#xD;&#xA; catName&#xD;&#xA; catComment&#xD;&#xA; catStatus&#xD;&#xA; catTime&#xD;&#xA; catID&#xD;&#xA; catParentID&#xD;&#xA;"/>
     </Pages>
     <DetailReports>
       <Count Value="0"/>

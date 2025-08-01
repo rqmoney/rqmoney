@@ -12,7 +12,7 @@ object frmSuccess: TfrmSuccess
   OnCreate = FormCreate
   OnResize = FormResize
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlSuccess: TPanel
     Left = 10
@@ -103,7 +103,6 @@ object frmSuccess: TfrmSuccess
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 3
           BorderSpacing.Around = 2
-          Color = clNone
           Constraints.MinHeight = 20
           Font.Style = [fsBold]
           OnClick = btnPasswordClick
@@ -171,7 +170,6 @@ object frmSuccess: TfrmSuccess
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 3
           BorderSpacing.Around = 2
-          Color = clNone
           Constraints.MinHeight = 20
           Font.Style = [fsBold]
           OnClick = btnGuideClick
@@ -266,7 +264,6 @@ object frmSuccess: TfrmSuccess
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 3
           BorderSpacing.Around = 2
-          Color = clNone
           Constraints.MinHeight = 20
           Font.Style = [fsBold]
           OnClick = btnImportClick
@@ -347,7 +344,6 @@ object frmSuccess: TfrmSuccess
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 3
           BorderSpacing.Around = 2
-          Color = clNone
           Constraints.MinHeight = 20
           Font.Style = [fsBold]
           OnClick = actExitExecute

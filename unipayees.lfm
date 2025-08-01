@@ -12,11 +12,11 @@ object frmPayees: TfrmPayees
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object splList: TSplitter
     Left = 567
-    Height = 446
+    Height = 444
     Top = 0
     Width = 3
     Align = alRight
@@ -187,13 +187,13 @@ object frmPayees: TfrmPayees
   end
   object pnlList: TPanel
     Left = 5
-    Height = 439
+    Height = 437
     Top = 5
     Width = 557
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 439
+    ClientHeight = 437
     ClientWidth = 557
     TabOrder = 0
     object pnlListCaption: TBCPanel
@@ -239,7 +239,7 @@ object frmPayees: TfrmPayees
     object VST: TLazVirtualStringTree
       Cursor = 63
       Left = 4
-      Height = 411
+      Height = 409
       Top = 24
       Width = 549
       Align = alClient
@@ -296,8 +296,8 @@ object frmPayees: TfrmPayees
   end
   object pnlButtons: TPanel
     Left = 5
-    Height = 25
-    Top = 449
+    Height = 27
+    Top = 447
     Width = 790
     Align = alBottom
     AutoSize = True
@@ -305,7 +305,7 @@ object frmPayees: TfrmPayees
     BorderSpacing.Right = 2
     BorderSpacing.Around = 3
     BevelOuter = bvNone
-    ClientHeight = 25
+    ClientHeight = 27
     ClientWidth = 790
     Constraints.MinHeight = 25
     ParentColor = False
@@ -315,7 +315,7 @@ object frmPayees: TfrmPayees
     object btnAdd: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 3
-      Height = 23
+      Height = 25
       Top = 1
       Width = 166
       StyleNormal.Color = clWhite
@@ -333,7 +333,6 @@ object frmPayees: TfrmPayees
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnAddClick
       ParentFont = False
@@ -343,7 +342,7 @@ object frmPayees: TfrmPayees
     object btnEdit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 172
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       StyleNormal.Color = clWhite
@@ -361,7 +360,6 @@ object frmPayees: TfrmPayees
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnEditClick
       ParentFont = False
@@ -369,9 +367,10 @@ object frmPayees: TfrmPayees
       ShowHint = True
     end
     object btnDelete: TBCMDButtonFocus
+      Tag = 12345
       Cursor = crHandPoint
       Left = 275
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       StyleNormal.Color = clWhite
@@ -389,7 +388,6 @@ object frmPayees: TfrmPayees
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnDeleteClick
       ParentFont = False
@@ -399,7 +397,7 @@ object frmPayees: TfrmPayees
     object btnCopy: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 378
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       StyleNormal.Color = clWhite
@@ -417,7 +415,6 @@ object frmPayees: TfrmPayees
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnCopyClick
       ParentFont = False
@@ -427,7 +424,7 @@ object frmPayees: TfrmPayees
     object btnPrint: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 584
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       StyleNormal.Color = clWhite
@@ -445,7 +442,6 @@ object frmPayees: TfrmPayees
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnPrintClick
       OnMouseDown = btnPrintMouseDown
@@ -456,7 +452,7 @@ object frmPayees: TfrmPayees
     object btnExit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 687
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       StyleNormal.Color = clWhite
@@ -474,7 +470,6 @@ object frmPayees: TfrmPayees
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnExitClick
       ParentFont = False
@@ -484,7 +479,7 @@ object frmPayees: TfrmPayees
     object btnSelect: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 481
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -503,7 +498,6 @@ object frmPayees: TfrmPayees
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnSelectClick
       ParentFont = False
@@ -513,13 +507,13 @@ object frmPayees: TfrmPayees
   end
   object pnlDetail: TPanel
     Left = 575
-    Height = 439
+    Height = 437
     Top = 5
     Width = 220
     Align = alRight
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 439
+    ClientHeight = 437
     ClientWidth = 220
     Constraints.MaxWidth = 350
     Constraints.MinWidth = 150
@@ -528,15 +522,15 @@ object frmPayees: TfrmPayees
     TabOrder = 2
     object pnlButton: TPanel
       Left = 2
-      Height = 25
-      Top = 410
+      Height = 27
+      Top = 406
       Width = 216
       Align = alBottom
       AutoSize = True
       BorderSpacing.Bottom = 2
       BorderSpacing.Around = 1
       BevelOuter = bvNone
-      ClientHeight = 25
+      ClientHeight = 27
       ClientWidth = 216
       Constraints.MinHeight = 25
       TabOrder = 2
@@ -545,7 +539,7 @@ object frmPayees: TfrmPayees
       object btnSave: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 115
-        Height = 23
+        Height = 25
         Top = 1
         Width = 98
         StyleNormal.Color = clWhite
@@ -563,7 +557,6 @@ object frmPayees: TfrmPayees
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnSaveClick
         ParentFont = False
@@ -573,7 +566,7 @@ object frmPayees: TfrmPayees
       object btnCancel: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 3
-        Height = 23
+        Height = 25
         Top = 1
         Width = 109
         StyleNormal.Color = clWhite
@@ -591,7 +584,6 @@ object frmPayees: TfrmPayees
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnCancelClick
         ParentFont = False
@@ -641,23 +633,23 @@ object frmPayees: TfrmPayees
     end
     object pnlClient: TPanel
       Left = 1
-      Height = 388
+      Height = 384
       Top = 21
       Width = 218
       Align = alClient
       BevelOuter = bvNone
-      ClientHeight = 388
+      ClientHeight = 384
       ClientWidth = 218
       TabOrder = 1
       object pnlComment: TPanel
         Left = 3
-        Height = 284
-        Top = 44
+        Height = 292
+        Top = 39
         Width = 212
         Align = alClient
         AutoSize = True
         BorderSpacing.Around = 3
-        ClientHeight = 284
+        ClientHeight = 292
         ClientWidth = 212
         TabOrder = 1
         object lblComment: TLabel
@@ -674,7 +666,7 @@ object frmPayees: TfrmPayees
         object memComment: TMemo
           Tag = 1
           Left = 3
-          Height = 277
+          Height = 285
           Top = 4
           Width = 206
           Align = alClient
@@ -691,14 +683,14 @@ object frmPayees: TfrmPayees
       end
       object pnlName: TPanel
         Left = 3
-        Height = 35
+        Height = 30
         Top = 3
         Width = 212
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 35
+        ClientHeight = 30
         ClientWidth = 212
         TabOrder = 0
         object lblName: TLabel
@@ -716,7 +708,7 @@ object frmPayees: TfrmPayees
         end
         object ediName: TEdit
           Left = 3
-          Height = 28
+          Height = 23
           Top = 4
           Width = 206
           Align = alTop
@@ -733,26 +725,26 @@ object frmPayees: TfrmPayees
       end
       object pnlStatus: TPanel
         Left = 3
-        Height = 51
-        Top = 331
+        Height = 44
+        Top = 334
         Width = 212
         Align = alBottom
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 51
+        ClientHeight = 44
         ClientWidth = 212
         TabOrder = 2
         object cbxStatus: TComboBox
           Left = 3
-          Height = 30
+          Height = 23
           Top = 18
           Width = 206
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
-          ItemHeight = 0
+          ItemHeight = 15
           Style = csDropDownList
           TabOrder = 0
           OnEnter = cbxStatusEnter

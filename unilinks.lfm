@@ -12,7 +12,7 @@ object frmLinks: TfrmLinks
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlBottom: TPanel
     Left = 0
@@ -193,13 +193,13 @@ object frmLinks: TfrmLinks
   end
   object pnlList: TPanel
     Left = 5
-    Height = 338
+    Height = 336
     Top = 5
     Width = 754
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 338
+    ClientHeight = 336
     ClientWidth = 754
     ParentFont = False
     TabOrder = 1
@@ -245,7 +245,7 @@ object frmLinks: TfrmLinks
     end
     object VST: TLazVirtualStringTree
       Left = 4
-      Height = 310
+      Height = 308
       Top = 24
       Width = 746
       Align = alClient
@@ -301,6 +301,7 @@ object frmLinks: TfrmLinks
       OnChange = VSTChange
       OnDblClick = VSTDblClick
       OnGetText = VSTGetText
+      OnPaintText = VSTPaintText
       OnGetImageIndex = VSTGetImageIndex
       OnGetNodeDataSize = VSTGetNodeDataSize
       OnResize = VSTResize
@@ -308,8 +309,8 @@ object frmLinks: TfrmLinks
   end
   object pnlButtons: TPanel
     Left = 5
-    Height = 25
-    Top = 348
+    Height = 27
+    Top = 346
     Width = 990
     Align = alBottom
     AutoSize = True
@@ -317,7 +318,7 @@ object frmLinks: TfrmLinks
     BorderSpacing.Right = 2
     BorderSpacing.Around = 3
     BevelOuter = bvNone
-    ClientHeight = 25
+    ClientHeight = 27
     ClientWidth = 990
     Constraints.MinHeight = 25
     ParentColor = False
@@ -327,7 +328,7 @@ object frmLinks: TfrmLinks
     object btnAdd: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 3
-      Height = 23
+      Height = 25
       Top = 1
       Width = 366
       Animation = True
@@ -346,7 +347,6 @@ object frmLinks: TfrmLinks
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnAddClick
       ParentFont = False
@@ -356,7 +356,7 @@ object frmLinks: TfrmLinks
     object btnEdit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 372
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -375,7 +375,6 @@ object frmLinks: TfrmLinks
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnEditClick
       ParentFont = False
@@ -383,9 +382,10 @@ object frmLinks: TfrmLinks
       ShowHint = True
     end
     object btnDelete: TBCMDButtonFocus
+      Tag = 12345
       Cursor = crHandPoint
       Left = 475
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -404,7 +404,6 @@ object frmLinks: TfrmLinks
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnDeleteClick
       ParentFont = False
@@ -414,7 +413,7 @@ object frmLinks: TfrmLinks
     object btnCopy: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 578
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -433,7 +432,6 @@ object frmLinks: TfrmLinks
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnCopyClick
       ParentFont = False
@@ -443,7 +441,7 @@ object frmLinks: TfrmLinks
     object btnSelect: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 681
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -462,7 +460,6 @@ object frmLinks: TfrmLinks
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnSelectClick
       ParentFont = False
@@ -472,7 +469,7 @@ object frmLinks: TfrmLinks
     object btnPrint: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 784
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -491,7 +488,6 @@ object frmLinks: TfrmLinks
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnPrintClick
       OnMouseDown = btnPrintMouseDown
@@ -502,7 +498,7 @@ object frmLinks: TfrmLinks
     object btnExit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 887
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -521,7 +517,6 @@ object frmLinks: TfrmLinks
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnExitClick
       ParentFont = False
@@ -531,13 +526,13 @@ object frmLinks: TfrmLinks
   end
   object pnlDetail: TPanel
     Left = 775
-    Height = 338
+    Height = 336
     Top = 5
     Width = 220
     Align = alRight
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 338
+    ClientHeight = 336
     ClientWidth = 220
     Constraints.MaxWidth = 400
     Constraints.MinWidth = 150
@@ -546,15 +541,15 @@ object frmLinks: TfrmLinks
     TabOrder = 3
     object pnlButton: TPanel
       Left = 2
-      Height = 25
-      Top = 309
+      Height = 27
+      Top = 305
       Width = 216
       Align = alBottom
       AutoSize = True
       BorderSpacing.Bottom = 2
       BorderSpacing.Around = 1
       BevelOuter = bvNone
-      ClientHeight = 25
+      ClientHeight = 27
       ClientWidth = 216
       Constraints.MinHeight = 25
       ParentColor = False
@@ -563,7 +558,7 @@ object frmLinks: TfrmLinks
       object btnSave: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 115
-        Height = 23
+        Height = 25
         Top = 1
         Width = 98
         StyleNormal.Color = clWhite
@@ -581,7 +576,6 @@ object frmLinks: TfrmLinks
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnSaveClick
         ParentFont = False
@@ -591,7 +585,7 @@ object frmLinks: TfrmLinks
       object btnCancel: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 3
-        Height = 23
+        Height = 25
         Top = 1
         Width = 109
         StyleNormal.Color = clWhite
@@ -609,7 +603,6 @@ object frmLinks: TfrmLinks
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnCancelClick
         ParentFont = False
@@ -659,24 +652,24 @@ object frmLinks: TfrmLinks
     end
     object pnlClient: TPanel
       Left = 1
-      Height = 287
+      Height = 283
       Top = 21
       Width = 218
       Align = alClient
       BevelOuter = bvNone
-      ClientHeight = 287
+      ClientHeight = 283
       ClientWidth = 218
       TabOrder = 1
       object pnlName: TPanel
         Left = 3
-        Height = 35
+        Height = 30
         Top = 3
         Width = 212
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 35
+        ClientHeight = 30
         ClientWidth = 212
         ParentFont = False
         TabOrder = 0
@@ -695,7 +688,7 @@ object frmLinks: TfrmLinks
         end
         object ediName: TEdit
           Left = 3
-          Height = 28
+          Height = 23
           Top = 4
           Width = 206
           Align = alTop
@@ -708,13 +701,13 @@ object frmLinks: TfrmLinks
       end
       object pnlComment: TPanel
         Left = 3
-        Height = 82
-        Top = 202
+        Height = 113
+        Top = 167
         Width = 212
         Align = alClient
         AutoSize = True
         BorderSpacing.Around = 3
-        ClientHeight = 82
+        ClientHeight = 113
         ClientWidth = 212
         ParentFont = False
         TabOrder = 3
@@ -732,7 +725,7 @@ object frmLinks: TfrmLinks
         end
         object memComment: TMemo
           Left = 3
-          Height = 75
+          Height = 106
           Top = 4
           Width = 206
           Align = alClient
@@ -745,14 +738,14 @@ object frmLinks: TfrmLinks
       end
       object pnlLink: TPanel
         Left = 3
-        Height = 35
-        Top = 44
+        Height = 30
+        Top = 39
         Width = 212
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 35
+        ClientHeight = 30
         ClientWidth = 212
         ParentFont = False
         TabOrder = 1
@@ -771,7 +764,7 @@ object frmLinks: TfrmLinks
         end
         object ediLink: TEdit
           Left = 3
-          Height = 28
+          Height = 23
           Top = 4
           Width = 206
           Align = alTop
@@ -784,20 +777,20 @@ object frmLinks: TfrmLinks
       end
       object pnlshortcut: TPanel
         Left = 3
-        Height = 111
-        Top = 85
+        Height = 86
+        Top = 75
         Width = 212
         Align = alTop
         AutoSize = True
         BorderSpacing.Bottom = 3
         BorderSpacing.Around = 3
-        ClientHeight = 111
+        ClientHeight = 86
         ClientWidth = 212
         ParentFont = False
         TabOrder = 2
         object chkCtrl: TCheckBox
           Left = 4
-          Height = 23
+          Height = 17
           Top = 5
           Width = 204
           Align = alTop
@@ -823,8 +816,8 @@ object frmLinks: TfrmLinks
         end
         object chkShift: TCheckBox
           Left = 4
-          Height = 23
-          Top = 29
+          Height = 17
+          Top = 23
           Width = 204
           Align = alTop
           BorderSpacing.Left = 2
@@ -836,8 +829,8 @@ object frmLinks: TfrmLinks
         end
         object chkAlt: TCheckBox
           Left = 4
-          Height = 23
-          Top = 53
+          Height = 17
+          Top = 41
           Width = 204
           Align = alTop
           BorderSpacing.Left = 2
@@ -849,15 +842,15 @@ object frmLinks: TfrmLinks
         end
         object cbxShortCut: TComboBox
           Left = 4
-          Height = 30
-          Top = 77
+          Height = 23
+          Top = 59
           Width = 204
           Align = alTop
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 2
           BorderSpacing.Around = 1
-          ItemHeight = 0
+          ItemHeight = 15
           Style = csDropDownList
           TabOrder = 3
           OnChange = ediNameChange
@@ -867,7 +860,7 @@ object frmLinks: TfrmLinks
   end
   object splList: TSplitter
     Left = 764
-    Height = 345
+    Height = 343
     Top = 0
     Width = 6
     Align = alRight

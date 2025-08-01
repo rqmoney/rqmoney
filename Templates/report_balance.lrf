@@ -7,7 +7,7 @@
     <KeyWords Value=""/>
     <Comments Value=""/>
     <ReportCreateDate Value="1899-12-30 00:00:00"/>
-    <ReportLastChange Value="2024-07-25 07:05:30"/>
+    <ReportLastChange Value="2025-02-22 14:54:52"/>
     <ReportVersionBuild Value=""/>
     <ReportVersionMajor Value=""/>
     <ReportVersionMinor Value=""/>
@@ -17,7 +17,7 @@
     <Pages>
       <PrintToDefault Value="False"/>
       <DoublePass Value="False"/>
-      <SelectedPrinter Value="ML-2540-Series"/>
+      <SelectedPrinter Value="Samsung ML-2540 Series"/>
       <PageCount Value="1"/>
       <Page1>
         <Name Value="Page1"/>
@@ -105,9 +105,9 @@
             <Left Value="0"/>
             <Top Value="104"/>
             <Width Value="752"/>
-            <Height Value="24"/>
+            <Height Value="22"/>
           </Size>
-          <Flags Value="49"/>
+          <Flags Value="48"/>
           <Data>
             <Script Value=""/>
             <GapX Value="0"/>
@@ -161,7 +161,7 @@
             <Left Value="73"/>
             <Top Value="105"/>
             <Width Value="641"/>
-            <Height Value="19"/>
+            <Height Value="20"/>
           </Size>
           <Flags Value="3"/>
           <FillColor Value="clGray"/>
@@ -176,7 +176,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="&#xA;"/>
+            <Script Value="&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -231,8 +231,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[DATE] [TIME]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="[DATE] [TIME]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -287,8 +287,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="~ [PAGE#] ~&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="~ [PAGE#] ~&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -343,8 +343,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -400,7 +400,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -446,17 +446,17 @@
           <Flags Value="3"/>
           <FillColor Value="clNone"/>
           <Frames>
-            <FrameColor Value="clBlack"/>
+            <FrameColor Value="clSilver"/>
             <FrameStyle Value="frsSolid"/>
             <FrameWidth Value="1"/>
-            <FrameBorders Value=""/>
+            <FrameBorders Value="frbBottom"/>
             <Restrictions Value=""/>
           </Frames>
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="&#xA;"/>
+            <Script Value="If [Line#] Mod 2 = 0 then&#xD;&#xA;  FillColor := clCream&#xD;&#xA;Else&#xD;&#xA;  FillColor := clNone;  &#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -511,8 +511,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[Name]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;"/>
+            <Memo Value="[Name]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -551,11 +551,11 @@
           <StreamMode Value="0"/>
           <Size>
             <Left Value="73"/>
-            <Top Value="106"/>
+            <Top Value="105"/>
             <Width Value="191"/>
-            <Height Value="19"/>
+            <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -568,7 +568,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -607,11 +607,11 @@
           <StreamMode Value="0"/>
           <Size>
             <Left Value="264"/>
-            <Top Value="106"/>
+            <Top Value="105"/>
             <Width Value="90"/>
-            <Height Value="19"/>
+            <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -624,7 +624,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -663,11 +663,11 @@
           <StreamMode Value="0"/>
           <Size>
             <Left Value="354"/>
-            <Top Value="106"/>
+            <Top Value="105"/>
             <Width Value="90"/>
-            <Height Value="19"/>
+            <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -680,7 +680,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -719,11 +719,11 @@
           <StreamMode Value="0"/>
           <Size>
             <Left Value="444"/>
-            <Top Value="106"/>
+            <Top Value="105"/>
             <Width Value="90"/>
-            <Height Value="19"/>
+            <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -736,7 +736,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -775,11 +775,11 @@
           <StreamMode Value="0"/>
           <Size>
             <Left Value="534"/>
-            <Top Value="106"/>
+            <Top Value="105"/>
             <Width Value="90"/>
-            <Height Value="19"/>
+            <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -792,7 +792,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -831,11 +831,11 @@
           <StreamMode Value="0"/>
           <Size>
             <Left Value="624"/>
-            <Top Value="106"/>
+            <Top Value="105"/>
             <Width Value="90"/>
-            <Height Value="19"/>
+            <Height Value="20"/>
           </Size>
-          <Flags Value="1"/>
+          <Flags Value="0"/>
           <FillColor Value="clNone"/>
           <Frames>
             <FrameColor Value="clBlack"/>
@@ -848,7 +848,7 @@
             <Format Value="556"/>
             <FormatStr Value=""/>
             <Memo Value=""/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -880,32 +880,6 @@
           <Cursor Value="0"/>
         </Object17>
         <Object18>
-          <Name Value="Line2"/>
-          <ClassName Value="TfrLineView"/>
-          <Visible Value="True"/>
-          <Typ Value="gtLine"/>
-          <StreamMode Value="0"/>
-          <Size>
-            <Left Value="73"/>
-            <Top Value="181"/>
-            <Width Value="640"/>
-            <Height Value="0"/>
-          </Size>
-          <Flags Value="1"/>
-          <Frames>
-            <FrameColor Value="clSilver"/>
-            <FrameStyle Value="frsSolid"/>
-            <FrameWidth Value="1"/>
-            <Restrictions Value=""/>
-          </Frames>
-          <Tag Value=""/>
-          <FURLInfo Value=""/>
-          <Data>
-            <GapX Value="0"/>
-            <GapY Value="0"/>
-          </Data>
-        </Object18>
-        <Object19>
           <Name Value="Line1"/>
           <ClassName Value="TfrLineView"/>
           <Visible Value="True"/>
@@ -930,8 +904,8 @@
             <GapX Value="0"/>
             <GapY Value="0"/>
           </Data>
-        </Object19>
-        <Object20>
+        </Object18>
+        <Object19>
           <Name Value="Memo2"/>
           <ClassName Value="TfrMemoView"/>
           <Visible Value="True"/>
@@ -955,8 +929,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[DATE] [TIME]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;End;&#xA;"/>
+            <Memo Value="[DATE] [TIME]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;End;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -986,8 +960,8 @@
           <Angle Value="0"/>
           <Justify Value="False"/>
           <Cursor Value="0"/>
-        </Object20>
-        <Object21>
+        </Object19>
+        <Object20>
           <Name Value="Memo3"/>
           <ClassName Value="TfrMemoView"/>
           <Visible Value="True"/>
@@ -1011,8 +985,64 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[Credits]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;&#xA;"/>
+            <Memo Value="[Credits]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;&#xD;&#xA;"/>
+            <GapX Value="0"/>
+            <GapY Value="0"/>
+            <OnClick Value=""/>
+            <OnMouseEnter Value=""/>
+            <OnMouseLeave Value=""/>
+            <DetailReport Value=""/>
+            <ParagraphGap Value="0"/>
+            <LineSpacing Value="2"/>
+          </Data>
+          <Tag Value=""/>
+          <FURLInfo Value=""/>
+          <Font>
+            <Name Value="helvetica [urw]"/>
+            <Size Value="10"/>
+            <Color Value="clBlack"/>
+            <Charset Value="0"/>
+            <Style Value=""/>
+          </Font>
+          <Highlight>
+            <FontStyle Value="2"/>
+            <FontColor Value="clBlack"/>
+            <FillColor Value="clWhite"/>
+            <HighlightStr Value=""/>
+          </Highlight>
+          <Alignment Value="taRightJustify"/>
+          <Layout Value="tlCenter"/>
+          <Angle Value="0"/>
+          <Justify Value="False"/>
+          <Cursor Value="0"/>
+        </Object20>
+        <Object21>
+          <Name Value="Memo4"/>
+          <ClassName Value="TfrMemoView"/>
+          <Visible Value="True"/>
+          <Typ Value="gtMemo"/>
+          <StreamMode Value="0"/>
+          <Size>
+            <Left Value="354"/>
+            <Top Value="160"/>
+            <Width Value="90"/>
+            <Height Value="20"/>
+          </Size>
+          <Flags Value="1"/>
+          <FillColor Value="clNone"/>
+          <Frames>
+            <FrameColor Value="clBlack"/>
+            <FrameStyle Value="frsSolid"/>
+            <FrameWidth Value="1"/>
+            <FrameBorders Value=""/>
+            <Restrictions Value=""/>
+          </Frames>
+          <Data>
+            <Format Value="556"/>
+            <FormatStr Value=""/>
+            <Memo Value="[Debits]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1044,13 +1074,13 @@
           <Cursor Value="0"/>
         </Object21>
         <Object22>
-          <Name Value="Memo4"/>
+          <Name Value="Memo5"/>
           <ClassName Value="TfrMemoView"/>
           <Visible Value="True"/>
           <Typ Value="gtMemo"/>
           <StreamMode Value="0"/>
           <Size>
-            <Left Value="354"/>
+            <Left Value="444"/>
             <Top Value="160"/>
             <Width Value="90"/>
             <Height Value="20"/>
@@ -1067,8 +1097,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[Debits]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;&#xA;"/>
+            <Memo Value="[Pluses]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1100,13 +1130,13 @@
           <Cursor Value="0"/>
         </Object22>
         <Object23>
-          <Name Value="Memo5"/>
+          <Name Value="Memo7"/>
           <ClassName Value="TfrMemoView"/>
           <Visible Value="True"/>
           <Typ Value="gtMemo"/>
           <StreamMode Value="0"/>
           <Size>
-            <Left Value="444"/>
+            <Left Value="534"/>
             <Top Value="160"/>
             <Width Value="90"/>
             <Height Value="20"/>
@@ -1123,8 +1153,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[Pluses]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;&#xA;"/>
+            <Memo Value="[Minuses]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1156,13 +1186,13 @@
           <Cursor Value="0"/>
         </Object23>
         <Object24>
-          <Name Value="Memo7"/>
+          <Name Value="Memo8"/>
           <ClassName Value="TfrMemoView"/>
           <Visible Value="True"/>
           <Typ Value="gtMemo"/>
           <StreamMode Value="0"/>
           <Size>
-            <Left Value="534"/>
+            <Left Value="624"/>
             <Top Value="160"/>
             <Width Value="90"/>
             <Height Value="20"/>
@@ -1179,8 +1209,8 @@
           <Data>
             <Format Value="556"/>
             <FormatStr Value=""/>
-            <Memo Value="[Minuses]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;&#xA;"/>
+            <Memo Value="[Balance]&#xD;&#xA;"/>
+            <Script Value="begin&#xD;&#xA;  FontName := FontNameX;&#xD;&#xA;  FontSize := FontSizeX;&#xD;&#xA;&#xD;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xD;&#xA;    FontStyle := 2&#xD;&#xA;  Else&#xD;&#xA;    FontStyle := 0;&#xD;&#xA;End;&#xD;&#xA;&#xD;&#xA;"/>
             <GapX Value="0"/>
             <GapY Value="0"/>
             <OnClick Value=""/>
@@ -1211,63 +1241,7 @@
           <Justify Value="False"/>
           <Cursor Value="0"/>
         </Object24>
-        <Object25>
-          <Name Value="Memo8"/>
-          <ClassName Value="TfrMemoView"/>
-          <Visible Value="True"/>
-          <Typ Value="gtMemo"/>
-          <StreamMode Value="0"/>
-          <Size>
-            <Left Value="624"/>
-            <Top Value="160"/>
-            <Width Value="90"/>
-            <Height Value="20"/>
-          </Size>
-          <Flags Value="1"/>
-          <FillColor Value="clNone"/>
-          <Frames>
-            <FrameColor Value="clBlack"/>
-            <FrameStyle Value="frsSolid"/>
-            <FrameWidth Value="1"/>
-            <FrameBorders Value=""/>
-            <Restrictions Value=""/>
-          </Frames>
-          <Data>
-            <Format Value="556"/>
-            <FormatStr Value=""/>
-            <Memo Value="[Balance]&#xA;"/>
-            <Script Value="begin&#xA;  FontName := FontNameX;&#xA;  FontSize := FontSizeX;&#xA;&#xA;  If ([Line#] = 1) or ([Level] = 0) then&#xA;    FontStyle := 2&#xA;  Else&#xA;    FontStyle := 0;&#xA;End;&#xA;&#xA;"/>
-            <GapX Value="0"/>
-            <GapY Value="0"/>
-            <OnClick Value=""/>
-            <OnMouseEnter Value=""/>
-            <OnMouseLeave Value=""/>
-            <DetailReport Value=""/>
-            <ParagraphGap Value="0"/>
-            <LineSpacing Value="2"/>
-          </Data>
-          <Tag Value=""/>
-          <FURLInfo Value=""/>
-          <Font>
-            <Name Value="helvetica [urw]"/>
-            <Size Value="10"/>
-            <Color Value="clBlack"/>
-            <Charset Value="0"/>
-            <Style Value=""/>
-          </Font>
-          <Highlight>
-            <FontStyle Value="2"/>
-            <FontColor Value="clBlack"/>
-            <FillColor Value="clWhite"/>
-            <HighlightStr Value=""/>
-          </Highlight>
-          <Alignment Value="taRightJustify"/>
-          <Layout Value="tlCenter"/>
-          <Angle Value="0"/>
-          <Justify Value="False"/>
-          <Cursor Value="0"/>
-        </Object25>
-        <ObjectCount Value="25"/>
+        <ObjectCount Value="24"/>
       </Page1>
       <FVal>
         <Count Value="7"/>
@@ -1321,7 +1295,7 @@
           <Item Value="Level"/>
         </Objects7>
       </FVal>
-      <ParentVars Value="ReportBalance&#xA; Name&#xA; Credits&#xA; Debits&#xA; Pluses&#xA; Minuses&#xA; Balance&#xA; Level&#xA;"/>
+      <ParentVars Value="ReportBalance&#xD;&#xA; Name&#xD;&#xA; Credits&#xD;&#xA; Debits&#xD;&#xA; Pluses&#xD;&#xA; Minuses&#xD;&#xA; Balance&#xD;&#xA; Level&#xD;&#xA;"/>
     </Pages>
     <DetailReports>
       <Count Value="0"/>

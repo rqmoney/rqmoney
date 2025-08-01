@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  BCPanel, DateUtils, Buttons, ComCtrls, ActnList, CheckLst, Spin,
+  BCPanel, DateUtils, Buttons, ComCtrls, ActnList, CheckLst, Spin, Math,
   LazUtf8, BCMDButtonFocus, StrUtils, laz.VirtualTrees, DateTimePicker;
 
 type
@@ -452,15 +452,17 @@ procedure TfrmEdits.chkTypeEnter(Sender: TObject);
 begin
   (Sender as TCheckBox).Font.Bold := True;
   if (Sender as TCheckBox) = chkTag then
-    pnlTag.Color := Color_panel_focus
+    pnlTag.Color := IfThen(Dark = False,
+      Color_panel_focus, clDkGray)
   else
-    (Sender as TCheckBox).Parent.Color := Color_panel_focus;
+    (Sender as TCheckBox).Parent.Color := IfThen(Dark = False,
+      Color_panel_focus, clDkGray);
 end;
 
 procedure TfrmEdits.chkTypeExit(Sender: TObject);
 begin
   (Sender as TCheckBox).Font.Bold := False;
-  (Sender as TCheckBox).Parent.Color := frmEdits.Color;
+  (Sender as TCheckBox).Parent.Color := clDefault;
 end;
 
 procedure TfrmEdits.datDateChange(Sender: TObject);
@@ -1062,9 +1064,10 @@ end;
 
 procedure TfrmEdits.cbxCommentEnter(Sender: TObject);
 begin
-  cbxComment.Color := Color_focus;
+  cbxComment.Color := IfThen(Dark = False,
+      Color_focus, clDkGray);
   cbxComment.Font.Style := [fsBold];
-  pnlComment.Color := Color_panel_focus;
+  pnlComment.Color := IfThen(Dark = False, Color_panel_focus, clDkGray);
 end;
 
 procedure TfrmEdits.cbxCommentExit(Sender: TObject);
@@ -1073,7 +1076,7 @@ var
 begin
   cbxComment.Color := clDefault;
   cbxComment.Font.Style := [];
-  pnlComment.Color := frmEdits.Color;
+  pnlComment.Color := clDefault;
 
   if ((Sender as TComboBox).Items.Count > 0) and ((Sender as TComboBox).Text <> '') then
     for W := 0 to (Sender as TComboBox).Items.Count - 1 do
@@ -1098,15 +1101,15 @@ end;
 procedure TfrmEdits.cbxTypeEnter(Sender: TObject);
 begin
   (Sender as TComboBox).Font.Style := [fsBold];
-  (Sender as TComboBox).Color := Color_focus;
-  (Sender as TComboBox).Parent.Color := Color_panel_focus;
+  (Sender as TComboBox).Color := IfThen(Dark = False, Color_focus, clDkGray);
+  (Sender as TComboBox).Parent.Color := IfThen(Dark = False, Color_panel_focus, clDkGray);
 end;
 
 procedure TfrmEdits.cbxTypeExit(Sender: TObject);
 begin
   (Sender as TComboBox).Font.Style := [];
   (Sender as TComboBox).Color := clDefault;
-  (Sender as TComboBox).Parent.Color := frmEdits.Color;
+  (Sender as TComboBox).Parent.Color := clDefault;
 
   if ((Sender as TComboBox).Name = 'cbxCategory') then
     if (cbxSubcategory.ItemIndex < 1) then

@@ -7,7 +7,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  ActnList, StrUtils, LCLType, LCLProc, laz.VirtualTrees, Buttons;
+  ActnList, StrUtils, LCLType, LCLProc, laz.VirtualTrees, Buttons, Math;
 
 type
 
@@ -135,6 +135,11 @@ begin
 
   // get form icon
   frmMain.img16.GetIcon(32, (Sender as TForm).Icon);
+
+  // colors
+  lblAction.Font.Color := IfThen(Dark = False, clGreen, $0062FF52);
+  lblShortCutOld.Font.Color := IfThen(Dark = False, clBlue, $00FFB852);
+  lblShortcut.Font.Color := IfThen(Dark = False, clRed, $006A64FF);
 end;
 
 procedure TfrmShortCut.FormResize(Sender: TObject);

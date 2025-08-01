@@ -15,7 +15,7 @@ object frmCategories: TfrmCategories
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlBottom: TPanel
     Left = 0
@@ -767,7 +767,6 @@ object frmCategories: TfrmCategories
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnSaveClick
         ParentFont = False
@@ -796,7 +795,6 @@ object frmCategories: TfrmCategories
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnCancelClick
         ParentFont = False
@@ -892,7 +890,6 @@ object frmCategories: TfrmCategories
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnAddClick
       ParentFont = False
@@ -921,7 +918,6 @@ object frmCategories: TfrmCategories
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnEditClick
       ParentFont = False
@@ -929,6 +925,7 @@ object frmCategories: TfrmCategories
       ShowHint = True
     end
     object btnDelete: TBCMDButtonFocus
+      Tag = 12345
       Cursor = crHandPoint
       Left = 233
       Height = 25
@@ -950,7 +947,6 @@ object frmCategories: TfrmCategories
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnDeleteClick
       ParentFont = False
@@ -979,7 +975,6 @@ object frmCategories: TfrmCategories
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnCopyClick
       ParentFont = False
@@ -1008,7 +1003,6 @@ object frmCategories: TfrmCategories
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnSelectClick
       ParentFont = False
@@ -1037,7 +1031,6 @@ object frmCategories: TfrmCategories
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnPrintClick
       OnMouseDown = btnPrintMouseDown
@@ -1067,7 +1060,6 @@ object frmCategories: TfrmCategories
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnExitClick
       ParentFont = False

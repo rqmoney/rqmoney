@@ -353,8 +353,10 @@ procedure TfrmDelete.VST1BeforeCellPaint(Sender: TBaseVirtualTree;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
   if Column = 0 then Exit;
-  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clRed,
-    RGBToColor(255, 120, 120)); //frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0,
+    IfThen(Dark = False, clRed, $000B0777),
+    IfThen(Dark = False, $007878FF, $00100066));
+
   TargetCanvas.FillRect(CellRect);
 end;
 

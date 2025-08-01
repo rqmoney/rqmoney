@@ -247,7 +247,8 @@ begin
   try
     // panel Detail
     pnlDetail.Enabled := True;
-    pnlDetail.Color := BrightenColor;
+    pnlDetail.Color := IfThen(Dark = False,
+      frmSettings.btnCaptionColorFont.Tag, rgbToColor(44, 44, 44));
     pnlDetailCaption.Caption := AnsiUpperCase(Caption_45);
 
     // disabled ListView
@@ -295,7 +296,9 @@ begin
   try
     // panel Detail
     pnlDetail.Enabled := True;
-    pnlDetail.Color := BrightenColor;
+    pnlDetail.Color := IfThen(Dark = False,
+      frmSettings.btnCaptionColorFont.Tag, rgbToColor(44, 44, 44));
+
     pnlDetailCaption.Caption := AnsiUpperCase(Caption_46);
 
     // disabled ListView
@@ -330,8 +333,7 @@ var
   N: PVirtualNode;
 begin
   try
-    if (frmMain.Conn.Connected = False) or (VST.SelectedCount = 0) or
-      (frmMain.Conn.Connected = False) then
+    if (frmMain.Conn.Connected = False) or (VST.SelectedCount = 0) then
       exit;
 
     // get IDs of all selected nodes
@@ -588,8 +590,11 @@ procedure TfrmAccounts.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clWhite,
-    frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -741,9 +746,12 @@ begin
 
   Account := Sender.GetNodeData(Node);
   case Account.Status of
-    0: TargetCanvas.Font.Color := clDefault;
-    1: TargetCanvas.Font.Color := clBlue;
-    2: TargetCanvas.Font.Color := clRed;
+    0: TargetCanvas.Font.Color :=
+        IfThen(Dark = False, clDefault, clSilver);
+    1: TargetCanvas.Font.Color :=
+        IfThen(Dark = False, clDefault, clSkyBlue);
+    2: TargetCanvas.Font.Color :=
+        IfThen(Dark = False, clDefault, $007873F4);
   end;
 end;
 

@@ -502,7 +502,8 @@ end;
 procedure TfrmTemplates.spiAmountChange(Sender: TObject);
 begin
   (Sender as TSpinEdit).Color :=
-    IfThen((Sender as TSpinEdit).Value = 0, clWhite, rgbToColor(255, 200, 255));
+    IfThen((Sender as TSpinEdit).Value = 0, clDefault,
+      IfThen(Dark = False, rgbToColor(255, 200, 255), $000B0777));
   if frmTemplates.Tag = 0 then
     FileToGrid;
 end;
@@ -510,7 +511,8 @@ end;
 procedure TfrmTemplates.spiCommentChange(Sender: TObject);
 begin
   (Sender as TSpinEdit).Color :=
-    IfThen((Sender as TSpinEdit).Value = 0, clWhite, rgbToColor(200, 255, 255));
+    IfThen((Sender as TSpinEdit).Value = 0, clDefault,
+      IfThen(Dark = False, $00ADE098, $00205808));
   if frmTemplates.Tag = 0 then
     FileToGrid;
 end;
@@ -519,7 +521,8 @@ procedure TfrmTemplates.spiDateChange(Sender: TObject);
 begin
   try
     (Sender as TSpinEdit).Color :=
-      IfThen((Sender as TSpinEdit).Value = 0, clWhite, rgbToColor(255, 255, 200));
+      IfThen((Sender as TSpinEdit).Value = 0, clDefault,
+      IfThen(Dark = False, rgbToColor(255, 255, 200), $00007980));
     if frmTemplates.Tag = 0 then
       FileToGrid;
   finally
@@ -535,7 +538,8 @@ end;
 procedure TfrmTemplates.spiFirstEnter(Sender: TObject);
 begin
   (Sender as TSpinEdit).Font.Style := [fsBold];
-  (Sender as TSpinEdit).Parent.Color := Color_panel_focus;
+  (Sender as TSpinEdit).Parent.Color := IfThen(Dark = False,
+    Color_panel_focus, $000A0044);
 end;
 
 procedure TfrmTemplates.spiFirstExit(Sender: TObject);
@@ -547,7 +551,8 @@ end;
 procedure TfrmTemplates.spiTypeChange(Sender: TObject);
 begin
   (Sender as TSpinEdit).Color :=
-    IfThen((Sender as TSpinEdit).Value = 0, clWhite, rgbToColor(222, 222, 222));
+    IfThen((Sender as TSpinEdit).Value = 0, clDefault,
+    IfThen(Dark = False, rgbToColor(222, 222, 222), $00745100));
   if frmTemplates.Tag = 0 then
     FileToGrid;
 end;
@@ -566,30 +571,37 @@ procedure TfrmTemplates.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clWhite,
-    frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
 
   // date color
   if (spiDate.Value > 0) and (Column = spiDate.Value) then
     TargetCanvas.Brush.Color :=
-      IfThen(Node.Index mod 2 = 0, spiDate.Color, frmSettings.pnlOddRowColor.Color);
+      IfThen(Node.Index mod 2 = 0, spiDate.Color, Brighten(spiDate.Color,
+      IfThen(Dark = False, 200, 44)));
 
   // amount color
   if (spiAmount.Value > 0) and (Column = spiAmount.Value) then
     TargetCanvas.Brush.Color :=
-      IfThen(Node.Index mod 2 = 0, spiAmount.Color, frmSettings.pnlOddRowColor.Color);
+      IfThen(Node.Index mod 2 = 0, spiAmount.Color, Brighten(spiAmount.Color,
+        IfThen(Dark = False, 200, 44)));
 
   // type color
   if (rbtTypeColumn.Checked = True) and (spiType.Value > 0) and
     (Column = spiType.Value) then
     TargetCanvas.Brush.Color :=
-      IfThen(Node.Index mod 2 = 0, spiType.Color, frmSettings.pnlOddRowColor.Color);
+      IfThen(Node.Index mod 2 = 0, spiType.Color, Brighten(spiType.Color,
+         IfThen(Dark = False, 200, 44)));
 
   // comment color
   if (rbtCommentColumn.Checked = True) and (spiComment.Value > 0) and
     (Column = spiComment.Value) then
     TargetCanvas.Brush.Color :=
-      IfThen(Node.Index mod 2 = 0, spiComment.Color, frmSettings.pnlOddRowColor.Color);
+      IfThen(Node.Index mod 2 = 0, spiComment.Color, Brighten(spiComment.Color,
+        IfThen(Dark = False, 200, 44)));
 
   TargetCanvas.FillRect(CellRect);
 end;
@@ -643,7 +655,8 @@ procedure TfrmTemplates.ediNameEnter(Sender: TObject);
 begin
   (Sender as TEdit).Color := Color_focus;
   (Sender as TEdit).Font.Style := [fsBold];
-  (Sender as TEdit).Parent.Color := Color_panel_focus;
+  (Sender as TEdit).Parent.Color := IfThen(Dark = False,
+    Color_panel_focus, $000A0044);
   (Sender as TEdit).SelStart := 0;
   (Sender as TEdit).SelLength := UTF8Length((Sender as TEdit).Text);
 end;
@@ -1383,6 +1396,10 @@ begin
   VST.Header.Height := PanelHeight;
   if VST.Header.Height < 20 then
     VST.Header.Height := 20;
+
+  memTop.Color := IfThen(Dark = False, clwhite, rgbToColor(44, 44, 44));
+  memTop.Font.Color := IfThen(Dark = False, clBlack, clSilver);
+
 end;
 
 procedure TfrmTemplates.FormResize(Sender: TObject);

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: uniresources.caption_00
 msgid "Add"
@@ -334,6 +334,7 @@ msgstr ""
 "transação\" para adicionar outra transação"
 
 #: uniresources.caption_16
+msgctxt "uniresources.caption_16"
 msgid "Total"
 msgstr "Total"
 
@@ -1111,16 +1112,16 @@ msgid "Meter reading"
 msgstr "Leitura do medidor"
 
 #: uniresources.caption_337
-msgid "at the beginning"
-msgstr "no começo"
+msgid "At the beginning"
+msgstr "No começo"
 
 #: uniresources.caption_338
-msgid "at the end"
-msgstr "no final"
+msgid "At the end"
+msgstr "No final"
 
 #: uniresources.caption_339
-msgid "consumption"
-msgstr "consumo"
+msgid "Consumption"
+msgstr "Consumo"
 
 #: uniresources.caption_34
 msgid "Account book"
@@ -1134,9 +1135,55 @@ msgstr "Metro"
 msgid "Allow writing to the list of items"
 msgstr "Permitir escrita na lista de itens"
 
+#: uniresources.caption_342
+msgid "TimeStamp"
+msgstr "Carimbo de hora"
+
+#: uniresources.caption_343
+msgid "Form name"
+msgstr "Nome do formulário"
+
+#: uniresources.caption_344
+msgid "Creation time (ms)"
+msgstr "Tempo de criação (ms)"
+
+#: uniresources.caption_345
+msgid "Duration (ms)"
+msgstr "Duração (ms)"
+
+#: uniresources.caption_346
+msgid "Dark mode"
+msgstr "Modo escuro"
+
+#: uniresources.caption_347
+msgid "Always use items from filter in new transaction"
+msgstr "Sempre use itens do filtro em uma nova transação"
+
+#: uniresources.caption_348
+msgid "New transaction"
+msgstr "Nova transação"
+
+#: uniresources.caption_349
+msgctxt "uniresources.caption_349"
+msgid "Price"
+msgstr "Preço"
+
 #: uniresources.caption_35
 msgid "Current balance"
 msgstr "Saldo atual"
+
+#: uniresources.caption_350
+msgctxt "uniresources.caption_350"
+msgid "Per unit"
+msgstr "Por unidade"
+
+#: uniresources.caption_351
+msgid "OS Windows only"
+msgstr "SO Windows somente"
+
+#: uniresources.caption_352
+msgid "OS Linux only"
+msgstr "SO Linux somente"
 
 #: uniresources.caption_36
 msgid "Final balance"
@@ -1639,6 +1686,12 @@ msgstr ""
 msgid "The program cannot find the selected file to open"
 msgstr "O programa não consegue encontrar o arquivo selecionado para abrir"
 
+#: uniresources.error_34
+msgid "Missing LIBSQLITE3-DEV library.% Database can not be created or opened."
+msgstr ""
+"Biblioteca LIBSQLITE3-DEV ausente.%O banco de dados não pode ser criado ou "
+"aberto."
+
 #: uniresources.guide_01
 msgid "A BEGINNER'S GUIDE"
 msgstr "GUIA PARA INICIANTES"
@@ -1820,6 +1873,10 @@ msgstr "Registre todos os pagamentos programados verificados nas transações"
 #: uniresources.hint_102
 msgid "Save your password to the database"
 msgstr "Salve sua senha no banco de dados"
+
+#: uniresources.hint_12
+msgid "Open the attachment using the default program"
+msgstr "Abra o anexo usando o programa padrão"
 
 #: uniresources.hint_13
 msgid "Print the list"
@@ -2375,6 +2432,13 @@ msgstr ""
 "A imagem selecionada foi copiada para a área de transferência.%0:sTamanho: "
 "%1:s px x %2:s px."
 
+#: uniresources.message_08
+msgid ""
+"Changing from dark to light mode and vice versa requires a program restart."
+msgstr ""
+"Mudar do modo escuro para o modo claro e vice-versa requer a reinicialização "
+"do programa."
+
 #: uniresources.message_09
 msgid "You are using the current version of the program."
 msgstr "Você está usando a versão atual do programa."
@@ -2383,6 +2447,15 @@ msgstr "Você está usando a versão atual do programa."
 msgctxt "uniresources.message_10"
 msgid "This feature is not available in this operating system"
 msgstr "Este recurso não está disponível neste sistema operacional"
+
+#: uniresources.message_11
+#, object-pascal-format
+msgid ""
+"Try installing the LIBSQLITE3-DEV library manually eg.:%sudo apt install -y "
+"libsqlite3-dev"
+msgstr ""
+"Tente instalar a biblioteca LIBSQLITE3-DEV manualmente, por exemplo:%sudo "
+"apt install -y libsqlite3-dev"
 
 #: uniresources.question_00
 msgid "Do you want to close opened database?"

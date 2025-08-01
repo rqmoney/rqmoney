@@ -12,7 +12,7 @@ object frmShortCut: TfrmShortCut
   OnCreate = FormCreate
   OnResize = FormResize
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlAction: TPanel
     Left = 5

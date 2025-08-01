@@ -1,7 +1,7 @@
 object frmGate: TfrmGate
-  Left = 427
+  Left = 532
   Height = 350
-  Top = 292
+  Top = 363
   Width = 500
   BorderIcons = [biSystemMenu]
   ClientHeight = 350
@@ -9,12 +9,13 @@ object frmGate: TfrmGate
   Constraints.MinHeight = 350
   Constraints.MinWidth = 500
   KeyPreview = True
+  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
   OnResize = FormResize
   OnShow = FormShow
-  Position = poDefault
-  LCLVersion = '3.4.0.0'
+  Position = poScreenCenter
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object Panel2: TPanel
     Left = 5
@@ -368,6 +369,7 @@ object frmGate: TfrmGate
           ParentFont = False
         end
         object btnBack: TBCMDButtonFocus
+          Tag = 12345
           Cursor = crHandPoint
           Left = 43
           Height = 100
@@ -466,7 +468,6 @@ object frmGate: TfrmGate
         BorderSpacing.Top = 10
         BorderSpacing.Right = 30
         BorderSpacing.Around = 5
-        Color = clNone
         Constraints.MinHeight = 25
         Enabled = False
         Font.Style = [fsBold]

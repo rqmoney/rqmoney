@@ -14,7 +14,7 @@ type
 
   TfrmFilter = class(TForm)
     btnApplyFilter: TBCMDButtonFocus;
-    chkFilter:TCheckListBox;
+    chkFilter: TCheckListBox;
     chkSelectAll: TCheckBox;
     imgHeight: TImage;
     imgChecked: TImage;
@@ -22,18 +22,18 @@ type
     lblHeight: TLabel;
     lblChecked: TLabel;
     lblWidth: TLabel;
-    pnlButtons:TPanel;
+    pnlButtons: TPanel;
     pnlHeight: TPanel;
     pnlFilterCaption: TBCPanel;
     pnlBottom: TPanel;
     pnlChecked: TPanel;
     pnlWidth: TPanel;
-    procedure btnAllClick(Sender:TObject);
+    procedure btnAllClick(Sender: TObject);
     procedure btnApplyFilterClick(Sender: TObject);
-    procedure chkFilterClickCheck(Sender:TObject);
+    procedure chkFilterClickCheck(Sender: TObject);
     procedure chkSelectAllChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormKeyPress(Sender:TObject; var Key:char);
+    procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure pnlBottomResize(Sender: TObject);
@@ -51,13 +51,13 @@ implementation
 {$R *.lfm}
 
 uses
-  uniMain;
+  uniMain, uniSettings;
 
-{ TfrmFilter }
+  { TfrmFilter }
 
-procedure TfrmFilter.FormKeyPress(Sender:TObject; var Key:char);
+procedure TfrmFilter.FormKeyPress(Sender: TObject; var Key: char);
 begin
-  If Ord(Key) = 27 Then frmFilter.ModalResult := mrClose;
+  if Ord(Key) = 27 then frmFilter.ModalResult := mrClose;
 end;
 
 procedure TfrmFilter.FormResize(Sender: TObject);
@@ -83,15 +83,14 @@ begin
   pnlHeight.Width := pnlBottom.Width div 3;
 end;
 
-procedure TfrmFilter.chkFilterClickCheck(Sender:TObject);
+procedure TfrmFilter.chkFilterClickCheck(Sender: TObject);
 var
-  X, Z: Word;
-
+  X, Z: word;
 begin
   // check if minimum one item is checked
   Z := 0;
-  For X := 0 to chkFilter.Items.Count - 1 do
-    If chkFilter.Checked[X] = True then Inc(Z);
+  for X := 0 to chkFilter.Items.Count - 1 do
+    if chkFilter.Checked[X] = True then Inc(Z);
   chkFilter.Tag := Z;
   lblChecked.Caption := IntToStr(Z);
   btnApplyFilter.Enabled := Z > 0;
@@ -100,9 +99,9 @@ end;
 
 procedure TfrmFilter.chkSelectAllChange(Sender: TObject);
 begin
-  If chkSelectAll.Checked = True then
+  if chkSelectAll.Checked = True then
     chkFilter.CheckAll(cbChecked, False, False)
-  Else
+  else
     chkFilter.CheckAll(cbUnchecked, False, False);
   chkFilterClickCheck(chkFilter);
 end;
@@ -115,20 +114,18 @@ begin
   pnlBottom.Height := ButtonHeight;
 end;
 
-procedure TfrmFilter.btnAllClick(Sender:TObject);
+procedure TfrmFilter.btnAllClick(Sender: TObject);
 var
-  W: Word;
-
+  W: word;
 begin
-  For W := 0 to chkFilter.Items.Count - 1 do
+  for W := 0 to chkFilter.Items.Count - 1 do
     chkFilter.Checked[W] := (Sender as TBitBtn).Tag = 1;
   chkFilterClickCheck(chkFilter);
 end;
 
 procedure TfrmFilter.btnApplyFilterClick(Sender: TObject);
 begin
-  frmFilter.ModalResult := mrOK;
+  frmFilter.ModalResult := mrOk;
 end;
 
 end.
-

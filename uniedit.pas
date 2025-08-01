@@ -50,17 +50,22 @@ type
     gbxAmount: TGroupBox;
     gbxCategory: TGroupBox;
     gbxComment: TGroupBox;
+    gbxCommentEnergy: TGroupBox;
     gbxDate: TGroupBox;
     gbxMeter: TGroupBox;
     gbxPayee: TGroupBox;
     gbxPerson: TGroupBox;
+    gbxPrice: TGroupBox;
     gbxType: TGroupBox;
     lblConsumption: TLabel;
     lblDate: TLabel;
     lblMeterEnd: TLabel;
     lblMeterStart: TLabel;
+    lblTotalPrice: TLabel;
+    lblUnitPrice: TLabel;
     lbxTag: TCheckListBox;
     lviAttachments: TListView;
+    memComment: TMemo;
     od: TOpenDialog;
     Panel1: TPanel;
     pnlAttachments: TPanel;
@@ -79,6 +84,8 @@ type
     pnlRight: TPanel;
     pnlTagLabel: TPanel;
     pnlTags: TPanel;
+    pnlTotalPrice: TPanel;
+    pnlUnitPrice: TPanel;
     scrLeft: TScrollBox;
     pnlHeight: TPanel;
     pnlWidth: TPanel;
@@ -86,6 +93,8 @@ type
     spiConsumption: TFloatSpinEdit;
     spiMeterEnd: TFloatSpinEdit;
     spiMeterStart: TFloatSpinEdit;
+    spiTotalPrice: TFloatSpinEdit;
+    spiUnitPrice: TFloatSpinEdit;
     splEdit: TSplitter;
     tabSimple: TECTabCtrl;
     procedure btnAccountClick(Sender: TObject);
@@ -704,7 +713,8 @@ begin
     spiMeterEnd.Value := 0;
 
     frmMain.QRY.SQL.Text :=
-      'SELECT ene_reading1, ene_reading2 FROM energies WHERE ene_d_id = ' +
+      'SELECT ene_reading1, ene_reading2, ene_price, ene_comment ' +
+      'FROM energies WHERE ene_d_id = ' +
       IntToStr(btnSave.Tag);
 
     frmMain.QRY.Open;
@@ -712,6 +722,9 @@ begin
     begin
       spiMeterStart.Value := StrToFLoat(frmMain.QRY.Fields[0].AsString);
       spiMeterEnd.Value := StrToFLoat(frmMain.QRY.Fields[1].AsString);
+      TryStrToFLoat(frmMain.QRY.Fields[2].AsString, D);
+      memComment.Text := frmMain.QRY.Fields[3].AsString;
+      spiUnitPrice.Value := D;
       frmMain.QRY.Next;
     end;
     frmMain.QRY.Close;
@@ -758,6 +771,7 @@ end;
 procedure TfrmEdit.spiMeterStartChange(Sender: TObject);
 begin
   spiConsumption.Value := spiMeterEnd.Value - spiMeterStart.Value;
+  spiTotalPrice.Value := spiConsumption.Value * spiUnitPrice.Value;
 end;
 
 procedure TfrmEdit.splEditCanResize(Sender: TObject; var NewSize: integer;
@@ -777,6 +791,8 @@ begin
   pnlTags.Visible := tabSimple.TabIndex = 0;
   pnlAttachments.Visible := tabSimple.TabIndex = 1;
   pnlEnergies.Visible := tabSimple.TabIndex = 2;
+  If pnlEnergies.Visible = True then
+    spiMeterStart.SetFocus;
 end;
 
 procedure TfrmEdit.btnSaveClick(Sender: TObject);
@@ -1109,12 +1125,16 @@ begin
       if I = 0 then
       begin
         frmMain.QRY.SQL.Text :=
-          'INSERT OR IGNORE INTO energies (ene_reading1, ene_reading2, ene_d_id) VALUES (:R1,:R2,:ID);';
+          'INSERT OR IGNORE INTO energies (ene_reading1, ene_reading2, ' +
+          'ene_price, ene_comment, ene_d_id) VALUES (:R1,:R2,:PRICE,:COMMENT,:ID);';
         frmMain.QRY.Params.ParamByName('R1').AsString :=
           ReplaceStr(FloatToStr(spiMeterStart.Value), FS_own.DecimalSeparator, '.');
         frmMain.QRY.Params.ParamByName('R2').AsString :=
           ReplaceStr(FloatToStr(spiMeterEnd.Value), FS_own.DecimalSeparator, '.');
-        frmMain.QRY.Params.ParamByName('ID').AsInteger := btnSave.Tag;
+        frmMain.QRY.Params.ParamByName('PRICE').AsString :=
+          ReplaceStr(FloatToStr(spiUnitPrice.Value), FS_own.DecimalSeparator, '.');
+        frmMain.QRY.Params.ParamByName('COMMENT').AsString := memComment.Text;
+      frmMain.QRY.Params.ParamByName('ID').AsInteger := btnSave.Tag;
         frmMain.QRY.Prepare;
         frmMain.QRY.ExecSQL;
         frmMain.Tran.Commit;
@@ -1122,11 +1142,17 @@ begin
       else
       begin
         frmMain.QRY.SQL.Text :=
-          'UPDATE OR IGNORE energies SET ene_reading1 = :R1, ene_reading2 = :R2 WHERE ene_d_id = :ID;';
+          'UPDATE OR IGNORE energies SET ' +
+            'ene_reading1 = :R1, ene_reading2 = :R2,' +
+            'ene_price = :PRICE, ene_comment = :COMMENT ' +
+            'WHERE ene_d_id = :ID;';
         frmMain.QRY.Params.ParamByName('R1').AsString :=
           ReplaceStr(FloatToStr(spiMeterStart.Value), FS_own.DecimalSeparator, '.');
         frmMain.QRY.Params.ParamByName('R2').AsString :=
           ReplaceStr(FloatToStr(spiMeterEnd.Value), FS_own.DecimalSeparator, '.');
+        frmMain.QRY.Params.ParamByName('PRICE').AsString :=
+          ReplaceStr(FloatToStr(spiUnitPrice.Value), FS_own.DecimalSeparator, '.');
+        frmMain.QRY.Params.ParamByName('COMMENT').AsString := memComment.Text;
         frmMain.QRY.Params.ParamByName('ID').AsInteger := btnSave.Tag;
         frmMain.QRY.Prepare;
         frmMain.QRY.ExecSQL;

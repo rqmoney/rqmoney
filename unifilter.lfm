@@ -12,7 +12,7 @@ object frmFilter: TfrmFilter
   OnKeyPress = FormKeyPress
   OnResize = FormResize
   OnShow = FormShow
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object chkFilter: TCheckListBox
     Left = 5
@@ -23,7 +23,6 @@ object frmFilter: TfrmFilter
     BorderSpacing.Around = 5
     ItemHeight = 0
     TabOrder = 0
-    TopIndex = -1
     OnClickCheck = chkFilterClickCheck
   end
   object pnlButtons: TPanel
@@ -60,7 +59,6 @@ object frmFilter: TfrmFilter
       Align = alClient
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
-      Color = clNone
       Constraints.MinHeight = 25
       Enabled = False
       Font.Style = [fsBold]
@@ -235,7 +233,7 @@ object frmFilter: TfrmFilter
       Left = 3
       Height = 18
       Top = 1
-      Width = 23
+      Width = 18
       Align = alLeft
       BorderSpacing.Left = 2
       TabOrder = 0

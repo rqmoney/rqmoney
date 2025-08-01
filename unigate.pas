@@ -52,6 +52,7 @@ type
     procedure ediGateExit(Sender: TObject);
     procedure ediGateKeyPress(Sender: TObject; var Key: char);
     procedure ediGateKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
@@ -69,7 +70,7 @@ var
 implementation
 
 uses
-  uniMain;
+  uniMain, uniSplash;
 
   {$R *.lfm}
 
@@ -97,9 +98,23 @@ end;
 
 procedure TfrmGate.FormShow(Sender: TObject);
 begin
+  if frmSplash.Visible = True then
+    begin
+    frmSplash.Hide;
+    frmSplash.Tag := 1;
+    end;
   ediGate.Clear;
   btnOK.Enabled := False;
   ediGate.SetFocus;
+end;
+
+procedure TfrmGate.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  If frmSplash.Tag = 1 then
+  begin
+    frmSplash.Tag := 0;
+    frmSplash.Show;
+  end;
 end;
 
 procedure TfrmGate.pnlNumericResize(Sender: TObject);

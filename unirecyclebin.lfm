@@ -11,17 +11,17 @@ object frmRecycleBin: TfrmRecycleBin
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlList: TPanel
     Left = 3
-    Height = 483
+    Height = 479
     Top = 3
     Width = 1082
     Align = alClient
     BorderSpacing.Around = 3
     BevelOuter = bvLowered
-    ClientHeight = 483
+    ClientHeight = 479
     ClientWidth = 1082
     ParentFont = False
     TabOrder = 0
@@ -68,8 +68,8 @@ object frmRecycleBin: TfrmRecycleBin
     object VST: TLazVirtualStringTree
       Cursor = 63
       Left = 4
-      Height = 416
-      Top = 63
+      Height = 419
+      Top = 56
       Width = 1074
       Align = alClient
       BorderSpacing.Around = 3
@@ -194,19 +194,19 @@ object frmRecycleBin: TfrmRecycleBin
     end
     object pnlView: TPanel
       Left = 4
-      Height = 36
+      Height = 29
       Top = 24
       Width = 1074
       Align = alTop
       AutoSize = True
       BorderSpacing.Around = 3
       BevelOuter = bvLowered
-      ClientHeight = 36
+      ClientHeight = 29
       ClientWidth = 1074
       TabOrder = 2
       object lblView: TLabel
         Left = 8
-        Height = 30
+        Height = 23
         Top = 3
         Width = 1
         Align = alLeft
@@ -217,7 +217,7 @@ object frmRecycleBin: TfrmRecycleBin
       end
       object cbxView: TComboBox
         Left = 19
-        Height = 30
+        Height = 23
         Top = 3
         Width = 1044
         Align = alClient
@@ -225,7 +225,7 @@ object frmRecycleBin: TfrmRecycleBin
         BorderSpacing.Top = 2
         BorderSpacing.Right = 10
         BorderSpacing.Bottom = 2
-        ItemHeight = 0
+        ItemHeight = 15
         Style = csDropDownList
         TabOrder = 0
         OnChange = cbxViewChange
@@ -234,15 +234,15 @@ object frmRecycleBin: TfrmRecycleBin
   end
   object pnlButtons: TPanel
     Left = 1
-    Height = 25
-    Top = 489
+    Height = 29
+    Top = 485
     Width = 1086
     Align = alBottom
     AutoSize = True
     BorderSpacing.Bottom = 3
     BorderSpacing.Around = 1
     BevelOuter = bvNone
-    ClientHeight = 25
+    ClientHeight = 29
     ClientWidth = 1086
     Constraints.MinHeight = 25
     TabOrder = 1
@@ -250,7 +250,7 @@ object frmRecycleBin: TfrmRecycleBin
     object btnExit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 3
-      Height = 21
+      Height = 25
       Top = 2
       Width = 150
       Animation = True
@@ -272,7 +272,6 @@ object frmRecycleBin: TfrmRecycleBin
       BorderSpacing.Right = 2
       BorderSpacing.Bottom = 1
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Font.Style = [fsBold]
       OnClick = btnExitClick
@@ -283,7 +282,7 @@ object frmRecycleBin: TfrmRecycleBin
     object btnSelect: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 627
-      Height = 21
+      Height = 25
       Top = 2
       Width = 150
       Animation = True
@@ -305,7 +304,6 @@ object frmRecycleBin: TfrmRecycleBin
       BorderSpacing.Right = 2
       BorderSpacing.Bottom = 1
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Enabled = False
       Font.Style = [fsBold]
@@ -315,9 +313,10 @@ object frmRecycleBin: TfrmRecycleBin
       ShowHint = True
     end
     object btnDelete: TBCMDButtonFocus
+      Tag = 12345
       Cursor = crHandPoint
       Left = 780
-      Height = 21
+      Height = 25
       Top = 2
       Width = 150
       Animation = True
@@ -339,7 +338,6 @@ object frmRecycleBin: TfrmRecycleBin
       BorderSpacing.Right = 2
       BorderSpacing.Bottom = 1
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Enabled = False
       Font.Style = [fsBold]
@@ -351,7 +349,7 @@ object frmRecycleBin: TfrmRecycleBin
     object btnRestore: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 474
-      Height = 21
+      Height = 25
       Top = 2
       Width = 150
       Animation = True
@@ -373,7 +371,6 @@ object frmRecycleBin: TfrmRecycleBin
       BorderSpacing.Right = 2
       BorderSpacing.Bottom = 1
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Enabled = False
       Font.Style = [fsBold]
@@ -385,7 +382,7 @@ object frmRecycleBin: TfrmRecycleBin
     object btnEdit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 933
-      Height = 21
+      Height = 25
       Top = 2
       Width = 150
       Animation = True
@@ -407,7 +404,6 @@ object frmRecycleBin: TfrmRecycleBin
       BorderSpacing.Right = 2
       BorderSpacing.Bottom = 1
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Enabled = False
       Font.Style = [fsBold]

@@ -154,7 +154,8 @@ begin
     TargetCanvas.Brush.Color := clYellow
   else
     TargetCanvas.Brush.Color :=
-      IfThen(Node.Index mod 2 = 0, RGBToColor(100, 100, 100), clGray);
+      IfThen(Node.Index mod 2 = 0, IfThen(Dark = False, RGBToColor(100, 100, 100), RGBToColor(44, 44, 44)),
+      IfThen(Dark = False, clGray, RGBToColor(22, 22, 22)));
 
   TargetCanvas.FillRect(CellRect);
 end;
@@ -287,19 +288,24 @@ procedure TfrmRecycleBin.VSTPaintText(Sender: TBaseVirtualTree;
   const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   TextType: TVSTTextType);
 var
-  D: double;
+  Trash: PTrash;
 begin
   try
     if (Column > 4) and (VST.Text[Node, Column] = '') then
     begin
-      TargetCanvas.Font.Color := clYellow;
+      TargetCanvas.Font.Color :=
+        IfThen(Dark = False, clYellow, $0000B5BF);
       TargetCanvas.Font.Bold := True;
     end
     else
     begin
-      TryStrToFloat(VST.Text[Node, 3], D);
-      if D >= 0 then
-        TargetCanvas.Font.Color := clWhite;
+      Trash := (Sender as TLazVirtualStringTree).GetNodeData(Node);
+      if (Column = 3) and (Trash.Amount < 0) then
+        TargetCanvas.Font.Color :=
+          IfThen(Dark = False, clRed, $007873F4)
+      else
+        TargetCanvas.Font.Color :=
+          IfThen(Dark = False, clWhite, clSilver);
     end;
   except
   end;

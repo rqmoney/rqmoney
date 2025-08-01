@@ -219,7 +219,8 @@ begin
   try
     // panel Detail
     pnlDetail.Enabled := True;
-    pnlDetail.Color := BrightenColor;
+    pnlDetail.Color := IfThen(Dark = False,
+      frmSettings.btnCaptionColorFont.Tag, rgbToColor(44,44,44));
     pnlDetailCaption.Caption := AnsiUpperCase(Caption_45);
 
     // disabled ListView
@@ -298,7 +299,8 @@ begin
   try
     // panel Detail
     pnlDetail.Enabled := True;
-    pnlDetail.Color := BrightenColor;
+    pnlDetail.Color := IfThen(Dark = False,
+      frmSettings.btnCaptionColorFont.Tag, rgbToColor(44,44,44));
     pnlDetailCaption.Caption := AnsiUpperCase(Caption_46);
 
     // disabled ListView
@@ -435,10 +437,14 @@ procedure TfrmCategories.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
   if Sender.GetNodeLevel(Node) = 0 then
-    TargetCanvas.Brush.Color := clSilver
+    TargetCanvas.Brush.Color := IfThen(Dark = False, clSilver,
+      Brighten(frmSettings.btnCaptionColorBack.Tag, 25))
   else
-    TargetCanvas.Brush.Color :=
-      IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
+    TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -590,9 +596,12 @@ begin
   Category := Sender.GetNodeData(Node);
 
   case Category.Status of
-    0: TargetCanvas.Font.Color := clDefault;
-    1: TargetCanvas.Font.Color := clBlue;
-    2: TargetCanvas.Font.Color := clRed;
+    0: TargetCanvas.Font.Color :=
+        IfThen(Dark = False, clDefault, clSilver);
+    1: TargetCanvas.Font.Color :=
+        IfThen(Dark = False, clDefault, clSkyBlue);
+    2: TargetCanvas.Font.Color :=
+        IfThen(Dark = False, clDefault, $007873F4);
   end;
   TargetCanvas.Font.Bold := Sender.GetNodeLevel(Node) = 0;
 end;
@@ -816,7 +825,7 @@ begin
     if cbxKind.Enabled = True then
       cbxKind.SetFocus
     else
-      if cbxEnergy.Enabled = True then
+    if cbxEnergy.Enabled = True then
       cbxEnergy.SetFocus
     else
       memComment.SetFocus;
@@ -831,8 +840,7 @@ var
   S: string;
 begin
   try
-    if (frmMain.Conn.Connected = False) or (VST.SelectedCount = 0) or
-      (frmMain.Conn.Connected = False) then
+    if (frmMain.Conn.Connected = False) or (VST.SelectedCount = 0) then
       exit;
 
     // get slDel of all selected nodes

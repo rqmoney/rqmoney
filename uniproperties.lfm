@@ -12,28 +12,28 @@ object frmProperties: TfrmProperties
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object tabProperties: TPageControl
     Left = 3
     Height = 508
     Top = 3
     Width = 494
-    ActivePage = tabDatabase
+    ActivePage = tabRecords
     Align = alClient
     AutoSize = True
     BorderSpacing.Around = 3
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
     object tabDatabase: TTabSheet
       AutoSize = True
-      ClientHeight = 478
-      ClientWidth = 484
+      ClientHeight = 480
+      ClientWidth = 486
       object pnlCaption: TBCPanel
         Left = 3
         Height = 20
         Top = 3
-        Width = 478
+        Width = 480
         Align = alTop
         BorderSpacing.Around = 3
         Background.Color = clBtnFace
@@ -74,30 +74,30 @@ object frmProperties: TfrmProperties
         Left = 0
         Height = 252
         Top = 26
-        Width = 484
+        Width = 486
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
         ClientHeight = 252
-        ClientWidth = 484
+        ClientWidth = 486
         TabOrder = 1
         object pnlLocation: TPanel
           Left = 5
           Height = 9
           Top = 167
-          Width = 474
+          Width = 476
           Align = alTop
           AutoSize = True
           BorderSpacing.Bottom = 5
           BorderSpacing.Around = 5
           ClientHeight = 9
-          ClientWidth = 474
+          ClientWidth = 476
           TabOrder = 0
           object lblLocation_: TLabel
             Left = 4
             Height = 1
             Top = 2
-            Width = 466
+            Width = 468
             Align = alTop
             BorderSpacing.Left = 3
             BorderSpacing.Top = 1
@@ -111,7 +111,7 @@ object frmProperties: TfrmProperties
             Left = 4
             Height = 1
             Top = 4
-            Width = 466
+            Width = 468
             Align = alTop
             BorderSpacing.Left = 3
             BorderSpacing.Right = 3
@@ -124,19 +124,19 @@ object frmProperties: TfrmProperties
           Left = 5
           Height = 9
           Top = 24
-          Width = 474
+          Width = 476
           Align = alTop
           AutoSize = True
           BorderSpacing.Bottom = 5
           BorderSpacing.Around = 5
           ClientHeight = 9
-          ClientWidth = 474
+          ClientWidth = 476
           TabOrder = 1
           object lblSize_: TLabel
             Left = 4
             Height = 1
             Top = 2
-            Width = 466
+            Width = 468
             Align = alTop
             BorderSpacing.Left = 3
             BorderSpacing.Top = 1
@@ -150,7 +150,7 @@ object frmProperties: TfrmProperties
             Left = 4
             Height = 1
             Top = 4
-            Width = 466
+            Width = 468
             Align = alTop
             BorderSpacing.Left = 3
             BorderSpacing.Right = 3
@@ -163,19 +163,19 @@ object frmProperties: TfrmProperties
           Left = 5
           Height = 9
           Top = 5
-          Width = 474
+          Width = 476
           Align = alTop
           AutoSize = True
           BorderSpacing.Bottom = 5
           BorderSpacing.Around = 5
           ClientHeight = 9
-          ClientWidth = 474
+          ClientWidth = 476
           TabOrder = 2
           object lblFileName_: TLabel
             Left = 4
             Height = 1
             Top = 2
-            Width = 466
+            Width = 468
             Align = alTop
             BorderSpacing.Left = 3
             BorderSpacing.Top = 1
@@ -189,7 +189,7 @@ object frmProperties: TfrmProperties
             Left = 4
             Height = 1
             Top = 4
-            Width = 466
+            Width = 468
             Align = alTop
             BorderSpacing.Left = 3
             BorderSpacing.Right = 3
@@ -202,16 +202,16 @@ object frmProperties: TfrmProperties
           Left = 5
           Height = 52
           Top = 43
-          Width = 474
+          Width = 476
           Align = alTop
           AutoSize = True
           BorderSpacing.Bottom = 5
           BorderSpacing.Around = 5
           ClientHeight = 52
-          ClientWidth = 474
+          ClientWidth = 476
           TabOrder = 3
           object imgPassword: TImage
-            Left = 419
+            Left = 421
             Height = 48
             Top = 2
             Width = 48
@@ -227,17 +227,17 @@ object frmProperties: TfrmProperties
             Left = 1
             Height = 50
             Top = 1
-            Width = 417
+            Width = 419
             Align = alClient
             BevelOuter = bvNone
             ClientHeight = 50
-            ClientWidth = 417
+            ClientWidth = 419
             TabOrder = 0
             object lblPasswordProtection: TLabel
               Left = 3
               Height = 1
               Top = 3
-              Width = 411
+              Width = 413
               Align = alTop
               BorderSpacing.Left = 3
               BorderSpacing.Right = 3
@@ -249,7 +249,7 @@ object frmProperties: TfrmProperties
               Left = 3
               Height = 1
               Top = 1
-              Width = 411
+              Width = 413
               Align = alTop
               BorderSpacing.Left = 3
               BorderSpacing.Top = 1
@@ -265,18 +265,18 @@ object frmProperties: TfrmProperties
           Left = 5
           Height = 17
           Top = 186
-          Width = 474
+          Width = 476
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 5
           ClientHeight = 17
-          ClientWidth = 474
+          ClientWidth = 476
           TabOrder = 4
           object lblOS1: TLabel
             Left = 7
             Height = 1
             Top = 7
-            Width = 460
+            Width = 462
             Align = alTop
             BorderSpacing.Left = 5
             BorderSpacing.Top = 5
@@ -290,7 +290,7 @@ object frmProperties: TfrmProperties
             Left = 7
             Height = 1
             Top = 9
-            Width = 460
+            Width = 462
             Align = alTop
             BorderSpacing.Left = 5
             BorderSpacing.Right = 5
@@ -304,18 +304,18 @@ object frmProperties: TfrmProperties
           Left = 5
           Height = 17
           Top = 230
-          Width = 474
+          Width = 476
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 5
           ClientHeight = 17
-          ClientWidth = 474
+          ClientWidth = 476
           TabOrder = 5
           object lblSQLiteVersion1: TLabel
             Left = 7
             Height = 1
             Top = 7
-            Width = 460
+            Width = 462
             Align = alTop
             BorderSpacing.Left = 5
             BorderSpacing.Top = 5
@@ -329,7 +329,7 @@ object frmProperties: TfrmProperties
             Left = 7
             Height = 1
             Top = 9
-            Width = 460
+            Width = 462
             Align = alTop
             BorderSpacing.Left = 5
             BorderSpacing.Right = 5
@@ -343,18 +343,18 @@ object frmProperties: TfrmProperties
           Left = 5
           Height = 17
           Top = 208
-          Width = 474
+          Width = 476
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 5
           ClientHeight = 17
-          ClientWidth = 474
+          ClientWidth = 476
           TabOrder = 6
           object lblSQLiteName1: TLabel
             Left = 7
             Height = 1
             Top = 7
-            Width = 460
+            Width = 462
             Align = alTop
             BorderSpacing.Left = 5
             BorderSpacing.Top = 5
@@ -368,7 +368,7 @@ object frmProperties: TfrmProperties
             Left = 7
             Height = 1
             Top = 9
-            Width = 460
+            Width = 462
             Align = alTop
             BorderSpacing.Left = 5
             BorderSpacing.Right = 5
@@ -382,16 +382,16 @@ object frmProperties: TfrmProperties
           Left = 5
           Height = 52
           Top = 105
-          Width = 474
+          Width = 476
           Align = alTop
           AutoSize = True
           BorderSpacing.Bottom = 5
           BorderSpacing.Around = 5
           ClientHeight = 52
-          ClientWidth = 474
+          ClientWidth = 476
           TabOrder = 7
           object imgEncryption: TImage
-            Left = 419
+            Left = 421
             Height = 48
             Top = 2
             Width = 48
@@ -407,17 +407,17 @@ object frmProperties: TfrmProperties
             Left = 1
             Height = 50
             Top = 1
-            Width = 417
+            Width = 419
             Align = alClient
             BevelOuter = bvNone
             ClientHeight = 50
-            ClientWidth = 417
+            ClientWidth = 419
             TabOrder = 0
             object lblEncryptionProtection: TLabel
               Left = 3
               Height = 1
               Top = 3
-              Width = 411
+              Width = 413
               Align = alTop
               BorderSpacing.Left = 3
               BorderSpacing.Right = 3
@@ -429,7 +429,7 @@ object frmProperties: TfrmProperties
               Left = 3
               Height = 1
               Top = 1
-              Width = 411
+              Width = 413
               Align = alTop
               BorderSpacing.Left = 3
               BorderSpacing.Top = 1
@@ -444,13 +444,13 @@ object frmProperties: TfrmProperties
       end
     end
     object tabRecords: TTabSheet
-      ClientHeight = 478
-      ClientWidth = 484
+      ClientHeight = 480
+      ClientWidth = 486
       object pnlCaption1: TBCPanel
         Left = 3
         Height = 20
         Top = 3
-        Width = 478
+        Width = 480
         Align = alTop
         BorderSpacing.Around = 3
         Background.Color = clBtnFace
@@ -489,34 +489,34 @@ object frmProperties: TfrmProperties
       end
       object pnlRecords: TScrollBox
         Left = 0
-        Height = 452
+        Height = 454
         Top = 26
-        Width = 484
-        HorzScrollBar.Page = 165
-        VertScrollBar.Page = 448
+        Width = 486
+        HorzScrollBar.Page = 161
+        VertScrollBar.Page = 450
         Align = alClient
-        ClientHeight = 448
-        ClientWidth = 477
+        ClientHeight = 450
+        ClientWidth = 465
         TabOrder = 1
         object pnlData: TPanel
           Left = 3
-          Height = 34
+          Height = 31
           Top = 2
-          Width = 471
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 0
           object lblData: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -525,7 +525,7 @@ object frmProperties: TfrmProperties
           end
           object imgData: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -537,8 +537,8 @@ object frmProperties: TfrmProperties
             Images = frmMain.img24
           end
           object btnData: TBCMDButtonFocus
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -557,7 +557,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Enabled = False
             Font.Style = [fsBold]
@@ -566,23 +565,23 @@ object frmProperties: TfrmProperties
         end
         object pnlRecycle: TPanel
           Left = 3
-          Height = 34
-          Top = 38
-          Width = 471
+          Height = 31
+          Top = 35
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 1
           object lblRecycle: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             BorderSpacing.Left = 10
             Layout = tlCenter
@@ -590,7 +589,7 @@ object frmProperties: TfrmProperties
           end
           object imgRecycle: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -603,8 +602,8 @@ object frmProperties: TfrmProperties
           end
           object btnRecycle: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -623,7 +622,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnRecycleClick
@@ -632,23 +630,23 @@ object frmProperties: TfrmProperties
         end
         object pnlAccounts: TPanel
           Left = 3
-          Height = 34
-          Top = 110
-          Width = 471
+          Height = 31
+          Top = 101
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 2
           object lblAccounts: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -657,7 +655,7 @@ object frmProperties: TfrmProperties
           end
           object imgAccounts: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -670,8 +668,8 @@ object frmProperties: TfrmProperties
           end
           object btnAccounts: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -690,7 +688,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnAccountsClick
@@ -699,23 +696,23 @@ object frmProperties: TfrmProperties
         end
         object pnlCurrencies: TPanel
           Left = 3
-          Height = 34
-          Top = 146
-          Width = 471
+          Height = 31
+          Top = 134
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 3
           object lblCurrencies: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -724,7 +721,7 @@ object frmProperties: TfrmProperties
           end
           object imgCurrencies: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -737,8 +734,8 @@ object frmProperties: TfrmProperties
           end
           object btnCurrencies: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -757,7 +754,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnCurrenciesClick
@@ -766,23 +762,23 @@ object frmProperties: TfrmProperties
         end
         object pnlCategories: TPanel
           Left = 3
-          Height = 34
-          Top = 182
-          Width = 471
+          Height = 31
+          Top = 167
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 4
           object lblCategories: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -791,7 +787,7 @@ object frmProperties: TfrmProperties
           end
           object imgCategories: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -804,8 +800,8 @@ object frmProperties: TfrmProperties
           end
           object btnCategories: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -824,7 +820,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnCategoriesClick
@@ -833,23 +828,23 @@ object frmProperties: TfrmProperties
         end
         object pnlComments: TPanel
           Left = 3
-          Height = 34
-          Top = 218
-          Width = 471
+          Height = 31
+          Top = 200
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 5
           object lblComments: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -858,7 +853,7 @@ object frmProperties: TfrmProperties
           end
           object imgComments: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -871,8 +866,8 @@ object frmProperties: TfrmProperties
           end
           object btnComments: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -891,7 +886,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnCommentsClick
@@ -900,23 +894,23 @@ object frmProperties: TfrmProperties
         end
         object pnlPersons: TPanel
           Left = 3
-          Height = 34
-          Top = 254
-          Width = 471
+          Height = 31
+          Top = 233
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 6
           object lblPersons: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -925,7 +919,7 @@ object frmProperties: TfrmProperties
           end
           object imgPersons: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -938,8 +932,8 @@ object frmProperties: TfrmProperties
           end
           object btnPersons: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -958,7 +952,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnPersonsClick
@@ -967,23 +960,23 @@ object frmProperties: TfrmProperties
         end
         object pnlHolidays: TPanel
           Left = 3
-          Height = 34
-          Top = 326
-          Width = 471
+          Height = 31
+          Top = 299
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 7
           object lblHolidays: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -992,7 +985,7 @@ object frmProperties: TfrmProperties
           end
           object imgHolidays: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -1005,8 +998,8 @@ object frmProperties: TfrmProperties
           end
           object btnHolidays: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -1025,7 +1018,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnHolidaysClick
@@ -1034,23 +1026,23 @@ object frmProperties: TfrmProperties
         end
         object pnlPayees: TPanel
           Left = 3
-          Height = 34
-          Top = 290
-          Width = 471
+          Height = 31
+          Top = 266
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 8
           object lblPayees: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -1059,7 +1051,7 @@ object frmProperties: TfrmProperties
           end
           object imgPayees: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -1072,8 +1064,8 @@ object frmProperties: TfrmProperties
           end
           object btnPayees: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -1092,7 +1084,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnPayeesClick
@@ -1101,23 +1092,23 @@ object frmProperties: TfrmProperties
         end
         object pnlTags: TPanel
           Left = 3
-          Height = 34
-          Top = 362
-          Width = 471
+          Height = 31
+          Top = 332
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 9
           object lblTags: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -1126,7 +1117,7 @@ object frmProperties: TfrmProperties
           end
           object imgTags: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -1139,8 +1130,8 @@ object frmProperties: TfrmProperties
           end
           object btnTags: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -1159,7 +1150,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnTagsClick
@@ -1168,23 +1158,23 @@ object frmProperties: TfrmProperties
         end
         object pnlScheduler: TPanel
           Left = 3
-          Height = 34
-          Top = 398
-          Width = 471
+          Height = 31
+          Top = 365
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 10
           object lblSchedulers: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -1193,7 +1183,7 @@ object frmProperties: TfrmProperties
           end
           object imgScheduler: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -1206,8 +1196,8 @@ object frmProperties: TfrmProperties
           end
           object btnScheduler: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -1226,7 +1216,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnSchedulerClick
@@ -1235,23 +1224,23 @@ object frmProperties: TfrmProperties
         end
         object pnlPayments: TPanel
           Left = 3
-          Height = 34
-          Top = 434
-          Width = 471
+          Height = 31
+          Top = 398
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 11
           object lblPayments: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -1260,7 +1249,7 @@ object frmProperties: TfrmProperties
           end
           object imgPayments: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -1273,8 +1262,8 @@ object frmProperties: TfrmProperties
           end
           object btnPayments: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -1293,7 +1282,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnPaymentsClick
@@ -1302,23 +1290,23 @@ object frmProperties: TfrmProperties
         end
         object pnlBudget: TPanel
           Left = 3
-          Height = 34
-          Top = 470
-          Width = 471
+          Height = 31
+          Top = 431
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 12
           object lblBudget: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -1327,7 +1315,7 @@ object frmProperties: TfrmProperties
           end
           object imgBudget: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -1340,8 +1328,8 @@ object frmProperties: TfrmProperties
           end
           object btnBudget: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -1360,7 +1348,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnBudgetClick
@@ -1369,23 +1356,23 @@ object frmProperties: TfrmProperties
         end
         object pnlLinks: TPanel
           Left = 3
-          Height = 34
-          Top = 74
-          Width = 471
+          Height = 31
+          Top = 68
+          Width = 459
           Align = alTop
           AutoSize = True
           BorderSpacing.Left = 3
           BorderSpacing.Top = 2
           BorderSpacing.Right = 3
           BorderSpacing.Bottom = 1
-          ClientHeight = 30
-          ClientWidth = 467
+          ClientHeight = 31
+          ClientWidth = 459
           TabOrder = 13
           object lblLinks: TLabel
             Left = 37
-            Height = 28
+            Height = 29
             Top = 1
-            Width = 313
+            Width = 305
             Align = alClient
             AutoSize = False
             BorderSpacing.Left = 10
@@ -1394,7 +1381,7 @@ object frmProperties: TfrmProperties
           end
           object imgLinks: TImage
             Left = 3
-            Height = 24
+            Height = 25
             Top = 3
             Width = 24
             Align = alLeft
@@ -1407,8 +1394,8 @@ object frmProperties: TfrmProperties
           end
           object btnLinks: TBCMDButtonFocus
             Cursor = crHandPoint
-            Left = 362
-            Height = 24
+            Left = 354
+            Height = 25
             Top = 3
             Width = 100
             StyleNormal.Color = clWhite
@@ -1427,7 +1414,6 @@ object frmProperties: TfrmProperties
             BorderSpacing.Left = 10
             BorderSpacing.Right = 2
             BorderSpacing.Around = 2
-            Color = clNone
             Constraints.MinWidth = 100
             Font.Style = [fsBold]
             OnClick = btnLinksClick
@@ -1550,7 +1536,6 @@ object frmProperties: TfrmProperties
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Font.Style = [fsBold]
       OnClick = btnExitClick

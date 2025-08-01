@@ -1241,7 +1241,11 @@ end;
 procedure TfrmSchedulers.VSTBeforeCellPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas;
   Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -1420,55 +1424,57 @@ begin
 
     // credit color
     0: case frmSettings.pnlCreditTransactionsColor.Tag of
-        0: TargetCanvas.Font.Color := clDefault;
+        0: TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSilver);
         1: begin
           if Column = 4 then
-            TargetCanvas.Font.Color := clBlue
+            TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSkyBlue)
           else
-            TargetCanvas.Font.Color := clDefault;
+            TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSilver);
         end
         else
-          TargetCanvas.Font.Color := clBlue;
+          TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSkyBlue);;
       end;
 
     // debit color                                                                                                                   ´
     1: case frmSettings.pnlDebitTransactionsColor.Tag of
-        0: TargetCanvas.Font.Color := clDefault;
+        0: TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSilver);
         1: begin
           if Column = 4 then
-            TargetCanvas.Font.Color := clRed
+            TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, $007873F4)
           else
-            TargetCanvas.Font.Color := clDefault;
+            TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSilver);
         end
         else
-          TargetCanvas.Font.Color := clRed;
+          TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, $007873F4);;
       end;
 
     // transfer plus color
     2: case frmSettings.pnlTransferPTransactionsColor.Tag of
-        0: TargetCanvas.Font.Color := clDefault;
+        0: TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSilver);
         1: begin
           if Column = 4 then
-            TargetCanvas.Font.Color := clGreen
+            TargetCanvas.Font.Color := IfThen(Dark = False, clGreen, clMoneyGreen)
           else
-            TargetCanvas.Font.Color := clDefault;
+            TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSilver);
         end
         else
-          TargetCanvas.Font.Color := clGreen;
+          TargetCanvas.Font.Color := IfThen(Dark = False, clGreen, clMoneyGreen);;
       end;
 
       // transfer minus color
     else
       case frmSettings.pnlTransferMTransactionsColor.Tag of
-        0: TargetCanvas.Font.Color := clDefault;
+        0: TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSilver);
         1: begin
           if Column = 4 then
-            TargetCanvas.Font.Color := rgbToColor(240, 160, 0)
+            TargetCanvas.Font.Color := IfThen(Dark = False,
+              rgbToColor(240, 160, 0), $0000B5BF)
           else
-            TargetCanvas.Font.Color := clDefault;
+            TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSilver);
         end
         else
-          TargetCanvas.Font.Color := rgbToColor(240, 160, 0);
+          TargetCanvas.Font.Color := IfThen(Dark = False,
+              rgbToColor(240, 160, 0), $0000B5BF);
       end;
   end;
 end;

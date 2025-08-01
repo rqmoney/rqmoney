@@ -184,8 +184,11 @@ begin
   if Write.Date > FormatDateTime('YYYY-MM-DD', Now()) then
     TargetCanvas.Brush.Color := FullColor
   else
-    TargetCanvas.Brush.Color :=
-      IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
+    TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -297,18 +300,17 @@ procedure TfrmWrite.VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
   Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
 var
   Write: PWrite;
-  B: Byte;
-
+  B: byte;
 begin
   Write := Sender.GetNodeData(Node);
   case Column of
     1: begin
-        B := DayOfTheWeek(StrToDate(Write.Date, 'YYYY-MM-DD', '-')) + 1;
-        if B = 8 then
-          B := 1;
-        CellText := FS_own.ShortDayNames[B] + ' ' +
-          DateToStr(StrToDate(Write.Date, 'YYYY-MM-DD', '-'), FS_own);
-      end;
+      B := DayOfTheWeek(StrToDate(Write.Date, 'YYYY-MM-DD', '-')) + 1;
+      if B = 8 then
+        B := 1;
+      CellText := FS_own.ShortDayNames[B] + ' ' +
+        DateToStr(StrToDate(Write.Date, 'YYYY-MM-DD', '-'), FS_own);
+    end;
     2: CellText := Write.Comment;
     3: CellText := Format('%n', [Write.Amount], FS_own);
     4: CellText := Write.currency;
@@ -356,52 +358,66 @@ begin
 
       // credit color
       0: case frmSettings.pnlCreditTransactionsColor.Tag of
-          0: TargetCanvas.Font.Color := clDefault;
+          0: TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clDefault, clSilver);
           1: begin
             if Column = 3 then
-              TargetCanvas.Font.Color := clBlue
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clBlue, $00FFB852)
             else
-              TargetCanvas.Font.Color := clDefault;
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
           end
           else
-            TargetCanvas.Font.Color := clBlue;
+            TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clBlue, $00FFB852)
         end;
 
       // debit color
       1: case frmSettings.pnlDebitTransactionsColor.Tag of
-          0: TargetCanvas.Font.Color := clDefault;
+          0: TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clDefault, clSilver);
           1: begin
             if Column = 3 then
-              TargetCanvas.Font.Color := clRed
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clRed, $006A64FF)
             else
-              TargetCanvas.Font.Color := clDefault;
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
           end
           else
-            TargetCanvas.Font.Color := clRed;
+            TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clRed, $006A64FF)
         end;
 
       // transfer plus color
       2: case frmSettings.pnlTransferPTransactionsColor.Tag of
-          0: TargetCanvas.Font.Color := clDefault;
+          0: TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clDefault, clSilver);
           1: begin
             if Column = 3 then
-              TargetCanvas.Font.Color := clGreen
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clGreen, $0062FF52)
             else
-              TargetCanvas.Font.Color := clDefault;
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
           end
           else
-            TargetCanvas.Font.Color := clGreen;
+            TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clGreen, $0062FF52);
         end;
 
         // transfer minus color
       else
         case frmSettings.pnlTransferMTransactionsColor.Tag of
-          0: TargetCanvas.Font.Color := clDefault;
+          0: TargetCanvas.Font.Color :=
+              IfThen(Dark = False, clDefault, clSilver);
           1: begin
             if Column = 3 then
               TargetCanvas.Font.Color := rgbToColor(240, 160, 0)
             else
-              TargetCanvas.Font.Color := clDefault;
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
           end
           else
             TargetCanvas.Font.Color := rgbToColor(240, 160, 0);
@@ -588,9 +604,9 @@ begin
           if (Write.Date < FormatDateTime('YYYY-MM-DD',
             frmSettings.datTransactionsAddDate.Date)) then
           begin
-            ShowMessage(Error_29 + ' ' +
-              DateToStr(frmSettings.datTransactionsAddDate.Date) + sLineBreak +
-              Error_28 + sLineBreak + sLineBreak + VST.Header.Columns[1].CaptionText +
+            ShowMessage(Error_29 + ' ' + DateToStr(
+              frmSettings.datTransactionsAddDate.Date) + sLineBreak + Error_28 +
+              sLineBreak + sLineBreak + VST.Header.Columns[1].CaptionText +
               ': ' + VST.Text[N, 1] + sLineBreak + VST.Header.Columns[2].CaptionText +
               ': ' + VST.Text[N, 2] + sLineBreak + VST.Header.Columns[3].CaptionText +
               ': ' + VST.Text[N, 3] + ' ' + VST.Text[N, 4] + sLineBreak +
@@ -612,12 +628,11 @@ begin
           if (Write.Date < FormatDateTime('YYYY-MM-DD',
             Round(Now - frmSettings.spiTransactionsAddDays.Value))) then
           begin
-            ShowMessage(Error_29 + ' ' +
-              DateToStr(Round(Now - frmSettings.spiTransactionsAddDays.Value)) +
-              sLineBreak + Error_28 + sLineBreak + sLineBreak +
-              VST.Header.Columns[1].CaptionText + ': ' + VST.Text[N, 1] +
-              sLineBreak + VST.Header.Columns[2].CaptionText + ': ' +
-              VST.Text[N, 2] + sLineBreak + VST.Header.Columns[3].CaptionText +
+            ShowMessage(Error_29 + ' ' + DateToStr(
+              Round(Now - frmSettings.spiTransactionsAddDays.Value)) + sLineBreak +
+              Error_28 + sLineBreak + sLineBreak + VST.Header.Columns[1].CaptionText +
+              ': ' + VST.Text[N, 1] + sLineBreak + VST.Header.Columns[2].CaptionText +
+              ': ' + VST.Text[N, 2] + sLineBreak + VST.Header.Columns[3].CaptionText +
               ': ' + VST.Text[N, 3] + ' ' + VST.Text[N, 4] + sLineBreak +
               VST.Header.Columns[5].CaptionText + ': ' + VST.Text[N, 5] +
               sLineBreak + VST.Header.Columns[6].CaptionText + ': ' +

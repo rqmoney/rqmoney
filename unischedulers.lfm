@@ -1,9 +1,9 @@
 object frmSchedulers: TfrmSchedulers
-  Left = 568
-  Height = 592
-  Top = 242
+  Left = 450
+  Height = 537
+  Top = 299
   Width = 985
-  ClientHeight = 592
+  ClientHeight = 537
   ClientWidth = 985
   Constraints.MinHeight = 400
   Constraints.MinWidth = 600
@@ -11,24 +11,24 @@ object frmSchedulers: TfrmSchedulers
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlList: TPanel
     Left = 5
-    Height = 582
+    Height = 527
     Top = 5
     Width = 580
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 582
+    ClientHeight = 527
     ClientWidth = 580
     Constraints.MinWidth = 500
     TabOrder = 0
     object pnlButtons: TPanel
       Left = 2
       Height = 25
-      Top = 529
+      Top = 474
       Width = 576
       Align = alBottom
       BorderSpacing.Around = 1
@@ -61,7 +61,6 @@ object frmSchedulers: TfrmSchedulers
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnAddClick
         ParentFont = False
@@ -69,6 +68,7 @@ object frmSchedulers: TfrmSchedulers
         ShowHint = True
       end
       object btnDelete: TBCMDButtonFocus
+        Tag = 12345
         Cursor = crHandPoint
         Left = 156
         Height = 23
@@ -90,7 +90,6 @@ object frmSchedulers: TfrmSchedulers
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnDeleteClick
         ParentFont = False
@@ -119,7 +118,6 @@ object frmSchedulers: TfrmSchedulers
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnCalendarClick
         ParentFont = False
@@ -148,7 +146,6 @@ object frmSchedulers: TfrmSchedulers
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnExitClick
         ParentFont = False
@@ -199,7 +196,7 @@ object frmSchedulers: TfrmSchedulers
     object VST: TLazVirtualStringTree
       Cursor = 63
       Left = 4
-      Height = 502
+      Height = 447
       Top = 24
       Width = 572
       Align = alClient
@@ -290,7 +287,7 @@ object frmSchedulers: TfrmSchedulers
     object pnlBottom: TPanel
       Left = 1
       Height = 22
-      Top = 559
+      Top = 504
       Width = 578
       Align = alBottom
       BorderSpacing.Top = 5
@@ -462,7 +459,7 @@ object frmSchedulers: TfrmSchedulers
   end
   object splList: TSplitter
     Left = 590
-    Height = 592
+    Height = 537
     Top = 0
     Width = 5
     Align = alRight
@@ -471,13 +468,13 @@ object frmSchedulers: TfrmSchedulers
   end
   object pnlRight: TPanel
     Left = 600
-    Height = 582
+    Height = 527
     Top = 5
     Width = 380
     Align = alRight
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 582
+    ClientHeight = 527
     ClientWidth = 380
     Constraints.MaxWidth = 650
     Constraints.MinWidth = 1
@@ -525,7 +522,7 @@ object frmSchedulers: TfrmSchedulers
     object VST1: TLazVirtualStringTree
       Cursor = 63
       Left = 4
-      Height = 502
+      Height = 447
       Top = 24
       Width = 372
       Align = alClient
@@ -587,7 +584,7 @@ object frmSchedulers: TfrmSchedulers
     object pnlButton: TPanel
       Left = 2
       Height = 25
-      Top = 529
+      Top = 474
       Width = 376
       Align = alBottom
       BorderSpacing.Around = 1
@@ -621,7 +618,6 @@ object frmSchedulers: TfrmSchedulers
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnAdd1Click
         ParentFont = False
@@ -650,7 +646,6 @@ object frmSchedulers: TfrmSchedulers
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnEdit1Click
         ParentFont = False
@@ -658,6 +653,7 @@ object frmSchedulers: TfrmSchedulers
         ShowHint = True
       end
       object btnDelete1: TBCMDButtonFocus
+        Tag = 12345
         Cursor = crHandPoint
         Left = 190
         Height = 23
@@ -679,7 +675,6 @@ object frmSchedulers: TfrmSchedulers
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnDelete1Click
         ParentFont = False
@@ -708,7 +703,6 @@ object frmSchedulers: TfrmSchedulers
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Enabled = False
         Font.Style = [fsBold]
         OnClick = btnPopPrintClick
@@ -720,7 +714,7 @@ object frmSchedulers: TfrmSchedulers
     object pnlBottom1: TPanel
       Left = 1
       Height = 22
-      Top = 559
+      Top = 504
       Width = 378
       Align = alBottom
       BorderSpacing.Top = 5
@@ -1080,8 +1074,6 @@ object frmSchedulers: TfrmSchedulers
     Title = ''
     Date = 44773
     DisplaySettings = [dsShowHeadings, dsShowDayNames, dsShowWeekNumbers]
-    OKCaption = '&OK'
-    CancelCaption = 'Zrušiť'
     Left = 800
     Top = 144
   end

@@ -14,7 +14,7 @@ object frmGuide: TfrmGuide
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   object pnlBottom: TPanel
     Left = 5
     Height = 22
@@ -131,21 +131,21 @@ object frmGuide: TfrmGuide
   end
   object pnlButtons: TPanel
     Left = 5
-    Height = 25
-    Top = 343
+    Height = 27
+    Top = 341
     Width = 690
     Align = alBottom
     AutoSize = True
     BorderSpacing.Around = 5
     BevelOuter = bvNone
-    ClientHeight = 25
+    ClientHeight = 27
     ClientWidth = 690
     Constraints.MinHeight = 25
     TabOrder = 1
     object btnBack: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 3
-      Height = 23
+      Height = 25
       Top = 1
       Width = 200
       Animation = True
@@ -164,7 +164,6 @@ object frmGuide: TfrmGuide
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 200
       Font.Style = [fsBold]
       OnClick = btnBackClick
@@ -173,7 +172,7 @@ object frmGuide: TfrmGuide
     object btnNext: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 487
-      Height = 23
+      Height = 25
       Top = 1
       Width = 200
       Animation = True
@@ -192,7 +191,6 @@ object frmGuide: TfrmGuide
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 200
       Font.Style = [fsBold]
       OnClick = btnNextClick
@@ -201,7 +199,7 @@ object frmGuide: TfrmGuide
   end
   object pnlList: TScrollBox
     Left = 5
-    Height = 333
+    Height = 331
     Top = 5
     Width = 690
     HorzScrollBar.Page = 11
@@ -209,14 +207,14 @@ object frmGuide: TfrmGuide
     Align = alClient
     AutoSize = True
     BorderSpacing.Around = 5
-    ClientHeight = 331
-    ClientWidth = 688
+    ClientHeight = 327
+    ClientWidth = 686
     TabOrder = 2
     object notGuide: TNotebook
       Left = 0
-      Height = 308
+      Height = 304
       Top = 23
-      Width = 688
+      Width = 686
       PageIndex = 0
       Align = alClient
       TabOrder = 0
@@ -224,9 +222,9 @@ object frmGuide: TfrmGuide
       object pagWelcome: TPage
         object txtWelcome: TLabel
           Left = 5
-          Height = 298
+          Height = 294
           Top = 5
-          Width = 678
+          Width = 676
           Align = alClient
           AutoSize = False
           BorderSpacing.Around = 5
@@ -476,7 +474,7 @@ object frmGuide: TfrmGuide
       Left = 0
       Height = 20
       Top = 0
-      Width = 688
+      Width = 686
       Align = alTop
       BorderSpacing.Bottom = 3
       Background.Color = clBtnFace

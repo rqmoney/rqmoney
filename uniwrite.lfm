@@ -12,25 +12,25 @@ object frmWrite: TfrmWrite
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlButtons: TPanel
     Left = 5
-    Height = 25
-    Top = 447
+    Height = 27
+    Top = 445
     Width = 990
     Align = alBottom
     AutoSize = True
     BorderSpacing.Around = 5
     BevelOuter = bvNone
-    ClientHeight = 25
+    ClientHeight = 27
     ClientWidth = 990
     Constraints.MinHeight = 25
     TabOrder = 1
     object btnSave: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 842
-      Height = 23
+      Height = 25
       Top = 1
       Width = 145
       Animation = True
@@ -49,7 +49,6 @@ object frmWrite: TfrmWrite
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Enabled = False
       Font.Style = [fsBold]
       OnClick = btnSaveClick
@@ -60,7 +59,7 @@ object frmWrite: TfrmWrite
     object btnExit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 595
-      Height = 23
+      Height = 25
       Top = 1
       Width = 145
       Animation = True
@@ -79,7 +78,6 @@ object frmWrite: TfrmWrite
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnExitClick
       ParentFont = False
@@ -89,7 +87,7 @@ object frmWrite: TfrmWrite
     object btnCalendar: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 299
-      Height = 23
+      Height = 25
       Top = 1
       Width = 145
       Animation = True
@@ -108,7 +106,6 @@ object frmWrite: TfrmWrite
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnCalendarClick
       ParentFont = False
@@ -118,7 +115,7 @@ object frmWrite: TfrmWrite
     object btnEdit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 3
-      Height = 23
+      Height = 25
       Top = 1
       Width = 145
       Animation = True
@@ -137,7 +134,6 @@ object frmWrite: TfrmWrite
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Enabled = False
       Font.Style = [fsBold]
       OnClick = btnEditClick
@@ -146,9 +142,10 @@ object frmWrite: TfrmWrite
       ShowHint = True
     end
     object btnDelete: TBCMDButtonFocus
+      Tag = 12345
       Cursor = crHandPoint
       Left = 151
-      Height = 23
+      Height = 25
       Top = 1
       Width = 145
       Animation = True
@@ -167,7 +164,6 @@ object frmWrite: TfrmWrite
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Enabled = False
       Font.Style = [fsBold]
       OnClick = btnDeleteClick
@@ -178,7 +174,7 @@ object frmWrite: TfrmWrite
     object btnSettings: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 447
-      Height = 23
+      Height = 25
       Top = 1
       Width = 145
       Animation = True
@@ -197,7 +193,6 @@ object frmWrite: TfrmWrite
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnSettingsClick
       ParentFont = False
@@ -207,20 +202,20 @@ object frmWrite: TfrmWrite
   end
   object pnlList: TPanel
     Left = 2
-    Height = 440
+    Height = 438
     Top = 2
     Width = 996
     Align = alClient
     BorderSpacing.Around = 2
     BevelOuter = bvLowered
-    ClientHeight = 440
+    ClientHeight = 438
     ClientWidth = 996
     Constraints.MinHeight = 300
     TabOrder = 0
     object VST: TLazVirtualStringTree
       Cursor = 63
       Left = 3
-      Height = 413
+      Height = 411
       Top = 24
       Width = 990
       Align = alClient

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLIntf,
-  ExtCtrls, Clipbrd, ComCtrls, ActnList, BCMDButtonFocus, dateutils;
+  ExtCtrls, Clipbrd, ComCtrls, ActnList, Buttons, BCMDButtonFocus, dateutils;
 
 type
 
@@ -156,12 +156,12 @@ begin
     lblProgram.Caption := Application.Title;
     // ===========================================================================
     // ***************************************************************************
-    lblReleased.Hint := '2025-01-30'; // IMPORTANT DATE OF RELEASE !!!
+    lblReleased.Hint := '2025-03-29'; // IMPORTANT DATE OF RELEASE !!!
     // ***************************************************************************
     // ===========================================================================
     lblReleased.Caption := FormatDateTime(FS_own.LongDateFormat,
       StrToDate(lblReleased.Hint, 'YYYY-MM-DD', '-'));
-    lblVersion.Hint := '3.10.2';
+    lblVersion.Hint := '3.11';
     lblLicense.Hint := 'https://en.wikipedia.org/wiki/GNU_General_Public_License';
     lblWebsite.Caption := 'www.rqmoney.eu';
     lblDeveloped.Caption := 'Lazarus';
@@ -187,6 +187,15 @@ begin
     pnlButtons.Height := PanelHeight;
     lblLink2.Caption := 'Icons8';
     lblLink2.Hint := 'https://icons8.com/';
+
+    // font color
+    If Not(Dark = False) then
+    begin
+      lblEmail.Font.Color := clSkyBlue;
+      lblWebsite.Font.Color := clSkyBlue;
+      lblLGPL.Font.Color := clSkyBlue;
+      lblDeveloped.Font.Color := clSkyBlue;;
+    end;
   except
   end;
 end;

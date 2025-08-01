@@ -46,8 +46,10 @@ type
     btnIniFile: TBCMDButtonFocus;
     btnOddRowColorBack: TBCMDButtonFocus;
     btnSave: TBCMDButtonFocus;
+    btnTimeStamp: TSpeedButton;
     cbxFirstWeekDay: TComboBox;
     cbxReportFont: TComboBox;
+    chkItemsFromFilter: TCheckBox;
     chkFilterComboboxStyle: TCheckBox;
     chkButtonsVisibility: TCheckListBox;
     chkBackupQuestion: TCheckBox;
@@ -56,6 +58,7 @@ type
     chkChartWrapLabelsText: TCheckBox;
     chkChartZeroBalance: TCheckBox;
     chkCloseDbWarning: TCheckBox;
+    chkDarkStyle: TCheckBox;
     chkRememberNewTransactionsForm: TCheckBox;
     chkEncryptDatabase: TCheckBox;
     chkDisplayFontBold: TCheckBox;
@@ -79,6 +82,7 @@ type
     gbxTransactionsEdit: TGroupBox;
     gbxTransactionsDelete: TGroupBox;
     gbxTransactionsAdd: TGroupBox;
+    gbxNewTransaction: TGroupBox;
     imgFlags: TImageList;
     lblButtonsSize: TLabel;
     lblButtonsVisibility: TLabel;
@@ -274,12 +278,14 @@ type
     procedure btnIniFileClick(Sender: TObject);
     procedure btnOddRowColorBackClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
+    procedure btnTimeStampClick(Sender: TObject);
     procedure cbxFirstWeekDayChange(Sender: TObject);
     procedure cbxGridFontNameChange(Sender: TObject);
     procedure chkButtonsVisibilityClickCheck(Sender: TObject);
     procedure chkChartRotateLabelsChange(Sender: TObject);
     procedure chkChartShowLegendChange(Sender: TObject);
     procedure chkChartZeroBalanceChange(Sender: TObject);
+    procedure chkDarkStyleClick(Sender: TObject);
     procedure chkDisplayFontBoldChange(Sender: TObject);
     procedure chkDisplaySubCatCapitalChange(Sender: TObject);
     procedure chkEncryptDatabaseChange(Sender: TObject);
@@ -324,11 +330,15 @@ type
     procedure rbtTransfersPColorBlackChange(Sender: TObject);
     procedure splSettingsCanResize(Sender: TObject; var NewSize: integer;
       var Accept: boolean);
+    procedure tabTransactionsRestrictionsResize(Sender: TObject);
     procedure traBackupCountChange(Sender: TObject);
     procedure treSettingsAdvancedCustomDrawItem(Sender: TCustomTreeView;
       Node: TTreeNode; State: TCustomDrawState; Stage: TCustomDrawStage;
       var PaintImages, DefaultDraw: boolean);
     procedure treSettingsChange(Sender: TObject; Node: TTreeNode);
+    procedure VSTKeysPaintText(Sender: TBaseVirtualTree;
+      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      TextType: TVSTTextType);
     procedure VSTLangChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure VSTLangGetImageIndex(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
@@ -378,7 +388,7 @@ uses
   uniGuide, uniPassword, uniSQLResults, uniHistory, uniWrite, uniManyCurrencies,
   uniSuccess, uniGate, uniSQL, uniRecycleBin, uniFilter, uniImport, uniDetail,
   uniCalendar, uniResources, uniwriting, uniEdits, uniPeriod, uniPlan, uniTemplates,
-  uniBudget, uniLinks, uniSplash;
+  uniBudget, uniLinks, uniSplash, uniTimeStamp;
 
   { TfrmSettings }
 
@@ -399,7 +409,7 @@ begin
     VSTLang.Header.Height := PanelHeight;
     pnlButtons.Height := ButtonHeight;
     pnlButtonsKeys.Height := ButtonHeight;
-    pnlBottom.Height := ButtonHeight;
+    pnlBottom.Height := ButtonHeight + 2;
 
     tabGlobal.TabIndex := 0;
     tabVisualSettings.TabIndex := 0;
@@ -435,8 +445,14 @@ begin
       ShowErrorMessage(E);
   end;
 
-  frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
-  frmSplash.Update;
+  if frmSplash.Visible = True then
+  begin
+    frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+    frmSplash.Update;
+    TimeLog[43, 0] := 'Set calendar';
+    TimeLog[43, 1] := IntToStr(GetTickCount64 - TimeStart);
+  end;
+
 
   // =================================================================================
   // FONT NAMES AND SIZES
@@ -471,8 +487,13 @@ begin
     chkButtonsVisibility.CheckAll(cbChecked, False, False);
   end;
 
-  frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
-  frmSplash.Update;
+  if frmSplash.Visible = True then
+  begin
+    frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+    frmSplash.Update;
+    TimeLog[44, 0] := 'Set font properties';
+    TimeLog[44, 1] := IntToStr(GetTickCount64 - TimeStart);
+  end;
 
   // =================================================================================
   // LANGUAGE
@@ -508,7 +529,6 @@ begin
     on E: Exception do
       ShowErrorMessage(E);
   end;
-  // SetNodeHeight(VSTLang);
 
   // =================================================================================
   // CREATE INI FILE
@@ -532,6 +552,8 @@ begin
           ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Languages',
           AnsiLowerCase(LeftStr(GetLang, 2)) + '.po',
           True);
+
+        INI.WriteInteger('GLOBAL', 'DarkMode', 0);
 
         INI.WriteBool('SYSTEM_FORMAT', 'Automatic', rbtSettingsAutomatic.Checked);
         // ====== Char(226) make error displaying thousand separators
@@ -599,6 +621,7 @@ begin
         INI.WriteBool('TRANSACTIONS', 'DisplaySubcategoryCapitalLetters', True);
         INI.WriteBool('TRANSACTIONS', 'EnableSelfTransfer', False);
         INI.WriteBool('TRANSACTIONS', 'RememberNewTransactionsForm', False);
+        INI.WriteBool('TRANSACTIONS', 'ItemsFromFilter', False);
 
         // restrictions
         INI.WriteString('TRANSACTIONS', 'RestrictionsAdd', '');
@@ -781,8 +804,8 @@ begin
           Temp := '';
           for I := 1 to frmBudget.VST.Header.Columns.Count - 1 do
             Temp := Temp + IfThen(I = 1, '', separ) +
-              INI.ReadString('frmBudget', 'Col_' + RightStr('0' +
-              IntToStr(I), 2), '100');
+              INI.ReadString('frmBudget', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
           INI.WriteString('COLUMNS_WIDTH', 'Budget', Temp);
           INI.EraseSection('frmBudget');
 
@@ -884,8 +907,8 @@ begin
           Temp := '';
           for I := 1 to frmDetail.VST.Header.Columns.Count - 1 do
             Temp := Temp + IfThen(I = 1, '', separ) +
-              INI.ReadString('frmDetail', 'Col_' + RightStr('0' +
-              IntToStr(I), 2), '100');
+              INI.ReadString('frmDetail', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
           INI.WriteString('COLUMNS_WIDTH', 'Detail', Temp);
           INI.EraseSection('frmDetail');
 
@@ -927,8 +950,8 @@ begin
           Temp := '';
           for I := 1 to frmPayees.VST.Header.Columns.Count - 1 do
             Temp := Temp + IfThen(I = 1, '', separ) +
-              INI.ReadString('frmPayees', 'Col_' + RightStr('0' +
-              IntToStr(I), 2), '100');
+              INI.ReadString('frmPayees', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
           INI.WriteString('COLUMNS_WIDTH', 'Payees', Temp);
           INI.EraseSection('frmPayees');
 
@@ -936,8 +959,8 @@ begin
           Temp := '';
           for I := 1 to frmPeriod.VST.Header.Columns.Count - 1 do
             Temp := Temp + IfThen(I = 1, '', separ) +
-              INI.ReadString('frmPeriod', 'Col_' + RightStr('0' +
-              IntToStr(I), 2), '100');
+              INI.ReadString('frmPeriod', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
           INI.WriteString('COLUMNS_WIDTH', 'Period', Temp);
           INI.EraseSection('frmPeriod');
 
@@ -1014,8 +1037,8 @@ begin
           Temp := '';
           for I := 1 to frmValues.VST.Header.Columns.Count - 1 do
             Temp := Temp + IfThen(I = 1, '', separ) +
-              INI.ReadString('frmValues', 'Col_' + RightStr('0' +
-              IntToStr(I), 2), '100');
+              INI.ReadString('frmValues', 'Col_' +
+              RightStr('0' + IntToStr(I), 2), '100');
           INI.WriteString('COLUMNS_WIDTH', 'Values', Temp);
           INI.EraseSection('frmValues');
 
@@ -1050,10 +1073,17 @@ begin
     except
     end;
 
-  frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
-  frmSplash.Update;
+    chkDarkStyle.Checked := INI.ReadInteger('GLOBAL', 'DarkMode', 0) = 2;
 
-  try
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+      TimeLog[45, 0] := 'Create INI file';
+      TimeLog[45, 1] := IntToStr(GetTickCount64 - TimeStart);
+    end;
+
+    try
       // ---------------------------------------------------
       // SET GLOBAL SETTINGS
       // ---------------------------------------------------
@@ -1248,6 +1278,9 @@ begin
         INI.ReadBool('TRANSACTIONS', 'EnableSelfTransfer', False);
       chkRememberNewTransactionsForm.Checked :=
         INI.ReadBool('TRANSACTIONS', 'RememberNewTransactionsForm', False);
+      chkItemsFromFilter.Checked :=
+        INI.ReadBool('TRANSACTIONS', 'ItemsFromFilter', False);
+
 
       Temp := INI.ReadString('TRANSACTIONS', 'RestrictionsAdd', '');
       case Length(Temp) of
@@ -1367,8 +1400,13 @@ begin
     except
     end;
 
-    frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
-    frmSplash.Update;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+      TimeLog[46, 0] := 'Open INI file 1';
+      TimeLog[46, 1] := IntToStr(GetTickCount64 - TimeStart);
+    end;
 
     // FORMS SIZE AND POSITION
     if chkLastFormsSize.Checked = True then
@@ -1966,8 +2004,13 @@ begin
         IntToStr(frmWriting.Left) + IntToStr(frmWriting.Top);
     end;
 
-    frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
-    frmSplash.Update;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+      TimeLog[47, 0] := 'Open INI file 2';
+      TimeLog[47, 1] := IntToStr(GetTickCount64 - TimeStart);
+    end;
 
     // set columns width on all tables (manually or automatic) - THIS IS AFTER FORMS RESIZING !!!
     chkAutoColumnWidth.Checked :=
@@ -2160,8 +2203,14 @@ begin
       end;
     end;
 
-    frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
-    frmSplash.Update;
+    if frmSplash.Visible = True then
+    begin
+      frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+      frmSplash.Update;
+      TimeLog[48, 0] := 'Open INI file 3';
+      TimeLog[48, 1] := IntToStr(GetTickCount64 - TimeStart);
+    end;
+
 
     try
       // ---------------------------------------------------------------------------
@@ -2527,8 +2576,13 @@ begin
     frmSettings.Tag := 2;
   end;
 
-  frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
-  frmSplash.Update;
+  if frmSplash.Visible = True then
+  begin
+    frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
+    frmSplash.Update;
+    TimeLog[49, 0] := 'Close INI file';
+    TimeLog[49, 1] := IntToStr(GetTickCount64 - TimeStart);
+  end;
 
   // INI file END procedure ======================================================
   try
@@ -2542,18 +2596,22 @@ begin
 
   try
     UpdateLanguage;
+    TimeLog[50, 0] := 'Update language';
+    TimeLog[50, 1] := IntToStr(GetTickCount64 - TimeStart);
   except
     on E: Exception do
       ShowErrorMessage(E);
   end;
   try
     UpdateSettings;
+    TimeLog[51, 0] := 'Update settings';
+    TimeLog[51, 1] := IntToStr(GetTickCount64 - TimeStart);
   except
     on E: Exception do
       ShowErrorMessage(E);
   end;
 
- try
+  try
     case Application.ParamCount of
       0: // open last used file
       begin
@@ -2575,6 +2633,9 @@ begin
     frmMain.mnuCheckUpdateClick(frmMain.mnuCheckUpdate);
   except
   end;
+  {$ENDIF}
+  {$IFDEF LINUX}
+  chkDarkStyle.Enabled := False;
   {$ENDIF}
 end;
 
@@ -2614,6 +2675,7 @@ begin
     INI.WriteString('GLOBAL', 'Language',
       VSTLang.Text[VSTLang.GetFirstSelected(), 1] + '.po');
     VSTLang.Hint := VSTLang.Text[VSTLang.GetFirstSelected(), 1];
+    INI.WriteInteger('GLOBAL', 'DarkMode', IfThen(chkDarkStyle.Checked = True, 2, 0));
 
     // DATE FORMAT settings
     INI.WriteBool('SYSTEM_FORMAT', 'Automatic', rbtSettingsAutomatic.Checked);
@@ -2700,7 +2762,7 @@ begin
     INI.WriteBool('TRANSACTIONS', 'EnableSelfTransfer', chkEnableSelfTransfer.Checked);
     INI.WriteBool('TRANSACTIONS', 'RememberNewTransactionsForm',
       chkRememberNewTransactionsForm.Checked);
-
+    INI.WriteBool('TRANSACTIONS', 'ItemsFromFilter', chkItemsFromFilter.Checked);
 
     // restrictions
     INI.WriteString('TRANSACTIONS', 'RestrictionsAdd',
@@ -2775,6 +2837,11 @@ begin
 
 end;
 
+procedure TfrmSettings.btnTimeStampClick(Sender: TObject);
+begin
+  frmTimeStamp.ShowModal;
+end;
+
 procedure TfrmSettings.cbxFirstWeekDayChange(Sender: TObject);
 begin
   frmMain.Calendar.StartingDayOfWeek := TDayOfWeek(cbxFirstWeekDay.ItemIndex);
@@ -2818,6 +2885,7 @@ begin
     frmSQLResult.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmTags.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmTemplates.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
+    frmTimeStamp.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmValues.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
     frmWrite.VST.Font.Name := cbxGridFontName.Items[cbxGridFontName.ItemIndex];
   except
@@ -2863,6 +2931,13 @@ end;
 procedure TfrmSettings.chkChartZeroBalanceChange(Sender: TObject);
 begin
   frmMain.tabBalanceHeaderChange(frmMain.tabBalanceHeader);
+end;
+
+procedure TfrmSettings.chkDarkStyleClick(Sender: TObject);
+begin
+
+  if (frmSettings.Visible = True) and (chkDarkStyle.Tag < 2) then
+    ShowMessage(Message_08);
 end;
 
 procedure TfrmSettings.chkDisplayFontBoldChange(Sender: TObject);
@@ -2970,17 +3045,29 @@ end;
 
 procedure TfrmSettings.lblTransactionsAddDateClick(Sender: TObject);
 begin
-  datTransactionsAddDate.SetFocus;
+  try
+    if (Panels.PageIndex = 3) and (tabTransactions.TabIndex = 1) then
+      datTransactionsAddDate.SetFocus;
+  except
+  end;
 end;
 
 procedure TfrmSettings.lblTransactionsDeleteDateClick(Sender: TObject);
 begin
-  datTransactionsDeleteDate.SetFocus;
+  try
+    if (Panels.PageIndex = 3) and (tabTransactions.TabIndex = 1) then
+      datTransactionsDeleteDate.SetFocus;
+  except
+  end;
 end;
 
 procedure TfrmSettings.lblTransactionsEditDateClick(Sender: TObject);
 begin
-  datTransactionsEditDate.SetFocus;
+  try
+    if (Panels.PageIndex = 3) and (tabTransactions.TabIndex = 1) then
+      datTransactionsEditDate.SetFocus;
+  except
+  end;
 end;
 
 procedure TfrmSettings.rbtButtonsSize24Change(Sender: TObject);
@@ -3107,7 +3194,7 @@ begin
       N := VSTLang.GetNext(N);
     end;
 
-    if (pnlGlobal.Visible = True) and (tabGlobal.TabIndex = 0) then
+    if (Panels.PageIndex = 0) and (tabGlobal.TabIndex = 0) then
       VSTLang.SetFocus;
 
     pnlFormats.Tag := IfThen(rbtSettingsAutomatic.Checked = True, 0, 1);
@@ -3129,6 +3216,7 @@ begin
     cbxGridFontName.Tag := cbxGridFontName.ItemIndex;
     chkRedColorButtonDelete.Tag := IfThen(chkRedColorButtonDelete.Checked = True, 1, 0);
     pnlButtonsSize.Tag := IfThen(rbtButtonsSize24.Checked = True, 24, 32);
+    chkDarkStyle.Tag := IfThen(chkDarkStyle.Checked = True, 1, 0);
 
     chkButtonsVisibility.Hint := '';
     for I := 0 to chkButtonsVisibility.Items.Count - 1 do
@@ -3165,6 +3253,7 @@ begin
     datTransactionsAddDateChange(datTransactionsAddDate);
     datTransactionsEditDateChange(datTransactionsEditDate);
     datTransactionsDeleteDateChange(datTransactionsDeleteDate);
+    chkItemsFromFilter.Tag := IfThen(chkItemsFromFilter.Checked = True, 1, 0);
 
     // restrictions
     gbxTransactionsAdd.Tag := IfThen(rbtTransactionsAddNo.Checked =
@@ -3212,6 +3301,12 @@ begin
       frmMain.VSTBalance.Hint :=
         frmMain.VSTBalance.Hint + IntToStr(frmMain.VSTBalance.Header.Columns[I].Width) +
         IfThen(I < frmMain.VSTBalance.Header.Columns.Count - 1, separ, '');
+
+    frmMain.VSTEnergy.Hint := '';
+    for I := 1 to frmMain.VSTEnergy.Header.Columns.Count - 1 do
+      frmMain.VSTEnergy.Hint :=
+        frmMain.VSTEnergy.Hint + IntToStr(frmMain.VSTEnergy.Header.Columns[I].Width) +
+        IfThen(I < frmMain.VSTEnergy.Header.Columns.Count - 1, separ, '');
 
     chkNewVersion.Tag := IfThen(chkNewVersion.Checked = True, 1, 0);
 
@@ -3401,6 +3496,7 @@ begin
     frmMain.VSTResize(frmMain.VST);
     frmMain.VSTSummaryResize(frmMain.VSTSummary);
     frmMain.VSTBalanceResize(frmMain.VSTBalance);
+    frmMain.VSTEnergyResize(frmMain.VSTEnergy);
   end
   else
   begin
@@ -3418,6 +3514,11 @@ begin
     for I := 1 to frmMain.VSTBalance.Header.Columns.Count - 1 do
       frmMain.VSTBalance.Header.Columns[I].Width :=
         StrToInt(Field(separ, frmMain.VSTBalance.Hint, I));
+
+    // Report - Energy columns width
+    for I := 1 to frmMain.VSTEnergy.Header.Columns.Count - 1 do
+      frmMain.VSTEnergy.Header.Columns[I].Width :=
+        StrToInt(Field(separ, frmMain.VSTEnergy.Hint, I));
   end;
 end;
 
@@ -3442,10 +3543,19 @@ begin
       Exit;
     btnOddRowColorBack.Tag := cd.Color;
     pnlOddRowColor.Color := cd.Color;
+
+    // repaint list in forms
     frmMain.VST.Repaint;
-    frmSchedulers.VST.Repaint;
-    frmSchedulers.VST1.Repaint;
-    frmWrite.VST.Repaint
+
+    if frmSchedulers.Visible = True then
+    begin
+      frmSchedulers.VST.Repaint;
+      frmSchedulers.VST1.Repaint;
+    end;
+    if frmDetail.Visible = True then
+      frmDetail.VST.Repaint;
+    if frmWrite.Visible = True then
+      frmWrite.VST.Repaint
 
   except
     on E: Exception do
@@ -3619,27 +3729,27 @@ begin
     // ----------------------------------------------------------------------------
 
 
-    If VSTLang.SelectedCount > 0 then
-    if (VSTLang.Hint <> VSTLang.Text[VSTLang.GetFirstSelected(), 1]) then
-    begin
-      SetDefaultLang(
-        LeftStr(VSTLang.Hint, 2),
-        ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Languages',
-        VSTLang.Hint + '.po',
-        True);
-
-      N := VSTLang.GetFirst();
-      while Assigned(N) do
+    if VSTLang.SelectedCount > 0 then
+      if (VSTLang.Hint <> VSTLang.Text[VSTLang.GetFirstSelected(), 1]) then
       begin
-        Lang := VSTLang.GetNodeData(N);
-        if Lang.code = VSTLang.Hint then
+        SetDefaultLang(
+          LeftStr(VSTLang.Hint, 2),
+          ExtractFileDir(Application.ExeName) + DirectorySeparator + 'Languages',
+          VSTLang.Hint + '.po',
+          True);
+
+        N := VSTLang.GetFirst();
+        while Assigned(N) do
         begin
-          VSTLang.Selected[N] := True;
-          Break;
+          Lang := VSTLang.GetNodeData(N);
+          if Lang.code = VSTLang.Hint then
+          begin
+            VSTLang.Selected[N] := True;
+            Break;
+          end;
+          N := VSTLang.GetNext(N);
         end;
-        N := VSTLang.GetNext(N);
       end;
-    end;
 
     if BoolToStr(rbtSettingsUser.Checked) <> IntToStr(rbtSettingsUser.Tag) then
       rbtSettingsUser.Checked := StrToBool(IntToStr(rbtSettingsUser.Tag));
@@ -3674,6 +3784,13 @@ begin
     // chkGradientEffect
     if BoolToStr(chkGradientEffect.Checked) <> IntToStr(chkGradientEffect.Tag) then
       chkGradientEffect.Checked := StrToBool(IntToStr(chkGradientEffect.Tag));
+
+    // chkDarkStyle
+    if BoolToStr(chkDarkStyle.Checked) <> IntToStr(chkDarkStyle.Tag) then
+    begin
+      chkDarkStyle.Tag := 2;
+      chkDarkStyle.Checked := StrToBool(IntToStr(chkDarkStyle.Tag));
+    end;
 
     if lblPanelsColor.Tag <> btnCaptionColorBack.Tag then
     begin
@@ -3818,6 +3935,11 @@ begin
       frmMain.VSTBalance.Header.Columns[I].Width :=
         StrToInt(Field(separ, frmMain.VSTBalance.Hint, I));
 
+    // report / energy columns width
+    for I := 1 to frmMain.VSTEnergy.Header.Columns.Count - 1 do
+      frmMain.VSTEnergy.Header.Columns[I].Width :=
+        StrToInt(Field(separ, frmMain.VSTEnergy.Hint, I));
+
     // chkNewVersion
     if BoolToStr(chkNewVersion.Checked) <> IntToStr(chkNewVersion.Tag) then
       chkNewVersion.Checked := StrToBool(IntToStr(chkNewVersion.Tag));
@@ -3857,6 +3979,11 @@ begin
       IntToStr(chkRememberNewTransactionsForm.Tag) then
       chkRememberNewTransactionsForm.Checked :=
         StrToBool(IntToStr(chkRememberNewTransactionsForm.Tag));
+
+    // chkitemsFromFilter
+    if BoolToStr(chkItemsFromFilter.Checked) <>
+      IntToStr(chkItemsFromFilter.Tag) then
+      chkItemsFromFilter.Checked := StrToBool(IntToStr(chkItemsFromFilter.Tag));
 
     // restrictions
     case gbxTransactionsAdd.Tag of
@@ -4049,10 +4176,8 @@ begin
     pnlDateFormat.Enabled := True;
 
     if (frmSettings.Visible = True) and (Panels.PageIndex = 0) then
-    begin
-      //ediThousandSeparator.SetFocus;
       ediThousandSeparator.SelectAll;
-    end;
+
     ediShortDateFormatChange(ediShortDateFormat);
   except
     on E: Exception do
@@ -4111,6 +4236,12 @@ begin
   end;
 end;
 
+procedure TfrmSettings.tabTransactionsRestrictionsResize(Sender: TObject);
+begin
+  gbxTransactionsAdd.Width := (tabTransactionsRestrictions.Width - 12) div 3;
+  gbxTransactionsEdit.Width := (tabTransactionsRestrictions.Width - 12) div 3;
+end;
+
 procedure TfrmSettings.traBackupCountChange(Sender: TObject);
 begin
   pnlBackupCount.Caption := IntToStr(traBackupCount.Position);
@@ -4137,7 +4268,7 @@ begin
         case Node.AbsoluteIndex of
           1: begin
             Panels.PageIndex := 0; // global
-            if tabGlobal.TabIndex = 0 then
+            if (tabGlobal.TabIndex = 0) and (frmSettings.Visible = True) then
               VSTLang.SetFocus;
           end;
           2: Panels.PageIndex := 1; // on run
@@ -4157,6 +4288,13 @@ begin
     on E: Exception do
       ShowErrorMessage(E);
   end;
+end;
+
+procedure TfrmSettings.VSTKeysPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSilver);
 end;
 
 procedure TfrmSettings.VSTLangChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
@@ -4205,8 +4343,11 @@ procedure TfrmSettings.VSTKeysBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clWhite,
-    frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -4307,13 +4448,16 @@ begin
 
     // Forms color
     {$IFDEF WINDOWS}
-    frmDetail.Color := $00DEDEDE; // gray
-    frmEdit.Color := frmDetail.Color;
-    frmEdits.Color := frmDetail.Color;
-    frmScheduler.Color := frmDetail.Color;
-    frmMain.pnlFilter.Color := frmDetail.Color;
-    frmSQL.Color := frmDetail.Color;
-    frmPlan.Color := frmDetail.Color;
+    If (Dark = False) then
+    begin
+      frmDetail.Color := $00DEDEDE; // gray
+      frmEdit.Color := frmDetail.Color;
+      frmEdits.Color := frmDetail.Color;
+      frmScheduler.Color := frmDetail.Color;
+      frmMain.pnlFilter.Color := frmDetail.Color;
+      frmSQL.Color := frmDetail.Color;
+      frmPlan.Color := frmDetail.Color;
+    end;
     {$ENDIF}
 
     // ===============================================================================
@@ -4355,15 +4499,7 @@ begin
     SetBtnProperty(frmMain.btnDuplicate);
     SetBtnProperty(frmMain.btnEdit);
     SetBtnProperty(frmMain.btnCopy);
-
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmMain.btnDelete.StyleNormal.Color := clRed;
-      frmMain.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmMain.btnDelete);
-
+    SetBtnProperty(frmMain.btnDelete);
     SetBtnProperty(frmMain.btnPrint);
     SetBtnProperty(frmMain.btnSelect);
     SetBtnProperty(frmMain.btnHistory);
@@ -4373,7 +4509,8 @@ begin
     SetBtnProperty(frmMain.btnReportSettings);
 
     // chart
-    frmMain.chaPie.BackColor := BrightenColor;
+    frmMain.chaPie.BackColor :=
+      IfThen(Dark = False, BrightenColor, rgbToColor(44, 44, 44));
     //frmMain.chaBalance.BackColor := RGBToColor(222,222,222);
 
     // ===============================================================================
@@ -4406,18 +4543,12 @@ begin
     SetBtnProperty(frmDetail.btnCancel);
     SetBtnProperty(frmDetail.btnSave);
     SetBtnProperty(frmDetail.btnSettings);
+    SetBtnProperty(frmDetail.btnDelete);
     SetBtnProperty(frmDetail.btnCancelX);
     SetBtnProperty(frmDetail.btnSaveX);
     SetBtnProperty(frmDetail.btnCancel);
     SetBtnProperty(frmDetail.btnAdd);
     SetBtnProperty(frmDetail.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmDetail.btnDelete.StyleNormal.Color := clRed;
-      frmDetail.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmDetail.btnDelete);
     SetBtnProperty(frmDetail.btnSelect);
     SetBtnProperty(frmDetail.btnDuplicate);
     SetBtnProperty(frmDetail.btnAttachmentAdd);
@@ -4447,13 +4578,7 @@ begin
     // buttons
     SetBtnProperty(frmAccounts.btnAdd);
     SetBtnProperty(frmAccounts.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmAccounts.btnDelete.StyleNormal.Color := clRed;
-      frmAccounts.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmAccounts.btnDelete);
+    SetBtnProperty(frmAccounts.btnDelete);
     SetBtnProperty(frmAccounts.btnCopy);
     SetBtnProperty(frmAccounts.btnPrint);
     SetBtnProperty(frmAccounts.btnSave);
@@ -4471,13 +4596,7 @@ begin
     // buttons
     SetBtnProperty(frmCurrencies.btnAdd);
     SetBtnProperty(frmCurrencies.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmCurrencies.btnDelete.StyleNormal.Color := clRed;
-      frmCurrencies.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmCurrencies.btnDelete);
+    SetBtnProperty(frmCurrencies.btnDelete);
     SetBtnProperty(frmCurrencies.btnCopy);
     SetBtnProperty(frmCurrencies.btnPrint);
     SetBtnProperty(frmCurrencies.btnSave);
@@ -4486,10 +4605,10 @@ begin
     SetBtnProperty(frmCurrencies.btnSelect);
     SetBtnProperty(frmCurrencies.btnValues);
 
-    frmCurrencies.btnValues.StyleNormal.Color := FullColor;
+    {frmCurrencies.btnValues.StyleNormal.Color := FullColor;
     frmCurrencies.btnValues.StyleNormal.TextColor := frmSettings.btnCaptionColorFont.Tag;
     frmCurrencies.btnValues.StyleHover.Color := frmSettings.btnCaptionColorFont.Tag;
-    frmCurrencies.btnValues.StyleHover.TextColor := FullColor;
+    frmCurrencies.btnValues.StyleHover.TextColor := FullColor;}
 
     // ===============================================================================
     // frmValues buttons
@@ -4501,13 +4620,7 @@ begin
     // buttons
     SetBtnProperty(frmValues.btnAdd);
     SetBtnProperty(frmValues.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmValues.btnDelete.StyleNormal.Color := clRed;
-      frmValues.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmValues.btnDelete);
+    SetBtnProperty(frmValues.btnDelete);
     SetBtnProperty(frmValues.btnSelect);
     SetBtnProperty(frmValues.btnCopy);
     SetBtnProperty(frmValues.btnSave);
@@ -4524,13 +4637,7 @@ begin
     // buttons
     SetBtnProperty(frmComments.btnAdd);
     SetBtnProperty(frmComments.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmComments.btnDelete.StyleNormal.Color := clRed;
-      frmComments.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmComments.btnDelete);
+    SetBtnProperty(frmComments.btnDelete);
     SetBtnProperty(frmComments.btnCopy);
     SetBtnProperty(frmComments.btnPrint);
     SetBtnProperty(frmComments.btnSave);
@@ -4548,13 +4655,7 @@ begin
     // buttons
     SetBtnProperty(frmHolidays.btnAdd);
     SetBtnProperty(frmHolidays.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmHolidays.btnDelete.StyleNormal.Color := clRed;
-      frmHolidays.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmHolidays.btnDelete);
+    SetBtnProperty(frmHolidays.btnDelete);
     SetBtnProperty(frmHolidays.btnCopy);
     SetBtnProperty(frmHolidays.btnPrint);
     SetBtnProperty(frmHolidays.btnSave);
@@ -4572,13 +4673,7 @@ begin
     // buttons
     SetBtnProperty(frmPersons.btnAdd);
     SetBtnProperty(frmPersons.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmPersons.btnDelete.StyleNormal.Color := clRed;
-      frmPersons.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmPersons.btnDelete);
+    SetBtnProperty(frmPersons.btnDelete);
     SetBtnProperty(frmPersons.btnCopy);
     SetBtnProperty(frmPersons.btnPrint);
     SetBtnProperty(frmPersons.btnSave);
@@ -4596,13 +4691,7 @@ begin
     // buttons
     SetBtnProperty(frmPayees.btnAdd);
     SetBtnProperty(frmPayees.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmPayees.btnDelete.StyleNormal.Color := clRed;
-      frmPayees.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmPayees.btnDelete);
+    SetBtnProperty(frmPayees.btnDelete);
     SetBtnProperty(frmPayees.btnCopy);
     SetBtnProperty(frmPayees.btnPrint);
     SetBtnProperty(frmPayees.btnSave);
@@ -4620,13 +4709,7 @@ begin
     // buttons
     SetBtnProperty(frmCategories.btnAdd);
     SetBtnProperty(frmCategories.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmCategories.btnDelete.StyleNormal.Color := clRed;
-      frmCategories.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmCategories.btnDelete);
+    SetBtnProperty(frmCategories.btnDelete);
     SetBtnProperty(frmCategories.btnCopy);
     SetBtnProperty(frmCategories.btnPrint);
     SetBtnProperty(frmCategories.btnSave);
@@ -4644,13 +4727,7 @@ begin
     // buttons
     SetBtnProperty(frmTags.btnAdd);
     SetBtnProperty(frmTags.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmTags.btnDelete.StyleNormal.Color := clRed;
-      frmTags.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmTags.btnDelete);
+    SetBtnProperty(frmTags.btnDelete);
     SetBtnProperty(frmTags.btnCopy);
     SetBtnProperty(frmTags.btnPrint);
     SetBtnProperty(frmTags.btnSave);
@@ -4785,13 +4862,7 @@ begin
     // buttons
     SetBtnProperty(frmRecycleBin.btnExit);
     SetBtnProperty(frmRecycleBin.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmRecycleBin.btnDelete.StyleNormal.Color := clRed;
-      frmRecycleBin.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmRecycleBin.btnDelete);
+    SetBtnProperty(frmRecycleBin.btnDelete);
     SetBtnProperty(frmRecycleBin.btnRestore);
     SetBtnProperty(frmRecycleBin.btnSelect);
 
@@ -4800,6 +4871,12 @@ begin
     // ===============================================================================
     // buttons
     SetBtnProperty(frmAbout.btnExit);
+
+    // ===============================================================================
+    // frmTimeStamp buttons
+    // ===============================================================================
+    // buttons
+    SetBtnProperty(frmTimeStamp.btnExit);
 
     // ===============================================================================
     // frmFilter buttons
@@ -4827,13 +4904,7 @@ begin
 
     // buttons
     SetBtnProperty(frmDelete.btnCancel);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmDelete.btnDelete.StyleNormal.Color := clRed;
-      frmDelete.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmDelete.btnDelete);
+    SetBtnProperty(frmDelete.btnDelete);
 
     // ===============================================================================
     // frmHistory buttons
@@ -4865,25 +4936,13 @@ begin
 
     // buttons
     SetBtnProperty(frmSchedulers.btnAdd);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmSchedulers.btnDelete.StyleNormal.Color := clRed;
-      frmSchedulers.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmSchedulers.btnDelete);
+    SetBtnProperty(frmSchedulers.btnDelete);
     SetBtnProperty(frmSchedulers.btnCalendar);
     SetBtnProperty(frmSchedulers.btnExit);
 
     SetBtnProperty(frmSchedulers.btnAdd1);
     SetBtnProperty(frmSchedulers.btnEdit1);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmSchedulers.btnDelete1.StyleNormal.Color := clRed;
-      frmSchedulers.btnDelete1.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmSchedulers.btnDelete1);
+    SetBtnProperty(frmSchedulers.btnDelete1);
     SetBtnProperty(frmSchedulers.btnPopPrint);
 
     // ===============================================================================
@@ -4894,13 +4953,7 @@ begin
 
     // buttons
     SetBtnProperty(frmWrite.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmWrite.btnDelete.StyleNormal.Color := clRed;
-      frmWrite.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmWrite.btnDelete);
+    SetBtnProperty(frmWrite.btnDelete);
     SetBtnProperty(frmWrite.btnCalendar);
     SetBtnProperty(frmWrite.btnSettings);
     SetBtnProperty(frmWrite.btnExit);
@@ -4942,13 +4995,7 @@ begin
 
     // buttons
     SetBtnProperty(frmCalendar.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmCalendar.btnDelete.StyleNormal.Color := clRed;
-      frmCalendar.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmCalendar.btnDelete);
+    SetBtnProperty(frmCalendar.btnDelete);
     SetBtnProperty(frmCalendar.btnExit);
 
     // ===============================================================================
@@ -5029,13 +5076,7 @@ begin
     SetBtnProperty(frmTemplates.btnExit);
     SetBtnProperty(frmTemplates.btnAdd);
     SetBtnProperty(frmTemplates.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmTemplates.btnDelete.StyleNormal.Color := clRed;
-      frmTemplates.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmTemplates.btnDelete);
+    SetBtnProperty(frmTemplates.btnDelete);
 
     // ===============================================================================
     // frmLinks buttons
@@ -5047,13 +5088,7 @@ begin
     // buttons
     SetBtnProperty(frmLinks.btnAdd);
     SetBtnProperty(frmLinks.btnEdit);
-    if frmSettings.chkRedColorButtonDelete.Checked = True then
-    begin
-      frmLinks.btnDelete.StyleNormal.Color := clRed;
-      frmLinks.btnDelete.StyleNormal.TextColor := clWhite;
-    end
-    else
-      SetBtnProperty(frmLinks.btnDelete);
+    SetBtnProperty(frmLinks.btnDelete);
     SetBtnProperty(frmLinks.btnCopy);
     SetBtnProperty(frmLinks.btnPrint);
     SetBtnProperty(frmLinks.btnSave);
@@ -5098,12 +5133,32 @@ end;
 procedure SetBtnProperty(Sender: TBCMDButtonFocus);
 begin
   try
-    Sender.StyleHover.Color := FullColor;
     Sender.StyleHover.TextColor := frmSettings.btnCaptionColorFont.Tag;
     Sender.Font.Bold := frmSettings.chkBoldFont.Checked;
 
-    Sender.StyleNormal.Color := Brighten(FullColor, 200);
-    Sender.StyleNormal.TextColor := clBlack;
+    // background color
+    Sender.StyleDisabled.Color :=
+      ifThen(Dark = False, clWhite, clDkGray);
+
+    if (frmSettings.chkRedColorButtonDelete.Checked = True) and
+      ((Sender.Tag = 12345)) then
+    begin
+      Sender.StyleNormal.Color :=
+        ifThen(Dark = False, clRed, clMaroon);
+      Sender.StyleHover.Color := ifThen(Dark = False, clMaroon, clRed);
+    end
+    else
+    begin
+      Sender.StyleNormal.Color :=
+        ifThen(Dark = False, Brighten(FullColor, 60), Brighten(FullColor, 50));
+      Sender.StyleHover.Color := FullColor;
+    end;
+
+    // font color
+    Sender.StyleNormal.TextColor := clWhite;
+
+    Sender.StyleDisabled.Color :=
+      ifThen(Dark = False, clWhite, clDkGray);
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -5163,15 +5218,15 @@ begin
       frmLinks.btnAdd.Hint := frmHolidays.btnAdd.Hint;
     end
     // ------------------------------------------------------------------------
-{    else if Action = 'record_add_multiple' then
+    else if Action = 'record_add_multiple' then
     begin
       frmMain.actAddMultiple.ShortCut := S;
-      frmMain.popAddMulitple.ShortCut := S;
+      frmMain.popAddMulti.ShortCut := S;
       frmMain.pnlButtons.Hint := ShortCutToText(S);
       frmMain.btnAdd.Hint := Hint_01 + ':' + sLineBreak + Caption_319 +
-        ' [' + ShortCutToText(frmMain.popAddSimple.ShortCut) + ']' +
-        sLineBreak + Caption_320 + ' [' + frmMain.pnlButtons.Hint + ']';
-    end}
+        ' [' + ShortCutToText(frmMain.popAdd.ShortCut) + ']' + sLineBreak +
+        Caption_320 + ' [' + frmMain.pnlButtons.Hint + ']';
+    end
     // ------------------------------------------------------------------------
     else if Action = 'record_edit' then
     begin

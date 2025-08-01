@@ -1,7 +1,7 @@
 object frmDetail: TfrmDetail
-  Left = 585
+  Left = 629
   Height = 530
-  Top = 364
+  Top = 165
   Width = 700
   ActiveControl = tabKind
   BorderIcons = [biSystemMenu]
@@ -15,7 +15,7 @@ object frmDetail: TfrmDetail
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlMultiple: TPanel
     Tag = 900
@@ -140,7 +140,6 @@ object frmDetail: TfrmDetail
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Around = 1
-          Color = clNone
           Font.Style = [fsBold]
           OnClick = btnSaveXClick
           ParentFont = False
@@ -169,7 +168,6 @@ object frmDetail: TfrmDetail
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Around = 1
-          Color = clNone
           Font.Style = [fsBold]
           OnClick = btnCancelXClick
           ParentFont = False
@@ -641,7 +639,6 @@ object frmDetail: TfrmDetail
           BorderStyle = bsSingle
           ClientHeight = 21
           ClientWidth = 179
-          Color = clWhite
           Font.Style = [fsItalic]
           ParentBackground = False
           ParentColor = False
@@ -662,7 +659,6 @@ object frmDetail: TfrmDetail
             BorderSpacing.Top = 1
             BorderSpacing.Right = 1
             BorderSpacing.Bottom = 1
-            ParentColor = True
             TrailingSeparator = False
             TextForNullDate = ''
             LeadingZeros = True
@@ -697,6 +693,7 @@ object frmDetail: TfrmDetail
             BorderSpacing.Right = 3
             BorderSpacing.Bottom = 2
             Layout = tlCenter
+            ParentColor = False
             ParentFont = False
             ParentShowHint = False
             Transparent = False
@@ -1154,6 +1151,7 @@ object frmDetail: TfrmDetail
           OnChange = VSTChange
           OnDblClick = VSTDblClick
           OnGetText = VSTGetText
+          OnPaintText = VSTPaintText
           OnGetImageIndex = VSTGetImageIndex
           OnResize = VSTResize
         end
@@ -1193,7 +1191,6 @@ object frmDetail: TfrmDetail
             BorderSpacing.Left = 1
             BorderSpacing.Right = 1
             BorderSpacing.Around = 1
-            Color = clNone
             Font.Style = [fsBold]
             OnClick = btnAddClick
             ParentFont = False
@@ -1222,7 +1219,6 @@ object frmDetail: TfrmDetail
             BorderSpacing.Left = 1
             BorderSpacing.Right = 1
             BorderSpacing.Around = 1
-            Color = clNone
             Enabled = False
             Font.Style = [fsBold]
             OnClick = btnDuplicateClick
@@ -1252,7 +1248,6 @@ object frmDetail: TfrmDetail
             BorderSpacing.Left = 1
             BorderSpacing.Right = 1
             BorderSpacing.Around = 1
-            Color = clNone
             Enabled = False
             Font.Style = [fsBold]
             OnClick = btnEditClick
@@ -1261,6 +1256,7 @@ object frmDetail: TfrmDetail
             ShowHint = True
           end
           object btnDelete: TBCMDButtonFocus
+            Tag = 12345
             Cursor = crHandPoint
             Left = 248
             Height = 23
@@ -1269,8 +1265,8 @@ object frmDetail: TfrmDetail
             Animation = True
             StyleNormal.Color = clWhite
             StyleNormal.TextColor = clBlack
-            StyleHover.Color = 14474460
-            StyleHover.TextColor = clBlack
+            StyleHover.Color = clMaroon
+            StyleHover.TextColor = clWhite
             StyleActive.Color = 13027014
             StyleActive.TextColor = clBlack
             StyleDisabled.Color = clWhite
@@ -1282,7 +1278,6 @@ object frmDetail: TfrmDetail
             BorderSpacing.Left = 1
             BorderSpacing.Right = 1
             BorderSpacing.Around = 1
-            Color = clNone
             Enabled = False
             Font.Style = [fsBold]
             OnClick = btnDeleteClick
@@ -1312,7 +1307,6 @@ object frmDetail: TfrmDetail
             BorderSpacing.Left = 1
             BorderSpacing.Right = 1
             BorderSpacing.Around = 1
-            Color = clNone
             Enabled = False
             Font.Style = [fsBold]
             OnClick = btnSelectClick
@@ -1465,7 +1459,6 @@ object frmDetail: TfrmDetail
         BorderSpacing.Left = 1
         BorderSpacing.Right = 1
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnSaveClick
         ParentFont = False
@@ -1494,7 +1487,6 @@ object frmDetail: TfrmDetail
         BorderSpacing.Left = 1
         BorderSpacing.Right = 1
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnCancelClick
         ParentFont = False
@@ -1523,7 +1515,6 @@ object frmDetail: TfrmDetail
         BorderSpacing.Left = 1
         BorderSpacing.Right = 1
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnSettingsClick
         ParentFont = False
@@ -1685,7 +1676,6 @@ object frmDetail: TfrmDetail
           BorderSpacing.Left = 1
           BorderSpacing.Right = 1
           BorderSpacing.Around = 1
-          Color = clNone
           Font.Style = [fsBold]
           OnClick = btnAttachmentAddClick
           ParentFont = False
@@ -1714,7 +1704,6 @@ object frmDetail: TfrmDetail
           BorderSpacing.Left = 1
           BorderSpacing.Right = 1
           BorderSpacing.Around = 1
-          Color = clNone
           Enabled = False
           Font.Style = [fsBold]
           OnClick = btnAttachmentEditClick
@@ -1723,16 +1712,17 @@ object frmDetail: TfrmDetail
           ShowHint = True
         end
         object btnAttachmentDelete: TBCMDButtonFocus
+          Tag = 12345
           Cursor = crHandPoint
           Left = 3
           Height = 22
           Top = 408
           Width = 176
           Animation = True
-          StyleNormal.Color = clWhite
-          StyleNormal.TextColor = clBlack
-          StyleHover.Color = 14474460
-          StyleHover.TextColor = clBlack
+          StyleNormal.Color = clRed
+          StyleNormal.TextColor = clWhite
+          StyleHover.Color = clMaroon
+          StyleHover.TextColor = clWhite
           StyleActive.Color = 13027014
           StyleActive.TextColor = clBlack
           StyleDisabled.Color = clWhite
@@ -1744,7 +1734,6 @@ object frmDetail: TfrmDetail
           BorderSpacing.Left = 1
           BorderSpacing.Right = 1
           BorderSpacing.Around = 1
-          Color = clNone
           Enabled = False
           Font.Style = [fsBold]
           OnClick = btnAttachmentDeleteClick
@@ -1774,7 +1763,6 @@ object frmDetail: TfrmDetail
           BorderSpacing.Left = 1
           BorderSpacing.Right = 1
           BorderSpacing.Around = 1
-          Color = clNone
           Enabled = False
           Font.Style = [fsBold]
           OnClick = btnAttachmentOpenClick
@@ -1789,6 +1777,7 @@ object frmDetail: TfrmDetail
           Width = 174
           Align = alClient
           BorderSpacing.Around = 3
+          BorderStyle = bsNone
           Columns = <          
             item
               Width = 130
@@ -1915,6 +1904,7 @@ object frmDetail: TfrmDetail
             BorderSpacing.Around = 2
             ClientHeight = 30
             ClientWidth = 166
+            Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 2
             object lblConsumption: TLabel
@@ -1940,6 +1930,109 @@ object frmDetail: TfrmDetail
               ReadOnly = True
               TabOrder = 0
             end
+          end
+        end
+        object gbxPrice: TGroupBox
+          Left = 4
+          Height = 86
+          Top = 125
+          Width = 174
+          Align = alTop
+          AutoSize = True
+          BorderSpacing.Around = 3
+          ClientHeight = 66
+          ClientWidth = 170
+          TabOrder = 1
+          object pnlUnitPrice: TPanel
+            Left = 2
+            Height = 30
+            Top = 2
+            Width = 166
+            Align = alTop
+            AutoSize = True
+            BorderSpacing.Around = 2
+            ClientHeight = 30
+            ClientWidth = 166
+            ParentFont = False
+            TabOrder = 0
+            object lblUnitPrice: TLabel
+              Left = 1
+              Height = 1
+              Top = 1
+              Width = 164
+              Align = alTop
+            end
+            object spiUnitPrice: TFloatSpinEdit
+              Left = 3
+              Height = 23
+              Top = 4
+              Width = 160
+              Align = alTop
+              Alignment = taRightJustify
+              BorderSpacing.Around = 2
+              DecimalPlaces = 5
+              OnChange = spiMeterStartChange
+              OnKeyUp = spiUnitPriceKeyUp
+              TabOrder = 0
+            end
+          end
+          object pnlTotalPrice: TPanel
+            Left = 2
+            Height = 30
+            Top = 34
+            Width = 166
+            Align = alTop
+            AutoSize = True
+            BorderSpacing.Around = 2
+            ClientHeight = 30
+            ClientWidth = 166
+            Font.Style = [fsBold]
+            ParentFont = False
+            TabOrder = 1
+            object lblTotalPrice: TLabel
+              Left = 1
+              Height = 1
+              Top = 1
+              Width = 164
+              Align = alTop
+            end
+            object spiTotalPrice: TFloatSpinEdit
+              Left = 3
+              Height = 23
+              Top = 4
+              Width = 160
+              Align = alTop
+              Alignment = taRightJustify
+              BorderSpacing.Around = 2
+              DecimalPlaces = 5
+              Enabled = False
+              Font.Color = clMaroon
+              Font.Style = [fsBold]
+              ParentFont = False
+              ReadOnly = True
+              TabOrder = 0
+            end
+          end
+        end
+        object gbxCommentEnergy: TGroupBox
+          Left = 4
+          Height = 237
+          Top = 214
+          Width = 174
+          Align = alClient
+          BorderSpacing.Around = 3
+          ClientHeight = 217
+          ClientWidth = 170
+          TabOrder = 2
+          object memComment: TMemo
+            Left = 2
+            Height = 213
+            Top = 2
+            Width = 166
+            Align = alClient
+            BorderSpacing.Around = 2
+            ParentFont = False
+            TabOrder = 0
           end
         end
       end
@@ -2105,7 +2198,6 @@ object frmDetail: TfrmDetail
                 BorderStyle = bsSingle
                 ClientHeight = 21
                 ClientWidth = 294
-                Color = clWhite
                 ParentBackground = False
                 ParentColor = False
                 TabOrder = 0
@@ -2124,7 +2216,6 @@ object frmDetail: TfrmDetail
                   BorderSpacing.Top = 1
                   BorderSpacing.Right = 1
                   BorderSpacing.Bottom = 1
-                  ParentColor = True
                   TrailingSeparator = False
                   TextForNullDate = ''
                   LeadingZeros = True
@@ -2164,6 +2255,7 @@ object frmDetail: TfrmDetail
                   BorderSpacing.Right = 3
                   BorderSpacing.Bottom = 2
                   Layout = tlCenter
+                  ParentColor = False
                   ParentFont = False
                   ParentShowHint = False
                   Transparent = False
@@ -2312,7 +2404,6 @@ object frmDetail: TfrmDetail
                 BorderStyle = bsSingle
                 ClientHeight = 21
                 ClientWidth = 117
-                Color = clWhite
                 ParentBackground = False
                 ParentColor = False
                 TabOrder = 0
@@ -2332,7 +2423,6 @@ object frmDetail: TfrmDetail
                   BorderSpacing.Top = 1
                   BorderSpacing.Right = 1
                   BorderSpacing.Bottom = 1
-                  ParentColor = True
                   TrailingSeparator = False
                   TextForNullDate = ''
                   LeadingZeros = True
@@ -2732,8 +2822,8 @@ object frmDetail: TfrmDetail
     end
   end
   object ActionList1: TActionList
-    Left = 552
-    Top = 176
+    Left = 584
+    Top = 416
     object actSave: TAction
       OnExecute = actSaveExecute
       ShortCut = 8205
@@ -2802,8 +2892,8 @@ object frmDetail: TfrmDetail
   end
   object popList: TPopupMenu
     Images = frmMain.imgButtons
-    Left = 552
-    Top = 256
+    Left = 512
+    Top = 424
     object popAdd: TMenuItem
       ImageIndex = 0
       ShortCut = 45
@@ -2843,7 +2933,7 @@ object frmDetail: TfrmDetail
     end
   end
   object od: TOpenDialog
-    Left = 544
-    Top = 120
+    Left = 640
+    Top = 416
   end
 end

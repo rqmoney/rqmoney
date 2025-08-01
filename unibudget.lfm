@@ -13,17 +13,17 @@ object frmBudget: TfrmBudget
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlLeft: TPanel
     Left = 5
-    Height = 338
+    Height = 336
     Top = 5
     Width = 200
     Align = alLeft
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 338
+    ClientHeight = 336
     ClientWidth = 200
     Constraints.MaxWidth = 300
     Constraints.MinWidth = 150
@@ -31,7 +31,7 @@ object frmBudget: TfrmBudget
     object pnlHint: TPanel
       Left = 4
       Height = 14
-      Top = 165
+      Top = 148
       Width = 192
       Align = alTop
       AutoSize = True
@@ -67,19 +67,19 @@ object frmBudget: TfrmBudget
     end
     object pnlType: TPanel
       Left = 4
-      Height = 78
+      Height = 66
       Top = 4
       Width = 192
       Align = alTop
       AutoSize = True
       BorderSpacing.Bottom = 10
       BorderSpacing.Around = 3
-      ClientHeight = 78
+      ClientHeight = 66
       ClientWidth = 192
       TabOrder = 1
       object rbtCategories: TRadioButton
         Left = 6
-        Height = 23
+        Height = 17
         Top = 24
         Width = 180
         Align = alTop
@@ -93,8 +93,8 @@ object frmBudget: TfrmBudget
       end
       object rbtSubcategories: TRadioButton
         Left = 6
-        Height = 23
-        Top = 49
+        Height = 17
+        Top = 43
         Width = 180
         Align = alTop
         BorderSpacing.Left = 5
@@ -148,14 +148,14 @@ object frmBudget: TfrmBudget
     end
     object pnlName: TPanel
       Left = 4
-      Height = 57
-      Top = 95
+      Height = 52
+      Top = 83
       Width = 192
       Align = alTop
       AutoSize = True
       BorderSpacing.Bottom = 10
       BorderSpacing.Around = 3
-      ClientHeight = 57
+      ClientHeight = 52
       ClientWidth = 192
       TabOrder = 2
       object pnlNameCaption: TBCPanel
@@ -201,7 +201,7 @@ object frmBudget: TfrmBudget
       end
       object ediName: TEdit
         Left = 4
-        Height = 28
+        Height = 23
         Top = 25
         Width = 184
         Align = alTop
@@ -214,20 +214,20 @@ object frmBudget: TfrmBudget
   end
   object splBudget: TSplitter
     Left = 210
-    Height = 345
+    Height = 343
     Top = 0
     Width = 3
     OnCanResize = splBudgetCanResize
   end
   object pnlCategories: TPanel
     Left = 218
-    Height = 338
+    Height = 336
     Top = 5
     Width = 477
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 338
+    ClientHeight = 336
     ClientWidth = 477
     TabOrder = 2
     object pnlCategoriesCaption: TBCPanel
@@ -274,7 +274,7 @@ object frmBudget: TfrmBudget
     object VST: TLazVirtualStringTree
       Cursor = 63
       Left = 4
-      Height = 309
+      Height = 307
       Top = 25
       Width = 469
       Align = alClient
@@ -319,6 +319,7 @@ object frmBudget: TfrmBudget
       OnCompareNodes = VSTCompareNodes
       OnEnter = VSTEnter
       OnGetText = VSTGetText
+      OnPaintText = VSTPaintText
       OnGetImageIndex = VSTGetImageIndex
       OnGetNodeDataSize = VSTGetNodeDataSize
       OnHeaderClick = VSTHeaderClick
@@ -329,14 +330,14 @@ object frmBudget: TfrmBudget
   end
   object pnlButtons: TPanel
     Left = 3
-    Height = 25
-    Top = 348
+    Height = 27
+    Top = 346
     Width = 694
     Align = alBottom
     AutoSize = True
     BorderSpacing.Around = 3
     BevelOuter = bvNone
-    ClientHeight = 25
+    ClientHeight = 27
     ClientWidth = 694
     Constraints.MinHeight = 25
     TabOrder = 3
@@ -344,7 +345,7 @@ object frmBudget: TfrmBudget
       Tag = 1
       Cursor = crHandPoint
       Left = 541
-      Height = 23
+      Height = 25
       Top = 1
       Width = 150
       Animation = True
@@ -364,7 +365,6 @@ object frmBudget: TfrmBudget
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Enabled = False
       Font.Style = [fsBold]
@@ -376,7 +376,7 @@ object frmBudget: TfrmBudget
     object btnCancel: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 3
-      Height = 23
+      Height = 25
       Top = 1
       Width = 150
       Animation = True
@@ -396,7 +396,6 @@ object frmBudget: TfrmBudget
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Font.Style = [fsBold]
       OnClick = btnCancelClick
@@ -408,7 +407,7 @@ object frmBudget: TfrmBudget
       Tag = 1
       Cursor = crHandPoint
       Left = 388
-      Height = 23
+      Height = 25
       Top = 1
       Width = 150
       Animation = True
@@ -428,7 +427,6 @@ object frmBudget: TfrmBudget
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Font.Style = [fsBold]
       OnClick = btnCategoriesClick

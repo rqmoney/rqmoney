@@ -360,6 +360,8 @@ begin
     end;
   end;
 
+  frmCounter.BeginFormUpdate;
+  try
   btnValues.Enabled := cbxCurrency.ItemIndex > -1;
   btnPrint.Enabled := cbxCurrency.ItemIndex > -1;
   btnCopy.Enabled := cbxCurrency.ItemIndex > -1;
@@ -458,7 +460,13 @@ begin
     frmMain.QRY.Next;
   end;
 
-  BackGround.Visible := True;
+
+  finally
+    frmMain.QRY.Close;
+    BackGround.Visible := True;
+    frmCounter.EndFormUpdate;
+  end;
+
   BackGround.Tag := I - 1;
 
   // buttons enabling
@@ -468,7 +476,6 @@ begin
 
   if (frmCounter.Visible = True) and (I > 1) then edi[I - 1].SetFocus;
 
-  frmMain.QRY.Close;
   cbxCurrency.Tag := cbxCurrency.ItemIndex;
 
   // enumerate

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: uniresources.caption_00
 msgid "Add"
@@ -335,8 +335,9 @@ msgstr ""
 "další transakce"
 
 #: uniresources.caption_16
+msgctxt "uniresources.caption_16"
 msgid "Total"
-msgstr "CELKEM"
+msgstr "Celkem"
 
 #: uniresources.caption_160
 msgid "open last used database"
@@ -1105,16 +1106,16 @@ msgid "Meter reading"
 msgstr "Odečet měřičů"
 
 #: uniresources.caption_337
-msgid "at the beginning"
-msgstr "na začátku"
+msgid "At the beginning"
+msgstr "Na začátku"
 
 #: uniresources.caption_338
-msgid "at the end"
-msgstr "na konci"
+msgid "At the end"
+msgstr "Na konci"
 
 #: uniresources.caption_339
-msgid "consumption"
-msgstr "spotřeba"
+msgid "Consumption"
+msgstr "Spotřeba"
 
 #: uniresources.caption_34
 msgid "Account book"
@@ -1128,9 +1129,55 @@ msgstr "Měřič"
 msgid "Allow writing to the list of items"
 msgstr "Povolit zápis do seznamu položek"
 
+#: uniresources.caption_342
+msgid "TimeStamp"
+msgstr "Časové razítko"
+
+#: uniresources.caption_343
+msgid "Form name"
+msgstr "Jméno formuláře"
+
+#: uniresources.caption_344
+msgid "Creation time (ms)"
+msgstr "Doba vytvoření (ms)"
+
+#: uniresources.caption_345
+msgid "Duration (ms)"
+msgstr "Doba trvání (ms)"
+
+#: uniresources.caption_346
+msgid "Dark mode"
+msgstr "Tmavý režim"
+
+#: uniresources.caption_347
+msgid "Always use items from filter in new transaction"
+msgstr "Vždy použít položky z filtru v nové transakci"
+
+#: uniresources.caption_348
+msgid "New transaction"
+msgstr "Nová transakce"
+
+#: uniresources.caption_349
+msgctxt "uniresources.caption_349"
+msgid "Price"
+msgstr "Cena"
+
 #: uniresources.caption_35
 msgid "Current balance"
 msgstr "Saldo"
+
+#: uniresources.caption_350
+msgctxt "uniresources.caption_350"
+msgid "Per unit"
+msgstr "Na jednotku"
+
+#: uniresources.caption_351
+msgid "OS Windows only"
+msgstr "pouze OS Windows"
+
+#: uniresources.caption_352
+msgid "OS Linux only"
+msgstr "pouze OS Linux"
 
 #: uniresources.caption_36
 msgid "Final balance"
@@ -1622,6 +1669,10 @@ msgstr ""
 msgid "The program cannot find the selected file to open"
 msgstr "Program nemůže najít soubor pro otevření"
 
+#: uniresources.error_34
+msgid "Missing LIBSQLITE3-DEV library.% Database can not be created or opened."
+msgstr "Chybí knihovna LIBSQLITE3-DEV.% Databázi nelze vytvořit ani otevřít."
+
 #: uniresources.guide_01
 msgid "A BEGINNER'S GUIDE"
 msgstr "PRŮVODCE PRO ZAČÁTEČNÍKA"
@@ -1800,6 +1851,10 @@ msgstr "Zapsat všechny zaškrtnuté plánované platby mezi transakce"
 #: uniresources.hint_102
 msgid "Save your password to the database"
 msgstr "Uložit Vaše heslo do databáze"
+
+#: uniresources.hint_12
+msgid "Open the attachment using the default program"
+msgstr "Otevření přílohy pomocí výchozího programu"
 
 #: uniresources.hint_13
 msgid "Print the list"
@@ -2351,6 +2406,11 @@ msgid ""
 msgstr ""
 "Vybraný obrázek byl zkopírován do schránky.%0:sVelikost: %1:s px x %2:s px."
 
+#: uniresources.message_08
+msgid ""
+"Changing from dark to light mode and vice versa requires a program restart."
+msgstr "Změna z tmavého režimu na světlý a naopak vyžaduje restart programu."
+
 #: uniresources.message_09
 msgid "You are using the current version of the program."
 msgstr "Používáte aktuální verzi programu."
@@ -2359,6 +2419,15 @@ msgstr "Používáte aktuální verzi programu."
 msgctxt "uniresources.message_10"
 msgid "This feature is not available in this operating system"
 msgstr "Tato funkce není dostupná v tomto operačním systému"
+
+#: uniresources.message_11
+#, object-pascal-format
+msgid ""
+"Try installing the LIBSQLITE3-DEV library manually eg.:%sudo apt install -y "
+"libsqlite3-dev"
+msgstr ""
+"Zkuste nainstalovat knihovnu LIBSQLITE3-DEV ručně, např.:%sudo apt install -"
+"y libsqlite3-dev"
 
 #: uniresources.question_00
 msgid "Do you want to close opened database?"
@@ -2501,7 +2570,7 @@ msgstr ""
 
 #: uniresources.question_27
 msgid "Do you want to back up your database to the selected folder now?"
-msgstr "Chcete nyní zálohovat databázi do vybrané složky? "
+msgstr "Chcete nyní zálohovat databázi do vybrané složky?"
 
 #: uniresources.question_28
 msgid ""

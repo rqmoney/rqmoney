@@ -109,6 +109,9 @@ type
     procedure VSTGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: integer);
     procedure VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+    procedure VSTPaintText(Sender: TBaseVirtualTree;
+      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      TextType: TVSTTextType);
     procedure VSTResize(Sender: TObject);
     procedure btnAddClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
@@ -178,7 +181,8 @@ begin
   try
     // panel Detail
     pnlDetail.Enabled := True;
-    pnlDetail.Color := BrightenColor;
+    pnlDetail.Color := IfThen(Dark = False,
+      frmSettings.btnCaptionColorFont.Tag, rgbToColor(44,44,44));
     pnlDetailCaption.Caption := AnsiUpperCase(Caption_45);
 
     // disabled ListView
@@ -221,7 +225,8 @@ begin
   try
     // panel Detail
     pnlDetail.Enabled := True;
-    pnlDetail.Color := BrightenColor;
+    pnlDetail.Color := IfThen(Dark = False,
+      frmSettings.btnCaptionColorFont.Tag, rgbToColor(44,44,44));
     pnlDetailCaption.Caption := AnsiUpperCase(Caption_46);
 
     // disabled ListView
@@ -443,8 +448,11 @@ procedure TfrmHolidays.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clWhite,
-    frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -549,6 +557,13 @@ begin
   end;
 end;
 
+procedure TfrmHolidays.VSTPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  TargetCanvas.Font.Color := IfThen(Dark = False, clDefault, clSilver);
+end;
+
 procedure TfrmHolidays.VSTResize(Sender: TObject);
 var
   X: integer;
@@ -570,8 +585,7 @@ var
   N: PVirtualNode;
 begin
   try
-    if (frmMain.Conn.Connected = False) or (VST.SelectedCount = 0) or
-      (frmMain.Conn.Connected = False) then
+    if (frmMain.Conn.Connected = False) or (VST.SelectedCount = 0) then
       exit;
 
     // get IDs of all selected nodes

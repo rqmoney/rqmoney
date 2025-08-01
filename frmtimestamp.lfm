@@ -1,0 +1,32 @@
+object Form1: TForm1
+  Left = 704
+  Height = 462
+  Top = 282
+  Width = 412
+  BorderIcons = [biSystemMenu]
+  ClientHeight = 462
+  ClientWidth = 412
+  Position = poScreenCenter
+  LCLVersion = '4.0.0.2'
+  object LazVirtualStringTree1: TLazVirtualStringTree
+    Left = 5
+    Height = 452
+    Top = 5
+    Width = 402
+    Align = alClient
+    BorderSpacing.Around = 5
+    DefaultText = 'Node'
+    Header.AutoSizeIndex = 0
+    Header.Columns = <    
+      item
+        Position = 0
+        Width = 250
+      end    
+      item
+        Position = 1
+        Width = 100
+      end>
+    Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+    TabOrder = 0
+  end
+end

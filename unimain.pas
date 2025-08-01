@@ -1,8 +1,10 @@
 // Program: RQ MONEY
-// Current version: 3.10.1
+// Current version: 3.11
 // Starting date: March 3, 2016
 // Author: Slavomir Svetlik
 // Contact: rqmoney@gmail.com
+
+// sudo apt install libsqlite3-dev
 
 unit uniMain;
 
@@ -19,15 +21,22 @@ uses
   CheckLst, GraphUtil, ActnList, BCPanel, BCMDButtonFocus, ECTabCtrl,
   BlowFish, laz.VirtualTrees, TAGraph, LCLTranslator, LCLProc,
   CalendarLite, SQLite3Dyn, gettext, TASeries, TASources, TAStyles,
+
+
   {$IFDEF WINDOWS}
-  urlmon, windows,
+  urlmon, windows, uDarkStyleParams, uWin32WidgetSetDark,
+  uDarkStyleSchemes, uMetaDarkStyle,
   {$ENDIF}
-  TAChartAxisUtils, TACustomSeries, DateTimePicker;
+
+  {$IFDEF LINUX}
+  unix,
+  {$ENDIF}
+
+  TAChartAxisUtils, TACustomSeries, DateTimePicker, IpFileBroker;
 
 const
   separ = '•';
   separ_1 = ' | ';
-  Color_focus = clSilver;
   Color_panel_focus = $00BDDDFF;
 
 type // bottom grid (Summary)
@@ -71,6 +80,19 @@ type // main grid (transactions)
   end;
   PTransactions = ^TTransactions;
 
+type // Reports(Energy)
+  TEnergy = record
+    Category: string;
+    SubCategory: string;
+    Date: string;
+    OnStart: double;
+    OnEnd: double;
+    Price: double;
+    Comment: string;
+    ID: integer;
+  end;
+  PEnergy = ^TEnergy;
+
 type
 
   { TfrmMain }
@@ -99,9 +121,9 @@ type
     actPrint: TAction;
     ActionList1: TActionList;
     btnAdd: TBCMDButtonFocus;
+    btnReportExit: TBCMDButtonFocus;
     btnSubcategory: TSpeedButton;
     btnReportPrint: TBCMDButtonFocus;
-    btnReportExit: TBCMDButtonFocus;
     btnCopy: TBCMDButtonFocus;
     btnDelete: TBCMDButtonFocus;
     btnDuplicate: TBCMDButtonFocus;
@@ -141,6 +163,10 @@ type
     cbxType: TComboBox;
     chaChrono: TChart;
     chkShowPieChart: TCheckBox;
+    IpHtmlDataProvider1: TIpHtmlDataProvider;
+    popEnergieDelete: TMenuItem;
+    popEnergie: TPopupMenu;
+    VSTEnergy: TLazVirtualStringTree;
     popAddMulti: TMenuItem;
     tabCurrency: TECTabCtrl;
     popEditToolBar: TMenuItem;
@@ -274,6 +300,7 @@ type
     tabBalance: TTabSheet;
     tabChrono: TTabSheet;
     tabCross: TTabSheet;
+    tabEnergies: TTabSheet;
     tmrFirstRun: TTimer;
     VSTBalance: TLazVirtualStringTree;
     VSTChrono: TLazVirtualStringTree;
@@ -432,7 +459,6 @@ type
     procedure DSTNext(Sender: TObject);
     procedure ediCommentEnter(Sender: TObject);
     procedure ediCommentExit(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure lblDateFromClick(Sender: TObject);
     procedure lblDateToClick(Sender: TObject);
     procedure mnuCheckUpdateClick(Sender: TObject);
@@ -443,6 +469,7 @@ type
     procedure popChartChronoShowPointsClick(Sender: TObject);
     procedure popCopyChartBalanceClick(Sender: TObject);
     procedure popEditToolBarClick(Sender: TObject);
+    procedure popEnergieDeleteClick(Sender: TObject);
     procedure popSummaryCopyClick(Sender: TObject);
     procedure popSummaryPrintClick(Sender: TObject);
     procedure ReportBeginBand(Band: TfrBand);
@@ -580,12 +607,21 @@ type
       var Ghosted: boolean; var ImageIndex: integer);
     procedure VSTCrossGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
-    procedure VSTCrossPaintText(Sender: TBaseVirtualTree;
-      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
-      TextType: TVSTTextType);
     procedure VSTCrossResize(Sender: TObject);
     procedure VSTDblClick(Sender: TObject);
     procedure VSTEndOperation(Sender: TBaseVirtualTree; OperationKind: TVTOperationKind);
+    procedure VSTEnergyChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure VSTEnergyGetImageIndex(Sender: TBaseVirtualTree;
+      Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+      var Ghosted: boolean; var ImageIndex: integer);
+    procedure VSTEnergyGetNodeDataSize(Sender: TBaseVirtualTree;
+      var NodeDataSize: integer);
+    procedure VSTEnergyGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
+      Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+    procedure VSTEnergyPaintText(Sender: TBaseVirtualTree;
+      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      TextType: TVSTTextType);
+    procedure VSTEnergyResize(Sender: TObject);
     procedure VSTFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure VSTGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: boolean;
@@ -635,7 +671,7 @@ type
     procedure VSTSummaryResize(Sender: TObject);
     procedure ExternalLinkClick(Sender: TObject);
   private
-
+    procedure VSTEnergy_Update;
   public
 
   end;
@@ -656,6 +692,10 @@ procedure FillCategory(Component: TComboBox; Kind: byte);
 procedure ComboDDWidth(ComboBox: TComboBox);
 procedure SetColumnsWidth(Sender: TLazVirtualStringTree; Text: string);
 
+{$IFDEF WINDOWS}
+procedure SetDarkStyle;
+{$ENDIF}
+
 function Field(char, Str: string; Count: integer): string;
 function Brighten(AColor: TColor; Light: byte): TColor;
 function CheckForbiddenChar(Sender: TObject): boolean;
@@ -671,18 +711,18 @@ var
   frmMain: TfrmMain;
   f_type, f_date, f_amount, f_currency, f_account, f_category, f_person,
   f_payee, f_comment, f_tag, f_subcategory: string;
-  UpdatedAll, AllowUpdateTransactions: boolean;
+  Dark, UpdatedAll, AllowUpdateTransactions: boolean;
   FullColor, BrightenColor: TColor;
   Balance: double;
   FS_own: TFormatSettings;
   B: array of TSpeedButton;
   ReportNode: PVirtualNode;
   ReportNodesCount, ButtonHeight, PanelHeight, ScreenRatio: integer;
-  Start: int64;
+  TimeStart, Start: int64;
   ScrollBarWidth, ScreenIndex: byte;
   cb: TClipboard;
-  //workarea: TRect;
-  //mon: TMonitor;
+  TimeLog: array[0..67, 0..1] of string;
+  Color_focus: TColor;
 
 implementation
 
@@ -698,6 +738,35 @@ uses
   uniWriting, uniSplash;
 
   { TfrmMain }
+
+{$IFDEF WINDOWS}
+  procedure SetDarkStyle;
+  var
+    INI: TINIFile;
+    INIFile: string;
+    iDarkMode: integer;
+  begin
+    // =====================================================================
+    // READ SETTINGS TO INI FILE
+    // =====================================================================
+    INIFile := ChangeFileExt(ParamStr(0), '.ini');
+    INI := TINIFile.Create(INIFile);
+
+    iDarkMode := ini.ReadInteger('GLOBAL', 'DarkMode', 0);
+    Dark := iDarkMode > 0;
+
+    // 0: pamDefault 1: pamAllowDark 2: pamForceDark 3: pamForceLight
+    case iDarkMode of
+      0: PreferredAppMode := pamDefault;
+      1: PreferredAppMode := pamAllowDark;
+      2: PreferredAppMode := pamForceDark;
+      3: PreferredAppMode := pamForceLight;
+    end;
+    if iDarkMode > 0 then
+      uMetaDarkStyle.ApplyMetaDarkStyle(DefaultDark);
+    INI.Free;
+  end;
+  {$ENDIF}
 
 function ReadColumnsWidth(Sender: TLazVirtualStringTree): string;
 var
@@ -754,233 +823,6 @@ begin
       Inc(Result);
   end;
 end;
-
-{procedure SaveFormPosition(Sender: TForm; const args: array of integer);
-var
-  INI: TINIFile;
-  Temp, S1, S2: string;
-  I: integer;
-begin
-  if frmSettings.chkLastFormsSize.Checked = False then
-    Exit;
-
-  try
-    Temp := ChangeFileExt(ParamStr(0), '.ini');
-    INI := TINIFile.Create(Temp);
-
-    S2 := INI.ReadString('MONITOR_' + IntToStr(ExtendedScreenWidth) +
-      '_' + IntToStr(workarea.Height) + '_' + IntToStr(ScreenRatio),
-      (Sender as TForm).Name, '');
-
-    S1 := '';
-    if Length(args) > 0 then
-      for I := 0 to Length(args) - 1 do
-        S1 := S1 + separ + IntToStr(args[I]);
-    S1 := IntToStr((Sender as TForm).Left) + separ + // from left position
-      IntToStr((Sender as TForm).Top) + separ + // from top position
-      IntToStr((Sender as TForm).Width) + separ + // from width
-      IntToStr((Sender as TForm).Height) + S1;
-
-    if S1 <> S2 then
-      INI.WriteString(
-        'MONITOR_' + IntToStr(ExtendedScreenWidth) + '_' +
-        IntToStr(workarea.Height) + '_' + IntToStr(ScreenRatio),
-        (Sender as TForm).Name, // form name as
-        S1);
-
-  finally
-    INI.Free;
-  end;
-end;}
-
-{procedure ReadFormPosition(Sender: TForm);
-var
-  INI: TINIFile;
-  Temp: string;
-  I: integer;
-begin
-  if frmSettings.chkLastFormsSize.Checked = False then
-  begin
-    try
-      (Sender as TForm).Position := poScreenCenter;
-      (Sender as TForm).SetBounds(
-        (Screen.Width - (Sender as TForm).Width) div 2,
-        (Screen.Height - (Sender as TForm).Height) div 2,
-        (Sender as TForm).Width,
-        (Sender as TForm).Height);
-      Exit;
-    except
-    end;
-  end;
-
-  (Sender as TForm).Position := poDesigned;
-
-
-  try
-    Temp := ChangeFileExt(ParamStr(0), '.ini');
-    INI := TINIFile.Create(Temp);
-
-    Temp := INI.ReadString('MONITOR_' + IntToStr(ExtendedScreenWidth) +
-      '_' + IntToStr(workarea.Height) + '_' + IntToStr(ScreenRatio),
-      (Sender as TForm).Name, ''); // form name as
-  finally
-    INI.Free;
-  end;
-
-  if Temp = '' then
-  begin
-    try
-      (Sender as TForm).Position := poScreenCenter;
-      (Sender as TForm).SetBounds(
-        (Screen.Width - (Sender as TForm).Width) div 2,
-        (Screen.Height - (Sender as TForm).Height) div 2,
-        (Sender as TForm).Width,
-        (Sender as TForm).Height);
-      Exit;
-    except
-    end;
-  end;
-
-  try
-    // ================================================
-    // BASIC FORM PARAMETERS (width, height, left, top)
-    // ================================================
-
-    // form width
-    TryStrToInt(Field(Separ, Temp, 3), I);
-    //    if (I > 1) and (I <= Workarea.Width) then
-    if (I > 1) then
-      (Sender as TForm).Width := I;
-
-    // form height
-    TryStrToInt(Field(Separ, Temp, 4), I);
-    if (I > 1) and (I <= Workarea.Height) then
-      (Sender as TForm).Height := I;
-
-    // form left
-    TryStrToInt(Field(Separ, Temp, 1), I);
-    if (I >= 0) and (I <= ExtendedScreenWidth - 100) then
-      (Sender as TForm).Left := I;
-
-    // form top
-    TryStrToInt(Field(Separ, Temp, 2), I);
-    if (I >= 0) and (I <= Workarea.Height - (Sender as TForm).Height) then
-      (Sender as TForm).Top := I;
-
-  except
-  end;
-
-  // ===================================================
-  // ADDITIONAL FORM PARAMETERS (panels width or hegith)
-  // ===================================================
-
-  // first parameter
-  try
-    if CountCharacterInText(Temp, separ[1]) < 4 then Exit;
-    TryStrToInt(Field(Separ, Temp, 5), I);
-    if I > 0 then
-    begin
-      if ((Sender as TForm).Name = 'frmAccounts') then
-        frmAccounts.pnlDetail.Width := I
-      else if (Sender as TForm).Name = 'frmBudget' then
-        frmBudget.pnlLeft.Width := I
-      else if (Sender as TForm).Name = 'frmBudgets' then
-        frmBudgets.tabLeft.Width := I
-      else if (Sender as TForm).Name = 'frmCalendar' then
-        frmCalendar.pnlLeft.Width := I
-      else if ((Sender as TForm).Name = 'frmCategories') then
-        frmCategories.pnlDetail.Width := I
-      else if ((Sender as TForm).Name = 'frmComments') then
-        frmComments.pnlDetail.Width := I
-      else if ((Sender as TForm).Name = 'frmCurrencies') then
-        frmCurrencies.pnlDetail.Width := I
-      else if ((Sender as TForm).Name = 'frmDetail') then
-      begin
-        frmDetail.pnlSimple.Tag := I;
-        frmDetail.Width := I;
-      end
-      else if ((Sender as TForm).Name = 'frmEdit') then
-        frmEdit.pnlRight.Width := I
-      else if ((Sender as TForm).Name = 'frmEdits') then
-        frmEdits.pnlTag.Width := I
-      else if ((Sender as TForm).Name = 'frmHistory') then
-        frmHistory.pnlTop.Height := I
-      else if ((Sender as TForm).Name = 'frmHolidays') then
-        frmHolidays.pnlDetail.Width := I
-      else if ((Sender as TForm).Name = 'frmLinks') then
-        frmLinks.pnlDetail.Width := I
-      else if (Sender as TForm).Name = 'frmMain' then
-        frmMain.pnlFilter.Width := I
-      else if ((Sender as TForm).Name = 'frmPayees') then
-        frmPayees.pnlDetail.Width := I
-      else if ((Sender as TForm).Name = 'frmPeriod') then
-        frmPeriod.pnlLeft.Width := I
-      else if ((Sender as TForm).Name = 'frmPersons') then
-        frmPersons.pnlDetail.Width := I
-      else if ((Sender as TForm).Name = 'frmScheduler') then
-        frmScheduler.pnlRight.Width := I
-      else if ((Sender as TForm).Name = 'frmSchedulers') then
-        frmSchedulers.pnlRight.Width := I
-      else if ((Sender as TForm).Name = 'frmTags') then
-        frmTags.pnlDetail.Width := I
-      else if ((Sender as TForm).Name = 'frmTemplates') then
-        frmTemplates.pnlLeft.Width := I
-      else if ((Sender as TForm).Name = 'frmValues') then
-        frmValues.pnlDetail.Width := I;
-    end;
-  except
-  end;
-
-  // second parameter
-  try
-    if CountCharacterInText(Temp, separ[1]) < 5 then Exit;
-    TryStrToInt(Field(Separ, Temp, 6), I);
-    if I > 0 then
-    begin
-      if (Sender as TForm).Name = 'frmMain' then
-        frmMain.pnlSummary.Height := I
-      else if (Sender as TForm).Name = 'frmDetail' then
-        frmDetail.pnlMultiple.Tag := I;
-    end;
-  except
-  end;
-
-  // thirst parameter
-  try
-    if CountCharacterInText(Temp, separ[1]) < 6 then Exit;
-    TryStrToInt(Field(Separ, Temp, 7), I);
-    if I > 0 then
-    begin
-      if (Sender as TForm).Name = 'frmDetail' then
-        frmDetail.pnlRight.Width := I;
-    end;
-  except
-  end;
-
-  // fourth parameter
-  try
-    if CountCharacterInText(Temp, separ[1]) < 7 then Exit;
-    TryStrToInt(Field(Separ, Temp, 8), I);
-    if I > 0 then
-    begin
-      if (Sender as TForm).Name = 'frmDetail' then
-        frmDetail.pnlLeft.Width := I;
-    end;
-  except
-  end;
-
-  // fifth parameter
-  try
-    if CountCharacterInText(Temp, separ[1]) < 8 then Exit;
-    TryStrToInt(Field(Separ, Temp, 9), I);
-    if I > 0 then
-    begin
-      if (Sender as TForm).Name = 'frmDetail' then
-        frmDetail.pnlDetail.Width := I;
-    end;
-  except
-  end;
-end;}
 
 function Eval(Text: string): string;
 var
@@ -1510,46 +1352,6 @@ var
   LibraryName: string;
   {$ENDIF}
 begin
-  Application.Title := 'RQ MONEY';
-  frmSplash.lblSplash.Caption := Application.Title;
-  frmSplash.Update;
-
-  // =================================================================================
-  // WORK AREA
-  // =================================================================================
-  //see MoveToDefaultPosition
-  {workarea := default(TRect);
-  if Application.MainForm <> nil then mon := Application.MainForm.Monitor
-  else
-    mon := Monitor;
-  if mon <> nil then workarea := mon.WorkareaRect;
-  if (workarea.Width <= 0) or (workarea.Height <= 0) then
-    workarea := screen.WorkAreaRect;
-  if (workarea.Width <= 0) or (workarea.Height <= 0) then
-    workarea := screen.DesktopRect;
-  if ((workarea.Width <= 0) or (workarea.Height <= 0)) and (mon <> nil) then
-    workarea := mon.BoundsRect;
-  if (workarea.Width <= 0) or (workarea.Height <= 0) then
-  begin
-    workarea.Width := screen.Width;
-    workarea.Height := screen.Height;
-  end;}
-
-  // =================================================================================
-  // CHECK THE SQLITE LIBRARY IN LINUX
-  // =================================================================================
-  {$IFDEF LINUX}
-  try
-    ScreenIndex := 1;
-    Conn.GetConnectionInfo(citClientName);
-  except
-    begin
-      ShowMessage(AnsiReplaceStr(Error_22, '%', sLineBreak));
-      Application.Terminate;
-    end;
-  end;
-  {$ENDIF}
-
   // check the SQL library in Windows
   {$IFDEF WINDOWS}
   ScreenIndex := 0;
@@ -1572,7 +1374,6 @@ begin
     end;
   end;
   {$ENDIF}
-
 
   try
     frmMain.Caption := Application.Title;
@@ -1634,8 +1435,53 @@ begin
     frmMain.popFilterClear.Tag := 1;
     frmMain.popFilterClearClick(frmMain.popFilterClear);
 
+    // dark mode color
+    Color_focus := IfThen(Dark = False, clSilver, $00745100);
+
+    scrFilter.Color := IfThen(Dark = False, clDefault, rgbToColor(44, 44, 44));
+
+    // calendar Font.color
+    calendar.Colors.BackgroundColor :=
+      IfThen(Dark = False, clWhite, rgbToColor(44, 44, 44));
+    calendar.Colors.TextColor :=
+      IfThen(Dark = False, clBlack, clWhite);
+    calendar.Colors.SelectedDateColor :=
+      IfThen(Dark = False, clMoneyGreen, clTeal);
+
+    // chaChart
+    chaChrono.Legend.BackgroundBrush.Color :=
+      IfThen(Dark = False, clWhite, rgbToColor(44, 44, 44));
+    chaBalance.Legend.BackgroundBrush.Color :=
+      IfThen(Dark = False, clWhite, rgbToColor(44, 44, 44));
+    serBalanceCredits.Marks.LabelBrush.Color :=
+      IfThen(Dark = False, clCream, $0059F7FF);
+    serBalanceDebits.Marks.LabelBrush.Color :=
+      IfThen(Dark = False, clCream, $00165BBF);
+
+    serChronoStart.Marks.LabelBrush.Color :=
+      IfThen(Dark = False, clYellow, rgbToColor(22, 22, 22));
+    serChronoCredits.Marks.LabelBrush.Color :=
+      IfThen(Dark = False, clYellow, rgbToColor(22, 22, 22));
+    serChronoDebits.Marks.LabelBrush.Color :=
+      IfThen(Dark = False, clYellow, rgbToColor(22, 22, 22));
+    serChronoTPlus.Marks.LabelBrush.Color :=
+      IfThen(Dark = False, clYellow, rgbToColor(22, 22, 22));
+    serChronoTMinus.Marks.LabelBrush.Color :=
+      IfThen(Dark = False, clYellow, rgbToColor(22, 22, 22));
+    serChronoBalance.Marks.LabelBrush.Color :=
+      IfThen(Dark = False, clYellow, rgbToColor(22, 22, 22));
+    serChronoTotal.Marks.LabelBrush.Color :=
+      IfThen(Dark = False, clYellow, rgbToColor(22, 22, 22));
+
+    serpie.Marks.LabelBrush.Color :=
+      IfThen(Dark = False, clWhite, RGBToColor(44, 44, 44));
+    serpie.Marks.LabelFont.Color :=
+      IfThen(Dark = False, clBlack, clSilver);
+
+    // set color of the hint
+    Application.HintColor := IfThen(Dark = False, clDefault, clSilver);
+
     // set components height
-    //ProgramFontSize := Abs(GetFontData(frmMain.Font.Handle).Height) + 4;
     PanelHeight := Round(18 * ScreenRatio / 100);
     ButtonHeight := Round(22 * ScreenRatio / 100 + 4);
 
@@ -2740,6 +2586,10 @@ begin
       0: tabBalanceHeaderChange(tabBalanceHeader);
       1: tabChronoHeaderChange(tabChronoHeader);
       2: tabCrossTopChange(tabCrossTop);
+      3: begin
+        VSTEnergy_Update;
+        VSTEnergy.SetFocus;
+      end;
     end;
   finally
     VSTSummaries.Visible := False;
@@ -2983,26 +2833,31 @@ begin
       FS_own.ThousandSeparator, ''), E);
 
     TargetCanvas.Font.Bold := (vsSelected in node.States) or
-      ((Sender as TLazVirtualStringTree).AbsoluteIndex(Node) = 0);
+      ((Sender as TLazVirtualStringTree).AbsoluteIndex(Node) = 0) or
+      (((Sender as TLazVirtualStringTree).Name = 'VSTCross') and
+      ((Sender as TLazVirtualStringTree).GetNodeLevel(Node) = 0));
 
     if (vsSelected in node.States) or
       ((Sender as TLazVirtualStringTree).AbsoluteIndex(Node) = 0) or
-      (((Sender as TLazVirtualStringTree).GetNodeLevel(Node) = 0) and
-      (Sender.Name = 'VSTCross')) then
+      (((Sender as TLazVirtualStringTree).Name = 'VSTCross') and
+      ((Sender as TLazVirtualStringTree).GetNodeLevel(Node) = 0)) then
     begin
       if (E < 0) then
-        TargetCanvas.Font.Color := clYellow
+        TargetCanvas.Font.Color :=
+          IfThen(Dark = False, clYellow, $0000B5BF)
       else
-        TargetCanvas.Font.Color := clWhite;
+        TargetCanvas.Font.Color :=
+          IfThen(Dark = False, clWhite, clSilver);
       Exit;
-    end;
-
-    if (Column > 1) then
+    end
+    else
     begin
       if (E < 0) then
-        TargetCanvas.Font.Color := clRed
+        TargetCanvas.Font.Color :=
+          IfThen(Dark = False, clRed, $006D68F3)
       else
-        TargetCanvas.Font.Color := clDefault;
+        TargetCanvas.Font.Color :=
+          IfThen(Dark = False, clDefault, clMedGray);
     end;
   except
     on E: Exception do
@@ -3056,7 +2911,10 @@ begin
         TargetCanvas.Brush.Color := FullColor
       else
         TargetCanvas.Brush.Color :=
-          IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
+          IfThen(Node.Index mod 2 = 0, IfThen(Dark = False, clWhite,
+          rgbToColor(22, 22, 22)), IfThen(Dark = False,
+          frmSettings.pnlOddRowColor.Color, Brighten(
+          frmSettings.pnlOddRowColor.Color, 44)));
     end;
     if (Column = 3) and ((Transaction.Kind in [0, 2]) and
       (Transaction.Amount < 0) or (Transaction.Kind in [1, 3]) and
@@ -3355,23 +3213,25 @@ procedure TfrmMain.VSTCrossBeforeCellPaint(Sender: TBaseVirtualTree;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
   try
-    if (vsSelected) in node.States then
+    if ((vsDisabled) in node.States) or ((vsSelected) in node.States) then
     begin
       TargetCanvas.Brush.Color := clBlack;
       TargetCanvas.FillRect(CellRect);
       exit;
     end;
 
-    if VSTCross.GetNodeLevel(Node) = 0 then
-      TargetCanvas.Brush.Color := FullColor
+    if (Sender as TLazVirtualStringTree).GetNodeLevel(Node) = 0 then
+      TargetCanvas.Brush.Color :=
+        IfThen(Dark = False, FullColor, Brighten(frmSettings.btnCaptionColorBack.Tag, 5))
     else
       TargetCanvas.Brush.Color :=
-        IfThen(Node.Index mod 2 = 0, Brighten(frmSettings.btnCaptionColorBack.Tag, 225),
-        Brighten(frmSettings.btnCaptionColorBack.Tag, 240));
+        IfThen(Node.Index mod 2 = 0, IfThen(Dark = False,
+        Brighten(frmSettings.btnCaptionColorBack.Tag, 225),
+        Brighten(frmSettings.btnCaptionColorBack.Tag, 25)),
+        IfThen(Dark = False, Brighten(frmSettings.btnCaptionColorBack.Tag, 240),
+        Brighten(frmSettings.btnCaptionColorBack.Tag, 15)));
     TargetCanvas.FillRect(CellRect);
   except
-    on E: Exception do
-      ShowErrorMessage(E);
   end;
 end;
 
@@ -3437,42 +3297,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.VSTCrossPaintText(Sender: TBaseVirtualTree;
-  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
-  TextType: TVSTTextType);
-var
-  E: double;
-begin
-  try
-    TryStrToFloat(ReplaceStr((Sender as TLazVirtualStringTree).Text[Node, Column],
-      FS_own.ThousandSeparator, ''), E);
-
-    if (vsSelected in node.States) or (VSTCross.AbsoluteIndex(Node) = 0) then
-    begin
-      if (E < 0) then
-        TargetCanvas.Font.Color := clYellow
-      else
-        TargetCanvas.Font.Color := clWhite;
-      Exit;
-    end;
-
-    TargetCanvas.Font.Bold := (vsSelected in node.States) or
-      (VSTSummary.GetNodeLevel(Node) = 0);
-
-    if (Column > 1) and (Node.Index > 0) then
-    begin
-
-      if (E < 0) then
-        TargetCanvas.Font.Color := clRed
-      else
-        TargetCanvas.Font.Color := clDefault;
-    end;
-  except
-    on E: Exception do
-      ShowErrorMessage(E);
-  end;
-end;
-
 procedure TfrmMain.VSTCrossResize(Sender: TObject);
 var
   X: integer;
@@ -3513,6 +3337,94 @@ procedure TfrmMain.VSTEndOperation(Sender: TBaseVirtualTree;
   OperationKind: TVTOperationKind);
 begin
   lblTime.Caption := IntToStr(GetTickCount64 - Start) + ' ms';
+end;
+
+procedure TfrmMain.VSTEnergyChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+begin
+  popEnergieDelete.Enabled := (VSTEnergy.SelectedCount = 1) and
+    (VSTEnergy.GetNodeLevel(Node) = 1);
+end;
+
+procedure TfrmMain.VSTEnergyGetImageIndex(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+  var Ghosted: boolean; var ImageIndex: integer);
+begin
+  try
+    if Column = 0 then
+      case VSTEnergy.GetNodeLevel(Node) of
+        0: ImageIndex := 35
+        else
+          ImageIndex := 36
+      end;
+  except
+  end;
+end;
+
+procedure TfrmMain.VSTEnergyGetNodeDataSize(Sender: TBaseVirtualTree;
+  var NodeDataSize: integer);
+begin
+  NodeDataSize := SizeOf(TEnergy);
+end;
+
+procedure TfrmMain.VSTEnergyGetText(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
+  var CellText: string);
+var
+  Energy: PEnergy;
+begin
+  Energy := VSTEnergy.GetNodeData(Node);
+  try
+    case Column of
+      1: CellText := Energy.Category;
+      2: CellText := Energy.SubCategory;
+      3: CellText := DateToStr(StrToDate(Energy.Date, 'YYYY-MM-DD', '-'), FS_own);
+      4: CellText := Format('%0.5n', [Energy.OnStart], FS_own);
+      5: CellText := Format('%0.5n', [Energy.OnEnd], FS_own);
+      6: CellText := Format('%0.5n', [Energy.OnEnd - Energy.OnStart], FS_own);
+      7: CellText := Format('%0.2n', [Energy.Price], FS_own);
+      8: CellText := Format('%0.2n', [(Energy.OnEnd - Energy.OnStart) *
+          Energy.Price], FS_own);
+      9: CellText := IfThen(VSTEnergy.GetNodeLevel(Node) = 0, '', IntToStr(Energy.ID));
+      10: CellText := Energy.Comment;
+    end;
+  except
+  end;
+end;
+
+procedure TfrmMain.VSTEnergyPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  TargetCanvas.Font.Bold := (Column in [6, 8]) or (vsSelected in node.States) or
+    ((Sender as TLazVirtualStringTree).GetNodeLevel(Node) = 0);
+
+  if (vsSelected in node.States) then
+    TargetCanvas.Font.Color := IfThen(Dark = False, clSilver, clYellow)
+  else
+    TargetCanvas.Font.Color :=
+      IfThen((Sender as TLazVirtualStringTree).GetNodeLevel(Node) =
+      0, clWhite, IfThen(Dark = False, clDefault, clSilver));
+end;
+
+procedure TfrmMain.VSTEnergyResize(Sender: TObject);
+var
+  X: integer;
+begin
+  // set transactions columns width
+  (Sender as TLazVirtualStringTree).Header.Columns[0].Width :=
+    round(ScreenRatio * 60 / 100);
+  if frmSettings.chkAutoColumnWidth.Checked = False then Exit;
+
+  X := round((VSTEnergy.Width - VSTEnergy.Header.Columns[0].Width -
+    ScrollBarWidth - 50) / 100);
+  VSTEnergy.Header.Columns[1].Width := 16 * X; // category
+  VSTEnergy.Header.Columns[2].Width := 16 * X; // subcategory
+  VSTEnergy.Header.Columns[3].Width := 11 * X; // date
+  VSTEnergy.Header.Columns[4].Width := 12 * X; // start
+  VSTEnergy.Header.Columns[5].Width := 12 * X; // end
+  VSTEnergy.Header.Columns[6].Width := 13 * X; // consumption
+  VSTEnergy.Header.Columns[7].Width := 9 * X; // unit price
+  VSTEnergy.Header.Columns[8].Width := 11 * X; // total price
 end;
 
 procedure TfrmMain.VSTFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
@@ -3631,61 +3543,76 @@ begin
     if Transaction.Date > FormatDateTime('YYYY-MM-DD', Now()) then
     begin
       if pnlListCaption.Tag = Transaction.ID then
-        TargetCanvas.Font.Color := FullColor
+        TargetCanvas.Font.Color := IfThen(Dark = False, FullColor, clDkGray)
       else
-        TargetCanvas.Font.Color := frmSettings.btnCaptionColorFont.Tag;
+        TargetCanvas.Font.Color :=
+          ifthen(Dark = False, frmSettings.btnCaptionColorFont.Tag, clSilver);
     end
     else
       case Transaction.Kind of
 
         // credit color
         0: case frmSettings.pnlCreditTransactionsColor.Tag of
-            0: TargetCanvas.Font.Color := clDefault;
+            0: TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
             1: begin
               if Column = 3 then
-                TargetCanvas.Font.Color := clBlue
+                TargetCanvas.Font.Color :=
+                  IfThen(Dark = False, clBlue, $00FFB852)
               else
-                TargetCanvas.Font.Color := clDefault;
+                TargetCanvas.Font.Color :=
+                  IfThen(Dark = False, clDefault, clSilver);
             end
             else
-              TargetCanvas.Font.Color := clBlue;
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clBlue, $00FFB852)
           end;
 
         // debit color
         1: case frmSettings.pnlDebitTransactionsColor.Tag of
-            0: TargetCanvas.Font.Color := clDefault;
+            0: TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
             1: begin
               if Column = 3 then
-                TargetCanvas.Font.Color := clRed
+                TargetCanvas.Font.Color :=
+                  IfThen(Dark = False, clRed, $006A64FF)
               else
-                TargetCanvas.Font.Color := clDefault;
+                TargetCanvas.Font.Color :=
+                  IfThen(Dark = False, clDefault, clSilver);
             end
             else
-              TargetCanvas.Font.Color := clRed;
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clRed, $006A64FF)
           end;
 
         // transfer plus color
         2: case frmSettings.pnlTransferPTransactionsColor.Tag of
-            0: TargetCanvas.Font.Color := clDefault;
+            0: TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
             1: begin
               if Column = 3 then
-                TargetCanvas.Font.Color := clGreen
+                TargetCanvas.Font.Color :=
+                  IfThen(Dark = False, clGreen, $0062FF52)
               else
-                TargetCanvas.Font.Color := clDefault;
+                TargetCanvas.Font.Color :=
+                  IfThen(Dark = False, clDefault, clSilver);
             end
             else
-              TargetCanvas.Font.Color := clGreen;
+              TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clGreen, $0062FF52);
           end;
 
           // transfer minus color
         else
           case frmSettings.pnlTransferMTransactionsColor.Tag of
-            0: TargetCanvas.Font.Color := clDefault;
+            0: TargetCanvas.Font.Color :=
+                IfThen(Dark = False, clDefault, clSilver);
             1: begin
               if Column = 3 then
                 TargetCanvas.Font.Color := rgbToColor(240, 160, 0)
               else
-                TargetCanvas.Font.Color := clDefault;
+                TargetCanvas.Font.Color :=
+                  IfThen(Dark = False, clDefault, clSilver);
             end
             else
               TargetCanvas.Font.Color := rgbToColor(240, 160, 0);
@@ -3859,11 +3786,15 @@ begin
     end;
 
     if Node.Index = 0 then
-      TargetCanvas.Brush.Color := FullColor
+      TargetCanvas.Brush.Color :=
+        IfThen(Dark = False, FullColor, Brighten(frmSettings.btnCaptionColorBack.Tag, 5))
     else
       TargetCanvas.Brush.Color :=
-        IfThen(Node.Index mod 2 = 0, Brighten(frmSettings.btnCaptionColorBack.Tag, 225),
-        Brighten(frmSettings.btnCaptionColorBack.Tag, 240));
+        IfThen(Node.Index mod 2 = 0, IfThen(Dark = False,
+        Brighten(frmSettings.btnCaptionColorBack.Tag, 225),
+        Brighten(frmSettings.btnCaptionColorBack.Tag, 25)),
+        IfThen(Dark = False, Brighten(frmSettings.btnCaptionColorBack.Tag, 240),
+        Brighten(frmSettings.btnCaptionColorBack.Tag, 15)));
     TargetCanvas.FillRect(CellRect);
   except
     on E: Exception do
@@ -4322,12 +4253,14 @@ begin
       exit;
     end;
 
-    if (Column > 1) and (Node.Index > 0) then
+    if (Column > 0) and (Node.Index > 0) then
     begin
       if (E < 0) then
-        TargetCanvas.Font.Color := clRed
+        TargetCanvas.Font.Color :=
+          IfThen(Dark = False, clRed, $006A64FF)
       else
-        TargetCanvas.Font.Color := clDefault;
+        TargetCanvas.Font.Color :=
+          IfThen(Dark = False, clDefault, clSilver);
     end;
   except
     on E: Exception do
@@ -4391,6 +4324,21 @@ procedure TfrmMain.mnuNewClick(Sender: TObject);
 var
   S: string;
 begin
+  {$IFDEF LINUX}
+  // =================================================================================
+  // CHECK THE SQLITE LIBRARY IN LINUX
+  // =================================================================================
+  try
+    If fpSystem('dpkg -l | grep libsqlite3-dev') <> 0 then
+      begin
+        ShowMessage(AnsiReplaceStr(Error_34, '% ', sLineBreak) + sLineBreak + sLineBreak +
+        AnsiReplaceStr(Message_11, '%', sLineBreak));
+        Exit;
+      end;
+  except
+  end;
+  {$ENDIF}
+
   try
     sd.InitialDir := ExtractFileDir(Application.ExeName);
     if sd.Execute = False then
@@ -4492,8 +4440,8 @@ begin
       'DELETE FROM data_tags WHERE dt_data = old.d_id;' +  // tags
       'DELETE FROM history WHERE his_d_id = old.d_id;' +   // history
       'DELETE FROM attachments WHERE att_d_id = old.d_id;' +  // attachments
-      'DELETE FROM transfers WHERE (tra_data1 = old.d_id) OR (tra_data2 = old.d_id); END;'
-      + 'DELETE FROM energies WHERE ene_d_id = old.d_id;';  // energies
+      'DELETE FROM transfers WHERE (tra_data1 = old.d_id) OR (tra_data2 = old.d_id);' +
+      'DELETE FROM energies WHERE ene_d_id = old.d_id; END;';  // energies
     QRY.ExecSQL;
 
     // **************************************************************************
@@ -5012,7 +4960,7 @@ begin
     QRY.SQL.Text :=
       'INSERT OR IGNORE INTO settings (set_parameter, set_value) VALUES ' + // INSERT
       '("program", "RQ3"), ' + // program
-      '("version", "4"), ' + // version
+      '("version", "5"), ' + // version
       '("password", NULL), ' + // password
       '("sort_column", "1"), ' + // sorting column
       '("sort_order", "0"), ' + // sorting order
@@ -5563,7 +5511,7 @@ begin
         tabCrossLeftChange(tabCrossLeft);
         tabReports.TabIndex := 0;
         tabReportsChange(tabReports);
-
+        VSTEnergy_Update;
       except
       end;
 
@@ -5895,6 +5843,11 @@ begin
         begin
           CopyVST(VSTCross);
           VSTCross.SetFocus;
+        end;
+      3: if (VSTEnergy.RootNodeCount > 0) then
+        begin
+          CopyVST(VSTEnergy);
+          VSTEnergy.SetFocus;
         end;
     end;
 end;
@@ -6924,7 +6877,7 @@ begin
         pnlType.Hint := '';
         pnlTypeCaption.Font.Style := [];
         pnlTypeCaption.Font.Color := clWhite;
-        cbxType.Hint := IntToStr(cbxType.ItemIndex);
+        cbxType.Hint := ''; //IntToStr(cbxType.ItemIndex);
       end
       else
       begin
@@ -6932,7 +6885,7 @@ begin
         pnlType.Hint := separ_1 + AnsiUpperCase(cbxType.Text);
         pnlTypeCaption.Font.Style := [fsBold];
         pnlTypeCaption.Font.Color := clYellow;
-        cbxType.Hint := IntToStr(cbxType.ItemIndex);
+        cbxType.Hint := IntToStr(cbxType.ItemIndex - 1);
       end;
     end;
   finally
@@ -6989,7 +6942,7 @@ begin
   if Key = 13 then
   begin
     Key := 0;
-    if frmMain.Visible = True then
+    if (frmMain.Visible = True) then
       datDateTo.SetFocus;
   end;
 end;
@@ -7145,45 +7098,165 @@ begin
         try
           // panel Detail
           frmDetail.cbxType.Enabled := True;
+
+          // ========================================================================
           // type
+          if (frmSettings.chkItemsFromFilter.Checked = True) then
+          begin
+            try
+              if cbxType.ItemIndex > 0 then
+                case cbxType.ItemIndex of
+                  1, 2: begin
+                    frmDetail.cbxType.ItemIndex := cbxType.ItemIndex - 1;
+                    frmDetail.cbxTypeChange(frmDetail.cbxType);
+                    frmDetail.cbxTypeX.ItemIndex := cbxType.ItemIndex - 1;
+                    frmDetail.cbxTypeXChange(frmDetail.cbxTypeX);
+                  end
+                  else
+                  begin
+                    frmDetail.cbxType.ItemIndex := 2;
+                    frmDetail.cbxTypeChange(frmDetail.cbxType);
+                  end;
+                end;
+            except
+              on E: Exception do
+                ShowErrorMessage(E);
+            end;
+          end;
+
           if (frmDetail.cbxType.ItemIndex = -1) then
           begin
             frmDetail.cbxType.ItemIndex := 1;
             frmDetail.cbxTypeChange(frmDetail.cbxType);
           end;
+
+
+          // ========================================================================
           // amount
           if frmDetail.spiAmountFrom.Text = '' then
             frmDetail.spiAmountFrom.Text := Format('%n', [0.0]);
           if frmDetail.spiAmountTo.Text = '' then
             frmDetail.spiAmountTo.Text := Format('%n', [0.0]);
-          // comment
-          //frmDetail.cbxComment.Text := '';
+
+          // ========================================================================
           // person
+          if (frmSettings.chkItemsFromFilter.Checked = True) then
+          begin
+            try
+              if (cbxPerson.ItemIndex > 0) then
+              begin
+                frmDetail.cbxPerson.ItemIndex := cbxPerson.ItemIndex - 1;
+                frmDetail.cbxPersonX.ItemIndex := cbxPerson.ItemIndex - 1;
+              end;
+            except
+              on E: Exception do
+                ShowErrorMessage(E);
+            end;
+          end;
+
           if (frmDetail.cbxPerson.ItemIndex = -1) and
             (frmDetail.cbxPerson.Items.Count > 0) then
             frmDetail.cbxPerson.ItemIndex := 0;
+
+          if (frmDetail.cbxPersonX.ItemIndex = -1) and
+            (frmDetail.cbxPersonX.Items.Count > 0) then
+            frmDetail.cbxPersonX.ItemIndex := 0;
+
+          // ========================================================================
+          // payee
+          if (frmSettings.chkItemsFromFilter.Checked = True) then
+          begin
+            try
+              if (cbxPayee.ItemIndex > 0) then
+              begin
+                frmDetail.cbxPayee.ItemIndex := cbxPayee.ItemIndex - 1;
+                frmDetail.cbxPayeeX.ItemIndex := cbxPayee.ItemIndex - 1;
+              end;
+            except
+              on E: Exception do
+                ShowErrorMessage(E);
+            end;
+          end;
+
+          if (frmDetail.cbxPayee.ItemIndex = -1) and
+            (frmDetail.cbxPayee.Items.Count > 0) then
+            frmDetail.cbxPayee.ItemIndex := 0;
+
+          if (frmDetail.cbxPayeeX.ItemIndex = -1) and
+            (frmDetail.cbxPayeeX.Items.Count > 0) then
+            frmDetail.cbxPayeeX.ItemIndex := 0;
+
+          // ========================================================================
+          // account from
+          if (frmSettings.chkItemsFromFilter.Checked = True) then
+          begin
+            try
+              if (cbxAccount.ItemIndex > 0) then
+              begin
+                frmDetail.cbxAccountFrom.ItemIndex := cbxAccount.ItemIndex - 1;
+                frmDetail.cbxAccountTo.ItemIndex := cbxAccount.ItemIndex - 1;
+                frmDetail.cbxAccountX.ItemIndex := cbxAccount.ItemIndex - 1;
+              end;
+            except
+              on E: Exception do
+                ShowErrorMessage(E);
+            end;
+          end;
+
           // account from
           if (frmDetail.cbxAccountFrom.ItemIndex = -1) and
             (frmDetail.cbxAccountFrom.Items.Count > 0) then
             frmDetail.cbxAccountFrom.ItemIndex :=
               IfThen(cbxAccount.ItemIndex > 0, cbxAccount.ItemIndex - 1, 0);
+
           // account to
-          if (frmDetail.cbxAccountFrom.ItemIndex = -1) and
-            (frmDetail.cbxAccountFrom.Items.Count > 0) then
+          if (frmDetail.cbxAccountTo.ItemIndex = -1) and
+            (frmDetail.cbxAccountTo.Items.Count > 0) then
             frmDetail.cbxAccountTo.ItemIndex := 0;
-          // payee
-          if (frmDetail.cbxPayee.ItemIndex = -1) and
-            (frmDetail.cbxPayee.Items.Count > 0) then
-            frmDetail.cbxPayee.ItemIndex := 0;
+
+          // Account X
+          if (frmDetail.cbxAccountX.ItemIndex = -1) and
+            (frmDetail.cbxAccountX.Items.Count > 0) then
+            frmDetail.cbxAccountX.ItemIndex :=
+              IfThen(cbxAccount.ItemIndex > 0, cbxAccount.ItemIndex - 1, 0);
+
+
+          // ========================================================================
           // category
+          if (frmSettings.chkItemsFromFilter.Checked = True) then
+          begin
+            try
+              if (cbxCategory.ItemIndex > 0) then
+              begin
+                frmDetail.cbxCategory.ItemIndex := cbxCategory.ItemIndex - 1;
+                frmDetail.cbxCategoryX.ItemIndex := cbxCategory.ItemIndex - 1;
+              end;
+            except
+              on E: Exception do
+                ShowErrorMessage(E);
+            end;
+          end;
+
           if (frmDetail.cbxCategory.ItemIndex = -1) and
             (frmDetail.cbxCategory.Items.Count > 0) then
             frmDetail.cbxCategory.ItemIndex := 0;
-          frmDetail.cbxTypeChange(frmDetail.cbxType);
+
           frmDetail.cbxCategoryChange(frmDetail.cbxCategory);
           frmDetail.cbxSubcategoryChange(frmDetail.cbxSubcategory);
+
+          if (frmDetail.cbxSubcategory.Items.Count > 0) and
+            (frmSettings.chkItemsFromFilter.Checked = True) and
+            (cbxSubcategory.ItemIndex > 0) then
+          begin
+            frmDetail.cbxSubcategory.ItemIndex :=
+              frmDetail.cbxSubcategory.Items.IndexOf(
+              cbxSubcategory.Items[cbxSubcategory.ItemIndex]);
+            frmDetail.cbxSubcategoryChange(frmDetail.cbxSubcategory);
+          end;
+
           // tag
           frmDetail.lbxTag.CheckAll(cbUnchecked, False, False);
+
           // tab Simple
           frmDetail.tabSimple.TabIndex := 0;
           frmDetail.pnlTags.Visible := frmDetail.tabSimple.TabIndex = 0;
@@ -7623,7 +7696,7 @@ begin
     else
     begin
       pnlType.Hint := '';
-      pnlTypeCaption.Font.Color := clYellow;
+      IfThen(Dark = False, clYellow, $0000B5BF);
       pnlTypeCaption.Font.Style := [fsBold];
       (cbx as TComboBox).Hint := '';
 
@@ -8140,6 +8213,8 @@ begin
         'Templates' + DirectorySeparator + 'report_balance.lrf';
     1: FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
         'Templates' + DirectorySeparator + 'report_chrono.lrf';
+    3: FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
+        'Templates' + DirectorySeparator + 'report_energy.lrf';
   end;
 
   if FileExists(FileName) = False then
@@ -8151,72 +8226,102 @@ begin
   try
     Report.LoadFromFile(FileName);
 
-    if tabReports.TabIndex <> 1 then
-    begin
-      // header
-      frmMain.Report.FindObject('HeaderCaption').Memo.Text :=
-        AnsiUpperCase(IfThen(tabReports.TabIndex = 0, Caption_287, Caption_318) +
-        ' - ' + IfThen(tabReports.TabIndex = 0,
-        tabBalanceHeader.Tabs[tabBalanceHeader.TabIndex].Text,
-        tabCrossTop.Tabs[tabCrossTop.TabIndex].Text + ' / ' +
-        tabCrossLeft.Tabs[tabCrossLeft.TabIndex].Text));
-      // transactions captions
-      frmMain.Report.FindObject('Name').Memo.Text :=
-        AnsiUpperCase(frmMain.VSTSummary.Header.Columns[1].CaptionText);
-      frmMain.Report.FindObject('Credits').Memo.Text :=
-        AnsiUpperCase(frmMain.VSTSummary.Header.Columns[3].CaptionText);
-      frmMain.Report.FindObject('Debits').Memo.Text :=
-        AnsiUpperCase(frmMain.VSTSummary.Header.Columns[4].CaptionText);
-      frmMain.Report.FindObject('Pluses').Memo.Text :=
-        AnsiUpperCase(frmMain.VSTSummary.Header.Columns[5].CaptionText);
-      frmMain.Report.FindObject('Minuses').Memo.Text :=
-        AnsiUpperCase(frmMain.VSTSummary.Header.Columns[6].CaptionText);
-      frmMain.Report.FindObject('Balance').Memo.Text :=
-        AnsiUpperCase(frmMain.VSTSummary.Header.Columns[7].CaptionText);
+    case tabReports.TabIndex of
+      0, 2: begin
+        // header
+        frmMain.Report.FindObject('HeaderCaption').Memo.Text :=
+          AnsiUpperCase(IfThen(tabReports.TabIndex = 0, Caption_287, Caption_318) +
+          ' - ' + IfThen(tabReports.TabIndex = 0,
+          tabBalanceHeader.Tabs[tabBalanceHeader.TabIndex].Text,
+          tabCrossTop.Tabs[tabCrossTop.TabIndex].Text + ' / ' +
+          tabCrossLeft.Tabs[tabCrossLeft.TabIndex].Text));
 
-      // footer
-      frmMain.Report.FindObject('Footer').Memo.Text :=
-        AnsiUpperCase(Application.Title + ' - ' + AnsiReplaceStr(Menu_45, '&', ''));
+        // transactions captions
+        frmMain.Report.FindObject('Name').Memo.Text :=
+          AnsiUpperCase(frmMain.VSTSummary.Header.Columns[1].CaptionText);
+        frmMain.Report.FindObject('Credits').Memo.Text :=
+          AnsiUpperCase(frmMain.VSTSummary.Header.Columns[3].CaptionText);
+        frmMain.Report.FindObject('Debits').Memo.Text :=
+          AnsiUpperCase(frmMain.VSTSummary.Header.Columns[4].CaptionText);
+        frmMain.Report.FindObject('Pluses').Memo.Text :=
+          AnsiUpperCase(frmMain.VSTSummary.Header.Columns[5].CaptionText);
+        frmMain.Report.FindObject('Minuses').Memo.Text :=
+          AnsiUpperCase(frmMain.VSTSummary.Header.Columns[6].CaptionText);
+        frmMain.Report.FindObject('Balance').Memo.Text :=
+          AnsiUpperCase(frmMain.VSTSummary.Header.Columns[7].CaptionText);
 
-      Report.Tag := 2;
-      Report.ShowReport;
-      case tabReports.TabIndex of
-        0: if tabBalanceShow.TabIndex = 0 then
-            VSTBalance.SetFocus;
-        2: VSTCross.SetFocus;
+        // footer
+        frmMain.Report.FindObject('Footer').Memo.Text :=
+          AnsiUpperCase(Application.Title + ' - ' + AnsiReplaceStr(Menu_45, '&', ''));
+
+        Report.Tag := 2;
+        Report.ShowReport;
+        case tabReports.TabIndex of
+          0: if tabBalanceShow.TabIndex = 0 then
+              VSTBalance.SetFocus;
+          2: VSTCross.SetFocus;
+        end;
       end;
-    end;
 
-    if tabReports.TabIndex = 1 then
-    begin
-      // header
-      frmMain.Report.FindObject('HeaderCaption').Memo.Text :=
-        AnsiUpperCase(AnsiReplaceStr(Menu_45, '&', '') + ' - ' +
-        Caption_287 + ' - ' + tabChronoHeader.Tabs[tabChronoHeader.TabIndex].Text);
+      1:
+      begin
+        // header
+        frmMain.Report.FindObject('HeaderCaption').Memo.Text :=
+          AnsiUpperCase(AnsiReplaceStr(Menu_45, '&', '') + ' - ' +
+          Caption_287 + ' - ' + tabChronoHeader.Tabs[tabChronoHeader.TabIndex].Text);
 
-      frmMain.Report.FindObject('Account').Memo.Text :=
-        frmMain.VSTChrono.Header.Columns[1].CaptionText;
-      frmMain.Report.FindObject('StartSum').Memo.Text :=
-        frmMain.VSTChrono.Header.Columns[2].CaptionText;
-      frmMain.Report.FindObject('Credits').Memo.Text :=
-        frmMain.VSTChrono.Header.Columns[3].CaptionText;
-      frmMain.Report.FindObject('Debits').Memo.Text :=
-        frmMain.VSTChrono.Header.Columns[4].CaptionText;
-      frmMain.Report.FindObject('Pluses').Memo.Text :=
-        frmMain.VSTChrono.Header.Columns[5].CaptionText;
-      frmMain.Report.FindObject('Minuses').Memo.Text :=
-        frmMain.VSTChrono.Header.Columns[6].CaptionText;
-      frmMain.Report.FindObject('Balance').Memo.Text :=
-        frmMain.VSTChrono.Header.Columns[7].CaptionText;
-      frmMain.Report.FindObject('Total').Memo.Text :=
-        frmMain.VSTChrono.Header.Columns[8].CaptionText;
-      // footer
-      frmMain.Report.FindObject('lblFooter').Memo.Text :=
-        AnsiUpperCase(Application.Title + ' - ' + AnsiReplaceStr(Menu_45, '&', ''));
+        frmMain.Report.FindObject('Account').Memo.Text :=
+          frmMain.VSTChrono.Header.Columns[1].CaptionText;
+        frmMain.Report.FindObject('StartSum').Memo.Text :=
+          frmMain.VSTChrono.Header.Columns[2].CaptionText;
+        frmMain.Report.FindObject('Credits').Memo.Text :=
+          frmMain.VSTChrono.Header.Columns[3].CaptionText;
+        frmMain.Report.FindObject('Debits').Memo.Text :=
+          frmMain.VSTChrono.Header.Columns[4].CaptionText;
+        frmMain.Report.FindObject('Pluses').Memo.Text :=
+          frmMain.VSTChrono.Header.Columns[5].CaptionText;
+        frmMain.Report.FindObject('Minuses').Memo.Text :=
+          frmMain.VSTChrono.Header.Columns[6].CaptionText;
+        frmMain.Report.FindObject('Balance').Memo.Text :=
+          frmMain.VSTChrono.Header.Columns[7].CaptionText;
+        frmMain.Report.FindObject('Total').Memo.Text :=
+          frmMain.VSTChrono.Header.Columns[8].CaptionText;
+        // footer
+        frmMain.Report.FindObject('lblFooter').Memo.Text :=
+          AnsiUpperCase(Application.Title + ' - ' + AnsiReplaceStr(Menu_45, '&', ''));
 
-      Report.Tag := 1;
-      Report.ShowReport;
-      VSTChrono.SetFocus;
+        Report.Tag := 1;
+        Report.ShowReport;
+        VSTChrono.SetFocus;
+      end;
+      3: begin
+        frmMain.Report.FindObject('HeaderCaption').Memo.Text :=
+          AnsiUpperCase(AnsiReplaceStr(Menu_45, '&', '') + ' - ' +
+          tabEnergies.Caption);
+
+        // fields caption
+        frmMain.Report.FindObject('Category').Memo.Text :=
+          '  ' + AnsiUpperCase(frmMain.VSTEnergy.Header.Columns[1].CaptionText +
+          ' / ' + frmMain.VSTEnergy.Header.Columns[2].CaptionText);
+        frmMain.Report.FindObject('Start').Memo.Text :=
+          AnsiUpperCase(frmMain.VSTEnergy.Header.Columns[4].CaptionText);
+        frmMain.Report.FindObject('End').Memo.Text :=
+          AnsiUpperCase(frmMain.VSTEnergy.Header.Columns[5].CaptionText);
+        frmMain.Report.FindObject('Consumption').Memo.Text :=
+          AnsiUpperCase(frmMain.VSTEnergy.Header.Columns[6].CaptionText);
+        frmMain.Report.FindObject('Price').Memo.Text :=
+          AnsiUpperCase(frmMain.VSTEnergy.Header.Columns[7].CaptionText);
+        frmMain.Report.FindObject('Total').Memo.Text :=
+          AnsiUpperCase(frmMain.VSTEnergy.Header.Columns[8].CaptionText);
+
+        // footer
+        frmMain.Report.FindObject('lblFooter').Memo.Text :=
+          AnsiUpperCase(Application.Title + ' - ' + AnsiReplaceStr(Menu_45, '&', ''));
+
+        Report.Tag := 3;
+        Report.ShowReport;
+        VSTEnergy.SetFocus;
+      end;
     end;
   except
     on E: Exception do
@@ -8241,6 +8346,8 @@ begin
           DirectorySeparator + 'Templates' + DirectorySeparator + 'report_balance.lrf';
       1: FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
           'Templates' + DirectorySeparator + 'report_chrono.lrf';
+      3: FileName := ExtractFileDir(Application.ExeName) + DirectorySeparator +
+          'Templates' + DirectorySeparator + 'report_energy.lrf';
     end;
 
     if FileExists(FileName) = False then
@@ -8623,6 +8730,7 @@ begin
   case tabReports.TabIndex of
     0: EOF := ReportNodesCount = VSTBalance.TotalCount;
     2: EOF := ReportNodesCount = VSTCross.TotalCount;
+    3: EOF := ReportNodesCount = VSTEnergy.TotalCount;
   end;
 end;
 
@@ -8632,6 +8740,7 @@ begin
   case tabReports.TabIndex of
     0: ReportNode := VSTBalance.GetFirst();
     2: ReportNode := VSTCross.GetFirst();
+    3: ReportNode := VSTEnergy.GetFirst();
   end;
 end;
 
@@ -8641,6 +8750,7 @@ begin
   case tabReports.TabIndex of
     0: ReportNode := VSTBalance.GetNext(ReportNode);
     2: ReportNode := VSTCross.GetNext(ReportNode);
+    3: ReportNode := VSTEnergy.GetNext(ReportNode);
   end;
 end;
 
@@ -8731,11 +8841,6 @@ procedure TfrmMain.ediCommentExit(Sender: TObject);
 begin
   actDelete.Enabled := True;
   actEdit.Enabled := True;
-end;
-
-procedure TfrmMain.FormDestroy(Sender: TObject);
-begin
-  frmSplash.Free;
 end;
 
 procedure TfrmMain.lblDateFromClick(Sender: TObject);
@@ -8889,6 +8994,34 @@ begin
   frmSettings.ShowModal;
 end;
 
+procedure TfrmMain.popEnergieDeleteClick(Sender: TObject);
+begin
+  try
+    if (VSTEnergy.SelectedCount = 0) or (frmMain.Conn.Connected = False) then
+      exit;
+
+    if MessageDlg(Message_00, Question_01 + sLineBreak + sLineBreak +
+      VSTEnergy.Header.Columns[1].Text + ': ' +
+      VSTEnergy.Text[VSTEnergy.FocusedNode, 1] + ' - ' +
+      VSTEnergy.Text[VSTEnergy.FocusedNode, 2] + sLineBreak +
+      VSTEnergy.Header.Columns[3].Text + ': ' +
+      VSTEnergy.Text[VSTEnergy.FocusedNode, 3] + sLineBreak +
+      VSTEnergy.Header.Columns[6].Text + ': ' +
+      VSTEnergy.Text[VSTEnergy.FocusedNode, 6], mtConfirmation, mbYesNo, 0) <> 6 then
+      Exit;
+
+    frmMain.QRY.SQL.Text := 'DELETE FROM energies WHERE ene_id IN (' +
+      VSTEnergy.Text[VSTEnergy.GetFirstSelected(), 9] + ')';
+    frmMain.QRY.ExecSQL;
+    frmMain.Tran.Commit;
+
+    VSTEnergy_Update;
+  except
+    on E: Exception do
+      ShowErrorMessage(E);
+  end;
+end;
+
 procedure TfrmMain.popSummaryCopyClick(Sender: TObject);
 begin
   CopyVST(VSTSummary);
@@ -8953,7 +9086,8 @@ begin
     frmMain.DSTSummary.Tag := 0;
     frmMain.Report.Tag := 1;
     frmMain.Report.ShowReport;
-    VST.SetFocus;
+    if pnlReport.Visible = False then
+      VST.SetFocus;
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -9191,6 +9325,7 @@ begin
   pnlAmount.Color := clDefault;
   pnlAmountCaption.Font.Style := [];
   pnlAmountCaption.Font.Color := clWhite;
+
   cbxMin.ItemIndex := 0;
   spiMin.Clear;
   cbxMax.ItemIndex := 0;
@@ -9436,8 +9571,8 @@ begin
           AnsiReplaceStr(cbxCurrency.Hint, '"', '""') + '" ';
         pnlCurrencyCaption.Font.Color := clYellow;
         pnlCurrencyCaption.Font.Style := [fsBold];
-        pnlCurrency.Hint := separ_1 +
-          Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
+        pnlCurrency.Hint := separ_1 + Field(separ_1,
+          cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
         tabCurrency.Tabs.Add;
         tabCurrency.Tabs[0].Text :=
           Field(separ_1, cbxCurrency.Items[cbxCurrency.ItemIndex], 1);
@@ -9909,6 +10044,10 @@ begin
       0: tabBalanceHeaderChange(tabBalanceHeader);
       1: tabChronoHeaderChange(tabChrono);
       2: tabCrossTopChange(tabCrossTop);
+      3: begin
+        VSTEnergy_Update;
+        VSTEnergy.SetFocus;
+      end;
     end;
     Exit;
   end;
@@ -9936,7 +10075,8 @@ procedure TfrmMain.popFilterExpandClick(Sender: TObject);
 var
   I: cardinal;
 begin
-  scrFilter.Visible := False; // due flickering of the components
+  frmMain.BeginFormUpdate;
+  //scrFilter.Visible := False; // due flickering of the components
 
   if Sender.ClassType = TAction then
     I := (Sender as TAction).Tag
@@ -9993,7 +10133,8 @@ begin
   pnlTagCaption.Tag := I;
   pnlTagCaptionClick(pnlTagCaption);
 
-  scrFilter.Visible := True; // end of flickering
+  //scrFilter.Visible := True; // end of flickering
+  frmMain.EndFormUpdate;
 end;
 
 procedure TfrmMain.ReportGetValue(const ParName: string; var ParValue: variant);
@@ -10011,6 +10152,8 @@ var
   Holiday: PHoliday;
   Link: PLink;
   Balance: PBalance;
+  Energy: PEnergy;
+  Level: byte;
 begin
 
   try
@@ -10201,6 +10344,34 @@ begin
             ParValue := 1;
         end;
         exit;
+      end;
+
+      3: begin
+        Energy := VSTEnergy.GetNodeData(ReportNode);
+        Level := VSTEnergy.GetNodeLevel(ReportNode);
+
+        if ParName = 'Level' then
+          ParValue := Level;
+
+        if ParName = 'Category' then
+        begin
+          if Level = 0 then
+            ParValue := Energy.Category + ' / ' + Energy.SubCategory
+          else
+            ParValue := '   ' + DateToStr(StrToDate(Energy.Date, 'YYYY-MM-DD', '-'),
+              FS_own) + IfThen(Energy.Comment = '', '', ' (' + Energy.Comment + ')');
+        end;
+
+        if ParName = 'Start' then
+          ParValue := Format('%0.5n', [Energy.OnStart]);
+        if ParName = 'End' then
+          ParValue := Format('%0.5n', [Energy.OnEnd]);
+        if ParName = 'Consumption' then
+          ParValue := Format('%0.5n', [Energy.OnEnd - Energy.OnStart]);
+        if ParName = 'Price' then
+          ParValue := Format('%0.2n', [Energy.Price]);
+        if ParName = 'Total' then
+          ParValue := Format('%0.2n', [(Energy.OnEnd - Energy.OnStart) * Energy.Price]);
       end;
     end;
 
@@ -10399,6 +10570,24 @@ var
   UsedLastImage: boolean;
   // if was used the last image of new transactions image (used items)
 begin
+  if frmSplash.Visible = False then
+    TimeStart := 0;
+
+  {$IFDEF LINUX}
+  // =================================================================================
+  // CHECK THE SQLITE LIBRARY IN LINUX
+  // =================================================================================
+  try
+    If fpSystem('dpkg -l | grep libsqlite3-dev') <> 0 then
+      begin
+      ShowMessage(AnsiReplaceStr(Error_34, '% ', sLineBreak) + sLineBreak + sLineBreak +
+        AnsiReplaceStr(Message_11, '%', sLineBreak));
+        Exit;
+      end;
+  except
+  end;
+  {$ENDIF}
+
   try
     // check zero size of the database
     if FileExists(FileName) then
@@ -10806,12 +10995,11 @@ begin
     frmMain.QRY.SQL.Text := 'CREATE TRIGGER after_delete_data ' + // 1
       'AFTER DELETE ON data FOR EACH ROW BEGIN ' +     // 2
       'UPDATE OR IGNORE data_tags SET dt_att = 1 WHERE dt_data = old.d_id;' +
-      // set attribute to delete
       'DELETE FROM data_tags WHERE dt_data = old.d_id;' +  // tags
       'DELETE FROM history WHERE his_d_id = old.d_id;' +   // history
       'DELETE FROM attachments WHERE att_d_id = old.d_id;' +  // attachments
-      'DELETE FROM transfers WHERE (tra_data1 = old.d_id) OR (tra_data2 = old.d_id); END;'
-      + 'DELETE FROM energies WHERE ene_d_id = old.d_id;';  // energies
+      'DELETE FROM transfers WHERE (tra_data1 = old.d_id) OR (tra_data2 = old.d_id);' +
+      'DELETE FROM energies WHERE ene_d_id = old.d_id; END;';  // energies
     frmMain.QRY.ExecSQL;
 
     // ADD COLUMN TO THE TABLE CATEGORIES
@@ -10887,6 +11075,47 @@ begin
     frmMain.QRY.ExecSQL;
     frmMain.Tran.Commit;
   end;
+
+  // ==========
+  // VERSION 04
+  // ==========
+  frmMain.QRY.SQL.Text :=
+    'SELECT set_value FROM settings WHERE set_parameter = "version"';
+  frmMain.QRY.Open;
+  Temp := frmMain.QRY.Fields[0].AsString;
+  frmMain.QRY.Close;
+
+  try
+    if Temp = '4' then
+    begin
+      frmMain.Tran.Commit;
+      frmMain.Tran.StartTransaction;
+      // DELETE WRONG TRIGGER AFTER DELETE DATA
+      frmMain.QRY.SQL.Text := 'DROP TRIGGER after_delete_data;';  // wrong trigger
+      frmMain.QRY.ExecSQL;
+
+      // CREATE CORRECT TRIGGER AFTER DELETE DATA
+      frmMain.QRY.SQL.Text := 'CREATE TRIGGER after_delete_data ' + // 1
+        'AFTER DELETE ON data FOR EACH ROW BEGIN ' +     // 2
+        'UPDATE OR IGNORE data_tags SET dt_att = 1 WHERE dt_data = old.d_id;' +
+        'DELETE FROM data_tags WHERE dt_data = old.d_id;' +  // tags
+        'DELETE FROM history WHERE his_d_id = old.d_id;' +   // history
+        'DELETE FROM attachments WHERE att_d_id = old.d_id;' +  // attachments
+        'DELETE FROM transfers WHERE (tra_data1 = old.d_id) OR (tra_data2 = old.d_id);' +
+        'DELETE FROM energies WHERE ene_d_id = old.d_id; END;';  // energies
+      frmMain.QRY.ExecSQL;
+
+      // UPDATE VERSON TO 5
+      frmMain.QRY.SQL.Text :=
+        'UPDATE settings SET set_value = 5 WHERE set_parameter = "version";';
+      frmMain.QRY.ExecSQL;
+      frmMain.Tran.Commit;
+    end;
+  except
+  end;
+
+  TimeLog[52, 0] := 'Check opened database';
+  TimeLog[52, 1] := IntToStr(GetTickCount64 - TimeStart);
 
   // **************************************************************************
   // ========================================
@@ -10995,6 +11224,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[53, 0] := 'Update list of persons';
+      TimeLog[53, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     UpdateCategories;
@@ -11002,6 +11233,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[54, 0] := 'Update list of categories';
+      TimeLog[54, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     UpdateCurrencies;
@@ -11009,6 +11242,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[55, 0] := 'Update list of currencies';
+      TimeLog[55, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     UpdateAccounts;
@@ -11016,6 +11251,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[56, 0] := 'Update list of accounts';
+      TimeLog[56, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     UpdatePayees;
@@ -11023,6 +11260,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[57, 0] := 'Update list of payees';
+      TimeLog[57, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     UpdateHolidays;
@@ -11030,6 +11269,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[58, 0] := 'Update list of holidays';
+      TimeLog[58, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     UpdateComments;
@@ -11037,6 +11278,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[59, 0] := 'Update list of comments';
+      TimeLog[59, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     UpdateTags;
@@ -11044,6 +11287,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[60, 0] := 'Update list of tags';
+      TimeLog[60, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     UpdateScheduler;
@@ -11051,6 +11296,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[61, 0] := 'Update schedulers';
+      TimeLog[61, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     UpdateBudgets;
@@ -11058,6 +11305,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[62, 0] := 'Update budgets';
+      TimeLog[62, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     UpdateLinks;
@@ -11065,6 +11314,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[63, 0] := 'Update list of links';
+      TimeLog[63, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     // =========================================================================
@@ -11538,6 +11789,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[64, 0] := 'Filter settings';
+      TimeLog[64, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     // ===============================================================================
@@ -11669,6 +11922,8 @@ begin
     begin
       frmSplash.prgSplash.Value := frmSplash.prgSplash.Value + 2;
       frmSplash.Update;
+      TimeLog[65, 0] := 'Transactions settings';
+      TimeLog[65, 1] := IntToStr(GetTickCount64 - TimeStart);
     end;
 
     // main currency in calendar
@@ -11685,6 +11940,8 @@ begin
     // Show all transactions and summary
     AllowUpdateTransactions := True;
     UpdateTransactions;
+    TimeLog[66, 0] := 'Update transactions';
+    TimeLog[66, 1] := IntToStr(GetTickCount64 - TimeStart);
 
     if frmSplash.Visible = True then
     begin
@@ -11697,7 +11954,9 @@ begin
     screen.Cursor := crDefault;
     frmMain.tmr.Enabled := True;
 
-    sleep(25);
+    Sleep(15);
+    TimeLog[67, 0] := 'Show main form';
+    TimeLog[67, 1] := IntToStr(GetTickCount64 - TimeStart);
   except
     on E: Exception do
       ShowErrorMessage(E);
@@ -11850,7 +12109,8 @@ begin
         Transactions.Account := frmMain.QRY.Fields[4].AsString;
         Transactions.Category := frmMain.QRY.Fields[5].AsString;
         Transactions.SubCategory :=
-          IfThen(frmMain.QRY.Fields[11].AsInteger = 0, '', frmMain.QRY.Fields[6].AsString);
+          IfThen(frmMain.QRY.Fields[11].AsInteger = 0, '',
+          frmMain.QRY.Fields[6].AsString);
         Transactions.Person := frmMain.QRY.Fields[7].AsString;
         Transactions.Payee := frmMain.QRY.Fields[8].AsString;
         Transactions.Kind := frmMain.QRY.Fields[10].AsInteger;
@@ -12141,6 +12401,7 @@ begin
       frmMain.tabBalanceHeaderChange(frmMain.tabBalanceHeader);
       frmMain.tabChronoHeaderChange(frmMain.tabChronoHeader);
       frmMain.tabCrossLeftChange(frmMain.tabCrossLeft);
+      frmMain.VSTEnergy_Update;
     end;
 
     frmMain.popSummaryCopy.Enabled := frmMain.VSTSummary.RootNodeCount > 0;
@@ -12159,5 +12420,90 @@ begin
     end;
   end;
 end;
+
+procedure TfrmMain.VSTEnergy_Update;
+var
+  Energy, SubEnergy: PEnergy;
+  N, S: PVirtualNode;
+  ID: integer;
+begin
+  VSTEnergy.RootNodeCount := 0;
+  VSTEnergy.Clear;
+  VSTEnergy.BeginUpdate;
+
+  // get data
+  frmMain.QRY.SQL.Text :=
+    'SELECT d_date, cat_parent_name, cat_name, ene_reading1, ' +
+    'ene_reading2, ene_price, ene_id, d_category, ene_comment ' +
+    'FROM data ' + 'INNER JOIN energies ON (ene_d_id = d_id) ' +
+    'LEFT JOIN accounts ON (acc_id = d_account) ' + sLineBreak +// accounts
+    'LEFT JOIN categories ON (cat_id = d_category) ' + sLineBreak +// categories
+    'LEFT JOIN persons ON (per_id = d_person) ' + sLineBreak +// persons
+    'LEFT JOIN payees ON (pee_id = d_payee) ' + sLineBreak +// payees
+    'WHERE ' +  // where clausule
+    f_type + sLineBreak + // type filter
+    f_date + sLineBreak + // date filter
+    f_currency + sLineBreak + // currency filter
+    f_account + sLineBreak + // account filter
+    f_amount + sLineBreak +  // amount filter
+    f_comment + sLineBreak + // comment filter
+    f_category + sLineBreak + // category filter
+    f_subcategory + sLineBreak + // subcategory filter
+    f_person + sLineBreak + // person filter
+    f_payee + sLineBreak + // payee filter
+    f_tag + // tag filter
+    'ORDER BY d_category, d_date;';
+
+  try
+    ID := 0;
+    frmMain.QRY.Open;
+
+    while not (frmMain.QRY.EOF) do
+    begin
+      if (ID <> frmMain.QRY.Fields[7].AsInteger) then
+      begin
+        VSTEnergy.RootNodeCount := VSTEnergy.RootNodeCount + 1;
+        N := VSTEnergy.GetLast();
+        Energy := VSTEnergy.GetNodeData(N);
+        Energy.Category := frmMain.QRY.Fields[1].AsString;
+        Energy.SubCategory := frmMain.QRY.Fields[2].AsString;
+        Energy.OnStart := frmMain.QRY.Fields[3].AsFloat;
+        Energy.Price := frmMain.QRY.Fields[5].AsFloat;
+      end;
+
+      VSTEnergy.ChildCount[N] := VSTEnergy.ChildCount[N] + 1;
+      S := VSTEnergy.GetLastChild(N);
+      SubEnergy := VSTEnergy.GetNodeData(S);
+      SubEnergy.Date := frmMain.QRY.Fields[0].AsString;
+      SubEnergy.Category := frmMain.QRY.Fields[1].AsString;
+      SubEnergy.SubCategory := frmMain.QRY.Fields[2].AsString;
+      SubEnergy.OnStart := frmMain.QRY.Fields[3].AsFloat;
+      SubEnergy.OnEnd := frmMain.QRY.Fields[4].AsFloat;
+      SubEnergy.Price := frmMain.QRY.Fields[5].AsFloat;
+      SubEnergy.Comment := frmMain.QRY.Fields[8].AsString;
+      SubEnergy.ID := frmMain.QRY.Fields[6].AsInteger;
+
+      Energy.OnEnd := frmMain.QRY.Fields[4].AsFloat;
+
+      ID := frmMain.QRY.Fields[7].AsInteger;
+      frmMain.QRY.Next;
+    end;
+  finally
+    frmMain.QRY.Close;
+    VSTEnergy.FullExpand();
+    popEnergieDelete.Enabled := False;
+  end;
+  VSTEnergy.EndUpdate;
+  if (pnlReport.Visible = True) and (tabReports.TabIndex = 3) then
+    VSTEnergy.SetFocus;
+end;
+
+{$IFDEF WINDOWS}
+  initialization
+  // =================================================================================
+  // DARK MODE IN WINDOWS ONLY
+  // =================================================================================
+    SetDarkStyle;
+{$ENDIF}
 
 end.

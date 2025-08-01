@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: uniresources.caption_00
 msgid "Add"
@@ -335,6 +335,7 @@ msgstr ""
 "add another transaction"
 
 #: uniresources.caption_16
+msgctxt "uniresources.caption_16"
 msgid "Total"
 msgstr "Total"
 
@@ -1103,16 +1104,16 @@ msgid "Meter reading"
 msgstr "Meter reading"
 
 #: uniresources.caption_337
-msgid "at the beginning"
-msgstr "at the beginning"
+msgid "At the beginning"
+msgstr "At the beginning"
 
 #: uniresources.caption_338
-msgid "at the end"
-msgstr "at the end"
+msgid "At the end"
+msgstr "At the end"
 
 #: uniresources.caption_339
-msgid "consumption"
-msgstr "consumption"
+msgid "Consumption"
+msgstr "Consumption"
 
 #: uniresources.caption_34
 msgid "Account book"
@@ -1126,9 +1127,55 @@ msgstr "Meter"
 msgid "Allow writing to the list of items"
 msgstr "Allow writing to the list of items"
 
+#: uniresources.caption_342
+msgid "TimeStamp"
+msgstr "TimeStamp"
+
+#: uniresources.caption_343
+msgid "Form name"
+msgstr "Form name"
+
+#: uniresources.caption_344
+msgid "Creation time (ms)"
+msgstr "Creation time (ms)"
+
+#: uniresources.caption_345
+msgid "Duration (ms)"
+msgstr "Duration (ms)"
+
+#: uniresources.caption_346
+msgid "Dark mode"
+msgstr "Dark mode"
+
+#: uniresources.caption_347
+msgid "Always use items from filter in new transaction"
+msgstr "Always use items from filter in new transaction"
+
+#: uniresources.caption_348
+msgid "New transaction"
+msgstr "New transaction"
+
+#: uniresources.caption_349
+msgctxt "uniresources.caption_349"
+msgid "Price"
+msgstr "Price"
+
 #: uniresources.caption_35
 msgid "Current balance"
 msgstr "Current balance"
+
+#: uniresources.caption_350
+msgctxt "uniresources.caption_350"
+msgid "Per unit"
+msgstr "Per unit"
+
+#: uniresources.caption_351
+msgid "OS Windows only"
+msgstr "OS Windows only"
+
+#: uniresources.caption_352
+msgid "OS Linux only"
+msgstr "OS Linux only"
 
 #: uniresources.caption_36
 msgid "Final balance"
@@ -1623,6 +1670,11 @@ msgstr ""
 msgid "The program cannot find the selected file to open"
 msgstr "The program cannot find the selected file to open"
 
+#: uniresources.error_34
+msgid "Missing LIBSQLITE3-DEV library.% Database can not be created or opened."
+msgstr ""
+"Missing LIBSQLITE3-DEV library.% Database can not be created or opened."
+
 #: uniresources.guide_01
 msgid "A BEGINNER'S GUIDE"
 msgstr "A BEGINNER'S GUIDE"
@@ -1798,6 +1850,10 @@ msgstr "Write all checked scheduled payments to the transactions"
 #: uniresources.hint_102
 msgid "Save your password to the database"
 msgstr "Save your password to the database"
+
+#: uniresources.hint_12
+msgid "Open the attachment using the default program"
+msgstr "Open the attachment using the default program"
 
 #: uniresources.hint_13
 msgid "Print the list"
@@ -2348,6 +2404,12 @@ msgid ""
 msgstr ""
 "Selected picture was copied to the clipboard.%0:sSize: %1:s px x %2:s px."
 
+#: uniresources.message_08
+msgid ""
+"Changing from dark to light mode and vice versa requires a program restart."
+msgstr ""
+"Changing from dark to light mode and vice versa requires a program restart."
+
 #: uniresources.message_09
 msgid "You are using the current version of the program."
 msgstr "You are using the current version of the program."
@@ -2356,6 +2418,15 @@ msgstr "You are using the current version of the program."
 msgctxt "uniresources.message_10"
 msgid "This feature is not available in this operating system"
 msgstr "This feature is not available in this operating system"
+
+#: uniresources.message_11
+#, object-pascal-format
+msgid ""
+"Try installing the LIBSQLITE3-DEV library manually eg.:%sudo apt install -y "
+"libsqlite3-dev"
+msgstr ""
+"Try installing the LIBSQLITE3-DEV library manually eg.:%sudo apt install -y "
+"libsqlite3-dev"
 
 #: uniresources.question_00
 msgid "Do you want to close opened database?"

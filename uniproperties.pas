@@ -5,8 +5,9 @@ unit uniProperties;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, sqldb, sqlite3,
-  ComCtrls, ActnList, Buttons, BCPanel, BCMDButtonFocus, FileUtil, StrUtils;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
+  sqldb, sqlite3, ComCtrls, ActnList, Buttons, BCPanel, BCMDButtonFocus,
+  FileUtil, laz.VirtualTrees, StrUtils;
 
 type
 

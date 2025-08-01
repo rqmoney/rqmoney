@@ -36,8 +36,9 @@ uses
 
 var
   g_buildNumber: DWORD = 0;
-  g_darkModeEnabled: bool = false;
+  //g_darkModeEnabled: bool = false;
   g_darkModeSupported: bool = false;
+  //gAppMode: integer = 1;
 
 {$IF DEFINED(LCLQT5)}
 procedure ApplyDarkStyle;
@@ -45,25 +46,16 @@ procedure ApplyDarkStyle;
 
 procedure RefreshTitleBarThemeColor(hWnd: HWND);
 function AllowDarkModeForWindow(hWnd: HWND; allow: bool): bool;
+procedure InitDarkMode;
 
 implementation
 
 uses
-  UxTheme, JwaWinUser, FileInfo, uEarlyConfig
+  UxTheme, JwaWinUser, FileInfo, uDarkStyleParams
 {$IF DEFINED(LCLQT5)}
   , Qt5
 {$ENDIF}
   ;
-
-type
-  // Insider 18334
-  TPreferredAppMode =
-  (
-    pamDefault,
-    pamAllowDark,
-    pamForceDark,
-    pamForceLight
-  );
 
 var
   AppMode: TPreferredAppMode;
@@ -100,7 +92,10 @@ begin
 end;
 
 function ShouldAppsUseDarkMode: Boolean;
+//var
+  //bb:bool;
 begin
+  //bb:=_ShouldAppsUseDarkMode();
   Result:= (_ShouldAppsUseDarkMode() or (AppMode = pamForceDark)) and not IsHighContrast();
 end;
 
@@ -250,13 +245,13 @@ begin
              Assigned(_IsDarkModeAllowedForWindow) then
           begin
             g_darkModeSupported := true;
-            AppMode := TPreferredAppMode(gAppMode);
+            AppMode := PreferredAppMode;
             if AppMode <> pamForceLight then
             begin
               AllowDarkModeForApp(true);
               _RefreshImmersiveColorPolicyState();
-              g_darkModeEnabled := ShouldAppsUseDarkMode;
-              if g_darkModeEnabled then AppMode := pamForceDark;
+              IsDarkModeEnabled := ShouldAppsUseDarkMode;
+              if IsDarkModeEnabled then AppMode := pamForceDark;
             end;
           end;
         end;
@@ -266,7 +261,5 @@ begin
 end;
 
 initialization
-  InitDarkMode;
-
 end.
 

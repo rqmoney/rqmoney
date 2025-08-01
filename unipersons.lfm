@@ -13,7 +13,7 @@ object frmPersons: TfrmPersons
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlBottom: TPanel
     Left = 0
@@ -188,23 +188,23 @@ object frmPersons: TfrmPersons
   end
   object pnlPersons: TPanel
     Left = 0
-    Height = 427
+    Height = 425
     Top = 0
     Width = 800
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 427
+    ClientHeight = 425
     ClientWidth = 800
     TabOrder = 0
     object pnlList: TPanel
       Left = 5
-      Height = 417
+      Height = 415
       Top = 5
       Width = 554
       Align = alClient
       BorderSpacing.Around = 5
       BevelOuter = bvLowered
-      ClientHeight = 417
+      ClientHeight = 415
       ClientWidth = 554
       ParentFont = False
       TabOrder = 0
@@ -251,7 +251,7 @@ object frmPersons: TfrmPersons
       object VST: TLazVirtualStringTree
         Cursor = 63
         Left = 4
-        Height = 389
+        Height = 387
         Top = 24
         Width = 546
         Align = alClient
@@ -307,13 +307,13 @@ object frmPersons: TfrmPersons
     end
     object pnlDetail: TPanel
       Left = 575
-      Height = 417
+      Height = 415
       Top = 5
       Width = 220
       Align = alRight
       BorderSpacing.Around = 5
       BevelOuter = bvLowered
-      ClientHeight = 417
+      ClientHeight = 415
       ClientWidth = 220
       Constraints.MaxWidth = 350
       Constraints.MinWidth = 150
@@ -322,15 +322,15 @@ object frmPersons: TfrmPersons
       TabOrder = 1
       object pnlButton: TPanel
         Left = 2
-        Height = 25
-        Top = 388
+        Height = 27
+        Top = 384
         Width = 216
         Align = alBottom
         AutoSize = True
         BorderSpacing.Bottom = 2
         BorderSpacing.Around = 1
         BevelOuter = bvNone
-        ClientHeight = 25
+        ClientHeight = 27
         ClientWidth = 216
         Constraints.MinHeight = 25
         ParentColor = False
@@ -340,7 +340,7 @@ object frmPersons: TfrmPersons
         object btnSave: TBCMDButtonFocus
           Cursor = crHandPoint
           Left = 115
-          Height = 23
+          Height = 25
           Top = 1
           Width = 98
           StyleNormal.Color = clWhite
@@ -358,7 +358,6 @@ object frmPersons: TfrmPersons
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Around = 1
-          Color = clNone
           Font.Style = [fsBold]
           OnClick = btnSaveClick
           ParentFont = False
@@ -368,7 +367,7 @@ object frmPersons: TfrmPersons
         object btnCancel: TBCMDButtonFocus
           Cursor = crHandPoint
           Left = 3
-          Height = 23
+          Height = 25
           Top = 1
           Width = 109
           StyleNormal.Color = clWhite
@@ -386,7 +385,6 @@ object frmPersons: TfrmPersons
           BorderSpacing.Left = 2
           BorderSpacing.Right = 2
           BorderSpacing.Around = 1
-          Color = clNone
           Font.Style = [fsBold]
           OnClick = btnCancelClick
           ParentFont = False
@@ -436,24 +434,24 @@ object frmPersons: TfrmPersons
       end
       object pnlClient: TPanel
         Left = 1
-        Height = 366
+        Height = 362
         Top = 21
         Width = 218
         Align = alClient
         BevelOuter = bvNone
-        ClientHeight = 366
+        ClientHeight = 362
         ClientWidth = 218
         TabOrder = 1
         object pnlName: TPanel
           Left = 3
-          Height = 35
+          Height = 30
           Top = 3
           Width = 212
           Align = alTop
           AutoSize = True
           BorderSpacing.Bottom = 3
           BorderSpacing.Around = 3
-          ClientHeight = 35
+          ClientHeight = 30
           ClientWidth = 212
           ParentFont = False
           TabOrder = 0
@@ -472,7 +470,7 @@ object frmPersons: TfrmPersons
           end
           object ediName: TEdit
             Left = 3
-            Height = 28
+            Height = 23
             Top = 4
             Width = 206
             Align = alTop
@@ -488,27 +486,27 @@ object frmPersons: TfrmPersons
         end
         object pnlStatus: TPanel
           Left = 3
-          Height = 51
-          Top = 309
+          Height = 44
+          Top = 312
           Width = 212
           Align = alBottom
           AutoSize = True
           BorderSpacing.Bottom = 3
           BorderSpacing.Around = 3
-          ClientHeight = 51
+          ClientHeight = 44
           ClientWidth = 212
           ParentFont = False
           TabOrder = 2
           object cbxStatus: TComboBox
             Left = 3
-            Height = 30
+            Height = 23
             Top = 18
             Width = 206
             Align = alTop
             BorderSpacing.Left = 2
             BorderSpacing.Right = 2
             BorderSpacing.Bottom = 2
-            ItemHeight = 0
+            ItemHeight = 15
             ParentFont = False
             Style = csDropDownList
             TabOrder = 0
@@ -575,13 +573,13 @@ object frmPersons: TfrmPersons
         end
         object pnlComment: TPanel
           Left = 3
-          Height = 262
-          Top = 44
+          Height = 270
+          Top = 39
           Width = 212
           Align = alClient
           AutoSize = True
           BorderSpacing.Around = 3
-          ClientHeight = 262
+          ClientHeight = 270
           ClientWidth = 212
           ParentFont = False
           TabOrder = 1
@@ -599,7 +597,7 @@ object frmPersons: TfrmPersons
           end
           object memComment: TMemo
             Left = 3
-            Height = 255
+            Height = 263
             Top = 4
             Width = 206
             Align = alClient
@@ -617,7 +615,7 @@ object frmPersons: TfrmPersons
     end
     object splList: TSplitter
       Left = 564
-      Height = 427
+      Height = 425
       Top = 0
       Width = 6
       Align = alRight
@@ -627,8 +625,8 @@ object frmPersons: TfrmPersons
   end
   object pnlButtons: TPanel
     Left = 5
-    Height = 25
-    Top = 430
+    Height = 27
+    Top = 428
     Width = 790
     Align = alBottom
     AutoSize = True
@@ -636,7 +634,7 @@ object frmPersons: TfrmPersons
     BorderSpacing.Right = 2
     BorderSpacing.Around = 3
     BevelOuter = bvNone
-    ClientHeight = 25
+    ClientHeight = 27
     ClientWidth = 790
     Constraints.MinHeight = 25
     ParentColor = False
@@ -646,7 +644,7 @@ object frmPersons: TfrmPersons
     object btnAdd: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 3
-      Height = 23
+      Height = 25
       Top = 1
       Width = 166
       Animation = True
@@ -665,7 +663,6 @@ object frmPersons: TfrmPersons
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnAddClick
       ParentFont = False
@@ -675,7 +672,7 @@ object frmPersons: TfrmPersons
     object btnEdit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 172
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -694,7 +691,6 @@ object frmPersons: TfrmPersons
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnEditClick
       ParentFont = False
@@ -702,9 +698,10 @@ object frmPersons: TfrmPersons
       ShowHint = True
     end
     object btnDelete: TBCMDButtonFocus
+      Tag = 12345
       Cursor = crHandPoint
       Left = 275
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -723,7 +720,6 @@ object frmPersons: TfrmPersons
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnDeleteClick
       ParentFont = False
@@ -733,7 +729,7 @@ object frmPersons: TfrmPersons
     object btnCopy: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 378
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -752,7 +748,6 @@ object frmPersons: TfrmPersons
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnCopyClick
       ParentFont = False
@@ -762,7 +757,7 @@ object frmPersons: TfrmPersons
     object btnSelect: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 481
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -781,7 +776,6 @@ object frmPersons: TfrmPersons
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnSelectClick
       ParentFont = False
@@ -791,7 +785,7 @@ object frmPersons: TfrmPersons
     object btnPrint: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 584
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -810,7 +804,6 @@ object frmPersons: TfrmPersons
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnPrintClick
       OnMouseDown = btnPrintMouseDown
@@ -821,7 +814,7 @@ object frmPersons: TfrmPersons
     object btnExit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 687
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True

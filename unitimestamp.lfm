@@ -1,0 +1,186 @@
+object frmTimeStamp: TfrmTimeStamp
+  Left = 700
+  Height = 500
+  Top = 268
+  Width = 410
+  BorderIcons = [biSystemMenu]
+  ClientHeight = 500
+  ClientWidth = 410
+  Constraints.MinHeight = 500
+  Constraints.MinWidth = 410
+  OnResize = FormResize
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '3.8.0.0'
+  object VST: TLazVirtualStringTree
+    Left = 5
+    Height = 428
+    Top = 5
+    Width = 400
+    Align = alClient
+    BorderSpacing.Around = 5
+    Header.AutoSizeIndex = 0
+    Header.Columns = <    
+      item
+        Position = 0
+        Width = 160
+      end    
+      item
+        Alignment = taCenter
+        Position = 1
+        Width = 120
+      end    
+      item
+        Alignment = taCenter
+        Position = 2
+        Width = 100
+      end>
+    Header.Font.Style = [fsBold]
+    Header.Height = 20
+    Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+    TabOrder = 0
+    TreeOptions.SelectionOptions = [toFullRowSelect]
+    OnBeforeCellPaint = VSTBeforeCellPaint
+    OnGetText = VSTGetText
+    OnPaintText = VSTPaintText
+    OnGetNodeDataSize = VSTGetNodeDataSize
+    OnResize = VSTResize
+  end
+  object pnlButtons: TPanel
+    Left = 5
+    Height = 25
+    Top = 438
+    Width = 400
+    Align = alBottom
+    BorderSpacing.Bottom = 3
+    BorderSpacing.Around = 5
+    BevelOuter = bvNone
+    ClientHeight = 25
+    ClientWidth = 400
+    Constraints.MinHeight = 25
+    TabOrder = 1
+    object btnExit: TBCMDButtonFocus
+      Cursor = crHandPoint
+      Left = 4
+      Height = 23
+      Top = 1
+      Width = 197
+      StyleNormal.Color = clWhite
+      StyleNormal.TextColor = clBlack
+      StyleHover.Color = 14474460
+      StyleHover.TextColor = clBlack
+      StyleActive.Color = 13027014
+      StyleActive.TextColor = clBlack
+      StyleDisabled.Color = clWhite
+      StyleDisabled.TextColor = 10724259
+      TextAutoSize = True
+      TextProportional = False
+      TextProportionalRatio = 0.5
+      Align = alLeft
+      BorderSpacing.Left = 3
+      BorderSpacing.Around = 1
+      Font.Style = [fsBold]
+      OnClick = btnExitClick
+      ParentFont = False
+    end
+  end
+  object pnlBottom: TPanel
+    Left = 5
+    Height = 24
+    Top = 471
+    Width = 400
+    Align = alBottom
+    BorderSpacing.Around = 5
+    BevelOuter = bvLowered
+    ClientHeight = 24
+    ClientWidth = 400
+    TabOrder = 2
+    object pnlHeight: TPanel
+      Left = 278
+      Height = 20
+      Top = 2
+      Width = 120
+      Align = alRight
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 120
+      Constraints.MinWidth = 120
+      ParentFont = False
+      TabOrder = 0
+      object imgHeight: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        Center = True
+        ImageIndex = 1
+        Images = frmMain.imgSize
+      end
+      object lblHeight: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 96
+        Align = alClient
+        Alignment = taCenter
+        AutoSize = False
+        BorderSpacing.Around = 1
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+    object pnlWidth: TPanel
+      Left = 157
+      Height = 20
+      Top = 2
+      Width = 120
+      Align = alRight
+      BorderSpacing.Around = 1
+      BevelOuter = bvLowered
+      ClientHeight = 20
+      ClientWidth = 120
+      Constraints.MinWidth = 120
+      ParentFont = False
+      TabOrder = 1
+      object imgWidth: TImage
+        Left = 5
+        Height = 16
+        Top = 2
+        Width = 16
+        Align = alLeft
+        AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Around = 1
+        Center = True
+        Images = frmMain.imgSize
+      end
+      object lblWidth: TLabel
+        Left = 22
+        Height = 16
+        Top = 2
+        Width = 96
+        Align = alClient
+        Alignment = taCenter
+        AutoSize = False
+        BorderSpacing.Around = 1
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Left = 244
+    Top = 44
+    object actExit: TAction
+      OnExecute = btnExitClick
+      ShortCut = 27
+    end
+  end
+end

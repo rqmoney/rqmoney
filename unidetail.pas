@@ -82,11 +82,20 @@ type
     datDateFrom: TDateTimePicker;
     datDateTo: TDateTimePicker;
     datDateX: TDateTimePicker;
+    gbxPrice: TGroupBox;
+    gbxCommentEnergy: TGroupBox;
+    lblTotalPrice: TLabel;
     lblMeterEnd: TLabel;
     lblConsumption: TLabel;
+    lblUnitPrice: TLabel;
+    memComment: TMemo;
+    pnlTotalPrice: TPanel;
     pnlMeterEnd: TPanel;
     pnlConsumption: TPanel;
+    pnlUnitPrice: TPanel;
     spiConsumption: TFloatSpinEdit;
+    spiTotalPrice: TFloatSpinEdit;
+    spiUnitPrice: TFloatSpinEdit;
     spiMeterStart: TFloatSpinEdit;
     gbxAccountFrom: TGroupBox;
     gbxAccountTo: TGroupBox;
@@ -307,6 +316,7 @@ type
     procedure spiMeterStartEnter(Sender: TObject);
     procedure spiMeterStartKeyUp(Sender: TObject; var Key: word;
       Shift: TShiftState);
+    procedure spiUnitPriceKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure splDetailCanResize(Sender: TObject; var NewSize: integer;
       var Accept: boolean);
     procedure splSimpleCanResize(Sender: TObject; var NewSize: integer;
@@ -324,6 +334,8 @@ type
       var ImageIndex: integer);
     procedure VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+    procedure VSTPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas;
+      Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
     procedure VSTResize(Sender: TObject);
   private
 
@@ -717,7 +729,8 @@ begin
     splDetail.Visible := True;
     splDetail.Left := 0;
 
-    pnlDetail.Color := frmSettings.btnCaptionColorFont.Tag;
+    pnlDetail.Color := IfThen(Dark = False, frmSettings.btnCaptionColorFont.Tag,
+      rgbToColor(44, 44, 44));
     pnlDetailCaption.Caption := AnsiUpperCase(Caption_45);
 
     pnlButtonsX.Visible := True; // save and cancel
@@ -1111,9 +1124,8 @@ begin
       ((datDateTo.Date < Round(Now - frmSettings.spiTransactionsAddDays.Value)) or
       (datDateFrom.Date < Round(Now - frmSettings.spiTransactionsAddDays.Value)))) then
     begin
-      ShowMessage(Error_29 + ' ' +
-        DateToStr(Now - frmSettings.spiTransactionsAddDays.Value) +
-        sLineBreak + Error_28);
+      ShowMessage(Error_29 + ' ' + DateToStr(Now -
+        frmSettings.spiTransactionsAddDays.Value) + sLineBreak + Error_28);
       Exit;
     end;
 
@@ -1388,11 +1400,15 @@ begin
     if tabSimple.Tabs[2].Options = [etoVisible] then
     begin
       frmMain.QRY.SQL.Text :=
-        'INSERT OR IGNORE INTO energies (ene_reading1, ene_reading2, ene_d_id) VALUES (:R1, :R2, :ID);';
+        'INSERT OR IGNORE INTO energies (ene_reading1, ene_reading2, ' +
+        'ene_price, ene_comment, ene_d_id) VALUES (:R1, :R2, :PRICE, :COMMENT, :ID);';
       frmMain.QRY.Params.ParamByName('R1').AsString :=
         ReplaceStr(FloatToStr(spiMeterStart.Value), FS_own.DecimalSeparator, '.');
       frmMain.QRY.Params.ParamByName('R2').AsString :=
         ReplaceStr(FloatToStr(spiMeterEnd.Value), FS_own.DecimalSeparator, '.');
+      frmMain.QRY.Params.ParamByName('PRICE').AsString :=
+        ReplaceStr(FloatToStr(spiUnitPrice.Value), FS_own.DecimalSeparator, '.');
+      frmMain.QRY.Params.ParamByName('COMMENT').AsString := memComment.Text;
       frmMain.QRY.Params.ParamByName('ID').AsInteger := ID1;
       frmMain.QRY.Prepare;
       frmMain.QRY.ExecSQL;
@@ -1400,12 +1416,16 @@ begin
       if Repeating = True then
       begin
         frmMain.QRY.SQL.Text :=
-          'INSERT OR IGNORE INTO energies (ene_reading1, ene_reading2, ene_d_id) VALUES (:R1, :R2, :ID);';
-        frmMain.QRY.Params.ParamByName('R1').AsString :=
-          ReplaceStr(FloatToStr(spiMeterStart.Value), FS_own.DecimalSeparator, '.');
-        frmMain.QRY.Params.ParamByName('R2').AsString :=
-          ReplaceStr(FloatToStr(spiMeterEnd.Value), FS_own.DecimalSeparator, '.');
-        frmMain.QRY.Params.ParamByName('ID').AsInteger := ID2;
+        'INSERT OR IGNORE INTO energies (ene_reading1, ene_reading2, ' +
+        'ene_price, ene_comment, ene_d_id) VALUES (:R1, :R2, :PRICE, :COMMENT, :ID);';
+      frmMain.QRY.Params.ParamByName('R1').AsString :=
+        ReplaceStr(FloatToStr(spiMeterStart.Value), FS_own.DecimalSeparator, '.');
+      frmMain.QRY.Params.ParamByName('R2').AsString :=
+        ReplaceStr(FloatToStr(spiMeterEnd.Value), FS_own.DecimalSeparator, '.');
+      frmMain.QRY.Params.ParamByName('PRICE').AsString :=
+        ReplaceStr(FloatToStr(spiUnitPrice.Value), FS_own.DecimalSeparator, '.');
+      frmMain.QRY.Params.ParamByName('COMMENT').AsString := memComment.Text;
+      frmMain.QRY.Params.ParamByName('ID').AsInteger := ID2;
         frmMain.QRY.Prepare;
         frmMain.QRY.ExecSQL;
       end;
@@ -2328,13 +2348,13 @@ begin
   lblHeight.Caption := IntToStr((Sender as TForm).Height);
 
   if (frmDetail.Visible = False) then
-  exit;
+    exit;
 
   if (tabKind.TabIndex = 0) then
-      pnlSimple.Tag := frmDetail.Width
-    else
-      pnlMultiple.Tag := frmDetail.Width;
-  end;
+    pnlSimple.Tag := frmDetail.Width
+  else
+    pnlMultiple.Tag := frmDetail.Width;
+end;
 
 procedure TfrmDetail.FormShow(Sender: TObject);
 begin
@@ -2417,13 +2437,14 @@ begin
   if Key = 13 then
   begin
     Key := 0;
-    btnSave.SetFocus;
+    spiUnitPrice.SetFocus;
   end;
 end;
 
 procedure TfrmDetail.spiMeterStartChange(Sender: TObject);
 begin
   spiConsumption.Value := spiMeterEnd.Value - spiMeterStart.Value;
+  spiTotalPrice.Value := spiConsumption.Value * spiUnitPrice.Value;
 end;
 
 procedure TfrmDetail.spiMeterStartEnter(Sender: TObject);
@@ -2439,6 +2460,16 @@ begin
   begin
     Key := 0;
     spiMeterEnd.SetFocus;
+  end;
+end;
+
+procedure TfrmDetail.spiUnitPriceKeyUp(Sender: TObject; var Key: word;
+  Shift: TShiftState);
+begin
+  if Key = 13 then
+  begin
+    Key := 0;
+    btnSave.SetFocus;
   end;
 end;
 
@@ -2545,14 +2576,19 @@ begin
   pnlTags.Visible := tabSimple.TabIndex = 0;
   pnlAttachments.Visible := tabSimple.TabIndex = 1;
   pnlEnergies.Visible := tabSimple.TabIndex = 2;
+  If pnlEnergies.Visible = True then
+    spiMeterStart.SetFocus;
 end;
 
 procedure TfrmDetail.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clWhite,
-    frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -2621,6 +2657,14 @@ begin
       7: CellText := Field(Separ, slMultiple.Strings[MM], 7);
     end;
   end;
+end;
+
+procedure TfrmDetail.VSTPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  TargetCanvas.Font.Color :=
+    IfThen(Dark = False, clDefault, clSilver);
 end;
 
 procedure TfrmDetail.VSTResize(Sender: TObject);

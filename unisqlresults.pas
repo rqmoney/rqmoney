@@ -64,6 +64,9 @@ type
       var NodeDataSize: integer);
     procedure VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+    procedure VSTPaintText(Sender: TBaseVirtualTree;
+      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      TextType: TVSTTextType);
     procedure VSTResize(Sender: TObject);
   private
 
@@ -135,7 +138,6 @@ var
 begin
   try
     // clear previous data
-    VST.BeginUpdate;
     slSQLresult.Clear;
     VST.Clear;
 
@@ -143,6 +145,7 @@ begin
     VST.Header.Columns.Clear;
 
     // create new columns
+    VST.BeginUpdate;
     for I := 0 to frmMain.QRY.FieldCount do
     begin
       VST.Header.Columns.Add;
@@ -181,6 +184,7 @@ begin
       frmMain.QRY.Next;
     end;
     frmMain.QRY.Close;
+    VST.EndUpdate;
 
     VST.Header.Columns[0].Width := Round(ScreenRatio * 25 / 100);
 
@@ -203,15 +207,14 @@ begin
     end;
 
     SetNodeHeight(VST);
-    VST.EndUpdate;
 
     // items icon
     lblItems.Caption := IntToStr(VST.RootNodeCount);
     lblItem.Caption := '';
 
     btnSelect.Enabled := VST.RootNodeCount > 0;
+  finally
     VST.SetFocus;
-  except
   end;
 end;
 
@@ -219,15 +222,24 @@ procedure TfrmSQLResult.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
+  try
   if frmSQL.rbtMaster.Checked = True then
     TargetCanvas.Brush.Color :=
-      IfThen(VST.Text[Node, 1] = 'table', $00E5FCFD, // yellow
-      IfThen(VST.Text[Node, 1] = 'trigger', $00FDF8E5, // blue
-      IfThen(VST.Text[Node, 1] = 'index', $00EBE5FD, // red
-      clWhite)))
+      IfThen(VST.Text[Node, 1] = 'table',
+        IfThen(Dark = False, $00E5FCFD, $00205808), // yellow/green
+      IfThen(VST.Text[Node, 1] = 'trigger',
+        IfThen(Dark = False, $00FDF8E5, $00745100), // blue
+      IfThen(VST.Text[Node, 1] = 'index',
+        IfThen(Dark = False, $00EBE5FD, $000A0044), // red
+      clDefault)))
   else
-    TargetCanvas.Brush.Color :=
-      IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
+    TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
+  except
+  end;
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -311,6 +323,14 @@ begin
   SQL := Sender.GetNodeData(Node);
   if Column > 0 then
     CellText := SQL.Value[Column - 1];
+end;
+
+procedure TfrmSQLResult.VSTPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  TargetCanvas.Font.Color :=
+    IfThen(Dark = False, clDefault, clSilver);
 end;
 
 procedure TfrmSQLResult.VSTResize(Sender: TObject);

@@ -177,6 +177,9 @@ type
       var NodeDataSize: integer);
     procedure VSTBudgetsGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+    procedure VSTBudgetsPaintText(Sender: TBaseVirtualTree;
+      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      TextType: TVSTTextType);
     procedure VSTBudgetsResize(Sender: TObject);
     procedure VSTBudCatBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
@@ -240,27 +243,22 @@ end;
 procedure TfrmBudgets.VSTBudCatBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
-var
-  Co: integer;
 begin
-  if Column < 4 then
-    if Node.Index = 0 then
-      TargetCanvas.Brush.Color := FullColor
-    else
-      TargetCanvas.Brush.Color :=
-        IfThen(Node.Index mod 2 = 0, clWhite, RGBToColor(230, 230, 230))
+  if (Column in [2..7]) and (Node.Index <> 0) then
+    TargetCanvas.Brush.Color :=
+      Ifthen(Dark = False,
+      IfThen(Node.Index mod 2 = 0, Brighten(FullColor, 200), Brighten(FullColor, 230)),
+      IfThen(Node.Index mod 2 = 0, RGBToColor(44, 44, 44), RGBToColor(22, 22, 22)))
   else
   begin
-    Co := Column mod 4;
     if (Node.Index = 0) or (VSTBudcat.Header.Columns[Column].Tag = 1) then
-      TargetCanvas.Brush.Color := FullColor
+      TargetCanvas.Brush.Color :=
+        Brighten(FullColor, 60)
     else
-      case Co of
-        0: TargetCanvas.Brush.Color := RGBToColor(255, 240, 186);
-        1: TargetCanvas.Brush.Color := RGBToColor(210, 230, 255)
-        else
-          TargetCanvas.Brush.Color := clWhite;
-      end;
+      TargetCanvas.Brush.Color :=
+        IfThen(Node.Index mod 2 = 0, IfThen(Dark = False, clWhite, rgbtoColor(44, 44, 44)),
+        IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+        InvertColor(frmSettings.pnlOddRowColor.Color)));
   end;
   TargetCanvas.FillRect(CellRect);
 end;
@@ -346,21 +344,25 @@ procedure TfrmBudgets.VSTBudCatPaintText(Sender: TBaseVirtualTree;
 begin
   if Node.Index = 0 then
   begin
-    TargetCanvas.Font.Color := clYellow;
+    TargetCanvas.Font.Color :=
+      Ifthen(Dark = False, clYellow, $0000B5BF);
     TargetCanvas.Font.Bold := True;
     Exit;
   end;
 
-  if (Column < 4) then
-    TargetCanvas.Font.Color := clBlack
+  if (Column in [1..7]) then
+    TargetCanvas.Font.Color := Ifthen(Dark = False, clDefault, clSilver)
   else if VSTBudCat.Header.Columns[Column].Tag = 1 then
-    TargetCanvas.Font.Color := clWhite
+    TargetCanvas.Font.Color := Ifthen(Dark = False, clDefault, clSilver)
   else
     case (Column mod 4) of
-      0, 1: TargetCanvas.Font.Color := clBlack;
-      2: TargetCanvas.Font.Color := clFuchsia
+      0, 1: TargetCanvas.Font.Color :=
+          Ifthen(Dark = False, clDefault, clSilver);
+      2: TargetCanvas.Font.Color :=
+          Ifthen(Dark = False, clFuchsia, $00C47DC3)
       else
-        TargetCanvas.Font.Color := clBlue;
+        TargetCanvas.Font.Color :=
+          Ifthen(Dark = False, clBlue, clSkyBlue);
     end;
 
   TargetCanvas.Font.Bold := (Column > 3) and ((Column mod 4) in [0..1]);
@@ -596,8 +598,11 @@ procedure TfrmBudgets.VSTBudgetsBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  TargetCanvas.Brush.Color := IfThen(Node.Index mod 2 = 0, clWhite,
-    frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -735,6 +740,14 @@ begin
     2: CellText := IntToStr(Budgets.Kind);
     3: CellText := IntToStr(Budgets.ID);
   end;
+end;
+
+procedure TfrmBudgets.VSTBudgetsPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  TargetCanvas.Font.Color :=
+    IfThen(Dark = False, clDefault, clSilver);
 end;
 
 procedure TfrmBudgets.btnExitClick(Sender: TObject);

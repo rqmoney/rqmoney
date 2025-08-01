@@ -7,7 +7,7 @@
         <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="RQM"/>
+      <Title Value="RQ MONEY"/>
       <Scaled Value="True"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
@@ -26,10 +26,9 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="3"/>
-      <MinorVersionNr Value="10"/>
-      <RevisionNr Value="1"/>
+      <MinorVersionNr Value="11"/>
       <Attributes pvaPreRelease="True"/>
-      <StringTable CompanyName="Slavomir Svetlik" FileDescription="Financial evidence for households" ProductName="RQ MONEY"/>
+      <StringTable Comments="Financial evidence for households" CompanyName="Slavomir Svetlik" FileDescription="RQ Money" ProductName="RQ Money"/>
     </VersionInfo>
     <BuildModes Count="5">
       <Item1 Name="Default" Default="True"/>
@@ -183,45 +182,48 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="12">
+    <RequiredPackages Count="13">
       <Item1>
-        <PackageName Value="SynEditDsgn"/>
+        <PackageName Value="TurboPowerIPro"/>
       </Item1>
       <Item2>
-        <PackageName Value="eccontrols"/>
+        <PackageName Value="SynEditDsgn"/>
       </Item2>
       <Item3>
-        <PackageName Value="callight_pkg"/>
+        <PackageName Value="eccontrols"/>
       </Item3>
       <Item4>
-        <PackageName Value="DateTimeCtrls"/>
+        <PackageName Value="callight_pkg"/>
       </Item4>
       <Item5>
-        <PackageName Value="TAChartLazarusPkg"/>
+        <PackageName Value="DateTimeCtrls"/>
       </Item5>
       <Item6>
-        <PackageName Value="SynEdit"/>
+        <PackageName Value="TAChartLazarusPkg"/>
       </Item6>
       <Item7>
-        <PackageName Value="laz.virtualtreeview_package"/>
+        <PackageName Value="SynEdit"/>
       </Item7>
       <Item8>
-        <PackageName Value="bgracontrols"/>
+        <PackageName Value="laz.virtualtreeview_package"/>
       </Item8>
       <Item9>
-        <PackageName Value="lazreport"/>
+        <PackageName Value="bgracontrols"/>
       </Item9>
       <Item10>
-        <PackageName Value="FCL"/>
+        <PackageName Value="lazreport"/>
       </Item10>
       <Item11>
-        <PackageName Value="LazControls"/>
+        <PackageName Value="FCL"/>
       </Item11>
       <Item12>
-        <PackageName Value="LCL"/>
+        <PackageName Value="LazControls"/>
       </Item12>
+      <Item13>
+        <PackageName Value="LCL"/>
+      </Item13>
     </RequiredPackages>
-    <Units Count="45">
+    <Units Count="46">
       <Unit0>
         <Filename Value="RQM.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -573,6 +575,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uniSplash"/>
       </Unit44>
+      <Unit45>
+        <Filename Value="unitimestamp.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmTimeStamp"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uniTimeStamp"/>
+      </Unit45>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

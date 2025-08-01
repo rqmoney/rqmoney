@@ -6,16 +6,16 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
-  ExtCtrls, BGRAFlashProgressBar;
+  ExtCtrls, BGRAFlashProgressBar, BCPanel;
 
 type
 
   { TfrmSplash }
 
   TfrmSplash = class(TForm)
-    Panel1: TPanel;
-    prgSplash: TBGRAFlashProgressBar;
     lblSplash: TLabel;
+    Panel1: TBCPanel;
+    prgSplash: TBGRAFlashProgressBar;
   private
 
   public
@@ -28,8 +28,6 @@ var
 implementation
 
 {$R *.lfm}
-
-{ TfrmSplash }
 
 end.
 

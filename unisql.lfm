@@ -12,7 +12,7 @@ object frmSQL: TfrmSQL
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlList: TPanel
     Left = 5
@@ -28,23 +28,24 @@ object frmSQL: TfrmSQL
     TabOrder = 0
     object pnlSQL: TPanel
       Left = 4
-      Height = 259
+      Height = 257
       Top = 71
       Width = 682
       Align = alClient
       BorderSpacing.Around = 3
       BevelOuter = bvLowered
-      ClientHeight = 259
+      ClientHeight = 257
       ClientWidth = 682
       TabOrder = 0
       object memSQL: TMemo
         Left = 31
-        Height = 133
-        Top = 120
+        Height = 172
+        Top = 79
         Width = 645
         Align = alClient
         BorderSpacing.Left = 25
         BorderSpacing.Around = 5
+        Font.Color = clGray
         Font.Height = -16
         Font.Name = 'Courier New'
         Lines.Strings = (
@@ -57,7 +58,7 @@ object frmSQL: TfrmSQL
       end
       object lblCommand: TStaticText
         Left = 4
-        Height = 18
+        Height = 1
         Top = 4
         Width = 674
         Align = alTop
@@ -72,8 +73,8 @@ object frmSQL: TfrmSQL
       end
       object rbtMaster: TRadioButton
         Left = 11
-        Height = 23
-        Top = 23
+        Height = 17
+        Top = 6
         Width = 667
         Align = alTop
         BorderSpacing.Left = 10
@@ -85,8 +86,8 @@ object frmSQL: TfrmSQL
       end
       object rbtVacuum: TRadioButton
         Left = 11
-        Height = 23
-        Top = 69
+        Height = 17
+        Top = 40
         Width = 667
         Align = alTop
         BorderSpacing.Left = 10
@@ -96,8 +97,8 @@ object frmSQL: TfrmSQL
       end
       object rbtOwn: TRadioButton
         Left = 11
-        Height = 23
-        Top = 92
+        Height = 17
+        Top = 57
         Width = 667
         Align = alTop
         BorderSpacing.Left = 10
@@ -107,8 +108,8 @@ object frmSQL: TfrmSQL
       end
       object rbtData: TRadioButton
         Left = 11
-        Height = 23
-        Top = 46
+        Height = 17
+        Top = 23
         Width = 667
         Align = alTop
         BorderSpacing.Left = 10
@@ -119,14 +120,14 @@ object frmSQL: TfrmSQL
     end
     object pnlButtons: TPanel
       Left = 4
-      Height = 25
-      Top = 333
+      Height = 27
+      Top = 331
       Width = 682
       Align = alBottom
       AutoSize = True
       BorderSpacing.Around = 3
       BevelOuter = bvNone
-      ClientHeight = 25
+      ClientHeight = 27
       ClientWidth = 682
       Constraints.MinHeight = 25
       ParentColor = False
@@ -134,7 +135,7 @@ object frmSQL: TfrmSQL
       object btnExit: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 3
-        Height = 23
+        Height = 25
         Top = 1
         Width = 150
         Animation = True
@@ -154,7 +155,6 @@ object frmSQL: TfrmSQL
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Constraints.MinWidth = 150
         Font.Style = [fsBold]
         OnClick = btnExitClick
@@ -165,7 +165,7 @@ object frmSQL: TfrmSQL
       object btnExecute: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 529
-        Height = 23
+        Height = 25
         Top = 1
         Width = 150
         Animation = True
@@ -185,7 +185,6 @@ object frmSQL: TfrmSQL
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Constraints.MinWidth = 150
         Font.Style = [fsBold]
         OnClick = btnExecuteClick
@@ -196,7 +195,7 @@ object frmSQL: TfrmSQL
       object btnDiagram: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 376
-        Height = 23
+        Height = 25
         Top = 1
         Width = 150
         Animation = True
@@ -216,7 +215,6 @@ object frmSQL: TfrmSQL
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Constraints.MinWidth = 150
         Font.Style = [fsBold]
         OnClick = btnDiagramClick

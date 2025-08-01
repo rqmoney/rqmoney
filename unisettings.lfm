@@ -1,7 +1,7 @@
 object frmSettings: TfrmSettings
-  Left = 521
+  Left = 511
   Height = 400
-  Top = 358
+  Top = 242
   Width = 800
   BorderIcons = [biSystemMenu]
   ClientHeight = 400
@@ -9,43 +9,43 @@ object frmSettings: TfrmSettings
   Constraints.MinHeight = 400
   Constraints.MinWidth = 800
   KeyPreview = True
-  Position = poScreenCenter
-  LCLVersion = '4.0.0.2'
-  Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
   OnResize = FormResize
   OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '3.8.0.0'
+  Scaled = False
   object pnlBottom: TPanel
     Left = 3
-    Height = 30
-    Top = 367
+    Height = 32
+    Top = 365
     Width = 794
     Align = alBottom
     BorderSpacing.Around = 3
     BevelOuter = bvLowered
-    ClientHeight = 30
+    ClientHeight = 32
     ClientWidth = 794
     Constraints.MinHeight = 20
     TabOrder = 0
     object pnlHeight: TPanel
       Left = 672
-      Height = 25
+      Height = 27
       Top = 3
       Width = 120
       Align = alRight
       BorderSpacing.Top = 1
       BorderSpacing.Around = 1
       BevelOuter = bvLowered
-      ClientHeight = 25
+      ClientHeight = 27
       ClientWidth = 120
       Constraints.MinWidth = 120
       ParentFont = False
       TabOrder = 0
       object imgHeight: TImage
         Left = 5
-        Height = 21
+        Height = 23
         Top = 2
         Width = 16
         Align = alLeft
@@ -60,7 +60,7 @@ object frmSettings: TfrmSettings
       end
       object lblHeight: TLabel
         Left = 22
-        Height = 21
+        Height = 23
         Top = 2
         Width = 96
         Align = alClient
@@ -73,21 +73,21 @@ object frmSettings: TfrmSettings
     end
     object pnlWidth: TPanel
       Left = 551
-      Height = 25
+      Height = 27
       Top = 3
       Width = 120
       Align = alRight
       BorderSpacing.Top = 1
       BorderSpacing.Around = 1
       BevelOuter = bvLowered
-      ClientHeight = 25
+      ClientHeight = 27
       ClientWidth = 120
       Constraints.MinWidth = 120
       ParentFont = False
       TabOrder = 1
       object imgWidth: TImage
         Left = 5
-        Height = 21
+        Height = 23
         Top = 2
         Width = 16
         Align = alLeft
@@ -102,7 +102,7 @@ object frmSettings: TfrmSettings
       end
       object lblWidth: TLabel
         Left = 22
-        Height = 21
+        Height = 23
         Top = 2
         Width = 96
         Align = alClient
@@ -115,22 +115,22 @@ object frmSettings: TfrmSettings
     end
     object pnlButtons: TPanel
       Left = 1
-      Height = 28
+      Height = 30
       Top = 1
-      Width = 549
+      Width = 528
       Align = alClient
       AutoSize = True
       BevelOuter = bvNone
-      ClientHeight = 28
-      ClientWidth = 549
+      ClientHeight = 30
+      ClientWidth = 528
       Constraints.MinHeight = 25
       TabOrder = 2
       OnResize = pnlButtonsResize
       object btnSave: TBCMDButtonFocus
         Tag = 1
         Cursor = crHandPoint
-        Left = 396
-        Height = 26
+        Left = 375
+        Height = 28
         Top = 1
         Width = 150
         Animation = True
@@ -149,7 +149,6 @@ object frmSettings: TfrmSettings
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnSaveClick
         ParentFont = False
@@ -157,7 +156,7 @@ object frmSettings: TfrmSettings
       object btnCancel: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 3
-        Height = 26
+        Height = 28
         Top = 1
         Width = 150
         Animation = True
@@ -176,7 +175,6 @@ object frmSettings: TfrmSettings
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnCancelClick
         ParentFont = False
@@ -184,9 +182,9 @@ object frmSettings: TfrmSettings
       object btnIniFile: TBCMDButtonFocus
         Cursor = crHandPoint
         Left = 164
-        Height = 26
+        Height = 28
         Top = 1
-        Width = 221
+        Width = 200
         Animation = True
         StyleNormal.Color = clWhite
         StyleNormal.TextColor = clBlack
@@ -203,27 +201,43 @@ object frmSettings: TfrmSettings
         BorderSpacing.Left = 10
         BorderSpacing.Right = 10
         BorderSpacing.Around = 1
-        Color = clNone
         Font.Style = [fsBold]
         OnClick = btnIniFileClick
         ParentFont = False
       end
     end
+    object btnTimeStamp: TSpeedButton
+      Left = 530
+      Height = 30
+      Top = 1
+      Width = 20
+      Align = alRight
+      AutoSize = True
+      BorderSpacing.Left = 1
+      BorderSpacing.Right = 1
+      Flat = True
+      Images = frmMain.img16
+      ImageIndex = 33
+      Spacing = 0
+      OnClick = btnTimeStampClick
+      ShowHint = True
+      ParentShowHint = False
+    end
   end
   object pnlClient: TPanel
     Left = 246
-    Height = 361
+    Height = 359
     Top = 3
     Width = 551
     Align = alClient
     BorderSpacing.Around = 3
     BevelOuter = bvNone
-    ClientHeight = 361
+    ClientHeight = 359
     ClientWidth = 551
     TabOrder = 1
     object Panels: TNotebook
       Left = 0
-      Height = 361
+      Height = 359
       Top = 0
       Width = 551
       PageIndex = 0
@@ -232,32 +246,32 @@ object frmSettings: TfrmSettings
       object pnlGlobal: TPage
         object tabGlobal: TPageControl
           Left = 5
-          Height = 351
+          Height = 349
           Top = 5
           Width = 541
-          ActivePage = tabFormat
+          ActivePage = tabLanguage
           Align = alClient
           BorderSpacing.Around = 5
-          TabIndex = 1
+          TabIndex = 0
           TabOrder = 0
           object tabLanguage: TTabSheet
-            ClientHeight = 321
+            ClientHeight = 319
             ClientWidth = 531
             object pnlLanguage: TPanel
               Left = 0
-              Height = 321
+              Height = 319
               Top = 0
               Width = 531
               Align = alClient
               BevelOuter = bvNone
-              ClientHeight = 321
+              ClientHeight = 319
               ClientWidth = 531
               ParentFont = False
               TabOrder = 0
               object lbxLanguage1: TFileListBox
                 Left = 5
                 Height = 108
-                Top = 208
+                Top = 206
                 Width = 521
                 Align = alBottom
                 BorderSpacing.Around = 5
@@ -273,7 +287,7 @@ object frmSettings: TfrmSettings
               object VSTLang: TLazVirtualStringTree
                 Cursor = 63
                 Left = 5
-                Height = 198
+                Height = 196
                 Top = 5
                 Width = 521
                 Align = alClient
@@ -317,6 +331,7 @@ object frmSettings: TfrmSettings
                 OnBeforeCellPaint = VSTKeysBeforeCellPaint
                 OnChange = VSTLangChange
                 OnGetText = VSTLangGetText
+                OnPaintText = VSTKeysPaintText
                 OnGetImageIndex = VSTLangGetImageIndex
                 OnGetNodeDataSize = VSTLangGetNodeDataSize
                 OnResize = VSTLangResize
@@ -324,17 +339,17 @@ object frmSettings: TfrmSettings
             end
           end
           object tabFormat: TTabSheet
-            ClientHeight = 321
+            ClientHeight = 319
             ClientWidth = 531
             object pnlFormats: TPanel
               Left = 0
-              Height = 321
+              Height = 319
               Top = 0
               Width = 531
               Align = alClient
               AutoSize = True
               BevelOuter = bvNone
-              ClientHeight = 321
+              ClientHeight = 319
               ClientWidth = 531
               Font.Style = [fsBold]
               ParentFont = False
@@ -789,7 +804,7 @@ object frmSettings: TfrmSettings
           TabOrder = 0
           object chkLastUsedFile: TCheckBox
             Left = 4
-            Height = 23
+            Height = 17
             Top = 4
             Width = 533
             Align = alTop
@@ -800,8 +815,8 @@ object frmSettings: TfrmSettings
           end
           object chkLastFormsSize: TCheckBox
             Left = 4
-            Height = 23
-            Top = 30
+            Height = 17
+            Top = 24
             Width = 533
             Align = alTop
             BorderSpacing.Around = 3
@@ -811,8 +826,8 @@ object frmSettings: TfrmSettings
           end
           object chkNewVersion: TCheckBox
             Left = 4
-            Height = 23
-            Top = 56
+            Height = 17
+            Top = 44
             Width = 533
             Align = alTop
             BorderSpacing.Around = 3
@@ -823,8 +838,8 @@ object frmSettings: TfrmSettings
           end
           object chkAutoColumnWidth: TCheckBox
             Left = 4
-            Height = 23
-            Top = 82
+            Height = 17
+            Top = 64
             Width = 533
             Align = alTop
             BorderSpacing.Around = 3
@@ -841,24 +856,24 @@ object frmSettings: TfrmSettings
           Height = 351
           Top = 5
           Width = 541
-          ActivePage = tabTables
+          ActivePage = tabProgram
           Align = alClient
           BorderSpacing.Around = 5
-          TabIndex = 1
+          TabIndex = 0
           TabOrder = 0
           object tabProgram: TTabSheet
             ClientHeight = 318
             ClientWidth = 531
             object pnlPanelsColor: TPanel
               Left = 5
-              Height = 110
+              Height = 107
               Top = 5
-              Width = 521
+              Width = 523
               Align = alTop
               AutoSize = True
               BorderSpacing.Around = 5
-              ClientHeight = 110
-              ClientWidth = 521
+              ClientHeight = 107
+              ClientWidth = 523
               ParentFont = False
               ParentShowHint = False
               TabOrder = 0
@@ -866,7 +881,7 @@ object frmSettings: TfrmSettings
                 Left = 6
                 Height = 1
                 Top = 8
-                Width = 509
+                Width = 511
                 Align = alTop
                 BorderSpacing.Top = 2
                 BorderSpacing.Around = 5
@@ -878,9 +893,9 @@ object frmSettings: TfrmSettings
               end
               object chkGradientEffect: TCheckBox
                 Left = 4
-                Height = 23
-                Top = 66
-                Width = 513
+                Height = 17
+                Top = 54
+                Width = 515
                 Align = alTop
                 BorderSpacing.Around = 3
                 Checked = True
@@ -890,21 +905,21 @@ object frmSettings: TfrmSettings
               end
               object pnlVisualButtons: TPanel
                 Left = 6
-                Height = 10
-                Top = 94
-                Width = 509
+                Height = 25
+                Top = 76
+                Width = 511
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Around = 5
                 BevelOuter = bvNone
-                ClientHeight = 10
-                ClientWidth = 509
+                ClientHeight = 25
+                ClientWidth = 511
                 TabOrder = 1
                 object btnCaptionColorBack: TBCMDButtonFocus
                   Tag = 10777363
                   Cursor = crHandPoint
                   Left = 0
-                  Height = 10
+                  Height = 25
                   Top = 0
                   Width = 26
                   Animation = True
@@ -929,8 +944,8 @@ object frmSettings: TfrmSettings
                 object btnCaptionColorFont: TBCMDButtonFocus
                   Tag = 10473983
                   Cursor = crHandPoint
-                  Left = 483
-                  Height = 10
+                  Left = 485
+                  Height = 25
                   Top = 0
                   Width = 26
                   Animation = True
@@ -954,9 +969,9 @@ object frmSettings: TfrmSettings
               end
               object chkShadowedFont: TCheckBox
                 Left = 4
-                Height = 23
+                Height = 17
                 Top = 14
-                Width = 513
+                Width = 515
                 Align = alTop
                 BorderSpacing.Around = 3
                 Checked = True
@@ -966,9 +981,9 @@ object frmSettings: TfrmSettings
               end
               object chkBoldFont: TCheckBox
                 Left = 4
-                Height = 23
-                Top = 40
-                Width = 513
+                Height = 17
+                Top = 34
+                Width = 515
                 Align = alTop
                 BorderSpacing.Around = 3
                 Checked = True
@@ -979,9 +994,9 @@ object frmSettings: TfrmSettings
             end
             object chkRedColorButtonDelete: TCheckBox
               Left = 3
-              Height = 23
-              Top = 120
-              Width = 525
+              Height = 17
+              Top = 117
+              Width = 527
               Align = alTop
               BorderSpacing.Around = 3
               Checked = True
@@ -989,20 +1004,30 @@ object frmSettings: TfrmSettings
               TabOrder = 1
               OnClick = chkGradientEffectClick
             end
+            object chkDarkStyle: TCheckBox
+              Left = 3
+              Height = 17
+              Top = 137
+              Width = 527
+              Align = alTop
+              BorderSpacing.Around = 3
+              TabOrder = 2
+              OnClick = chkDarkStyleClick
+            end
           end
           object tabTables: TTabSheet
             ClientHeight = 318
             ClientWidth = 531
             object pnlOddRowColorSettings: TPanel
               Left = 5
-              Height = 22
+              Height = 37
               Top = 5
-              Width = 521
+              Width = 523
               Align = alTop
               AutoSize = True
               BorderSpacing.Around = 5
-              ClientHeight = 22
-              ClientWidth = 521
+              ClientHeight = 37
+              ClientWidth = 523
               ParentFont = False
               ParentShowHint = False
               TabOrder = 0
@@ -1010,7 +1035,7 @@ object frmSettings: TfrmSettings
                 Left = 6
                 Height = 1
                 Top = 3
-                Width = 509
+                Width = 511
                 Align = alTop
                 BorderSpacing.Left = 5
                 BorderSpacing.Top = 2
@@ -1024,9 +1049,9 @@ object frmSettings: TfrmSettings
               end
               object pnlOddRowColor: TPanel
                 Left = 228
-                Height = 10
+                Height = 25
                 Top = 7
-                Width = 286
+                Width = 288
                 Align = alClient
                 BorderSpacing.Left = 10
                 BorderSpacing.Right = 5
@@ -1043,7 +1068,7 @@ object frmSettings: TfrmSettings
               object btnOddRowColorBack: TBCMDButtonFocus
                 Cursor = crHandPoint
                 Left = 17
-                Height = 10
+                Height = 25
                 Top = 7
                 Width = 200
                 Animation = True
@@ -1070,20 +1095,20 @@ object frmSettings: TfrmSettings
             end
             object pnlTransactionsColor: TPanel
               Left = 5
-              Height = 132
-              Top = 77
-              Width = 521
+              Height = 112
+              Top = 85
+              Width = 523
               Align = alTop
               AutoSize = True
               BorderSpacing.Around = 5
-              ClientHeight = 132
-              ClientWidth = 521
+              ClientHeight = 112
+              ClientWidth = 523
               TabOrder = 1
               object tabFontColor: TPageControl
                 Left = 6
-                Height = 117
+                Height = 97
                 Top = 9
-                Width = 509
+                Width = 511
                 ActivePage = tabTransferMFontColor
                 Align = alClient
                 AutoSize = True
@@ -1091,28 +1116,28 @@ object frmSettings: TfrmSettings
                 TabIndex = 3
                 TabOrder = 0
                 object tabCreditFontColor: TTabSheet
-                  ClientHeight = 84
-                  ClientWidth = 499
+                  ClientHeight = 64
+                  ClientWidth = 501
                   object pnlCreditTransactionsColor: TPanel
                     Tag = 1
                     Left = 3
-                    Height = 81
+                    Height = 63
                     Top = 3
-                    Width = 493
+                    Width = 497
                     Align = alTop
                     AutoSize = True
                     BorderSpacing.Around = 3
                     BevelOuter = bvNone
-                    ClientHeight = 81
-                    ClientWidth = 493
+                    ClientHeight = 63
+                    ClientWidth = 497
                     ParentFont = False
                     ParentShowHint = False
                     TabOrder = 0
                     object rbtCreditColorBlack: TRadioButton
                       Left = 23
-                      Height = 23
+                      Height = 17
                       Top = 3
-                      Width = 467
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1122,9 +1147,9 @@ object frmSettings: TfrmSettings
                     object rbtCreditColorMixed: TRadioButton
                       Tag = 1
                       Left = 23
-                      Height = 23
-                      Top = 29
-                      Width = 467
+                      Height = 17
+                      Top = 23
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1136,9 +1161,9 @@ object frmSettings: TfrmSettings
                     object rbtCreditColorAll: TRadioButton
                       Tag = 2
                       Left = 23
-                      Height = 23
-                      Top = 55
-                      Width = 467
+                      Height = 17
+                      Top = 43
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1148,28 +1173,28 @@ object frmSettings: TfrmSettings
                   end
                 end
                 object tabDebitFontColor: TTabSheet
-                  ClientHeight = 84
-                  ClientWidth = 499
+                  ClientHeight = 64
+                  ClientWidth = 501
                   object pnlDebitTransactionsColor: TPanel
                     Tag = 1
                     Left = 3
-                    Height = 81
+                    Height = 63
                     Top = 3
-                    Width = 493
+                    Width = 497
                     Align = alTop
                     AutoSize = True
                     BorderSpacing.Around = 3
                     BevelOuter = bvNone
-                    ClientHeight = 81
-                    ClientWidth = 493
+                    ClientHeight = 63
+                    ClientWidth = 497
                     ParentFont = False
                     ParentShowHint = False
                     TabOrder = 0
                     object rbtDebitColorBlack: TRadioButton
                       Left = 23
-                      Height = 23
+                      Height = 17
                       Top = 3
-                      Width = 467
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1179,9 +1204,9 @@ object frmSettings: TfrmSettings
                     object rbtDebitColorMixed: TRadioButton
                       Tag = 1
                       Left = 23
-                      Height = 23
-                      Top = 29
-                      Width = 467
+                      Height = 17
+                      Top = 23
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1193,9 +1218,9 @@ object frmSettings: TfrmSettings
                     object rbtDebitColorAll: TRadioButton
                       Tag = 2
                       Left = 23
-                      Height = 23
-                      Top = 55
-                      Width = 467
+                      Height = 17
+                      Top = 43
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1205,28 +1230,28 @@ object frmSettings: TfrmSettings
                   end
                 end
                 object tabTransferPFontColor: TTabSheet
-                  ClientHeight = 84
-                  ClientWidth = 499
+                  ClientHeight = 64
+                  ClientWidth = 501
                   object pnlTransferPTransactionsColor: TPanel
                     Tag = 1
                     Left = 3
-                    Height = 81
+                    Height = 63
                     Top = 3
-                    Width = 493
+                    Width = 497
                     Align = alTop
                     AutoSize = True
                     BorderSpacing.Around = 3
                     BevelOuter = bvNone
-                    ClientHeight = 81
-                    ClientWidth = 493
+                    ClientHeight = 63
+                    ClientWidth = 497
                     ParentFont = False
                     ParentShowHint = False
                     TabOrder = 0
                     object rbtTransfersPColorBlack: TRadioButton
                       Left = 23
-                      Height = 23
+                      Height = 17
                       Top = 3
-                      Width = 467
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1236,9 +1261,9 @@ object frmSettings: TfrmSettings
                     object rbtTransfersPColorMixed: TRadioButton
                       Tag = 1
                       Left = 23
-                      Height = 23
-                      Top = 29
-                      Width = 467
+                      Height = 17
+                      Top = 23
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1250,9 +1275,9 @@ object frmSettings: TfrmSettings
                     object rbtTransfersPColorAll: TRadioButton
                       Tag = 2
                       Left = 23
-                      Height = 23
-                      Top = 55
-                      Width = 467
+                      Height = 17
+                      Top = 43
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1262,28 +1287,28 @@ object frmSettings: TfrmSettings
                   end
                 end
                 object tabTransferMFontColor: TTabSheet
-                  ClientHeight = 84
-                  ClientWidth = 499
+                  ClientHeight = 64
+                  ClientWidth = 501
                   object pnlTransferMTransactionsColor: TPanel
                     Tag = 1
                     Left = 3
-                    Height = 81
+                    Height = 63
                     Top = 3
-                    Width = 493
+                    Width = 497
                     Align = alTop
                     AutoSize = True
                     BorderSpacing.Around = 3
                     BevelOuter = bvNone
-                    ClientHeight = 81
-                    ClientWidth = 493
+                    ClientHeight = 63
+                    ClientWidth = 497
                     ParentFont = False
                     ParentShowHint = False
                     TabOrder = 0
                     object rbtTransfersMColorBlack: TRadioButton
                       Left = 23
-                      Height = 23
+                      Height = 17
                       Top = 3
-                      Width = 467
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1293,9 +1318,9 @@ object frmSettings: TfrmSettings
                     object rbtTransfersMColorMixed: TRadioButton
                       Tag = 1
                       Left = 23
-                      Height = 23
-                      Top = 29
-                      Width = 467
+                      Height = 17
+                      Top = 23
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1307,9 +1332,9 @@ object frmSettings: TfrmSettings
                     object rbtTransfersMColorAll: TRadioButton
                       Tag = 2
                       Left = 23
-                      Height = 23
-                      Top = 55
-                      Width = 467
+                      Height = 17
+                      Top = 43
+                      Width = 471
                       Align = alTop
                       BorderSpacing.Left = 20
                       BorderSpacing.Around = 3
@@ -1323,7 +1348,7 @@ object frmSettings: TfrmSettings
                 Left = 6
                 Height = 1
                 Top = 3
-                Width = 509
+                Width = 511
                 Align = alTop
                 BorderSpacing.Left = 5
                 BorderSpacing.Top = 2
@@ -1338,14 +1363,14 @@ object frmSettings: TfrmSettings
             end
             object pnlGridFont: TPanel
               Left = 5
-              Height = 40
-              Top = 32
-              Width = 521
+              Height = 33
+              Top = 47
+              Width = 523
               Align = alTop
               AutoSize = True
               BorderSpacing.Around = 5
-              ClientHeight = 40
-              ClientWidth = 521
+              ClientHeight = 33
+              ClientWidth = 523
               ParentFont = False
               ParentShowHint = False
               TabOrder = 2
@@ -1353,7 +1378,7 @@ object frmSettings: TfrmSettings
                 Left = 6
                 Height = 1
                 Top = 3
-                Width = 509
+                Width = 511
                 Align = alTop
                 BorderSpacing.Left = 5
                 BorderSpacing.Top = 2
@@ -1367,23 +1392,23 @@ object frmSettings: TfrmSettings
               end
               object cbxGridFontName: TComboBox
                 Left = 16
-                Height = 30
+                Height = 23
                 Top = 7
-                Width = 419
+                Width = 421
                 Align = alClient
                 BorderSpacing.Left = 15
                 BorderSpacing.Top = 3
                 BorderSpacing.Right = 5
                 BorderSpacing.Bottom = 2
                 DropDownCount = 15
-                ItemHeight = 0
+                ItemHeight = 15
                 Style = csDropDownList
                 TabOrder = 0
                 OnChange = cbxGridFontNameChange
               end
               object spiGridFontSize: TSpinEdit
-                Left = 440
-                Height = 30
+                Left = 442
+                Height = 23
                 Top = 7
                 Width = 75
                 Align = alRight
@@ -1394,9 +1419,9 @@ object frmSettings: TfrmSettings
                 BorderSpacing.Bottom = 2
                 MaxValue = 25
                 MinValue = 5
+                OnChange = spiGridFontSizeChange
                 TabOrder = 1
                 Value = 10
-                OnChange = spiGridFontSizeChange
               end
             end
           end
@@ -1405,20 +1430,20 @@ object frmSettings: TfrmSettings
             ClientWidth = 531
             object pnlButtonsSize: TPanel
               Left = 5
-              Height = 311
+              Height = 313
               Top = 5
-              Width = 35
+              Width = 30
               Align = alLeft
               AutoSize = True
               BorderSpacing.Around = 5
-              ClientHeight = 311
-              ClientWidth = 35
+              ClientHeight = 313
+              ClientWidth = 30
               TabOrder = 0
               object lblButtonsSize: TLabel
                 Left = 6
                 Height = 1
                 Top = 3
-                Width = 23
+                Width = 18
                 Align = alTop
                 BorderSpacing.Left = 3
                 BorderSpacing.Right = 3
@@ -1427,9 +1452,9 @@ object frmSettings: TfrmSettings
               object rbtButtonsSize24: TRadioButton
                 Tag = 24
                 Left = 6
-                Height = 23
+                Height = 17
                 Top = 6
-                Width = 23
+                Width = 18
                 Align = alTop
                 BorderSpacing.Left = 5
                 BorderSpacing.Right = 5
@@ -1441,9 +1466,9 @@ object frmSettings: TfrmSettings
               object rbtButtonsSize32: TRadioButton
                 Tag = 32
                 Left = 6
-                Height = 23
-                Top = 29
-                Width = 23
+                Height = 17
+                Top = 23
+                Width = 18
                 Align = alTop
                 BorderSpacing.Left = 5
                 BorderSpacing.Right = 5
@@ -1453,43 +1478,42 @@ object frmSettings: TfrmSettings
               end
             end
             object pnlButtonsVisibility: TPanel
-              Left = 45
-              Height = 311
+              Left = 40
+              Height = 313
               Top = 5
-              Width = 481
+              Width = 488
               Align = alClient
               BorderSpacing.Around = 5
-              ClientHeight = 311
-              ClientWidth = 481
+              ClientHeight = 313
+              ClientWidth = 488
               TabOrder = 1
               object chkButtonsVisibility: TCheckListBox
                 Left = 6
-                Height = 276
-                Top = 29
-                Width = 469
+                Height = 284
+                Top = 23
+                Width = 476
                 Align = alClient
                 BorderSpacing.Around = 5
                 ItemHeight = 0
                 TabOrder = 0
-                TopIndex = -1
                 OnClickCheck = chkButtonsVisibilityClickCheck
               end
               object pnlButtonVisibilityTop: TPanel
                 Left = 1
-                Height = 23
+                Height = 17
                 Top = 1
-                Width = 479
+                Width = 486
                 Align = alTop
                 AutoSize = True
                 BevelOuter = bvNone
-                ClientHeight = 23
-                ClientWidth = 479
+                ClientHeight = 17
+                ClientWidth = 486
                 TabOrder = 1
                 object chkSelectAll: TCheckBox
-                  Left = 456
-                  Height = 23
+                  Left = 468
+                  Height = 17
                   Top = 0
-                  Width = 23
+                  Width = 18
                   Align = alRight
                   BorderSpacing.Left = 2
                   Checked = True
@@ -1499,9 +1523,9 @@ object frmSettings: TfrmSettings
                 end
                 object lblButtonsVisibility: TLabel
                   Left = 5
-                  Height = 19
+                  Height = 13
                   Top = 2
-                  Width = 449
+                  Width = 461
                   Align = alClient
                   BorderSpacing.Left = 3
                   BorderSpacing.Around = 2
@@ -1514,9 +1538,9 @@ object frmSettings: TfrmSettings
             ClientWidth = 531
             object chkFilterComboboxStyle: TCheckBox
               Left = 0
-              Height = 23
+              Height = 17
               Top = 3
-              Width = 531
+              Width = 533
               Align = alTop
               BorderSpacing.Top = 3
               TabOrder = 0
@@ -1542,10 +1566,10 @@ object frmSettings: TfrmSettings
             Height = 339
             Top = 6
             Width = 529
-            ActivePage = tabTransactionsGlobal
+            ActivePage = tabTransactionsRestrictions
             Align = alClient
             BorderSpacing.Around = 5
-            TabIndex = 0
+            TabIndex = 1
             TabOrder = 0
             object tabTransactionsGlobal: TTabSheet
               ClientHeight = 306
@@ -1553,7 +1577,7 @@ object frmSettings: TfrmSettings
               object chkDisplayFontBold: TCheckBox
                 Left = 3
                 Height = 17
-                Top = 23
+                Top = 3
                 Width = 515
                 Align = alTop
                 BorderSpacing.Around = 3
@@ -1565,7 +1589,7 @@ object frmSettings: TfrmSettings
               object chkDisplaySubCatCapital: TCheckBox
                 Left = 3
                 Height = 17
-                Top = 63
+                Top = 23
                 Width = 515
                 Align = alTop
                 BorderSpacing.Around = 3
@@ -1574,40 +1598,63 @@ object frmSettings: TfrmSettings
                 TabOrder = 1
                 OnChange = chkDisplaySubCatCapitalChange
               end
-              object chkEnableSelfTransfer: TCheckBox
+              object gbxNewTransaction: TGroupBox
                 Left = 3
-                Height = 17
-                Top = 83
-                Width = 515
-                Align = alTop
-                BorderSpacing.Around = 3
-                Checked = True
-                State = cbChecked
-                TabOrder = 2
-                OnChange = chkDisplayFontBoldChange
-              end
-              object chkOpenNewTransaction: TCheckBox
-                Left = 3
-                Height = 17
-                Top = 3
-                Width = 515
-                Align = alTop
-                BorderSpacing.Around = 3
-                TabOrder = 3
-              end
-              object chkRememberNewTransactionsForm: TCheckBox
-                Left = 3
-                Height = 17
+                Height = 103
                 Top = 43
                 Width = 515
                 Align = alTop
+                AutoSize = True
                 BorderSpacing.Around = 3
-                TabOrder = 4
+                ClientHeight = 86
+                ClientWidth = 513
+                TabOrder = 2
+                object chkOpenNewTransaction: TCheckBox
+                  Left = 3
+                  Height = 17
+                  Top = 3
+                  Width = 505
+                  Align = alTop
+                  BorderSpacing.Around = 3
+                  TabOrder = 0
+                end
+                object chkRememberNewTransactionsForm: TCheckBox
+                  Left = 3
+                  Height = 17
+                  Top = 43
+                  Width = 505
+                  Align = alTop
+                  BorderSpacing.Around = 3
+                  TabOrder = 1
+                end
+                object chkItemsFromFilter: TCheckBox
+                  Left = 3
+                  Height = 17
+                  Top = 63
+                  Width = 505
+                  Align = alTop
+                  BorderSpacing.Around = 3
+                  TabOrder = 2
+                  OnChange = chkDisplayFontBoldChange
+                end
+                object chkEnableSelfTransfer: TCheckBox
+                  Left = 3
+                  Height = 17
+                  Top = 23
+                  Width = 505
+                  Align = alTop
+                  BorderSpacing.Around = 3
+                  Checked = True
+                  State = cbChecked
+                  TabOrder = 3
+                  OnChange = chkDisplayFontBoldChange
+                end
               end
             end
             object tabTransactionsRestrictions: TTabSheet
               ClientHeight = 306
               ClientWidth = 519
+              OnResize = tabTransactionsRestrictionsResize
               object gbxTransactionsAdd: TGroupBox
                 Left = 191
                 Height = 305
@@ -1658,7 +1705,6 @@ object frmSettings: TfrmSettings
                     BorderSpacing.Right = 2
                     BorderSpacing.Bottom = 1
                     Enabled = False
-                    Color = clWhite
                     TrailingSeparator = False
                     TextForNullDate = ''
                     LeadingZeros = True
@@ -1726,9 +1772,9 @@ object frmSettings: TfrmSettings
                     BorderSpacing.Bottom = 2
                     MaxValue = 100000
                     MinValue = 1
+                    OnChange = spiGridFontSizeChange
                     TabOrder = 0
                     Value = 365
-                    OnChange = spiGridFontSizeChange
                   end
                   object lblTransactionsAddDays: TLabel
                     Left = 88
@@ -1816,7 +1862,6 @@ object frmSettings: TfrmSettings
                     BorderSpacing.Right = 2
                     BorderSpacing.Bottom = 1
                     Enabled = False
-                    Color = clWhite
                     TrailingSeparator = False
                     TextForNullDate = ''
                     LeadingZeros = True
@@ -1884,9 +1929,9 @@ object frmSettings: TfrmSettings
                     BorderSpacing.Bottom = 2
                     MaxValue = 100000
                     MinValue = 1
+                    OnChange = spiGridFontSizeChange
                     TabOrder = 0
                     Value = 365
-                    OnChange = spiGridFontSizeChange
                   end
                   object lblTransactionsEditDays: TLabel
                     Left = 88
@@ -1985,7 +2030,6 @@ object frmSettings: TfrmSettings
                     BorderSpacing.Right = 2
                     BorderSpacing.Bottom = 1
                     Enabled = False
-                    Color = clWhite
                     TrailingSeparator = False
                     TextForNullDate = ''
                     LeadingZeros = True
@@ -2064,9 +2108,9 @@ object frmSettings: TfrmSettings
                     BorderSpacing.Bottom = 2
                     MaxValue = 100000
                     MinValue = 1
+                    OnChange = spiGridFontSizeChange
                     TabOrder = 0
                     Value = 365
-                    OnChange = spiGridFontSizeChange
                   end
                   object lblTransactionsDeleteDays: TLabel
                     Left = 88
@@ -2191,9 +2235,9 @@ object frmSettings: TfrmSettings
                 BorderSpacing.Bottom = 2
                 MaxValue = 20
                 MinValue = 5
+                OnChange = spiReportSizeChange
                 TabOrder = 1
                 Value = 10
-                OnChange = spiReportSizeChange
               end
             end
           end
@@ -2234,8 +2278,8 @@ object frmSettings: TfrmSettings
               Directory = '/home/tatko'
               ItemHeight = 0
               Mask = '*.lrf'
-              TabOrder = 0
               OnChange = filListReportsChange
+              TabOrder = 0
             end
             object Panel2: TPanel
               Left = 375
@@ -2251,7 +2295,7 @@ object frmSettings: TfrmSettings
                 Tag = 1
                 Cursor = crHandPoint
                 Left = -3
-                Height = 10
+                Height = 25
                 Top = 3
                 Width = 150
                 Animation = True
@@ -2269,7 +2313,6 @@ object frmSettings: TfrmSettings
                 Align = alTop
                 AutoSize = True
                 BorderSpacing.Around = 2
-                Color = clNone
                 Constraints.MinWidth = 150
                 Enabled = False
                 Font.Style = [fsBold]
@@ -2297,12 +2340,12 @@ object frmSettings: TfrmSettings
           Left = 3
           Height = 69
           Top = 69
-          Width = 546
+          Width = 545
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 3
           ClientHeight = 52
-          ClientWidth = 544
+          ClientWidth = 543
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
@@ -2310,12 +2353,12 @@ object frmSettings: TfrmSettings
             Left = 0
             Height = 49
             Top = 0
-            Width = 542
+            Width = 541
             Align = alTop
             AutoSize = True
             BevelOuter = bvNone
             ClientHeight = 49
-            ClientWidth = 542
+            ClientWidth = 541
             ParentFont = False
             TabOrder = 0
             object spiChartRotateLabels: TSpinEdit
@@ -2326,10 +2369,10 @@ object frmSettings: TfrmSettings
               Align = alLeft
               BorderSpacing.Around = 3
               MaxValue = 359
+              OnChange = spiChartRotateLabelsChange
               ParentFont = False
               TabOrder = 0
               Value = 25
-              OnChange = spiChartRotateLabelsChange
             end
             object lblChartRotateDegree: TLabel
               Left = 112
@@ -2359,7 +2402,7 @@ object frmSettings: TfrmSettings
               Left = 3
               Height = 17
               Top = 3
-              Width = 536
+              Width = 535
               Align = alTop
               BorderSpacing.Around = 3
               Checked = True
@@ -2374,12 +2417,12 @@ object frmSettings: TfrmSettings
           Left = 3
           Height = 63
           Top = 3
-          Width = 546
+          Width = 545
           Align = alTop
           AutoSize = True
           BorderSpacing.Around = 3
           ClientHeight = 46
-          ClientWidth = 544
+          ClientWidth = 543
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 1
@@ -2387,7 +2430,7 @@ object frmSettings: TfrmSettings
             Left = 3
             Height = 17
             Top = 23
-            Width = 536
+            Width = 535
             Align = alTop
             BorderSpacing.Around = 3
             ParentFont = False
@@ -2398,7 +2441,7 @@ object frmSettings: TfrmSettings
             Left = 3
             Height = 17
             Top = 3
-            Width = 536
+            Width = 535
             Align = alTop
             BorderSpacing.Around = 3
             Checked = True
@@ -2586,8 +2629,8 @@ object frmSettings: TfrmSettings
                 BorderSpacing.Left = 10
                 BorderSpacing.Right = 10
                 MaxValue = 10000
-                TabOrder = 0
                 OnChange = spiPaymentsChange
+                TabOrder = 0
               end
               object lblPayments2: TLabel
                 Left = 106
@@ -2633,20 +2676,20 @@ object frmSettings: TfrmSettings
       object pnlShortcuts: TPage
         object pnlShortCutsClient: TPanel
           Left = 5
-          Height = 433
+          Height = 351
           Top = 5
-          Width = 542
+          Width = 541
           Align = alClient
           BorderSpacing.Around = 5
           BevelOuter = bvLowered
-          ClientHeight = 433
-          ClientWidth = 542
+          ClientHeight = 351
+          ClientWidth = 541
           TabOrder = 0
           object VSTKeys: TLazVirtualStringTree
             Left = 6
-            Height = 391
+            Height = 309
             Top = 6
-            Width = 530
+            Width = 529
             Align = alClient
             BorderSpacing.Around = 5
             DefaultText = 'Node'
@@ -2680,6 +2723,7 @@ object frmSettings: TfrmSettings
             OnChange = VSTKeysChange
             OnDblClick = VSTKeysDblClick
             OnGetText = VSTKeysGetText
+            OnPaintText = VSTKeysPaintText
             OnGetImageIndex = VSTKeysGetImageIndex
             OnGetNodeDataSize = VSTKeysGetNodeDataSize
             OnResize = VSTKeysResize
@@ -2687,14 +2731,14 @@ object frmSettings: TfrmSettings
           object pnlButtonsKeys: TPanel
             Left = 6
             Height = 25
-            Top = 402
-            Width = 530
+            Top = 320
+            Width = 529
             Align = alBottom
             AutoSize = True
             BorderSpacing.Around = 5
             BevelOuter = bvNone
             ClientHeight = 25
-            ClientWidth = 530
+            ClientWidth = 529
             Constraints.MinHeight = 25
             TabOrder = 1
             object btnChange: TBCMDButtonFocus
@@ -2717,7 +2761,6 @@ object frmSettings: TfrmSettings
               TextProportionalRatio = 0.5
               Align = alLeft
               AutoSize = True
-              Color = clNone
               Constraints.MinWidth = 150
               Enabled = False
               Font.Style = [fsBold]
@@ -2747,7 +2790,6 @@ object frmSettings: TfrmSettings
               Align = alLeft
               AutoSize = True
               BorderSpacing.Left = 5
-              Color = clNone
               Constraints.MinWidth = 150
               Font.Style = [fsBold]
               OnClick = btnDefaultClick
@@ -2885,10 +2927,10 @@ object frmSettings: TfrmSettings
                 AutoSize = True
                 Max = 50
                 Min = 1
+                OnChange = traBackupCountChange
                 Position = 25
                 ScalePos = trBottom
                 TickMarks = tmBoth
-                OnChange = traBackupCountChange
                 Align = alClient
                 BorderSpacing.Around = 5
                 TabOrder = 0
@@ -2995,8 +3037,8 @@ object frmSettings: TfrmSettings
                   0000000000000000000000000000000000000000000000000000000000000000
                   0000000000000000000000000000000000000000000000000000
                 }
-                TabOrder = 0
                 OnClick = btnBackupFolderClick
+                TabOrder = 0
               end
             end
             object chkBackupQuestion: TCheckBox
@@ -3018,7 +3060,7 @@ object frmSettings: TfrmSettings
   end
   object treSettings: TTreeView
     Left = 5
-    Height = 357
+    Height = 355
     Top = 5
     Width = 230
     Align = alLeft
@@ -3029,6 +3071,8 @@ object frmSettings: TfrmSettings
     ReadOnly = True
     ScrollBars = ssAutoVertical
     TabOrder = 2
+    OnAdvancedCustomDrawItem = treSettingsAdvancedCustomDrawItem
+    OnChange = treSettingsChange
     Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
     Items.Data = {
       F9FFFFFF020002000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF080000000000
@@ -3044,12 +3088,10 @@ object frmSettings: TfrmSettings
       000000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000000000
       000000000000
     }
-    OnAdvancedCustomDrawItem = treSettingsAdvancedCustomDrawItem
-    OnChange = treSettingsChange
   end
   object splSettings: TSplitter
     Left = 240
-    Height = 364
+    Height = 362
     Top = 0
     Width = 3
     AutoSnap = False
@@ -3091,8 +3133,8 @@ object frmSettings: TfrmSettings
     Left = 81
     Top = 160
     object actChange: TAction
-      ShortCut = 32
       OnExecute = btnChangeClick
+      ShortCut = 32
     end
   end
   object imgFlags: TImageList

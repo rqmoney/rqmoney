@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  ActnList, Spin, BCMDButtonFocus, BCPanel;
+  ActnList, Spin, BCMDButtonFocus, BCPanel, Math;
 
 type
 
@@ -74,6 +74,10 @@ begin
 
     // get form icon
     frmMain.img16.GetIcon(21, (Sender as TForm).Icon);
+
+    // font color
+    lblNote.Font.Color := IfThen(Dark = False, clRed, $007873F4);
+
   except
   end;
 end;

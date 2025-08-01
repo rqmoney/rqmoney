@@ -14,28 +14,28 @@ object frmCounter: TfrmCounter
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlBackground: TPanel
     Left = 5
-    Height = 419
+    Height = 417
     Top = 5
     Width = 434
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 419
+    ClientHeight = 417
     ClientWidth = 434
     TabOrder = 0
     object pnlValue: TPanel
       Left = 6
-      Height = 327
-      Top = 72
+      Height = 332
+      Top = 65
       Width = 422
       Align = alClient
       AutoSize = True
       BorderSpacing.Around = 5
-      ClientHeight = 327
+      ClientHeight = 332
       ClientWidth = 422
       TabOrder = 0
       object lblValue: TLabel
@@ -54,7 +54,7 @@ object frmCounter: TfrmCounter
       end
       object BackGround: TScrollBox
         Left = 6
-        Height = 309
+        Height = 314
         Top = 12
         Width = 410
         HorzScrollBar.Page = 1
@@ -69,7 +69,7 @@ object frmCounter: TfrmCounter
     object pnlSummary: TPanel
       Left = 6
       Height = 9
-      Top = 404
+      Top = 402
       Width = 422
       Align = alBottom
       AutoSize = True
@@ -149,19 +149,19 @@ object frmCounter: TfrmCounter
     end
     object pnlCurrencies: TPanel
       Left = 6
-      Height = 36
+      Height = 29
       Top = 31
       Width = 422
       Align = alTop
       AutoSize = True
       BorderSpacing.Around = 5
-      ClientHeight = 36
+      ClientHeight = 29
       ClientWidth = 422
       TabOrder = 3
       object btnValues: TSpeedButton
         Tag = 2
         Left = 387
-        Height = 30
+        Height = 23
         Top = 3
         Width = 32
         Align = alRight
@@ -179,23 +179,23 @@ object frmCounter: TfrmCounter
       end
       object pnlCurrency: TPanel
         Left = 37
-        Height = 34
+        Height = 27
         Top = 1
         Width = 348
         Align = alClient
         AutoSize = True
         BevelOuter = bvNone
-        ClientHeight = 34
+        ClientHeight = 27
         ClientWidth = 348
         TabOrder = 0
         object cbxCurrency: TComboBox
           Left = 2
-          Height = 30
+          Height = 23
           Top = 2
           Width = 344
           Align = alTop
           BorderSpacing.Around = 2
-          ItemHeight = 0
+          ItemHeight = 15
           ParentFont = False
           Style = csDropDownList
           TabOrder = 0
@@ -205,7 +205,7 @@ object frmCounter: TfrmCounter
       end
       object btnCurrencies: TSpeedButton
         Left = 3
-        Height = 30
+        Height = 23
         Top = 3
         Width = 32
         Align = alLeft
@@ -224,15 +224,15 @@ object frmCounter: TfrmCounter
   end
   object pnlButtons: TPanel
     Left = 3
-    Height = 25
-    Top = 429
+    Height = 27
+    Top = 427
     Width = 438
     Align = alBottom
     AutoSize = True
     BorderSpacing.Bottom = 3
     BorderSpacing.Around = 3
     BevelOuter = bvNone
-    ClientHeight = 25
+    ClientHeight = 27
     ClientWidth = 438
     Constraints.MinHeight = 25
     TabOrder = 1
@@ -240,7 +240,7 @@ object frmCounter: TfrmCounter
     object btnCopy: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 3
-      Height = 23
+      Height = 25
       Top = 1
       Width = 110
       Animation = True
@@ -259,7 +259,6 @@ object frmCounter: TfrmCounter
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Enabled = False
       Font.Style = [fsBold]
       OnClick = btnCopyClick
@@ -270,7 +269,7 @@ object frmCounter: TfrmCounter
     object btnReset: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 116
-      Height = 23
+      Height = 25
       Top = 1
       Width = 103
       Animation = True
@@ -289,7 +288,6 @@ object frmCounter: TfrmCounter
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Enabled = False
       Font.Style = [fsBold]
       OnClick = btnResetClick
@@ -300,7 +298,7 @@ object frmCounter: TfrmCounter
     object btnPrint: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 222
-      Height = 23
+      Height = 25
       Top = 1
       Width = 110
       Animation = True
@@ -319,7 +317,6 @@ object frmCounter: TfrmCounter
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Enabled = False
       Font.Style = [fsBold]
       OnClick = btnPrintClick
@@ -331,7 +328,7 @@ object frmCounter: TfrmCounter
     object btnExit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 335
-      Height = 23
+      Height = 25
       Top = 1
       Width = 100
       Animation = True
@@ -350,7 +347,6 @@ object frmCounter: TfrmCounter
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Font.Style = [fsBold]
       OnClick = btnExitClick
       ParentFont = False

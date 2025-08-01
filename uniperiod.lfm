@@ -12,17 +12,17 @@ object frmPeriod: TfrmPeriod
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlLeft: TPanel
     Left = 5
-    Height = 337
+    Height = 335
     Top = 5
     Width = 180
     Align = alLeft
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 337
+    ClientHeight = 335
     ClientWidth = 180
     Constraints.MaxWidth = 350
     Constraints.MinWidth = 150
@@ -84,7 +84,7 @@ object frmPeriod: TfrmPeriod
     object lblToDate: TLabel
       Left = 6
       Height = 1
-      Top = 76
+      Top = 77
       Width = 168
       Align = alTop
       BorderSpacing.Left = 5
@@ -96,25 +96,24 @@ object frmPeriod: TfrmPeriod
     end
     object pnlDateFrom: TPanel
       Left = 4
-      Height = 30
+      Height = 31
       Top = 36
       Width = 172
       Align = alTop
       AutoSize = True
       BorderSpacing.Around = 3
       BorderStyle = bsSingle
-      ClientHeight = 28
-      ClientWidth = 170
-      Color = clWhite
+      ClientHeight = 27
+      ClientWidth = 168
       ParentBackground = False
       ParentColor = False
       TabOrder = 1
       object datDateFrom: TDateTimePicker
         Cursor = crHandPoint
         Left = 3
-        Height = 20
+        Height = 19
         Top = 6
-        Width = 164
+        Width = 162
         CenturyFrom = 2000
         MaxDate = 117974
         MinDate = 2
@@ -152,7 +151,7 @@ object frmPeriod: TfrmPeriod
         Left = 3
         Height = 1
         Top = 3
-        Width = 164
+        Width = 162
         Align = alTop
         BorderSpacing.Left = 2
         BorderSpacing.Top = 2
@@ -168,25 +167,24 @@ object frmPeriod: TfrmPeriod
     end
     object pnlDateTo: TPanel
       Left = 4
-      Height = 30
-      Top = 80
+      Height = 31
+      Top = 81
       Width = 172
       Align = alTop
       AutoSize = True
       BorderSpacing.Around = 3
       BorderStyle = bsSingle
-      ClientHeight = 28
-      ClientWidth = 170
-      Color = clWhite
+      ClientHeight = 27
+      ClientWidth = 168
       ParentBackground = False
       ParentColor = False
       TabOrder = 2
       object datDateTo: TDateTimePicker
         Cursor = crHandPoint
         Left = 3
-        Height = 20
+        Height = 19
         Top = 6
-        Width = 164
+        Width = 162
         CenturyFrom = 1965
         MaxDate = 117974
         MinDate = 2
@@ -224,7 +222,7 @@ object frmPeriod: TfrmPeriod
         Left = 3
         Height = 1
         Top = 3
-        Width = 164
+        Width = 162
         Align = alTop
         BorderSpacing.Left = 2
         BorderSpacing.Top = 2
@@ -241,20 +239,20 @@ object frmPeriod: TfrmPeriod
   end
   object splBudget: TSplitter
     Left = 190
-    Height = 344
+    Height = 342
     Top = 0
     Width = 3
     OnCanResize = splBudgetCanResize
   end
   object pnlBudget: TPanel
     Left = 198
-    Height = 337
+    Height = 335
     Top = 5
     Width = 597
     Align = alClient
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 337
+    ClientHeight = 335
     ClientWidth = 597
     TabOrder = 1
     object pnlBudgetCaption: TBCPanel
@@ -301,7 +299,7 @@ object frmPeriod: TfrmPeriod
     object VST: TLazVirtualStringTree
       Cursor = 63
       Left = 4
-      Height = 308
+      Height = 306
       Top = 25
       Width = 589
       Align = alClient
@@ -361,6 +359,7 @@ object frmPeriod: TfrmPeriod
       OnDblClick = VSTDblClick
       OnEnter = VSTEnter
       OnGetText = VSTGetText
+      OnPaintText = VSTPaintText
       OnGetImageIndex = VSTGetImageIndex
       OnGetNodeDataSize = VSTGetNodeDataSize
       OnResize = VSTResize
@@ -368,14 +367,14 @@ object frmPeriod: TfrmPeriod
   end
   object pnlButtons: TPanel
     Left = 3
-    Height = 25
-    Top = 347
+    Height = 27
+    Top = 345
     Width = 794
     Align = alBottom
     AutoSize = True
     BorderSpacing.Around = 3
     BevelOuter = bvNone
-    ClientHeight = 25
+    ClientHeight = 27
     ClientWidth = 794
     Constraints.MinHeight = 25
     TabOrder = 3
@@ -383,7 +382,7 @@ object frmPeriod: TfrmPeriod
     object btnEdit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 156
-      Height = 23
+      Height = 25
       Top = 1
       Width = 150
       Animation = True
@@ -403,7 +402,6 @@ object frmPeriod: TfrmPeriod
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Enabled = False
       Font.Style = [fsBold]
@@ -416,7 +414,7 @@ object frmPeriod: TfrmPeriod
       Tag = 1
       Cursor = crHandPoint
       Left = 641
-      Height = 23
+      Height = 25
       Top = 1
       Width = 150
       Animation = True
@@ -436,7 +434,6 @@ object frmPeriod: TfrmPeriod
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Font.Style = [fsBold]
       OnClick = btnSaveClick
@@ -447,7 +444,7 @@ object frmPeriod: TfrmPeriod
     object btnCancel: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 3
-      Height = 23
+      Height = 25
       Top = 1
       Width = 150
       Animation = True
@@ -467,7 +464,6 @@ object frmPeriod: TfrmPeriod
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Font.Style = [fsBold]
       OnClick = btnCancelClick

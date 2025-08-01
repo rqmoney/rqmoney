@@ -90,6 +90,9 @@ type
     procedure VSTInitNode(Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode;
       var InitialStates: TVirtualNodeInitStates);
     procedure VSTKeyPress(Sender: TObject; var Key: char);
+    procedure VSTPaintText(Sender: TBaseVirtualTree;
+      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      TextType: TVSTTextType);
     procedure VSTResize(Sender: TObject);
   private
 
@@ -186,8 +189,12 @@ procedure TfrmBudget.VSTBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  TargetCanvas.Brush.Color :=
-    IfThen(Node.Index mod 2 = 0, clWhite, frmSettings.pnlOddRowColor.Color);
+  TargetCanvas.Brush.Color := // color
+    IfThen(Node.Index mod 2 = 0, // odd row
+    IfThen(Dark = False, clWhite, rgbToColor(22, 22, 22)),
+    IfThen(Dark = False, frmSettings.pnlOddRowColor.Color,
+    Brighten(frmSettings.pnlOddRowColor.Color, 44)));
+
   TargetCanvas.FillRect(CellRect);
 end;
 
@@ -269,6 +276,14 @@ begin
   if Ord(Key) = 13 then
     if btnSave.Enabled = True then
       btnSave.SetFocus;
+end;
+
+procedure TfrmBudget.VSTPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  TargetCanvas.Font.Color :=
+    IfThen(Dark = False, clDefault, clSilver);
 end;
 
 procedure TfrmBudget.VSTResize(Sender: TObject);

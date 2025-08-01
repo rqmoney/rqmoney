@@ -8,7 +8,7 @@ object frmImage: TfrmImage
   OnCreate = FormCreate
   OnResize = FormResize
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object imgDiagram: TImage
     Left = 3
@@ -10170,7 +10170,6 @@ object frmImage: TfrmImage
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Constraints.MinWidth = 150
         Font.Style = [fsBold]
         OnClick = btnExitClick
@@ -10201,7 +10200,6 @@ object frmImage: TfrmImage
         BorderSpacing.Left = 2
         BorderSpacing.Right = 2
         BorderSpacing.Around = 1
-        Color = clNone
         Constraints.MinWidth = 150
         Font.Style = [fsBold]
         OnClick = btnCopyClick

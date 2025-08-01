@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
-  Buttons, StdCtrls, LazUTF8, ActnList, BCPanel, BCMDButtonFocus, StrUtils;
+  Buttons, StdCtrls, LazUTF8, ActnList, BCPanel, BCMDButtonFocus, StrUtils, Math;
 
 type
 
@@ -105,7 +105,10 @@ begin
   begin
     memSQL.SetFocus;
     memSQL.SelStart := 14;
-  end;
+    memSQL.Font.Color := IfThen(Dark = False, $00C08000, clYellow);
+  end
+  else
+    memSQL.Font.Color := IfThen(Dark = False, clGray, $0000B5BF);
 end;
 
 procedure TfrmSQL.memSQLChange(Sender: TObject);
@@ -211,7 +214,7 @@ begin
       'persons ON (per_id = d_person), ' + sLineBreak + // categories
       'payees ON (pee_id = d_payee) ' + sLineBreak + // categories
       'ORDER BY d_date DESC, d_id DESC;'; // ORDER/
-    memSQL.Font.Color := clGray;
+    memSQL.Font.Color := IfThen(Dark = False, clGray, $0000B5BF);
   end;
 end;
 
@@ -222,7 +225,7 @@ begin
     memSQL.Enabled := True;
     memSQL.ReadOnly := True;
     memSQL.Text := 'SELECT * FROM sqlite_master;';
-    memSQL.Font.Color := clGray;
+    memSQL.Font.Color := IfThen(Dark = False, clGray, $0000B5BF);
   end;
 end;
 
@@ -236,7 +239,7 @@ begin
     if (frmSQL.Visible = True) then
       memSQL.SetFocus;
     memSQL.SelStart := 14;
-    memSQL.Font.Color := FullColor;
+    memSQL.Font.Color := IfThen(Dark = False, $00C08000, clYellow);
   end;
 end;
 
@@ -247,7 +250,7 @@ begin
     memSQL.Enabled := True;
     memSQL.ReadOnly := True;
     memSQL.Text := 'VACUUM';
-    memSQL.Font.Color := clGray;
+    memSQL.Font.Color := IfThen(Dark = False, clGray, $0000B5BF);
   end;
 end;
 

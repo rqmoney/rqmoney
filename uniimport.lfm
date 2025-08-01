@@ -13,25 +13,25 @@ object frmImport: TfrmImport
   OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   Scaled = False
   object pnlButtons: TPanel
     Left = 5
-    Height = 25
-    Top = 141
+    Height = 29
+    Top = 137
     Width = 490
     Align = alBottom
     AutoSize = True
     BorderSpacing.Around = 5
     BevelOuter = bvLowered
-    ClientHeight = 25
+    ClientHeight = 29
     ClientWidth = 490
     Constraints.MinHeight = 25
     TabOrder = 0
     object btnImport: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 336
-      Height = 21
+      Height = 25
       Top = 2
       Width = 150
       Animation = True
@@ -51,7 +51,6 @@ object frmImport: TfrmImport
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Enabled = False
       Font.Style = [fsBold]
@@ -61,7 +60,7 @@ object frmImport: TfrmImport
     object btnExit: TBCMDButtonFocus
       Cursor = crHandPoint
       Left = 4
-      Height = 21
+      Height = 25
       Top = 2
       Width = 150
       Animation = True
@@ -81,7 +80,6 @@ object frmImport: TfrmImport
       BorderSpacing.Left = 2
       BorderSpacing.Right = 2
       BorderSpacing.Around = 1
-      Color = clNone
       Constraints.MinWidth = 150
       Font.Style = [fsBold]
       OnClick = actExitExecute
@@ -237,7 +235,7 @@ object frmImport: TfrmImport
   end
   object tabImport: TTabControl
     Left = 5
-    Height = 106
+    Height = 102
     Top = 30
     Width = 490
     HotTrack = True
@@ -248,13 +246,13 @@ object frmImport: TfrmImport
     TabOrder = 3
     object pnlFile: TPanel
       Left = 2
-      Height = 76
-      Top = 28
+      Height = 97
+      Top = 3
       Width = 486
       Align = alClient
       AutoSize = True
       BevelOuter = bvLowered
-      ClientHeight = 76
+      ClientHeight = 97
       ClientWidth = 486
       TabOrder = 1
       object btnFile: TBitBtn
@@ -277,12 +275,12 @@ object frmImport: TfrmImport
       end
       object pnlFileName: TPanel
         Left = 71
-        Height = 74
+        Height = 95
         Top = 1
         Width = 414
         Align = alClient
         BevelOuter = bvNone
-        ClientHeight = 74
+        ClientHeight = 95
         ClientWidth = 414
         TabOrder = 1
         object lblFileName1: TLabel
@@ -299,7 +297,7 @@ object frmImport: TfrmImport
         end
         object lblFileName: TLabel
           Left = 3
-          Height = 67
+          Height = 88
           Top = 4
           Width = 408
           Align = alClient
